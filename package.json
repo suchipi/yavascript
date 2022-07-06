@@ -1,0 +1,10 @@
+{
+  "name": "tonna",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "author": "Lily Scott <me@suchipi.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
