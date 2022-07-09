@@ -10,5 +10,9 @@
   },
   "scripts": {
     "build": "./bootstrap.sh && ./build.sh"
+  },
+  "dependencies": {
+    "kleur": "^4.1.5",
+    "node-inspect-extracted": "^1.1.0"
   }
 }

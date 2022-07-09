@@ -1,5 +1,5 @@
 import * as std from "std";
-import inspect from "./inspect";
+import * as util from "node-inspect-extracted";
 
 const makeInspectLog =
   (file: std.FILE) =>
@@ -12,7 +12,7 @@ const makeInspectLog =
       if (typeof arg === "string") {
         file.puts(arg);
       } else {
-        file.puts(inspect(arg));
+        file.puts(util.inspect(arg, { colors: true, depth: 8 }));
       }
     }
 

@@ -1,6 +1,6 @@
 import * as std from "std";
 import "./console-patch";
-import * as api from "./api";
+import api from "./api";
 
 if (scriptArgs.length < 2) {
   std.err.puts(
