@@ -1,5 +1,5 @@
 import * as std from "std";
-import inspect from "./inspect.js";
+import inspect from "./inspect";
 
 const makeInspectLog =
   (file: std.FILE) =>
