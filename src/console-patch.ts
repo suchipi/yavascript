@@ -1,5 +1,5 @@
 import * as std from "std";
-import * as util from "node-inspect-extracted";
+import inspect from "./inspect";
 
 const makeInspectLog =
   (file: std.FILE) =>
@@ -9,11 +9,9 @@ const makeInspectLog =
         file.puts(" ");
       }
       const arg = args[i];
-      if (typeof arg === "string") {
-        file.puts(arg);
-      } else {
-        file.puts(util.inspect(arg, { colors: true, depth: 8 }));
-      }
+
+      const str = inspect(arg);
+      file.puts(str);
     }
 
     file.puts("\n");
@@ -23,7 +21,9 @@ const log = makeInspectLog(std.out);
 const warn = makeInspectLog(std.err);
 
 console.log = log;
+// @ts-ignore no info on console
+console.info = log;
 // @ts-ignore no warn on console
 console.warn = warn;
 // @ts-ignore no error on console
-console.error = console.warn;
+console.error = warn;
