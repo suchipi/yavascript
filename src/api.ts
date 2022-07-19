@@ -3,6 +3,7 @@ import * as os from "os";
 import * as util from "node-inspect-extracted";
 import inspect from "./inspect";
 import kleur from "kleur";
+import minimatch from "minimatch";
 
 // @ts-ignore assignment to value incorrectly typed as read-only
 kleur.enabled = true;
@@ -225,9 +226,13 @@ function writeFile(path: string, data: string | ArrayBuffer): void {
   }
 }
 
+function isDir(path: string): boolean {
+  const stats = os.stat(path);
+  return Boolean(os.S_IFDIR & stats.mode);
+}
+
 function remove(path: string): void {
-  const stats = os.lstat(path);
-  if (os.S_IFDIR & stats.mode) {
+  if (isDir(path)) {
     const children = os
       .readdir(path)
       .filter((child) => child !== "." && child !== "..")
@@ -258,8 +263,48 @@ function pwd(): string {
   return os.getcwd();
 }
 
-function glob(...inputs: Array<string>): Array<string> {
-  throw new Error("not yet implemented");
+function glob(
+  dir: string,
+  patterns: Array<string>,
+  { followSymlinks = false } = {}
+): Array<string> {
+  if (!exists(dir)) {
+    throw new Error(`No such directory: ${dir} (from ${pwd()})`);
+  }
+
+  const matches: Array<string> = [];
+
+  function find(searchDir: string) {
+    const children = os.readdir(dir);
+    for (const child of children) {
+      if (child === ".") continue;
+      if (child === "..") continue;
+
+      const fullName = searchDir === "." ? child : searchDir + "/" + child;
+
+      if (patterns.every((pattern) => minimatch(fullName, pattern))) {
+        matches.push(fullName);
+
+        try {
+          let stat: os.Stats;
+          if (followSymlinks) {
+            stat = os.stat(fullName);
+          } else {
+            stat = os.lstat(fullName);
+          }
+          if (os.S_IFDIR & stat.mode) {
+            find(fullName);
+          }
+        } catch (err) {
+          // ignore I/O and access errors when searching
+        }
+      }
+    }
+  }
+
+  find(dir);
+
+  return matches;
 }
 
 const baseApi = {
@@ -273,6 +318,7 @@ const baseApi = {
 
   readFile,
   writeFile,
+  isDir,
   exists,
   remove,
   glob,

@@ -121,6 +121,8 @@ declare function readFile(path: string): string;
 
 declare function writeFile(path: string, data: string | ArrayBuffer): void;
 
+declare function isDir(path: string): boolean;
+
 declare function remove(path: string): void;
 
 declare function exists(path: string): boolean;

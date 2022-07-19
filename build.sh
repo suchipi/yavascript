@@ -7,7 +7,10 @@ mkdir -p dist
 npx kame bundle --resolver ./kame-resolver.js
 
 # generate dist/tonna.c
-./quickjs/build/src/qjsc/qjsc.target -e -D os -D std -o dist/tonna.c dist/index.js
+# to make the stack traces clearer:
+mv dist/index.js ./tonna-internal.js
+./quickjs/build/src/qjsc/qjsc.target -e -D os -D std -o dist/tonna.c tonna-internal.js
+mv tonna-internal.js dist/index.js
 
 # generate dist/tonna
 gcc -static -o dist/tonna dist/tonna.c quickjs/build/src/archive/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
