@@ -26,6 +26,8 @@ mv yavascript-internal.js dist/index.js
 # generate dist/yavascript
 if [ "$WINDOWS" == "yes" ]; then
   x86_64-w64-mingw32-gcc -static -o dist/yavascript.exe dist/yavascript.c quickjs/build-windows/src/archive/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread
+elif [ "$DARWIN" == "yes" ]; then
+  clang -o dist/yavascript dist/yavascript.c quickjs/build/src/archive/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
 else
   gcc -static -o dist/yavascript dist/yavascript.c quickjs/build/src/archive/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
 fi
