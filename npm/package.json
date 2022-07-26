@@ -1,0 +1,10 @@
+{
+  "name": "yavascript",
+  "version": "0.0.1",
+  "main": "index.js",
+  "bin": {
+    "ys": "cli.js"
+  },
+  "author": "Lily Scott <me@suchipi.com>",
+  "license": "MIT"
+}
