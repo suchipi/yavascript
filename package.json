@@ -1,6 +1,6 @@
 {
   "name": "yavascript",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
   "author": "Lily Scott <me@suchipi.com>",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
-    "build": "./bootstrap.sh && ./build.sh"
+    "build": "./scripts/build.sh"
   },
   "dependencies": {
     "kleur": "^4.1.5",
