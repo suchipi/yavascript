@@ -1,4 +1,18 @@
+/**
+ * An object representing the process's environment variables. You can read
+ * from it to read environment variables, write into it to set environment
+ * variables, and/or delete properties from it to unset environment variables.
+ * Any value you write will be coerced into a string.
+ */
 declare const env: { [key: string]: string | undefined };
+
+type BaseExecOptions = {
+  /** Sets the current working directory for the child process. */
+  cwd?: string;
+
+  /** Sets environment variables within the process. */
+  env?: { [key: string | number]: string | number | boolean };
+};
 
 interface Exec {
   (args: Array<string>): void;
@@ -7,7 +21,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
        * status code.
@@ -27,7 +41,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
        * status code.
@@ -47,7 +61,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
        * status code.
@@ -60,7 +74,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
        * status code.
@@ -80,7 +94,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * If true, stdout and stderr will be collected into strings and returned
        * instead of being printed to the screen.
@@ -93,7 +107,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
        * status code.
@@ -109,11 +123,10 @@ interface Exec {
 /** Run a child process using the provided arguments. The first value in the arguments array is the program to run. */
 declare const exec: Exec;
 
-/** Alias for `exec(args, { captureOutput: true, failOnNonZeroStatus: false })` */
+/** Alias for `exec(args, { captureOutput: true })` */
 declare function $(args: Array<string>): {
   stdout: string;
   stderr: string;
-  status: number;
 };
 
 /** Read the contents of a file from disk, as a string. */

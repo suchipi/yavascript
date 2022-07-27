@@ -54,6 +54,14 @@ const env = new Proxy(
   }
 );
 
+type BaseExecOptions = {
+  /** Sets the current working directory for the child process. */
+  cwd?: string;
+
+  /** Sets environment variables within the process. */
+  env?: { [key: string | number]: string | number | boolean };
+};
+
 interface Exec {
   (args: Array<string>): void;
 
@@ -61,7 +69,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
        * status code.
@@ -81,7 +89,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
        * status code.
@@ -101,7 +109,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
        * status code.
@@ -114,7 +122,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
        * status code.
@@ -134,7 +142,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * If true, stdout and stderr will be collected into strings and returned
        * instead of being printed to the screen.
@@ -147,7 +155,7 @@ interface Exec {
 
   (
     args: Array<string>,
-    options: {
+    options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
        * status code.
@@ -162,8 +170,10 @@ interface Exec {
 
 const exec: Exec = (
   args: Array<string>,
-  { failOnNonZeroStatus = true, captureOutput = false } = {}
+  options: BaseExecOptions & { failOnNonZeroStatus?: boolean, captureOutput?: boolean } = {}
 ): any => {
+  const { failOnNonZeroStatus = true, captureOutput = false, cwd, env } = options;
+
   let tmpOut: std.FILE | null = null;
   let tmpErr: std.FILE | null = null;
   if (captureOutput) {
@@ -180,6 +190,14 @@ const exec: Exec = (
       execOpts.stdin = std.in.fileno();
       execOpts.stdout = std.out.fileno();
       execOpts.stderr = std.err.fileno();
+    }
+
+    if (cwd != null) {
+      execOpts.cwd = cwd;
+    }
+
+    if (env != null) {
+      execOpts.env = env;
     }
 
     const status = os.exec(args, execOpts);
@@ -221,9 +239,8 @@ const exec: Exec = (
 function $(args: Array<string>): {
   stdout: string;
   stderr: string;
-  status: number;
 } {
-  return exec(args, { captureOutput: true, failOnNonZeroStatus: false });
+  return exec(args, { captureOutput: true });
 }
 
 function readFile(path: string): string {
