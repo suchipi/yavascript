@@ -8,8 +8,10 @@ import minimatch from "minimatch";
 // @ts-ignore assignment to value incorrectly typed as read-only
 kleur.enabled = true;
 
+const _env = std.getenviron();
+
 const env = new Proxy(
-  {},
+  _env,
   {
     get(target, property, receiver) {
       if (typeof property === "symbol") return undefined;
@@ -20,9 +22,12 @@ const env = new Proxy(
       if (typeof property === "symbol") return false;
 
       if (value == null) {
+        delete _env[property];
         std.unsetenv(property);
       } else {
-        std.setenv(property, value);
+        const strValue = String(value);
+        _env[property] = strValue;
+        std.setenv(property, strValue);
       }
 
       return true;
@@ -32,7 +37,19 @@ const env = new Proxy(
       if (typeof property === "symbol") return false;
 
       std.unsetenv(property);
+      delete _env[property];
       return true;
+    },
+
+    ownKeys(target) {
+      return Object.keys(std.getenviron());
+    },
+
+    has(target, property) {
+      if (typeof property === "symbol") return false;
+
+      const result = std.getenv(property);
+      return typeof result !== "undefined";
     },
   }
 );
