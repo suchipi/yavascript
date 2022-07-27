@@ -20,13 +20,13 @@ cp ../bin/win32/* ./win32/yavascript-${VERSION}/
 cp ../dist/yavascript.d.ts ./win32/yavascript-${VERSION}/
 
 pushd darwin > /dev/null
-tar -czvf yavascript-0.0.1-darwin-amd64.tar.gz yavascript-0.0.1/
+tar -czvf yavascript-${VERSION}-darwin-amd64.tar.gz yavascript-${VERSION}/
 popd > /dev/null
 
 pushd linux > /dev/null
-tar -czvf yavascript-0.0.1-linux-amd64.tar.gz yavascript-0.0.1/
+tar -czvf yavascript-${VERSION}-linux-amd64.tar.gz yavascript-${VERSION}/
 popd > /dev/null
 
 pushd win32 > /dev/null
-tar -czvf yavascript-0.0.1-win32-amd64.tar.gz yavascript-0.0.1/
+tar -czvf yavascript-${VERSION}-win32-amd64.tar.gz yavascript-${VERSION}/
 popd > /dev/null
