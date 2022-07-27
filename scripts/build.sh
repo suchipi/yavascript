@@ -15,7 +15,7 @@ npm install
 mkdir -p dist
 
 # generate dist/index.js
-npx kame bundle --resolver ./kame-resolver.js
+npx kame bundle --resolver ./src/kame-resolver.js
 
 # generate dist/yavascript.c
 # to make the stack traces clearer:
@@ -49,7 +49,3 @@ echo "// ------------------------------------------" >> dist/yavascript.d.ts
 echo "" >> dist/yavascript.d.ts
 cat ./quickjs/src/quickjs-libc/quickjs-libc.d.ts >> dist/yavascript.d.ts
 echo "" >> dist/yavascript.d.ts
-
-pushd npm > /dev/null
-./prepare.sh
-popd > /dev/null

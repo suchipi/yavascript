@@ -2,6 +2,8 @@
 
 set -ex
 
+cd tgz-release
+
 VERSION=`cat ../package.json | jq -r .version`
 
 rm -rf ./darwin ./linux ./win32
