@@ -304,13 +304,13 @@ function pwd(): string {
 
 const OS_PATH_SEPARATOR = os.platform === "win32" ? "\\" : "/";
 
-function pathJoin(...parts: Array<string | { separator: string }>) {
+function makePath(...parts: Array<string | { separator: string }>) {
   const lastPart = parts[parts.length - 1];
   let options: { separator: string } | null = null;
   if (typeof lastPart === "object") {
     options = lastPart as any;
   }
- 
+
   let separator = OS_PATH_SEPARATOR;
   if (options != null && options.separator) {
     separator = options.separator;
@@ -328,7 +328,7 @@ function pathJoin(...parts: Array<string | { separator: string }>) {
 
   let resultingString = stringParts
     .map((part) => {
-      return part.replace(new RegExp("\\" + wrongSeparator, "g"), separator);
+      return part.replace(new RegExp("\\" + wrongSeparator + "+", "g"), separator);
     })
     .join(separator);
 
@@ -351,7 +351,7 @@ function ls(
     .filter((child) => child !== "." && child !== "..");
   if (!options.relativePaths) {
     const parent = realpath(dir);
-    children = children.map((child) => pathJoin(parent, child));
+    children = children.map((child) => makePath(parent, child));
   }
 
   return children;
@@ -421,7 +421,7 @@ const baseApi = {
   glob,
 
   OS_PATH_SEPARATOR,
-  pathJoin,
+  makePath,
 
   inspect,
   stripAnsi: util.stripVTControlCharacters,

@@ -164,23 +164,23 @@ declare function pwd(): string;
 declare const OS_PATH_SEPARATOR: "/" | "\\";
 
 /**
- * Join several path components together into one string.
- * Trailing or duplicate slashes will be removed.
- *
+ * Create a path string from one or more path or path component strings.
+ * 
+ * Trailing slashes and duplicate path separators will be removed. Any slashes
+ * or backslashes that do not match the requested path separator character
+ * (which defaults to {@link OS_PATH_SEPARATOR}) will be converted to the
+ * requested path separator. If multiple strings are passed, they will be
+ * joined together using the requested path separator.
+ * 
  * This function does not resolve `..` or `.`. Use {@link realpath} for that.
+ * 
+ * To request a path separator other than {@link OS_PATH_SEPARATOR}, pass an
+ * object like `{ separator: "/" }` as the final argument to `makePath`.
  *
- * @param parts strings containing path components to join together.
- * 
- * If the final argument to this function is an object with a `separator`
- * property on it which is a string, that string will be used the the separator
- * to join path components together with instead of OS_PATH_SEPARATOR.
- * 
- * If a path component contains a slash or backslash, and OS_PATH_SEPARATOR
- * or the specified separator differs from that slash or backslash, the slash
- * or backslash will be replaced with OS_PATH_SEPARATOR or the specified
- * separator. 
+ * @param parts strings containing path components that should be present in
+ * the returned path string.
  */
-declare function pathJoin(
+declare function makePath(
   ...parts: Array<string | { separator: string }>
 ): string;
 
