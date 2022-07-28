@@ -197,6 +197,11 @@ declare function makePath(
 declare function repoRoot(relativeTo?: string): string;
 
 /**
+ * Returns whether the provided path is ignored by git.
+ */
+declare function isGitignored(path: string): boolean
+
+/**
  * Return the contents of a directory, as absolute paths. `.` and `..` are
  * omitted.
  *

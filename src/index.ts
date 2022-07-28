@@ -47,7 +47,10 @@ switch (target) {
     }
 
     // TODO: would be better to eval as module
-    std.evalScript(codeToRun, { backtraceBarrier: true });
+    const result = std.evalScript(codeToRun, { backtraceBarrier: true });
+    if (typeof result !== "undefined") {
+      console.log(result);
+    }
 
     break;
   }

@@ -430,6 +430,14 @@ function repoRoot(relativeTo: string = pwd()): string {
   throw new Error(`Fatal: ${relativeTo} is not within a git or hg repo, or git/hg were not found in PATH`);
 }
 
+function isGitignored(path: string): boolean {
+  const result = exec(["git", "check-ignore", path], { failOnNonZeroStatus: false, captureOutput: true });
+  if (result.status !== 0 && result.status !== 1) {
+    throw new Error("git check-ignore failed: " + result.stderr.trim());
+  }
+  return result.status === 0;
+}
+
 const baseApi = {
   echo: console.log,
   cd,
@@ -454,6 +462,7 @@ const baseApi = {
   makePath,
 
   repoRoot,
+  isGitignored,
 
   inspect,
   stripAnsi: util.stripVTControlCharacters,
