@@ -10,49 +10,46 @@ kleur.enabled = true;
 
 const _env = std.getenviron();
 
-const env = new Proxy(
-  _env,
-  {
-    get(target, property, receiver) {
-      if (typeof property === "symbol") return undefined;
-      return std.getenv(property) || undefined;
-    },
+const env = new Proxy(_env, {
+  get(target, property, receiver) {
+    if (typeof property === "symbol") return undefined;
+    return std.getenv(property) || undefined;
+  },
 
-    set(target, property, value, receiver) {
-      if (typeof property === "symbol") return false;
+  set(target, property, value, receiver) {
+    if (typeof property === "symbol") return false;
 
-      if (value == null) {
-        delete _env[property];
-        std.unsetenv(property);
-      } else {
-        const strValue = String(value);
-        _env[property] = strValue;
-        std.setenv(property, strValue);
-      }
-
-      return true;
-    },
-
-    deleteProperty(target, property) {
-      if (typeof property === "symbol") return false;
-
-      std.unsetenv(property);
+    if (value == null) {
       delete _env[property];
-      return true;
-    },
+      std.unsetenv(property);
+    } else {
+      const strValue = String(value);
+      _env[property] = strValue;
+      std.setenv(property, strValue);
+    }
 
-    ownKeys(target) {
-      return Object.keys(std.getenviron());
-    },
+    return true;
+  },
 
-    has(target, property) {
-      if (typeof property === "symbol") return false;
+  deleteProperty(target, property) {
+    if (typeof property === "symbol") return false;
 
-      const result = std.getenv(property);
-      return typeof result !== "undefined";
-    },
-  }
-);
+    std.unsetenv(property);
+    delete _env[property];
+    return true;
+  },
+
+  ownKeys(target) {
+    return Object.keys(std.getenviron());
+  },
+
+  has(target, property) {
+    if (typeof property === "symbol") return false;
+
+    const result = std.getenv(property);
+    return typeof result !== "undefined";
+  },
+});
 
 type BaseExecOptions = {
   /** Sets the current working directory for the child process. */
@@ -170,9 +167,17 @@ interface Exec {
 
 const exec: Exec = (
   args: Array<string>,
-  options: BaseExecOptions & { failOnNonZeroStatus?: boolean, captureOutput?: boolean } = {}
+  options: BaseExecOptions & {
+    failOnNonZeroStatus?: boolean;
+    captureOutput?: boolean;
+  } = {}
 ): any => {
-  const { failOnNonZeroStatus = true, captureOutput = false, cwd, env } = options;
+  const {
+    failOnNonZeroStatus = true,
+    captureOutput = false,
+    cwd,
+    env,
+  } = options;
 
   let tmpOut: std.FILE | null = null;
   let tmpErr: std.FILE | null = null;
@@ -297,6 +302,61 @@ function pwd(): string {
   return os.getcwd();
 }
 
+const OS_PATH_SEPARATOR = os.platform === "win32" ? "\\" : "/";
+
+function pathJoin(...parts: Array<string | { separator: string }>) {
+  const lastPart = parts[parts.length - 1];
+  let options: { separator: string } | null = null;
+  if (typeof lastPart === "object") {
+    options = lastPart as any;
+  }
+ 
+  let separator = OS_PATH_SEPARATOR;
+  if (options != null && options.separator) {
+    separator = options.separator;
+  }
+
+  let stringParts = (
+    parts.filter((part) => typeof part === "string") as any as Array<string>
+  )
+    .map((part) => part.split(separator))
+    .filter(Boolean)
+    .flat(1)
+    .filter(Boolean);
+
+  const wrongSeparator = separator === "\\" ? "/" : "\\";
+
+  let resultingString = stringParts
+    .map((part) => {
+      return part.replace(new RegExp("\\" + wrongSeparator, "g"), separator);
+    })
+    .join(separator);
+
+  if (typeof parts[0] === "string" && parts[0].startsWith(separator)) {
+    resultingString = separator + resultingString;
+  }
+
+  return resultingString;
+}
+
+function ls(
+  dir: string = pwd(),
+  options: { relativePaths?: boolean } = { relativePaths: false }
+): Array<string> {
+  if (!isDir(dir)) {
+    throw new Error(`Not a directory: ${dir}`);
+  }
+  let children = os
+    .readdir(dir)
+    .filter((child) => child !== "." && child !== "..");
+  if (!options.relativePaths) {
+    const parent = realpath(dir);
+    children = children.map((child) => pathJoin(parent, child));
+  }
+
+  return children;
+}
+
 function glob(
   dir: string,
   patterns: Array<string>,
@@ -345,6 +405,9 @@ const baseApi = {
   echo: console.log,
   cd,
   pwd,
+  realpath: os.realpath.bind(os),
+  readlink: os.readlink.bind(os),
+  ls,
 
   env,
   exec,
@@ -356,6 +419,9 @@ const baseApi = {
   exists,
   remove,
   glob,
+
+  OS_PATH_SEPARATOR,
+  pathJoin,
 
   inspect,
   stripAnsi: util.stripVTControlCharacters,
@@ -369,8 +435,19 @@ delete api.enabled;
 
 Object.assign(globalThis, api);
 
-Object.defineProperty(globalThis, "__filename", {
-  get() {
-    return os.realpath(std.getFileNameFromStack(1));
-  }
+Object.defineProperties(globalThis, {
+  __filename: {
+    get() {
+      return os.realpath(std.getFileNameFromStack(1));
+    },
+  },
+  __dirname: {
+    get() {
+      const filename = os.realpath(std.getFileNameFromStack(1));
+      return filename
+        .split(OS_PATH_SEPARATOR)
+        .slice(0, -1)
+        .join(OS_PATH_SEPARATOR);
+    },
+  },
 });

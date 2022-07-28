@@ -1,6 +1,9 @@
 /** The name of the current file (whether script or module). Alias for `os.realpath(std.getFileNameFromStack())`. */
 declare const __filename: string;
 
+/** The name of the directory the current file is inside of. */
+declare const __dirname: string;
+
 /**
  * An object representing the process's environment variables. You can read
  * from it to read environment variables, write into it to set environment
@@ -152,6 +155,52 @@ declare function cd(path: string): void;
 
 /** Return the process's current working directory. */
 declare function pwd(): string;
+
+/**
+ * The separator character the host operative system uses between path
+ * components, ie. the slashes in a filepath. On windows, it's a backslash, and
+ * on all other OSes, it's a forward slash.
+ */
+declare const OS_PATH_SEPARATOR: "/" | "\\";
+
+/**
+ * Join several path components together into one string.
+ * Trailing or duplicate slashes will be removed.
+ *
+ * This function does not resolve `..` or `.`. Use {@link realpath} for that.
+ *
+ * @param parts strings containing path components to join together.
+ * 
+ * If the final argument to this function is an object with a `separator`
+ * property on it which is a string, that string will be used the the separator
+ * to join path components together with instead of OS_PATH_SEPARATOR.
+ * 
+ * If a path component contains a slash or backslash, and OS_PATH_SEPARATOR
+ * or the specified separator differs from that slash or backslash, the slash
+ * or backslash will be replaced with OS_PATH_SEPARATOR or the specified
+ * separator. 
+ */
+declare function pathJoin(
+  ...parts: Array<string | { separator: string }>
+): string;
+
+/**
+ * Return the contents of a directory, as absolute paths. `.` and `..` are
+ * omitted.
+ *
+ * Use the `relativePaths` option to get relative paths instead (relative to
+ * the parent directory).
+ */
+declare function ls(
+  dir?: string,
+  options?: { relativePaths?: boolean }
+): Array<string>;
+
+/** Get the absolute path given a relative path. Symlinks are also resolved. */
+declare function realpath(path: string): string;
+
+/** Read a symlink. */
+declare function readlink(path: string): string;
 
 /**
  * Search the filesystem for files matching the specified glob patterns. Uses [minimatch](https://www.npmjs.com/package/minimatch) with its default options.
