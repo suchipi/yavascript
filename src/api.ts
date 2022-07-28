@@ -367,4 +367,10 @@ const api = Object.assign(baseApi, kleur as Omit<typeof kleur, "enabled">);
 // @ts-ignore deleting property that doesn't exist on type (due to Omit cast)
 delete api.enabled;
 
-export default api;
+Object.assign(globalThis, api);
+
+Object.defineProperty(globalThis, "__filename", {
+  get() {
+    return os.realpath(std.getFileNameFromStack(1));
+  }
+});

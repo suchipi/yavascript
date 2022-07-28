@@ -1,3 +1,6 @@
+/** The name of the current file (whether script or module). Alias for `os.realpath(std.getFileNameFromStack())`. */
+declare const __filename: string;
+
 /**
  * An object representing the process's environment variables. You can read
  * from it to read environment variables, write into it to set environment

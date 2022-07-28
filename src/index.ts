@@ -1,6 +1,6 @@
 import * as std from "std";
 import "./console-patch";
-import api from "./api";
+import "./api";
 import * as pkg from "../package.json";
 
 if (scriptArgs.length < 2) {
@@ -9,8 +9,6 @@ if (scriptArgs.length < 2) {
   );
   std.exit(1);
 }
-
-Object.assign(globalThis, api);
 
 const targetFile = scriptArgs[1];
 
