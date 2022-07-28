@@ -156,6 +156,9 @@ declare function cd(path: string): void;
 /** Return the process's current working directory. */
 declare function pwd(): string;
 
+/** Removes the final component from a path string. */
+declare function dirname(path: string): string;
+
 /**
  * The separator character the host operative system uses between path
  * components, ie. the slashes in a filepath. On windows, it's a backslash, and
@@ -183,6 +186,15 @@ declare const OS_PATH_SEPARATOR: "/" | "\\";
 declare function makePath(
   ...parts: Array<string | { separator: string }>
 ): string;
+
+/**
+ * Returns the absolute path to the root folder of the git/hg repo.
+ * 
+ * This is done by running `git rev-parse --show-toplevel` and `hg root`.
+ * 
+ * If `relativeTo` is provided, the git and hg commands will be executed in that 
+ */
+declare function repoRoot(relativeTo?: string): string;
 
 /**
  * Return the contents of a directory, as absolute paths. `.` and `..` are

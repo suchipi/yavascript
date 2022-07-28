@@ -339,6 +339,12 @@ function makePath(...parts: Array<string | { separator: string }>) {
   return resultingString;
 }
 
+function dirname(path: string) {
+  const separator = path.includes("\\") ? "\\" : "/";
+  const cleanPath = makePath(path, { separator });
+  return cleanPath.split(separator).slice(0, -1).join(separator);
+}
+
 function ls(
   dir: string = pwd(),
   options: { relativePaths?: boolean } = { relativePaths: false }
@@ -401,6 +407,29 @@ function glob(
   return matches;
 }
 
+function repoRoot(relativeTo: string = pwd()): string {
+  if (exists(relativeTo) && !isDir(relativeTo)) {
+    relativeTo = dirname(relativeTo);
+  }
+
+  try {
+    const gitRootRun = exec(["git", "rev-parse", "--show-toplevel"], { captureOutput: true, failOnNonZeroStatus: false, cwd: relativeTo });
+    if (gitRootRun.status === 0) {
+      return gitRootRun.stdout.trim();
+    }
+  } catch (err) {}
+
+  try {
+    const hgRootRun = exec(["hg", "root"], { captureOutput: true, failOnNonZeroStatus: false, cwd: relativeTo });
+    if (hgRootRun.status === 0) {
+      return hgRootRun.stdout.trim();
+    }
+  } catch (err) {}
+
+
+  throw new Error(`Fatal: ${relativeTo} is not within a git or hg repo, or git/hg were not found in PATH`);
+}
+
 const baseApi = {
   echo: console.log,
   cd,
@@ -408,6 +437,7 @@ const baseApi = {
   realpath: os.realpath.bind(os),
   readlink: os.readlink.bind(os),
   ls,
+  dirname,
 
   env,
   exec,
@@ -422,6 +452,8 @@ const baseApi = {
 
   OS_PATH_SEPARATOR,
   makePath,
+
+  repoRoot,
 
   inspect,
   stripAnsi: util.stripVTControlCharacters,
@@ -444,10 +476,7 @@ Object.defineProperties(globalThis, {
   __dirname: {
     get() {
       const filename = os.realpath(std.getFileNameFromStack(1));
-      return filename
-        .split(OS_PATH_SEPARATOR)
-        .slice(0, -1)
-        .join(OS_PATH_SEPARATOR);
+      return dirname(filename);
     },
   },
 });
