@@ -1,6 +1,6 @@
 # yavascript
 
-<!-- NOTE: this file is also used as help text by the CLI. Don't use markdown syntax below this line. -->
+<!-- NOTE: this file is also used as help text by the CLI. Don't use markdown syntax below this line unless said syntax would also be clearly readable as plain text. -->
 
 YavaScript is a bash-like script runner which is distributed as a single
 statically-linked binary. Scripts are written in JavaScript. There are global
@@ -25,7 +25,7 @@ either not present in bash or are cumbersome to use in bash, namely:
 - Cross-file import/export using ECMAScript Modules
 - Splitting strings on delimeters
 - Pretty-printing of objects
-- Getting the path to the currently-running script (via import.meta.url or __filename)
+- Getting the path to the currently-running script (via import.meta.url or `__filename`)
 - Getting the absolute path to the root folder of the current git/mercurial repo (repoRoot function)
 
 To view the APIs, consult the file yavascript.d.ts which was distributed with
