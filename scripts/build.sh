@@ -3,6 +3,8 @@ set -ex
 
 git submodule init
 git submodule update
+
+# build quickjs (dep of yavascript)
 pushd quickjs > /dev/null
 if [ "$WINDOWS" == "yes" ]; then
   env VARIANT=windows make
@@ -10,15 +12,18 @@ else
   make
 fi
 popd > /dev/null
+
+# grab JS dependencies from npm
 npm install
 
+# generate dist/index.js (bundles in dependencies from npm)
 mkdir -p dist
-
-# generate dist/index.js
+rm -rf dist
 npx kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js
 
 # generate dist/yavascript.c
-# to make the stack traces clearer:
+
+# to make the stack traces clearer, we change the filename that will get baked into the binary:
 mv dist/index.js ./yavascript-internal.js
 ./quickjs/build/src/qjsc/qjsc.host -e -D os -D std -o dist/yavascript.c yavascript-internal.js
 mv yavascript-internal.js dist/index.js
