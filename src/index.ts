@@ -3,14 +3,21 @@ import "./console-patch";
 import "./api";
 import * as pkg from "../package.json";
 import readme from "../README.md";
+import license from "./license";
 
 let target;
 if (scriptArgs.includes("-h") || scriptArgs.includes("--help")) {
   target = "help";
 } else if (scriptArgs.includes("-e") || scriptArgs.includes("--eval")) {
   target = "eval";
-} else if (scriptArgs.includes("-v") || scriptArgs.includes("--version") || scriptArgs.includes("-version")) {
+} else if (
+  scriptArgs.includes("-v") ||
+  scriptArgs.includes("--version") ||
+  scriptArgs.includes("-version")
+) {
   target = "version";
+} else if (scriptArgs.includes("--license")) {
+  target = "license";
 } else {
   target = "runFile";
 }
@@ -67,9 +74,16 @@ Usage: One of these:
   yavascript --eval '<code-to-run>'
   yavascript -v
   yavascript --version
+  yavascript --license
 
 ${readme.split("\n").slice(4).join("\n")}`);
     std.exit(2);
+    break;
+  }
+
+  case "license": {
+    std.out.puts(license);
+    std.exit(0);
     break;
   }
 }
