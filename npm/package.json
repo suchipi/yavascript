@@ -5,5 +5,6 @@
   "bin": "lib/cli.js",
   "types": "yavascript.d.ts",
   "author": "Lily Scott <me@suchipi.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "suchipi/yavascript"
 }
