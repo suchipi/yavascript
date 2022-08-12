@@ -73,3 +73,4 @@ cat dist/yavascript.d.ts >> ./yavascript.d.ts
 # copy stuff into npm folder
 cp -R bin npm
 cp dist/yavascript.d.ts npm
+cp README.md npm
