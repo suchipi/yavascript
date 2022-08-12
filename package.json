@@ -1,6 +1,6 @@
 {
   "name": "yavascript",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/index.js",
   "author": "Lily Scott <me@suchipi.com>",
   "license": "MIT",

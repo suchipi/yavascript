@@ -328,7 +328,10 @@ function makePath(...parts: Array<string | { separator: string }>) {
 
   let resultingString = stringParts
     .map((part) => {
-      return part.replace(new RegExp("\\" + wrongSeparator + "+", "g"), separator);
+      return part.replace(
+        new RegExp("\\" + wrongSeparator + "+", "g"),
+        separator
+      );
     })
     .join(separator);
 
@@ -413,25 +416,37 @@ function repoRoot(relativeTo: string = pwd()): string {
   }
 
   try {
-    const gitRootRun = exec(["git", "rev-parse", "--show-toplevel"], { captureOutput: true, failOnNonZeroStatus: false, cwd: relativeTo });
+    const gitRootRun = exec(["git", "rev-parse", "--show-toplevel"], {
+      captureOutput: true,
+      failOnNonZeroStatus: false,
+      cwd: relativeTo,
+    });
     if (gitRootRun.status === 0) {
       return gitRootRun.stdout.trim();
     }
   } catch (err) {}
 
   try {
-    const hgRootRun = exec(["hg", "root"], { captureOutput: true, failOnNonZeroStatus: false, cwd: relativeTo });
+    const hgRootRun = exec(["hg", "root"], {
+      captureOutput: true,
+      failOnNonZeroStatus: false,
+      cwd: relativeTo,
+    });
     if (hgRootRun.status === 0) {
       return hgRootRun.stdout.trim();
     }
   } catch (err) {}
 
-
-  throw new Error(`Fatal: ${relativeTo} is not within a git or hg repo, or git/hg were not found in PATH`);
+  throw new Error(
+    `Fatal: ${relativeTo} is not within a git or hg repo, or git/hg were not found in PATH`
+  );
 }
 
 function isGitignored(path: string): boolean {
-  const result = exec(["git", "check-ignore", path], { failOnNonZeroStatus: false, captureOutput: true });
+  const result = exec(["git", "check-ignore", path], {
+    failOnNonZeroStatus: false,
+    captureOutput: true,
+  });
   if (result.status !== 0 && result.status !== 1) {
     throw new Error("git check-ignore failed: " + result.stderr.trim());
   }
@@ -443,7 +458,11 @@ const baseApi = {
   cd,
   pwd,
   realpath: os.realpath.bind(os),
-  readlink: os.readlink.bind(os),
+  readlink: os.readlink
+    ? os.readlink.bind(os)
+    : () => {
+        throw new Error(`readlink is not yet supported in ${os.platform}`);
+      },
   ls,
   dirname,
 
