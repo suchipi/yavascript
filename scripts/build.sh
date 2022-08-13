@@ -9,7 +9,9 @@ git submodule update
 
 # build quickjs (dep of yavascript)
 pushd quickjs > /dev/null
-./docker/build-all.sh
+if [[ "$SKIP_QJS" == "" ]]; then
+  ./docker/build-all.sh
+fi
 popd > /dev/null
 
 # grab JS dependencies from npm
