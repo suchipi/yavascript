@@ -28,7 +28,7 @@ switch (target) {
 
     if (fileToRun == null) {
       std.err.puts(
-        `Please specify a file to run. For example: ${scriptArgs[0]} ./my-script.js\nFor more info, run ${scriptArgs[0]} --help.`
+        `Please specify a file to run. For example: ${scriptArgs[0]} ./my-script.js\nFor more info, run ${scriptArgs[0]} --help.\n`
       );
       std.exit(1);
     }
