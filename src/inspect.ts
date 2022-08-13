@@ -1,4 +1,4 @@
-import * as util from "node-inspect-extracted";
+import { format } from "pretty-format";
 
 function isProbablyError(value: any): boolean {
   return (
@@ -9,6 +9,13 @@ function isProbablyError(value: any): boolean {
     typeof value.stack === "string"
   );
 }
+
+const formatOptions = {
+  callToJSON: false,
+  maxDepth: 8,
+  maxWidth: 100,
+  printFunctionName: true,
+};
 
 export default function inspect(value: any): string {
   if (typeof value === "string") {
@@ -23,8 +30,7 @@ export default function inspect(value: any): string {
           "\n" +
           indent +
           "with properties: " +
-          util
-            .inspect(otherProps, { colors: true, depth: 8 })
+          format(otherProps, formatOptions)
             .split("\n")
             .map((line) => indent + line)
             .join("\n")
@@ -36,6 +42,6 @@ export default function inspect(value: any): string {
 
     return `${name}: ${message}\n${String(stack).trimEnd()}${suffix}`;
   } else {
-    return util.inspect(value, { colors: true, depth: 8 });
+    return format(value, formatOptions);
   }
 }

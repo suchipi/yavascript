@@ -14,7 +14,11 @@ const makeInspectLog =
       try {
         str = inspect(arg);
       } catch (err) {
-        std.err.puts((err as any).message + "\n");
+        try {
+          std.err.puts((err as any).message + "\n");
+        } catch (err) {
+          // I give up
+        }
         str = String(arg);
       }
       file.puts(str);

@@ -1,6 +1,6 @@
 import * as std from "std";
 import * as os from "os";
-import * as util from "node-inspect-extracted";
+import stripAnsi from "strip-ansi";
 import inspect from "./inspect";
 import kleur from "kleur";
 import minimatch from "minimatch";
@@ -484,7 +484,7 @@ const baseApi = {
   isGitignored,
 
   inspect,
-  stripAnsi: util.stripVTControlCharacters,
+  stripAnsi,
   quote: JSON.stringify.bind(JSON),
 };
 
