@@ -10,7 +10,12 @@ const makeInspectLog =
       }
       const arg = args[i];
 
-      const str = inspect(arg);
+      let str: string;
+      try {
+        str = inspect(arg);
+      } catch (err) {
+        str = String(arg);
+      }
       file.puts(str);
     }
 
