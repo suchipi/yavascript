@@ -1,4 +1,4 @@
-import { format } from "pretty-format";
+import print from "print";
 
 function isProbablyError(value: any): boolean {
   return (
@@ -10,12 +10,18 @@ function isProbablyError(value: any): boolean {
   );
 }
 
-const formatOptions = {
-  callToJSON: false,
-  maxDepth: 8,
-  maxWidth: 100,
-  printFunctionName: true,
+const printOptions = {
+  ampedSymbols: false,
+  maxArrayLength: 100,
+  showAll: true,
+  showArrayLength: true,
 };
+
+function leadingTabsToSpaces(line: string): string {
+  const matches = line.match(/^(\t+)/);
+  if (!matches) return line;
+  return line.replace(matches[1], "  ".repeat(matches[1].length));
+}
 
 export default function inspect(value: any): string {
   if (typeof value === "string") {
@@ -30,9 +36,9 @@ export default function inspect(value: any): string {
           "\n" +
           indent +
           "with properties: " +
-          format(otherProps, formatOptions)
+          print(otherProps, undefined, printOptions)
             .split("\n")
-            .map((line) => indent + line)
+            .map((line: string) => indent + leadingTabsToSpaces(line))
             .join("\n")
             .trimStart();
       } catch (err) {
@@ -42,6 +48,9 @@ export default function inspect(value: any): string {
 
     return `${name}: ${message}\n${String(stack).trimEnd()}${suffix}`;
   } else {
-    return format(value, formatOptions);
+    return print(value, undefined, printOptions)
+      .split("\n")
+      .map(leadingTabsToSpaces)
+      .join("\n");
   }
 }
