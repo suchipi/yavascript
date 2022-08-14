@@ -1,44 +1,18 @@
 import * as std from "std";
-import "./console-patch";
-import "./api";
-import * as pkg from "../package.json";
-import readme from "../README.md";
-import license from "./license";
+import { installApi } from "./api";
+installApi(globalThis);
 
-let target;
-if (scriptArgs.includes("-h") || scriptArgs.includes("--help")) {
-  target = "help";
-} else if (scriptArgs.includes("-e") || scriptArgs.includes("--eval")) {
-  target = "eval";
-} else if (
-  scriptArgs.includes("-v") ||
-  scriptArgs.includes("--version") ||
-  scriptArgs.includes("-version")
-) {
-  target = "version";
-} else if (scriptArgs.includes("--license")) {
-  target = "license";
-} else {
-  target = "runFile";
-}
+import helpTarget from "./targets/help";
+import versionTarget from "./targets/version";
+import licenseTarget from "./targets/license";
+import runFileTarget from "./targets/run-file";
+import evalTarget from "./targets/eval";
 
-switch (target) {
-  case "runFile": {
-    const fileToRun = scriptArgs[1];
-
-    if (fileToRun == null) {
-      std.err.puts(
-        `Please specify a file to run. For example: ${scriptArgs[0]} ./my-script.js\nFor more info, run ${scriptArgs[0]} --help.\n`
-      );
-      std.exit(1);
-    }
-
-    std.importModule(fileToRun, "./<cwd>");
-
-    break;
-  }
-  case "eval": {
-    let codeToRun;
+function main() {
+  if (scriptArgs.includes("-h") || scriptArgs.includes("--help")) {
+    helpTarget();
+  } else if (scriptArgs.includes("-e") || scriptArgs.includes("--eval")) {
+    let codeToRun: string | null = null;
     for (let i = 0; i < scriptArgs.length; i++) {
       const arg = scriptArgs[i];
       if (arg === "-e" || arg === "--eval") {
@@ -51,39 +25,30 @@ switch (target) {
         `Please specify the code string to run. For example: ${scriptArgs[0]} -e 'echo("hi")'\nFor more info, run ${scriptArgs[0]} --help.`
       );
       std.exit(1);
+    } else {
+      evalTarget(codeToRun);
     }
+  } else if (
+    scriptArgs.includes("-v") ||
+    scriptArgs.includes("--version") ||
+    scriptArgs.includes("-version")
+  ) {
+    versionTarget();
+    return;
+  } else if (scriptArgs.includes("--license")) {
+    licenseTarget();
+  } else {
+    const fileToRun = scriptArgs[1];
 
-    // TODO: would be better to eval as module
-    const result = std.evalScript(codeToRun, { backtraceBarrier: true });
-    if (typeof result !== "undefined") {
-      console.log(result);
+    if (fileToRun == null) {
+      std.err.puts(
+        `Please specify a file to run. For example: ${scriptArgs[0]} ./my-script.js\nFor more info, run ${scriptArgs[0]} --help.\n`
+      );
+      std.exit(1);
+    } else {
+      runFileTarget(fileToRun);
     }
-
-    break;
-  }
-  case "version": {
-    std.out.puts(pkg.version);
-    break;
-  }
-  case "help": {
-    std.err.puts(`yavascript ${pkg.version}
-
-Usage: One of these:
-  yavascript <path/to/file-to-run.js>
-  yavascript -e '<code-to-run>'
-  yavascript --eval '<code-to-run>'
-  yavascript -v
-  yavascript --version
-  yavascript --license
-
-${readme.split("\n").slice(4).join("\n")}`);
-    std.exit(2);
-    break;
-  }
-
-  case "license": {
-    std.out.puts(license);
-    std.exit(0);
-    break;
   }
 }
+
+main();
