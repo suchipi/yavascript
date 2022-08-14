@@ -3,11 +3,14 @@ import { exec, $ } from "./exec";
 import {
   exists,
   isDir,
+  isLink,
   ls,
   readFile,
   remove,
   writeFile,
   readlink,
+  ensureDir,
+  copy,
 } from "./filesystem";
 import {
   OS_PATH_SEPARATOR,
@@ -16,8 +19,10 @@ import {
   get__dirname,
   get__filename,
   makePath,
+  splitPath,
   pwd,
   realpath,
+  basename,
 } from "./paths";
 import { glob } from "./glob";
 import { isGitignored, repoRoot } from "./repo";
@@ -64,18 +69,23 @@ export function installApi(target: typeof globalThis) {
 
     exists,
     isDir,
+    isLink,
     ls,
     readFile,
     remove,
     writeFile,
     readlink,
+    ensureDir,
+    copy,
 
     OS_PATH_SEPARATOR,
     cd,
     dirname,
     makePath,
+    splitPath,
     pwd,
     realpath,
+    basename,
 
     glob,
 

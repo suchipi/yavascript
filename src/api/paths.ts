@@ -67,3 +67,12 @@ export function get__dirname(): string {
 export function realpath(path: string): string {
   return os.realpath(path);
 }
+
+export function splitPath(path: string): Array<string> {
+  return path.split(/\/|\\/g);
+}
+
+export function basename(path: string): string {
+  const parts = splitPath(path);
+  return parts[parts.length - 1];
+}
