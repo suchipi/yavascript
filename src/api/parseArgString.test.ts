@@ -130,3 +130,11 @@ test("parseArgString: consecutive whitespace", () => {
 test("parseArgString does not interpolate env vars", () => {
   expect(parseArgString(`$HI '$HI' "$HI"`)).toEqual(["$HI", "$HI", "$HI"]);
 });
+
+test("parseArgString does not expand globs", () => {
+  expect(parseArgString(`./**/* './**/*' "./**/*"`)).toEqual([
+    "./**/*",
+    "./**/*",
+    "./**/*",
+  ]);
+});

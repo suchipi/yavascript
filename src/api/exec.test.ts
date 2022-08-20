@@ -203,3 +203,13 @@ test("exec's string parsing does not interpolate env vars", async () => {
     stderr: "",
   });
 });
+
+test("exec's string parsing does not interpolate env vars", async () => {
+  const result = await evaluate(`exec('echo **/*')`);
+  expect(result).toEqual({
+    code: 0,
+    error: false,
+    stdout: "**/*\n",
+    stderr: "",
+  });
+});
