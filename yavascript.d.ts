@@ -31,12 +31,12 @@ type BaseExecOptions = {
 };
 
 interface Exec {
-  (args: Array<string>): void;
+  (args: Array<string> | string): void;
 
-  (args: Array<string>, options: Record<string, never>): void;
+  (args: Array<string> | string, options: Record<string, never>): void;
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -56,7 +56,7 @@ interface Exec {
   ): void;
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -76,7 +76,7 @@ interface Exec {
   ): { status: number };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -89,7 +89,7 @@ interface Exec {
   ): { status: number };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -109,7 +109,7 @@ interface Exec {
   ): { stdout: string; stderr: string };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * If true, stdout and stderr will be collected into strings and returned
@@ -122,7 +122,7 @@ interface Exec {
   ): { stdout: string; stderr: string };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -140,7 +140,7 @@ interface Exec {
 declare const exec: Exec;
 
 /** Alias for `exec(args, { captureOutput: true })` */
-declare function $(args: Array<string>): {
+declare function $(args: Array<string> | string): {
   stdout: string;
   stderr: string;
 };
@@ -151,8 +151,19 @@ declare function readFile(path: string): string;
 /** Write the contents of a string or ArrayBuffer to a file. */
 declare function writeFile(path: string, data: string | ArrayBuffer): void;
 
+interface IsDir {
+  /** Returns true if the path points to a directory, or if the path points to a symlink which points to a directory. */
+  (path: string): boolean;
+
+  /** Maximum number of symlinks to follow before erroring. */
+  symlinkLimit: number;
+}
+
 /** Returns true if the path points to a directory, or if the path points to a symlink which points to a directory. */
-declare function isDir(path: string): boolean;
+declare var isDir: IsDir;
+
+/** Returns true if the path points to a symlink. */
+declare function isLink(path: string): boolean;
 
 /** Delete the file or directory at the specified path. If the directory isn't empty, its contents will be deleted, too. */
 declare function remove(path: string): void;
@@ -178,15 +189,15 @@ declare const OS_PATH_SEPARATOR: "/" | "\\";
 
 /**
  * Create a path string from one or more path or path component strings.
- * 
+ *
  * Trailing slashes and duplicate path separators will be removed. Any slashes
  * or backslashes that do not match the requested path separator character
  * (which defaults to {@link OS_PATH_SEPARATOR}) will be converted to the
  * requested path separator. If multiple strings are passed, they will be
  * joined together using the requested path separator.
- * 
+ *
  * This function does not resolve `..` or `.`. Use {@link realpath} for that.
- * 
+ *
  * To request a path separator other than {@link OS_PATH_SEPARATOR}, pass an
  * object like `{ separator: "/" }` as the final argument to `makePath`.
  *
@@ -198,18 +209,30 @@ declare function makePath(
 ): string;
 
 /**
+ * Split a path string on / or \\, returning an Array of strings.
+ *
+ * If the path starts with `/`, the first string in the Array will be empty.
+ */
+export function splitPath(path: string): Array<string>;
+
+/**
+ * Return the last component of a path string.
+ */
+declare function basename(path: string): string;
+
+/**
  * Returns the absolute path to the root folder of the git/hg repo.
- * 
+ *
  * This is done by running `git rev-parse --show-toplevel` and `hg root`.
- * 
- * If `relativeTo` is provided, the git and hg commands will be executed in that 
+ *
+ * If `relativeTo` is provided, the git and hg commands will be executed in that
  */
 declare function repoRoot(relativeTo?: string): string;
 
 /**
  * Returns whether the provided path is ignored by git.
  */
-declare function isGitignored(path: string): boolean
+declare function isGitignored(path: string): boolean;
 
 /**
  * Return the contents of a directory, as absolute paths. `.` and `..` are
@@ -228,6 +251,17 @@ declare function realpath(path: string): string;
 
 /** Read a symlink. */
 declare function readlink(path: string): string;
+
+/** If they don't exist, create a directories for each of the provided path components. Works the same as `mkdir -p`. */
+declare function ensureDir(path: string): string;
+
+/** Options for {@link copy}. */
+export type CopyOptions = {
+  whenTargetExists?: "overwrite" | "skip" | "error";
+};
+
+/** Copy a file or folder from one location to another. Folders are copied recursively. */
+export function copy(from: string, to: string, options?: CopyOptions): void;
 
 /**
  * Search the filesystem for files matching the specified glob patterns. Uses [minimatch](https://www.npmjs.com/package/minimatch) with its default options.

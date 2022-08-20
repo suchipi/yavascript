@@ -21,12 +21,12 @@ type BaseExecOptions = {
 };
 
 interface Exec {
-  (args: Array<string>): void;
+  (args: Array<string> | string): void;
 
-  (args: Array<string>, options: Record<string, never>): void;
+  (args: Array<string> | string, options: Record<string, never>): void;
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -46,7 +46,7 @@ interface Exec {
   ): void;
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -66,7 +66,7 @@ interface Exec {
   ): { status: number };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -79,7 +79,7 @@ interface Exec {
   ): { status: number };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -99,7 +99,7 @@ interface Exec {
   ): { stdout: string; stderr: string };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * If true, stdout and stderr will be collected into strings and returned
@@ -112,7 +112,7 @@ interface Exec {
   ): { stdout: string; stderr: string };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -130,7 +130,7 @@ interface Exec {
 declare const exec: Exec;
 
 /** Alias for `exec(args, { captureOutput: true })` */
-declare function $(args: Array<string>): {
+declare function $(args: Array<string> | string): {
   stdout: string;
   stderr: string;
 };
@@ -251,11 +251,7 @@ export type CopyOptions = {
 };
 
 /** Copy a file or folder from one location to another. Folders are copied recursively. */
-export function copy(
-  from: string,
-  to: string,
-  options: CopyOptions = { whenTargetExists: "error" }
-): void;
+export function copy(from: string, to: string, options?: CopyOptions): void;
 
 /**
  * Search the filesystem for files matching the specified glob patterns. Uses [minimatch](https://www.npmjs.com/package/minimatch) with its default options.

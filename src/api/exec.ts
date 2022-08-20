@@ -11,12 +11,12 @@ type BaseExecOptions = {
 };
 
 interface Exec {
-  (args: Array<string>): void;
+  (args: Array<string> | string): void;
 
-  (args: Array<string>, options: Record<string, never>): void;
+  (args: Array<string> | string, options: Record<string, never>): void;
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -36,7 +36,7 @@ interface Exec {
   ): void;
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -56,7 +56,7 @@ interface Exec {
   ): { status: number };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -69,7 +69,7 @@ interface Exec {
   ): { status: number };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -89,7 +89,7 @@ interface Exec {
   ): { stdout: string; stderr: string };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * If true, stdout and stderr will be collected into strings and returned
@@ -102,7 +102,7 @@ interface Exec {
   ): { stdout: string; stderr: string };
 
   (
-    args: Array<string>,
+    args: Array<string> | string,
     options: BaseExecOptions & {
       /**
        * Whether an Error should be thrown when the process exits with a nonzero
@@ -196,9 +196,9 @@ export const exec: Exec = (
   }
 };
 
-export function $(args: Array<string>): {
+export function $(args: Array<string> | string): {
   stdout: string;
   stderr: string;
 } {
-  return exec(args, { captureOutput: true });
+  return exec(args as any, { captureOutput: true });
 }
