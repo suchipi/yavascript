@@ -1,5 +1,6 @@
 import * as std from "std";
 import * as os from "os";
+import { parseArgString } from "./parseArgString";
 
 type BaseExecOptions = {
   /** Sets the current working directory for the child process. */
@@ -116,7 +117,7 @@ interface Exec {
 }
 
 export const exec: Exec = (
-  args: Array<string>,
+  args: Array<string> | string,
   options: BaseExecOptions & {
     failOnNonZeroStatus?: boolean;
     captureOutput?: boolean;
@@ -128,6 +129,10 @@ export const exec: Exec = (
     cwd,
     env,
   } = options;
+
+  if (typeof args === "string") {
+    args = parseArgString(args);
+  }
 
   let tmpOut: std.FILE | null = null;
   let tmpErr: std.FILE | null = null;
