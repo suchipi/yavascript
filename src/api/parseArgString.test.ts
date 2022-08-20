@@ -77,10 +77,17 @@ test("parseArgString: escaped characters outside of string", () => {
 });
 
 test("parseArgString: string gluing", () => {
-  expect(parseArgString(`one two'three' four"five"'six'`)).toEqual([
+  expect(
+    parseArgString(
+      `one two'three' four"five"'six' "seven""eight" nine"ten" 'eleven''twelve'`
+    )
+  ).toEqual([
     "one",
     "twothree",
     "fourfivesix",
+    "seveneight",
+    "nineten",
+    "eleventwelve",
   ]);
 });
 

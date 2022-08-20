@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "./scripts/build.sh",
-    "test": "test-it --watch"
+    "test": "test-it"
   },
   "dependencies": {
     "kleur": "^4.1.5",
