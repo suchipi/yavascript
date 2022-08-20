@@ -28,7 +28,7 @@ test("exec false - string", async () => {
     code: 1,
     error: false,
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js:987)
+    at exec (yavascript-internal.js:940)
     at <eval> (<evalScript>)
 
 `,
@@ -42,7 +42,7 @@ test("exec false - array", async () => {
     code: 1,
     error: false,
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js:987)
+    at exec (yavascript-internal.js:940)
     at <eval> (<evalScript>)
 
 `,
@@ -176,8 +176,8 @@ test("$ false", async () => {
     error: false,
     stdout: "",
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js:987)
-    at $ (yavascript-internal.js:1028)
+    at exec (yavascript-internal.js:940)
+    at $ (yavascript-internal.js:981)
     at <eval> (<evalScript>)
 
 `,
@@ -204,7 +204,7 @@ test("exec's string parsing does not interpolate env vars", async () => {
   });
 });
 
-test("exec's string parsing does not interpolate env vars", async () => {
+test("exec's string parsing does not parse globs", async () => {
   const result = await evaluate(`exec('echo **/*')`);
   expect(result).toEqual({
     code: 0,

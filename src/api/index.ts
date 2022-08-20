@@ -22,6 +22,7 @@ import {
   splitPath,
   pwd,
   realpath,
+  resolvePath,
   basename,
 } from "./paths";
 import { glob } from "./glob";
@@ -43,7 +44,6 @@ import {
   bold,
   cyan,
   dim,
-  enabled,
   gray,
   green,
   grey,
@@ -85,6 +85,7 @@ export function installApi(target: typeof globalThis) {
     splitPath,
     pwd,
     realpath,
+    resolvePath,
     basename,
 
     glob,
@@ -108,7 +109,6 @@ export function installApi(target: typeof globalThis) {
     bold,
     cyan,
     dim,
-    enabled,
     gray,
     green,
     grey,

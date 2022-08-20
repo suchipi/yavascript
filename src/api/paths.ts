@@ -11,8 +11,8 @@ export function pwd(): string {
 
 export const OS_PATH_SEPARATOR = os.platform === "win32" ? "\\" : "/";
 
-export function makePath(...parts: Array<string | { separator: string }>) {
-  const lastPart = parts[parts.length - 1];
+function getPathComponents(inputParts: Array<string | { separator: string }>) {
+  const lastPart = inputParts[inputParts.length - 1];
   let options: { separator: string } | null = null;
   if (typeof lastPart === "object") {
     options = lastPart as any;
@@ -24,7 +24,9 @@ export function makePath(...parts: Array<string | { separator: string }>) {
   }
 
   let stringParts = (
-    parts.filter((part) => typeof part === "string") as any as Array<string>
+    inputParts.filter(
+      (part) => typeof part === "string"
+    ) as any as Array<string>
   )
     .map((part) => part.split(separator))
     .filter(Boolean)
@@ -33,20 +35,27 @@ export function makePath(...parts: Array<string | { separator: string }>) {
 
   const wrongSeparator = separator === "\\" ? "/" : "\\";
 
-  let resultingString = stringParts
-    .map((part) => {
-      return part.replace(
-        new RegExp("\\" + wrongSeparator + "+", "g"),
-        separator
-      );
-    })
-    .join(separator);
+  let parts = stringParts.map((part) => {
+    return part.replace(
+      new RegExp("\\" + wrongSeparator + "+", "g"),
+      separator
+    );
+  });
 
-  if (typeof parts[0] === "string" && parts[0].startsWith(separator)) {
-    resultingString = separator + resultingString;
+  if (
+    typeof inputParts[0] === "string" &&
+    inputParts[0].startsWith(separator)
+  ) {
+    parts = [""].concat(parts);
   }
 
-  return resultingString;
+  return { parts, separator };
+}
+
+export function makePath(...parts: Array<string | { separator: string }>) {
+  const components = getPathComponents(parts);
+
+  return components.parts.join(components.separator);
 }
 
 export function dirname(path: string) {
@@ -66,6 +75,29 @@ export function get__dirname(): string {
 
 export function realpath(path: string): string {
   return os.realpath(path);
+}
+
+export function resolvePath(path: string, from: string = pwd()): string {
+  const { parts, separator } = getPathComponents([path]);
+
+  const newParts: Array<string> = [];
+  let currentPart: string | undefined;
+  while ((currentPart = parts.shift())) {
+    if (currentPart === "." || currentPart === "..") {
+      if (newParts.length === 0) {
+        const pwdComponents = getPathComponents([from]);
+        newParts.push(...pwdComponents.parts);
+      }
+
+      if (currentPart === "..") {
+        newParts.pop();
+      }
+    } else {
+      newParts.push(currentPart);
+    }
+  }
+
+  return newParts.join(separator);
 }
 
 export function splitPath(path: string): Array<string> {

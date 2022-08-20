@@ -186,7 +186,7 @@ declare const OS_PATH_SEPARATOR: "/" | "\\";
  * requested path separator. If multiple strings are passed, they will be
  * joined together using the requested path separator.
  *
- * This function does not resolve `..` or `.`. Use {@link realpath} for that.
+ * This function does not resolve `..` or `.`. Use {@link resolvePath} for that.
  *
  * To request a path separator other than {@link OS_PATH_SEPARATOR}, pass an
  * object like `{ separator: "/" }` as the final argument to `makePath`.
@@ -236,8 +236,18 @@ declare function ls(
   options?: { relativePaths?: boolean }
 ): Array<string>;
 
-/** Get the absolute path given a relative path. Symlinks are also resolved. */
+/** Get the absolute path given a relative path. Symlinks are also resolved. The path's target file/directory must exist. */
 declare function realpath(path: string): string;
+
+/**
+ * Interpret any `.` or `..` parts from a path, resulting in an absolute path.
+ * The path's target file/directory doesn't have to exist.
+ *
+ * You may optionally pass a `from` argument to specify where leading `.` or
+ * `..` parts should be considered relative to. If unspecified, `from` defaults
+ * to the process's current working directory, ie `pwd()`.
+ */
+declare function resolvePath(path: string, from?: string): string;
 
 /** Read a symlink. */
 declare function readlink(path: string): string;
