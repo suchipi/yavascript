@@ -44,7 +44,8 @@ function getPathComponents(inputParts: Array<string | { separator: string }>) {
 
   if (
     typeof inputParts[0] === "string" &&
-    inputParts[0].startsWith(separator)
+    (inputParts[0].startsWith(separator) ||
+      inputParts[0].startsWith(wrongSeparator))
   ) {
     parts = [""].concat(parts);
   }
@@ -96,6 +97,8 @@ export function resolvePath(path: string, from: string = pwd()): string {
       newParts.push(currentPart);
     }
   }
+
+  console.log({ parts, separator, newParts });
 
   return newParts.join(separator);
 }
