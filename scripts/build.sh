@@ -25,26 +25,26 @@ npx kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js
 # to make the stack traces clearer, we change the filename that will get baked into the binary:
 mv dist/index.js ./yavascript-internal.js
 # generate dist/yavascript.c
-docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" suchipi/quickjs-build:linux ./quickjs/docker/artifacts/linux/qjsc.target -e -D os -D std -o dist/yavascript.c yavascript-internal.js
+docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" suchipi/quickjs-build:linux-from-linux ./quickjs/docker/artifacts/linux-from-linux/qjsc.target -e -D os -D std -o dist/yavascript.c yavascript-internal.js
 mv yavascript-internal.js dist/index.js
 
 mkdir -p bin
 
 # generate bin/darwin-arm/yavascript
 mkdir -p bin/darwin-arm
-docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" suchipi/quickjs-build:darwin-arm arm64-apple-darwin20.4-clang -o bin/darwin-arm/yavascript dist/yavascript.c quickjs/docker/artifacts/darwin-arm/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
+docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" suchipi/quickjs-build:darwin-arm-from-linux arm64-apple-darwin20.4-clang -o bin/darwin-arm/yavascript dist/yavascript.c quickjs/docker/artifacts/darwin-arm-from-linux/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
 
 # generate bin/darwin/yavascript
 mkdir -p bin/darwin
-docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" suchipi/quickjs-build:darwin x86_64-apple-darwin20.4-clang -o bin/darwin/yavascript dist/yavascript.c quickjs/docker/artifacts/darwin/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
+docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" suchipi/quickjs-build:darwin-from-linux x86_64-apple-darwin20.4-clang -o bin/darwin/yavascript dist/yavascript.c quickjs/docker/artifacts/darwin-from-linux/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
 
 # generate bin/linux/yavascript
 mkdir -p bin/linux
-docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" suchipi/quickjs-build:linux gcc -static -o bin/linux/yavascript dist/yavascript.c quickjs/docker/artifacts/linux/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
+docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" suchipi/quickjs-build:linux-from-linux gcc -static -o bin/linux/yavascript dist/yavascript.c quickjs/docker/artifacts/linux-from-linux/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
 
 # generate bin/windows/yavascript
 mkdir -p bin/windows
-docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" suchipi/quickjs-build:windows x86_64-w64-mingw32-gcc -static -o bin/windows/yavascript.exe dist/yavascript.c quickjs/docker/artifacts/windows/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread
+docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" suchipi/quickjs-build:windows-from-linux x86_64-w64-mingw32-gcc -static -o bin/windows/yavascript.exe dist/yavascript.c quickjs/docker/artifacts/windows-from-linux/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread
 
 # remove dist/yavascript.c
 rm dist/yavascript.c
