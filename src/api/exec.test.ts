@@ -28,7 +28,7 @@ test("exec false - string", async () => {
     code: 1,
     error: false,
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js:940)
+    at exec (yavascript-internal.js:957)
     at <eval> (<evalScript>)
 
 `,
@@ -42,7 +42,7 @@ test("exec false - array", async () => {
     code: 1,
     error: false,
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js:940)
+    at exec (yavascript-internal.js:957)
     at <eval> (<evalScript>)
 
 `,
@@ -176,8 +176,8 @@ test("$ false", async () => {
     error: false,
     stdout: "",
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js:940)
-    at $ (yavascript-internal.js:981)
+    at exec (yavascript-internal.js:957)
+    at $ (yavascript-internal.js:1005)
     at <eval> (<evalScript>)
 
 `,
@@ -211,5 +211,23 @@ test("exec's string parsing does not parse globs", async () => {
     error: false,
     stdout: "**/*\n",
     stderr: "",
+  });
+});
+
+test("logging", async () => {
+  const result = await evaluate(
+    `exec.enableLogging(); exec('echo hi'); exec(['echo', '   hi']);`
+  );
+  expect(result).toEqual({
+    code: 0,
+    error: false,
+    stderr: [
+      `+ exec: ["echo","hi"]`,
+      `+ exec result: ["echo","hi"] -> 0`,
+      `+ exec: ["echo","   hi"]`,
+      `+ exec result: ["echo","   hi"] -> 0`,
+      ``,
+    ].join("\n"),
+    stdout: "hi\n   hi\n",
   });
 });

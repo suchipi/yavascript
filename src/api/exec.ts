@@ -1,124 +1,19 @@
 import * as std from "std";
 import * as os from "os";
 import { parseArgString } from "./parseArgString";
+import { inspect } from "./inspect";
 
-type BaseExecOptions = {
-  /** Sets the current working directory for the child process. */
-  cwd?: string;
+let logging = false;
 
-  /** Sets environment variables within the process. */
-  env?: { [key: string | number]: string | number | boolean };
-};
-
-interface Exec {
-  (args: Array<string> | string): void;
-
-  (args: Array<string> | string, options: Record<string, never>): void;
-
-  (
-    args: Array<string> | string,
-    options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
-      failOnNonZeroStatus: true;
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
-      captureOutput: false;
-    }
-  ): void;
-
-  (
-    args: Array<string> | string,
-    options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
-      failOnNonZeroStatus: false;
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
-      captureOutput: false;
-    }
-  ): { status: number };
-
-  (
-    args: Array<string> | string,
-    options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
-      failOnNonZeroStatus: false;
-    }
-  ): { status: number };
-
-  (
-    args: Array<string> | string,
-    options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
-      failOnNonZeroStatus: true;
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
-      captureOutput: true;
-    }
-  ): { stdout: string; stderr: string };
-
-  (
-    args: Array<string> | string,
-    options: BaseExecOptions & {
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
-      captureOutput: true;
-    }
-  ): { stdout: string; stderr: string };
-
-  (
-    args: Array<string> | string,
-    options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
-      failOnNonZeroStatus: false;
-      captureOutput: true;
-    }
-  ): { stdout: string; stderr: string; status: number };
+function enableLogging(isOn: boolean = true) {
+  logging = isOn;
 }
 
-export const exec: Exec = (
+const exec = (
   args: Array<string> | string,
-  options: BaseExecOptions & {
+  options: {
+    cwd?: string;
+    env?: { [key: string | number]: string | number | boolean };
     failOnNonZeroStatus?: boolean;
     captureOutput?: boolean;
   } = {}
@@ -132,6 +27,10 @@ export const exec: Exec = (
 
   if (typeof args === "string") {
     args = parseArgString(args);
+  }
+
+  if (logging) {
+    std.err.puts("+ exec: " + JSON.stringify(args) + "\n");
   }
 
   let tmpOut: std.FILE | null = null;
@@ -162,6 +61,12 @@ export const exec: Exec = (
 
     const status = os.exec(args, execOpts);
 
+    if (logging) {
+      std.err.puts(
+        "+ exec result: " + JSON.stringify(args) + ` -> ${status}\n`
+      );
+    }
+
     if (failOnNonZeroStatus && status !== 0) {
       const err = new Error(`Command failed: ${JSON.stringify(args)}`);
       // @ts-ignore property status not found on error
@@ -190,11 +95,20 @@ export const exec: Exec = (
         "Internal error: tmpOut and tmpErr weren't set, but attempted to return stdout and stderr. This indicates a bug in the exec function"
       );
     }
+  } catch (err) {
+    if (logging) {
+      std.err.puts(`+ exec error: ${inspect(err)}\n`);
+    }
+    throw err;
   } finally {
     if (tmpOut != null) tmpOut.close();
     if (tmpErr != null) tmpErr.close();
   }
 };
+
+exec.enableLogging = enableLogging;
+
+export { exec };
 
 export function $(args: Array<string> | string): {
   stdout: string;

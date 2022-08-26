@@ -124,6 +124,9 @@ interface Exec {
       captureOutput: true;
     }
   ): { stdout: string; stderr: string; status: number };
+
+  /** Log all executed commands to stderr. `isOn` is optional and defaults to `true`. Pass `false` to disable logging. */
+  enableLogging(isOn?: boolean): void;
 }
 
 /** Run a child process using the provided arguments. The first value in the arguments array is the program to run. */
