@@ -11,52 +11,34 @@ export function pwd(): string {
 
 export const OS_PATH_SEPARATOR = os.platform === "win32" ? "\\" : "/";
 
-function getPathComponents(inputParts: Array<string | { separator: string }>) {
-  const lastPart = inputParts[inputParts.length - 1];
-  let options: { separator: string } | null = null;
-  if (typeof lastPart === "object") {
-    options = lastPart as any;
+function getPathComponents(inputParts: Array<string> | string) {
+  if (!Array.isArray(inputParts)) {
+    inputParts = [inputParts];
   }
 
-  let separator = OS_PATH_SEPARATOR;
-  if (options != null && options.separator) {
-    separator = options.separator;
-  }
-
-  let stringParts = (
-    inputParts.filter(
-      (part) => typeof part === "string"
-    ) as any as Array<string>
-  )
-    .map((part) => part.split(separator))
-    .filter(Boolean)
+  return inputParts
+    .map((part) => part.split(/(?:\/|\\)+/g))
     .flat(1)
-    .filter(Boolean);
-
-  const wrongSeparator = separator === "\\" ? "/" : "\\";
-
-  let parts = stringParts.map((part) => {
-    return part.replace(
-      new RegExp("\\" + wrongSeparator + "+", "g"),
-      separator
-    );
-  });
-
-  if (
-    typeof inputParts[0] === "string" &&
-    (inputParts[0].startsWith(separator) ||
-      inputParts[0].startsWith(wrongSeparator))
-  ) {
-    parts = [""].concat(parts);
-  }
-
-  return { parts, separator };
+    .filter((part, index) => {
+      if (index === 0) return true;
+      return Boolean(part);
+    });
 }
 
 export function makePath(...parts: Array<string | { separator: string }>) {
-  const components = getPathComponents(parts);
+  const lastPart = parts[parts.length - 1];
+  let separator = OS_PATH_SEPARATOR;
+  if (typeof lastPart === "object") {
+    separator = lastPart.separator;
+  }
 
-  return components.parts.join(components.separator);
+  const stringParts: Array<string> = parts.filter(
+    (part) => typeof part === "string"
+  ) as any;
+
+  const components = getPathComponents(stringParts);
+
+  return components.join(separator);
 }
 
 export function dirname(path: string) {
@@ -79,7 +61,7 @@ export function realpath(path: string): string {
 }
 
 export function resolvePath(path: string, from: string = pwd()): string {
-  const { parts, separator } = getPathComponents([path]);
+  const parts = getPathComponents(path);
 
   const newParts: Array<string> = [];
   let currentPart: string | undefined;
@@ -97,8 +79,6 @@ export function resolvePath(path: string, from: string = pwd()): string {
       newParts.push(currentPart);
     }
   }
-
-  console.log({ parts, separator, newParts });
 
   return newParts.join(separator);
 }
