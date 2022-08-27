@@ -55,7 +55,7 @@ import {
   white,
   yellow,
 } from "./strings";
-import { console, echo } from "./console";
+import { console, echo, print } from "./console";
 
 export function installApi(target: typeof globalThis) {
   Object.assign(target, {
@@ -119,6 +119,7 @@ export function installApi(target: typeof globalThis) {
 
     console,
     echo,
+    print,
   });
 
   Object.defineProperties(target, {

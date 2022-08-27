@@ -414,15 +414,6 @@ declare function glob(
 declare const echo: typeof console.log;
 
 // ---------------
-// --- inspect ---
-// ---------------
-
-/**
- * Convert a value to a string, using the same logic as `echo` and `console.log`.
- */
-declare function inspect(value: any): string;
-
-// ---------------
 // --- strings ---
 // ---------------
 
@@ -522,6 +513,15 @@ declare var print: (...args: Array<any>) => void;
 declare var console: {
   /** Same as {@link print}(). */
   log: typeof print;
+
+  /** Same as {@link print}(). */
+  warn: typeof print;
+
+  /** Same as {@link print}(). */
+  error: typeof print;
+
+  /** Same as {@link print}(). */
+  info: typeof print;
 };
 
 declare module "std" {
@@ -574,9 +574,9 @@ declare module "std" {
 
   /**
    * Read the script of module filename from an active stack frame, then return it as a string.
-   * 
+   *
    * If there isn't a valid filename for the specified stack frame, an error will be thrown.
-   * 
+   *
    * @param stackLevels - How many levels up the stack to search for a filename. Defaults to 0, which uses the current stack frame.
    */
   export function getFileNameFromStack(stackLevels: number): string;
@@ -1217,4 +1217,109 @@ declare module "os" {
   /** `access` Unix system call; checks if a file is readable, writable, executable, and/or exists (use {@link R_OK}, {@link W_OK}, {@link X_OK}, and/or {@link F_OK} for `accessMode`). Throws a descriptive error (with errno property) if the requested access is not available; otherwise, returns undefined. */
   export function access(path: string, accessMode: number): void;
 }
+
+/**
+ * Options for {@link inspect}.
+ */
+declare interface InspectOptions {
+  /** Whether to display non-enumerable properties. Defaults to false. */
+  all?: boolean;
+
+  /** Whether to invoke getter functions. Defaults to false. */
+  followGetters?: boolean;
+
+  /** Whether to display the indexes of iterable entries. Defaults to false. */
+  indexes?: boolean;
+
+  /** Hide object details after 𝑁 recursions. Defaults to Infinity. */
+  maxDepth?: number;
+
+  /** If true, don't identify well-known symbols as `@@…`. Defaults to false. */
+  noAmp?: boolean;
+
+  /** If true, don't format byte-arrays as hexadecimal. Defaults to false. */
+  noHex?: boolean;
+
+  /** If true, don't display function source code. Defaults to false. */
+  noSource?: boolean;
+
+  /** Whether to show `__proto__` properties if possible. Defaults to false. */
+  proto?: boolean;
+
+  /** Whether to sort properties alphabetically. When false, properties are sorted by creation order. Defaults to false. */
+  sort?: boolean;
+
+  /** Options that control whether and how ANSI terminal escape sequences for colours should be added to the output. Defaults to false, meaning no colours. */
+  colours?: boolean | 256 | 8 | InspectColours;
+
+  /** Prefix string to use for indentation. Defaults to '\t'. */
+  indent?: string;
+}
+
+declare interface InspectColours {
+  off?: string | number;
+  red?: string | number;
+  grey?: string | number;
+  green?: string | number;
+  darkGreen?: string | number;
+  punct?: string | number;
+  keys?: string | number;
+  keyEscape?: string | number;
+  typeColour?: string | number;
+  primitive?: string | number;
+  escape?: string | number;
+  date?: string | number;
+  hexBorder?: string | number;
+  hexValue?: string | number;
+  hexOffset?: string | number;
+  reference?: string | number;
+  srcBorder?: string | number;
+  srcRowNum?: string | number;
+  srcRowText?: string | number;
+  nul?: string | number;
+  nulProt?: string | number;
+  undef?: string | number;
+  noExts?: string | number;
+  frozen?: string | number;
+  sealed?: string | number;
+  regex?: string | number;
+  string?: string | number;
+  symbol?: string | number;
+  symbolFade?: string | number;
+  braces?: string | number;
+  quotes?: string | number;
+  empty?: string | number;
+  dot?: string | number;
+}
+
+declare interface InspectFunction {
+  /**
+   * Generate a human-readable representation of a value.
+   *
+   * @param value - Value to inspect
+   * @param options - Additional settings for refining output
+   * @returns A string representation of `value`.
+   */
+  (value: any, options?: InspectOptions): string;
+
+  /**
+   * Generate a human-readable representation of a value.
+   *
+   * @param value - Value to inspect
+   * @param key - The value's corresponding member name
+   * @param options - Additional settings for refining output
+   * @returns A string representation of `value`.
+   */
+  (value: any, key?: string | symbol, options?: InspectOptions): string;
+}
+
+/**
+ * Generate a human-readable representation of a value.
+ *
+ * @param value - Value to inspect
+ * @param key - The value's corresponding member name
+ * @param options - Additional settings for refining output
+ * @returns A string representation of `value`.
+ */
+declare var inspect: InspectFunction;
 

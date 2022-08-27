@@ -42,3 +42,6 @@ export const console = {
 };
 
 export const echo = makeInspectLog(std.out);
+
+// To overwrite the quickjs globalThis.print
+export const print = makeInspectLog(std.out);
