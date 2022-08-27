@@ -24,6 +24,7 @@ import {
   realpath,
   resolvePath,
   basename,
+  detectPathSeparator,
 } from "./paths";
 import { glob } from "./glob";
 import { isGitignored, repoRoot } from "./repo";
@@ -87,6 +88,7 @@ export function installApi(target: typeof globalThis) {
     realpath,
     resolvePath,
     basename,
+    detectPathSeparator,
 
     glob,
 

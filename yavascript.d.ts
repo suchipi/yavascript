@@ -212,11 +212,11 @@ declare function makePath(
 ): string;
 
 /**
- * Split a path string on / or \\, returning an Array of strings.
+ * Split a path string (or array of path strings) on / or \\, returning an Array of strings.
  *
  * If the path starts with `/`, the first string in the Array will be empty.
  */
-export function splitPath(path: string): Array<string>;
+export function splitPath(path: string | Array<string>): Array<string>;
 
 /**
  * Return the last component of a path string.

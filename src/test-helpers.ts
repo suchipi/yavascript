@@ -30,7 +30,17 @@ if (process.platform === "win32") {
 
 export { binaryPath };
 
-export async function evaluate(code: string, options: SpawnOptions = {}) {
+export type EvaluateResult = {
+  stdout: string;
+  stderr: string;
+  code: number | null;
+  error: boolean;
+};
+
+export async function evaluate(
+  code: string,
+  options: SpawnOptions = {}
+): Promise<EvaluateResult> {
   const runContext = spawn(binaryPath, ["-e", code], options);
   await runContext.completion;
   return runContext.result;

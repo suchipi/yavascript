@@ -11,7 +11,7 @@ export function pwd(): string {
 
 export const OS_PATH_SEPARATOR = os.platform === "win32" ? "\\" : "/";
 
-function getPathComponents(inputParts: Array<string> | string) {
+export function splitPath(inputParts: Array<string> | string): Array<string> {
   if (!Array.isArray(inputParts)) {
     inputParts = [inputParts];
   }
@@ -25,26 +25,22 @@ function getPathComponents(inputParts: Array<string> | string) {
     });
 }
 
-export function makePath(...parts: Array<string | { separator: string }>) {
-  const lastPart = parts[parts.length - 1];
-  let separator = OS_PATH_SEPARATOR;
-  if (typeof lastPart === "object") {
-    separator = lastPart.separator;
+export function detectPathSeparator(input: Array<string> | string): string {
+  let testStr = input;
+  if (Array.isArray(input)) {
+    testStr = input.join("|");
   }
+  return testStr.includes("\\") ? "\\" : "/";
+}
 
-  const stringParts: Array<string> = parts.filter(
-    (part) => typeof part === "string"
-  ) as any;
-
-  const components = getPathComponents(stringParts);
-
-  return components.join(separator);
+export function makePath(...parts: Array<string>) {
+  const separator = detectPathSeparator(parts);
+  return splitPath(parts).join(separator);
 }
 
 export function dirname(path: string) {
-  const separator = path.includes("\\") ? "\\" : "/";
-  const cleanPath = makePath(path, { separator });
-  return cleanPath.split(separator).slice(0, -1).join(separator);
+  const separator = detectPathSeparator(path);
+  return splitPath(path).slice(0, -1).join(separator);
 }
 
 export function get__filename(): string {
@@ -61,30 +57,40 @@ export function realpath(path: string): string {
 }
 
 export function resolvePath(path: string, from: string = pwd()): string {
-  const parts = getPathComponents(path);
+  const parts = splitPath(path);
 
   const newParts: Array<string> = [];
   let currentPart: string | undefined;
-  while ((currentPart = parts.shift())) {
+  while (parts.length > 0) {
+    currentPart = parts.shift();
     if (currentPart === "." || currentPart === "..") {
       if (newParts.length === 0) {
-        const pwdComponents = getPathComponents([from]);
-        newParts.push(...pwdComponents.parts);
+        const fromParts = splitPath(from);
+        newParts.push(...fromParts);
       }
 
       if (currentPart === "..") {
-        newParts.pop();
+        if (newParts.length > 0) {
+          newParts.pop();
+        } else {
+          const err = new Error(
+            `Cannot resolve leading .. from path ${JSON.stringify(
+              from
+            )} (path = ${path})`
+          );
+          Object.assign(err, {
+            from,
+            path,
+          });
+          throw err;
+        }
       }
-    } else {
+    } else if (currentPart != null) {
       newParts.push(currentPart);
     }
   }
 
-  return newParts.join(separator);
-}
-
-export function splitPath(path: string): Array<string> {
-  return path.split(/\/|\\/g);
+  return newParts.join(OS_PATH_SEPARATOR);
 }
 
 export function basename(path: string): string {

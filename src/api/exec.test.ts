@@ -1,6 +1,21 @@
 ///<reference types="@test-it/core/globals" />
-import { evaluate, binaryPath } from "../test-helpers";
+import { evaluate, binaryPath, type EvaluateResult } from "../test-helpers";
 import { inspect } from "./inspect";
+
+function cleanStack(input: string): string {
+  return input.replace(
+    /yavascript-internal\.js:\d+/g,
+    "yavascript-internal.js"
+  );
+}
+
+function cleanResult(input: EvaluateResult): EvaluateResult {
+  return {
+    ...input,
+    stdout: cleanStack(input.stdout),
+    stderr: cleanStack(input.stderr),
+  };
+}
 
 test("exec true - string", async () => {
   const result = await evaluate(`exec("true")`);
@@ -24,11 +39,11 @@ test("exec true - array", async () => {
 
 test("exec false - string", async () => {
   const result = await evaluate(`exec("false")`);
-  expect(result).toEqual({
+  expect(cleanResult(result)).toEqual({
     code: 1,
     error: false,
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js:957)
+    at exec (yavascript-internal.js)
     at <eval> (<evalScript>)
 
 `,
@@ -38,11 +53,11 @@ test("exec false - string", async () => {
 
 test("exec false - array", async () => {
   const result = await evaluate(`exec(["false"])`);
-  expect(result).toEqual({
+  expect(cleanResult(result)).toEqual({
     code: 1,
     error: false,
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js:957)
+    at exec (yavascript-internal.js)
     at <eval> (<evalScript>)
 
 `,
@@ -171,13 +186,13 @@ test("$ echo hi - array", async () => {
 
 test("$ false", async () => {
   const result = await evaluate(`$("false")`);
-  expect(result).toEqual({
+  expect(cleanResult(result)).toEqual({
     code: 1,
     error: false,
     stdout: "",
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js:957)
-    at $ (yavascript-internal.js:1005)
+    at exec (yavascript-internal.js)
+    at $ (yavascript-internal.js)
     at <eval> (<evalScript>)
 
 `,
