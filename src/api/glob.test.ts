@@ -3,7 +3,6 @@ import path from "path";
 import { evaluate } from "../test-helpers";
 import { inspect } from "./inspect";
 
-// TODO: this test is incomplete and is failing
 test("sample glob", async () => {
   const dir = path.join(__dirname, "test_fixtures/glob 1");
   const patterns = ["**/*"];
@@ -12,7 +11,18 @@ test("sample glob", async () => {
     `glob(${JSON.stringify(dir)}, ${JSON.stringify(patterns)})`
   );
 
-  const expected = [];
+  const expected = [
+    "potato",
+    "potato/banana",
+    "potato/banana/yo.txt",
+    "potato/banana/yo.js",
+    "potato/eggplant",
+    "hi.js",
+    "hi.txt",
+    "cabana",
+    "hi",
+    "hi/there.txt",
+  ];
 
   expect(result).toEqual({
     code: 0,

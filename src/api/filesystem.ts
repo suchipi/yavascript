@@ -1,6 +1,32 @@
 import * as std from "std";
 import * as os from "os";
-import { basename, makePath, splitPath, pwd, OS_PATH_SEPARATOR } from "./paths";
+import { basename, paths, pwd } from "./paths";
+
+export function ls(
+  dir: string = pwd(),
+  options: { relativePaths?: boolean } = { relativePaths: false }
+): Array<string> {
+  if (!isDir(dir)) {
+    throw new Error(`Not a directory: ${dir}`);
+  }
+  let children = os
+    .readdir(dir)
+    .filter((child) => child !== "." && child !== "..");
+  if (!options.relativePaths) {
+    const parent = os.realpath(dir);
+    children = children.map((child) => paths.join(parent, child));
+  }
+
+  return children;
+}
+
+export function readlink(path: string): string {
+  if (os.readlink == null) {
+    throw new Error(`readlink is not yet supported in ${os.platform}`);
+  } else {
+    return os.readlink(path);
+  }
+}
 
 export function readFile(path: string): string {
   return std.loadFile(path);
@@ -74,29 +100,47 @@ export function exists(path: string): boolean {
   }
 }
 
-export function ls(
-  dir: string = pwd(),
-  options: { relativePaths?: boolean } = { relativePaths: false }
-): Array<string> {
-  if (!isDir(dir)) {
-    throw new Error(`Not a directory: ${dir}`);
-  }
-  let children = os
-    .readdir(dir)
-    .filter((child) => child !== "." && child !== "..");
-  if (!options.relativePaths) {
-    const parent = os.realpath(dir);
-    children = children.map((child) => makePath(parent, child));
+function getPathInfo(path: string) {
+  if (!exists(path)) {
+    return "nonexistent";
   }
 
-  return children;
+  if (isDir("path")) {
+    return "dir";
+  }
+
+  if (isLink(path)) {
+    // isDir returns true for symlinks pointing to dirs
+    return "link-to-file";
+  }
+
+  return "file";
 }
 
-export function readlink(path: string): string {
-  if (os.readlink == null) {
-    throw new Error(`readlink is not yet supported in ${os.platform}`);
-  } else {
-    return os.readlink(path);
+export function ensureDir(path: string) {
+  const components = paths.split(path);
+
+  for (let i = 0; i < components.length; i++) {
+    const componentsSoFar = components.slice(0, i + 1);
+    const pathSoFar = componentsSoFar.join(paths.OS_PATH_SEPARATOR);
+    if (pathSoFar === ".") continue;
+
+    const info = getPathInfo(pathSoFar);
+    switch (info) {
+      case "nonexistent": {
+        os.mkdir(pathSoFar, 0o775);
+        break;
+      }
+      case "dir": {
+        break;
+      }
+      case "file":
+      case "link-to-file": {
+        throw new Error(
+          `Wanted to ensure that the directory path ${path} existed, but ${pathSoFar} was a file, not a directory`
+        );
+      }
+    }
   }
 }
 
@@ -135,50 +179,6 @@ export type CopyOptions = {
   whenTargetExists?: "overwrite" | "skip" | "error";
 };
 
-function getPathInfo(path: string) {
-  if (!exists(path)) {
-    return "nonexistent";
-  }
-
-  if (isDir("path")) {
-    return "dir";
-  }
-
-  if (isLink(path)) {
-    // isDir returns true for symlinks pointing to dirs
-    return "link-to-file";
-  }
-
-  return "file";
-}
-
-export function ensureDir(path: string) {
-  const components = splitPath(path);
-
-  for (let i = 0; i < components.length; i++) {
-    const componentsSoFar = components.slice(0, i + 1);
-    const pathSoFar = componentsSoFar.join(OS_PATH_SEPARATOR);
-    if (pathSoFar === ".") continue;
-
-    const info = getPathInfo(pathSoFar);
-    switch (info) {
-      case "nonexistent": {
-        os.mkdir(pathSoFar, 0o775);
-        break;
-      }
-      case "dir": {
-        break;
-      }
-      case "file":
-      case "link-to-file": {
-        throw new Error(
-          `Wanted to ensure that the directory path ${path} existed, but ${pathSoFar} was a file, not a directory`
-        );
-      }
-    }
-  }
-}
-
 export function copy(
   from: string,
   to: string,
@@ -202,7 +202,7 @@ export function copy(
     case "file -> dir": {
       // Copy file into dir
       const filename = basename(from);
-      const target = makePath(to, filename);
+      const target = paths.join(to, filename);
       copyRaw(from, target);
       return;
     }
@@ -234,7 +234,7 @@ export function copy(
       const children = ls(from);
       for (const child of children) {
         const filename = basename(child);
-        const target = makePath(to, filename);
+        const target = paths.join(to, filename);
         copy(child, target, options);
       }
       return;
@@ -242,13 +242,13 @@ export function copy(
     case "dir -> dir": {
       // Create new dir within target path and copy contents into it recursively
       const dirname = basename(from);
-      const targetDir = makePath(to, dirname);
+      const targetDir = paths.join(to, dirname);
       ensureDir(targetDir);
 
       const children = ls(from);
       for (const child of children) {
         const filename = basename(child);
-        const target = makePath(targetDir, filename);
+        const target = paths.join(targetDir, filename);
         copy(child, target, options);
       }
       return;

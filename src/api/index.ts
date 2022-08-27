@@ -13,18 +13,15 @@ import {
   copy,
 } from "./filesystem";
 import {
-  OS_PATH_SEPARATOR,
   cd,
-  dirname,
-  get__dirname,
-  get__filename,
-  makePath,
-  splitPath,
   pwd,
   realpath,
-  resolvePath,
+  dirname,
   basename,
-  detectPathSeparator,
+  extname,
+  paths,
+  get__dirname,
+  get__filename,
 } from "./paths";
 import { glob } from "./glob";
 import { isGitignored, repoRoot } from "./repo";
@@ -79,16 +76,13 @@ export function installApi(target: typeof globalThis) {
     ensureDir,
     copy,
 
-    OS_PATH_SEPARATOR,
     cd,
-    dirname,
-    makePath,
-    splitPath,
     pwd,
     realpath,
-    resolvePath,
+    dirname,
     basename,
-    detectPathSeparator,
+    extname,
+    paths,
 
     glob,
 
@@ -132,12 +126,12 @@ export function installApi(target: typeof globalThis) {
   Object.defineProperties(target, {
     __filename: {
       get() {
-        return get__filename();
+        return get__filename(2);
       },
     },
     __dirname: {
       get() {
-        return get__dirname();
+        return get__dirname(2);
       },
     },
   });

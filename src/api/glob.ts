@@ -1,7 +1,7 @@
 import * as os from "os";
 import minimatch from "minimatch";
 import { exists } from "./filesystem";
-import { pwd, resolvePath } from "./paths";
+import { pwd, paths } from "./paths";
 
 export function glob(
   dir: string,
@@ -12,17 +12,17 @@ export function glob(
     throw new Error(`No such directory: ${dir} (from ${pwd()})`);
   }
 
-  const startingDir = resolvePath(dir);
+  const startingDir = paths.resolve(dir);
   const allPatterns = patterns.map((pattern) => {
     if (pattern.startsWith("!")) {
       return {
         negated: true,
-        pattern: resolvePath("./" + pattern.slice(1)),
+        pattern: paths.resolve("./" + pattern.slice(1)),
       };
     } else {
       return {
         negated: false,
-        pattern: resolvePath("./" + pattern),
+        pattern: paths.resolve("./" + pattern),
       };
     }
   });
