@@ -1,6 +1,7 @@
 import { spawn, Options as SpawnOptions } from "first-base";
 import path from "path";
 import print from "@suchipi/print";
+import inspectOptionsForPrint from "./inspect-options-for-print";
 
 var binaryPath: string;
 if (process.platform === "win32") {
@@ -49,11 +50,5 @@ export async function evaluate(
 
 export function inspect(value: any): string {
   // options to inspect here match what is given to console.log
-  return print(value, {
-    all: true,
-    maxDepth: 8,
-    noAmp: true,
-    colours: true,
-    indent: "  ",
-  });
+  return print(value, inspectOptionsForPrint);
 }

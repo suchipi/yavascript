@@ -1,4 +1,6 @@
 import * as std from "std";
+import inspectOptionsForPrint from "./inspect-options-for-print";
+
 import { installApi } from "./api";
 installApi(globalThis);
 
@@ -51,4 +53,54 @@ function main() {
   }
 }
 
-main();
+try {
+  main();
+} catch (err: any) {
+  if (
+    typeof err === "object" &&
+    err != null &&
+    typeof err.name === "string" &&
+    typeof err.message === "string" &&
+    typeof err.stack === "string"
+  ) {
+    std.err.puts(err.name);
+    std.err.puts(": ");
+    std.err.puts(err.message);
+    std.err.puts("\n");
+    std.err.puts(
+      err.stack
+        .split("\n")
+        .map((line) => line.replace(/^\s+/, "  "))
+        .join("\n")
+        .replace(/\s+$/, "")
+    );
+
+    const normalProps = new Set(["name", "message", "stack"]);
+
+    let extraProps: Array<string> = [];
+    try {
+      extraProps = Object.getOwnPropertyNames(err).filter(
+        (name) => !normalProps.has(name)
+      );
+    } catch (err) {
+      // ignored
+    }
+
+    if (extraProps.length > 0) {
+      const propsObj = {};
+      for (const key of extraProps) {
+        propsObj[key] = err[key];
+      }
+      std.err.puts(" ");
+      std.err.puts(inspect(propsObj, inspectOptionsForPrint));
+    }
+
+    std.err.puts("\n");
+  } else {
+    std.err.puts("Non-error value was thrown: ");
+    std.err.puts(inspect(err, inspectOptionsForPrint));
+    std.err.puts("\n");
+  }
+
+  std.exit(1);
+}

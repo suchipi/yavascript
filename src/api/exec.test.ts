@@ -47,10 +47,8 @@ test("exec false - string", async () => {
     code: 1,
     error: false,
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js)
-    at <eval> (<evalScript>)
-
-`,
+  at exec (yavascript-internal.js)
+  at <eval> (<evalScript>) ${inspect({ status: 1 })}\n`,
     stdout: "",
   });
 });
@@ -61,10 +59,8 @@ test("exec false - array", async () => {
     code: 1,
     error: false,
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js)
-    at <eval> (<evalScript>)
-
-`,
+  at exec (yavascript-internal.js)
+  at <eval> (<evalScript>) ${inspect({ status: 1 })}\n`,
     stdout: "",
   });
 });
@@ -195,11 +191,9 @@ test("$ false", async () => {
     error: false,
     stdout: "",
     stderr: `Error: Command failed: [\"false\"]
-    at exec (yavascript-internal.js)
-    at $ (yavascript-internal.js)
-    at <eval> (<evalScript>)
-
-`,
+  at exec (yavascript-internal.js)
+  at $ (yavascript-internal.js)
+  at <eval> (<evalScript>) ${inspect({ status: 1 })}\n`,
   });
 });
 

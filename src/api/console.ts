@@ -1,12 +1,5 @@
 import * as std from "std";
-
-const inspectOptions = {
-  all: true,
-  maxDepth: 8,
-  noAmp: true,
-  colours: true,
-  indent: "  ",
-};
+import inspectOptionsForPrint from "../inspect-options-for-print";
 
 const makeInspectLog =
   (file: std.FILE) =>
@@ -22,7 +15,7 @@ const makeInspectLog =
         str = arg;
       } else {
         try {
-          str = inspect(arg, inspectOptions);
+          str = inspect(arg, inspectOptionsForPrint);
         } catch (err) {
           try {
             std.err.puts((err as any).message + "\n");
@@ -39,6 +32,7 @@ const makeInspectLog =
     file.puts("\n");
   };
 
+// To overwrite the quickjs console object
 export const console = {
   log: makeInspectLog(std.out),
   info: makeInspectLog(std.out),
