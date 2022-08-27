@@ -1,5 +1,5 @@
 ///<reference types="@test-it/core/globals" />
-import { evaluate } from "../test-helpers";
+import { evaluate, inspect } from "../test-helpers";
 
 test("console.log string", async () => {
   const result = await evaluate(`console.log("hi");`);
@@ -47,7 +47,7 @@ test("console.log object", async () => {
     code: 0,
     error: false,
     stderr: "",
-    stdout: "{\n  hi: true\n}\n",
+    stdout: inspect({ hi: true }) + "\n",
   });
 });
 
@@ -57,7 +57,7 @@ test("console.info object", async () => {
     code: 0,
     error: false,
     stderr: "",
-    stdout: "{\n  hi: true\n}\n",
+    stdout: inspect({ hi: true }) + "\n",
   });
 });
 
@@ -66,7 +66,7 @@ test("console.warn object", async () => {
   expect(result).toEqual({
     code: 0,
     error: false,
-    stderr: "{\n  hi: true\n}\n",
+    stderr: inspect({ hi: true }) + "\n",
     stdout: "",
   });
 });
@@ -76,7 +76,7 @@ test("console.error object", async () => {
   expect(result).toEqual({
     code: 0,
     error: false,
-    stderr: "{\n  hi: true\n}\n",
+    stderr: inspect({ hi: true }) + "\n",
     stdout: "",
   });
 });
@@ -87,7 +87,7 @@ test("console.log multiple", async () => {
     code: 0,
     error: false,
     stderr: "",
-    stdout: "hi {\n  hi: true\n} hi again\n",
+    stdout: "hi " + inspect({ hi: true }) + " hi again\n",
   });
 });
 
@@ -99,7 +99,7 @@ test("console.info multiple", async () => {
     code: 0,
     error: false,
     stderr: "",
-    stdout: "hi {\n  hi: true\n} hi again\n",
+    stdout: "hi " + inspect({ hi: true }) + " hi again\n",
   });
 });
 
@@ -110,7 +110,7 @@ test("console.warn multiple", async () => {
   expect(result).toEqual({
     code: 0,
     error: false,
-    stderr: "hi {\n  hi: true\n} hi again\n",
+    stderr: "hi " + inspect({ hi: true }) + " hi again\n",
     stdout: "",
   });
 });
@@ -122,7 +122,7 @@ test("console.error multiple", async () => {
   expect(result).toEqual({
     code: 0,
     error: false,
-    stderr: "hi {\n  hi: true\n} hi again\n",
+    stderr: "hi " + inspect({ hi: true }) + " hi again\n",
     stdout: "",
   });
 });

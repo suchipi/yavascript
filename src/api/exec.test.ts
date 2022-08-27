@@ -121,9 +121,9 @@ test("exec with captureOutput true", async () => {
     stderr: "",
     stdout:
       inspect({
-        status: 0,
-        stderr: "",
         stdout: "hi there\n",
+        stderr: "",
+        status: 0,
       }) + "\n",
   });
 });
@@ -166,9 +166,9 @@ test("$ echo hi - string", async () => {
     stderr: "",
     stdout:
       inspect({
-        status: 0,
-        stderr: "",
         stdout: "hi\n",
+        stderr: "",
+        status: 0,
       }) + "\n",
   });
 });
@@ -181,9 +181,9 @@ test("$ echo hi - array", async () => {
     stderr: "",
     stdout:
       inspect({
-        status: 0,
-        stderr: "",
         stdout: "hi\n",
+        stderr: "",
+        status: 0,
       }) + "\n",
   });
 });

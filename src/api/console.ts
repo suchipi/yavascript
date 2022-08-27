@@ -18,16 +18,21 @@ const makeInspectLog =
       const arg = args[i];
 
       let str: string;
-      try {
-        str = inspect(arg, inspectOptions);
-      } catch (err) {
+      if (typeof arg === "string") {
+        str = arg;
+      } else {
         try {
-          std.err.puts((err as any).message + "\n");
+          str = inspect(arg, inspectOptions);
         } catch (err) {
-          // I give up
+          try {
+            std.err.puts((err as any).message + "\n");
+          } catch (err) {
+            // I give up
+          }
+          str = String(arg);
         }
-        str = String(arg);
       }
+
       file.puts(str);
     }
 
