@@ -5,6 +5,7 @@
   "author": "Lily Scott <me@suchipi.com>",
   "license": "MIT",
   "devDependencies": {
+    "@suchipi/print": "^2.2.0",
     "@test-it/cli": "^0.7.2",
     "@test-it/core": "^0.7.2",
     "@types/minimatch": "^3.0.5",
@@ -21,7 +22,6 @@
   "dependencies": {
     "kleur": "^4.1.5",
     "minimatch": "^5.1.0",
-    "print": "^1.2.0",
     "strip-ansi": "^6.0.1"
   },
   "prettier": {}

@@ -1,7 +1,6 @@
 import * as std from "std";
 import * as os from "os";
 import { parseArgString } from "./parseArgString";
-import { inspect } from "./inspect";
 
 let logging = false;
 

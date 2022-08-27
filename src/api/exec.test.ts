@@ -1,6 +1,10 @@
 ///<reference types="@test-it/core/globals" />
-import { evaluate, binaryPath, type EvaluateResult } from "../test-helpers";
-import { inspect } from "./inspect";
+import {
+  evaluate,
+  binaryPath,
+  type EvaluateResult,
+  inspect,
+} from "../test-helpers";
 
 function cleanStack(input: string): string {
   return input.replace(

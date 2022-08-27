@@ -1,5 +1,12 @@
 import * as std from "std";
-import { inspect } from "./inspect";
+
+const inspectOptions = {
+  all: true,
+  maxDepth: 8,
+  noAmp: true,
+  colours: true,
+  indent: "  ",
+};
 
 const makeInspectLog =
   (file: std.FILE) =>
@@ -12,7 +19,7 @@ const makeInspectLog =
 
       let str: string;
       try {
-        str = inspect(arg);
+        str = inspect(arg, inspectOptions);
       } catch (err) {
         try {
           std.err.puts((err as any).message + "\n");

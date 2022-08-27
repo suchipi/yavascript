@@ -1,6 +1,5 @@
 ///<reference types="@test-it/core/globals" />
-import { evaluate, binaryPath } from "../test-helpers";
-import { inspect } from "./inspect";
+import { evaluate, binaryPath, inspect } from "../test-helpers";
 
 test("reading env", async () => {
   const result = await evaluate(`env.BLAH_BLAH`, {

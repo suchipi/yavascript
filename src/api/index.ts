@@ -25,7 +25,6 @@ import {
 } from "./paths";
 import { glob } from "./glob";
 import { isGitignored, repoRoot } from "./repo";
-import { inspect } from "./inspect";
 import {
   quote,
   stripAnsi,
@@ -89,7 +88,6 @@ export function installApi(target: typeof globalThis) {
     isGitignored,
     repoRoot,
 
-    inspect,
     quote,
     stripAnsi,
     bgBlack,

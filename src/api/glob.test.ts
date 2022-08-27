@@ -1,7 +1,6 @@
 ///<reference types="@test-it/core/globals" />
 import path from "path";
-import { evaluate } from "../test-helpers";
-import { inspect } from "./inspect";
+import { evaluate, inspect } from "../test-helpers";
 
 test("sample glob", async () => {
   const dir = path.join(__dirname, "test_fixtures/glob 1");

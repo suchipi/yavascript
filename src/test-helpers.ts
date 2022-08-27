@@ -1,5 +1,6 @@
 import { spawn, Options as SpawnOptions } from "first-base";
 import path from "path";
+import print from "@suchipi/print";
 
 var binaryPath: string;
 if (process.platform === "win32") {
@@ -44,4 +45,15 @@ export async function evaluate(
   const runContext = spawn(binaryPath, ["-e", code], options);
   await runContext.completion;
   return runContext.result;
+}
+
+export function inspect(value: any): string {
+  // options to inspect here match what is given to console.log
+  return print(value, {
+    all: true,
+    maxDepth: 8,
+    noAmp: true,
+    colours: true,
+    indent: "  ",
+  });
 }

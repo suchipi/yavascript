@@ -404,15 +404,6 @@ declare function glob(
 declare const echo: typeof console.log;
 
 // ---------------
-// --- inspect ---
-// ---------------
-
-/**
- * Convert a value to a string, using the same logic as `echo` and `console.log`.
- */
-declare function inspect(value: any): string;
-
-// ---------------
 // --- strings ---
 // ---------------
 
