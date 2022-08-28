@@ -1,25 +1,5 @@
 ///<reference types="@test-it/core/globals" />
-import {
-  evaluate,
-  binaryPath,
-  type EvaluateResult,
-  inspect,
-} from "../test-helpers";
-
-function cleanStack(input: string): string {
-  return input.replace(
-    /yavascript-internal\.js:\d+/g,
-    "yavascript-internal.js"
-  );
-}
-
-function cleanResult(input: EvaluateResult): EvaluateResult {
-  return {
-    ...input,
-    stdout: cleanStack(input.stdout),
-    stderr: cleanStack(input.stderr),
-  };
-}
+import { evaluate, binaryPath, inspect, cleanResult } from "../test-helpers";
 
 test("exec true - string", async () => {
   const result = await evaluate(`exec("true")`);
@@ -104,6 +84,16 @@ test("exec with cwd", async () => {
     error: false,
     stderr: "",
     stdout: "/tmp\n",
+  });
+});
+
+test("exec with env", async () => {
+  const result = await evaluate(`exec(['env'], { env: { HI: 'yeah' } })`);
+  expect(result).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: "HI=yeah\n",
   });
 });
 

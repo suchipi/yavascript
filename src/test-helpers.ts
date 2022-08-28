@@ -52,3 +52,18 @@ export function inspect(value: any): string {
   // options to inspect here match what is given to console.log
   return print(value, inspectOptionsForPrint);
 }
+
+export function cleanStack(input: string): string {
+  return input.replace(
+    /yavascript-internal\.js:\d+/g,
+    "yavascript-internal.js"
+  );
+}
+
+export function cleanResult(input: EvaluateResult): EvaluateResult {
+  return {
+    ...input,
+    stdout: cleanStack(input.stdout),
+    stderr: cleanStack(input.stderr),
+  };
+}
