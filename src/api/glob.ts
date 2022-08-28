@@ -17,12 +17,12 @@ export function glob(
     if (pattern.startsWith("!")) {
       return {
         negated: true,
-        pattern: paths.resolve("./" + pattern.slice(1)),
+        pattern: paths.resolve("./" + pattern.slice(1), startingDir),
       };
     } else {
       return {
         negated: false,
-        pattern: paths.resolve("./" + pattern),
+        pattern: paths.resolve("./" + pattern, startingDir),
       };
     }
   });
@@ -76,8 +76,12 @@ export function glob(
             find(fullName);
           }
         }
-      } catch (err) {
-        // ignore I/O and access errors when searching
+      } catch (err: any) {
+        try {
+          console.warn(`glob encountered error: ${err.message}`);
+        } catch (err2) {
+          // ignore
+        }
       }
     }
   }
