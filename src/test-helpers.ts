@@ -3,34 +3,25 @@ import path from "path";
 import print from "@suchipi/print";
 import inspectOptionsForPrint from "./inspect-options-for-print";
 
-var binaryPath: string;
-if (process.platform === "win32") {
-  binaryPath = path.resolve(
-    __dirname,
-    "..",
-    "bin",
-    "windows",
-    "yavascript.exe"
-  );
-} else if (process.platform === "darwin") {
-  if (process.arch.startsWith("arm")) {
-    binaryPath = path.resolve(
-      __dirname,
-      "..",
-      "bin",
-      "darwin-arm",
-      "yavascript"
-    );
+function getBinaryPath(platform: string) {
+  if (platform === "win32") {
+    return path.resolve(__dirname, "..", "bin", "windows", "yavascript.exe");
+  } else if (platform === "darwin") {
+    if (process.arch.startsWith("arm")) {
+      return path.resolve(__dirname, "..", "bin", "darwin-arm", "yavascript");
+    } else {
+      return path.resolve(__dirname, "..", "bin", "darwin", "yavascript");
+    }
+  } else if (platform === "linux") {
+    return path.resolve(__dirname, "..", "bin", "linux", "yavascript");
   } else {
-    binaryPath = path.resolve(__dirname, "..", "bin", "darwin", "yavascript");
+    throw new Error("Unsupported platform: " + platform);
   }
-} else if (process.platform === "linux") {
-  binaryPath = path.resolve(__dirname, "..", "bin", "linux", "yavascript");
-} else {
-  throw new Error("Unsupported platform: " + process.platform);
 }
 
-export { binaryPath };
+var binaryPath = getBinaryPath(process.platform);
+
+export { binaryPath, getBinaryPath };
 
 export type EvaluateResult = {
   stdout: string;
