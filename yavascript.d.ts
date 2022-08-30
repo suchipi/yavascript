@@ -248,6 +248,12 @@ declare const paths: {
    * resolved relative to. If unspecified, it defaults to `pwd()`.
    */
   resolve(path: string, from?: string): string;
+
+  /**
+   * Returns whether the path starts with either a leading slash or a windows
+   * drive letter.
+   */
+  isAbsolute(path: string): boolean;
 };
 
 /**

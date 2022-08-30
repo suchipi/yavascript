@@ -107,6 +107,21 @@ export const paths = {
 
     return newParts.join(paths.OS_PATH_SEPARATOR);
   },
+
+  isAbsolute(path: string): boolean {
+    const parts = paths.split(path);
+    const firstPart = parts[0];
+
+    // empty first component indicates that path starts with leading slash
+    if (firstPart === "") return true;
+
+    // windows drive
+    if (/^[A-Za-z]:/.test(firstPart)) return true;
+
+    // TODO: windows UNC paths (not supported very well by these path APIs at all, yet)
+
+    return false;
+  },
 };
 
 // Not public API; exported for __filename, which *is* a public API

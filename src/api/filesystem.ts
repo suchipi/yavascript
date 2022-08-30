@@ -50,19 +50,23 @@ function isDir_internal(
   linkDepth: number,
   originalPath: string
 ): boolean {
-  const stats = os.stat(path);
+  try {
+    const stats = os.lstat(path);
 
-  if (Boolean(os.S_IFLNK & stats.mode)) {
-    if (linkDepth > isDir.symlinkLimit) {
-      throw new Error(
-        `isDir followed ${isDir.symlinkLimit} symlinks trying to see if ${originalPath} was a directory. Something's probably not quite right. If you're sure you wanna keep going, set isDir.symlinkLimit to a higher number, or Infinity.`
-      );
+    if (Boolean(os.S_IFLNK & stats.mode)) {
+      if (linkDepth > isDir.symlinkLimit) {
+        throw new Error(
+          `isDir followed ${isDir.symlinkLimit} symlinks trying to see if ${originalPath} was a directory. Something's probably not quite right. If you're sure you wanna keep going, set isDir.symlinkLimit to a higher number, or Infinity.`
+        );
+      }
+
+      return isDir_internal(readlink(path), linkDepth + 1, originalPath);
     }
 
-    return isDir_internal(readlink(path), linkDepth + 1, originalPath);
+    return Boolean(os.S_IFDIR & stats.mode);
+  } catch {
+    return false;
   }
-
-  return Boolean(os.S_IFDIR & stats.mode);
 }
 
 export function isDir(path: string): boolean {
@@ -72,8 +76,12 @@ export function isDir(path: string): boolean {
 isDir.symlinkLimit = 100;
 
 export function isLink(path: string): boolean {
-  const stats = os.stat(path);
-  return Boolean(os.S_IFLNK & stats.mode);
+  try {
+    const stats = os.lstat(path);
+    return Boolean(os.S_IFLNK & stats.mode);
+  } catch {
+    return false;
+  }
 }
 
 export function remove(path: string): void {
@@ -100,20 +108,21 @@ export function exists(path: string): boolean {
   }
 }
 
+// TODO: change to recursive and share symlink depth with isDir
 function getPathInfo(path: string) {
-  if (!exists(path)) {
-    return "nonexistent";
-  }
-
-  if (isDir("path")) {
-    return "dir";
-  }
-
   if (isLink(path)) {
-    // isDir returns true for symlinks pointing to dirs
-    return "link-to-file";
+    try {
+      const linkedPath = os.realpath(path);
+      if (!exists(linkedPath)) return "nonexistent";
+      if (isDir(linkedPath)) return "dir";
+      return "file";
+    } catch {
+      return "nonexistent";
+    }
   }
 
+  if (!exists(path)) return "nonexistent";
+  if (isDir(path)) return "dir";
   return "file";
 }
 
@@ -134,8 +143,7 @@ export function ensureDir(path: string) {
       case "dir": {
         break;
       }
-      case "file":
-      case "link-to-file": {
+      case "file": {
         throw new Error(
           `Wanted to ensure that the directory path ${path} existed, but ${pathSoFar} was a file, not a directory`
         );
@@ -155,7 +163,7 @@ function copyRaw(from: string, to: string): void {
     filesToCloseLater.push(toFile);
 
     const chunkSize = 256 * 1024; // 256KB
-    const buffer = new Uint8Array(chunkSize);
+    const buffer = new ArrayBuffer(chunkSize);
 
     let pos = 0;
     while (!fromFile.eof()) {
@@ -177,6 +185,7 @@ function copyRaw(from: string, to: string): void {
 
 export type CopyOptions = {
   whenTargetExists?: "overwrite" | "skip" | "error";
+  trace?: (...args: Array<any>) => void;
 };
 
 export function copy(
@@ -191,9 +200,12 @@ export function copy(
   const sourceInfo = getPathInfo(from);
   const targetInfo = getPathInfo(to);
 
+  if (options.trace) {
+    options.trace.call(null, "copying", { from, to });
+  }
+
   switch (`${sourceInfo} -> ${targetInfo}`) {
-    case "dir -> file":
-    case "dir -> link-to-file": {
+    case "dir -> file": {
       // Invalid
       throw new Error(
         `Attempting to copy folder to path where file already exists: ${to}`
@@ -211,12 +223,13 @@ export function copy(
       copyRaw(from, to);
       return;
     }
-    case "file -> file":
-    case "file -> link-to-file": {
+    case "file -> file": {
       // Either overwrite, error, or skip, depending on whenTargetExists
       if (options.whenTargetExists === "error") {
         throw new Error(
-          `File already exists: ${to}. To skip or overwrite existing files, pass 'whenTargetExists' as an option to 'copy', with a value of either "skip" or "overwrite".`
+          `File already exists: ${JSON.stringify(
+            to
+          )}. To skip or overwrite existing files, pass 'whenTargetExists' as an option to 'copy', with a value of either "skip" or "overwrite".`
         );
       }
 
@@ -253,6 +266,17 @@ export function copy(
       }
       return;
     }
+    case "nonexistent -> nonexistent":
+    case "nonexistent -> dir":
+    case "nonexistent -> file": {
+      const error: any = new Error(
+        `Attempting to copy a nonexistent file (from = ${from}, to = ${to})`
+      );
+      error.from = from;
+      error.to = to;
+      throw error;
+    }
+
     default: {
       throw new Error(
         `Unhandled situation in 'copy' function: ${JSON.stringify({
