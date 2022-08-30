@@ -6,6 +6,7 @@ export default function helpTarget() {
   std.err.puts(`yavascript ${pkg.version}
 
 Usage: One of these:
+  yavascript
   yavascript <path/to/file-to-run.js>
   yavascript -e '<code-to-run>'
   yavascript --eval '<code-to-run>'

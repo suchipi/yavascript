@@ -9,6 +9,7 @@ import versionTarget from "./targets/version";
 import licenseTarget from "./targets/license";
 import runFileTarget from "./targets/run-file";
 import evalTarget from "./targets/eval";
+import replTarget from "./targets/repl";
 
 function main() {
   if (scriptArgs.includes("-h") || scriptArgs.includes("--help")) {
@@ -43,10 +44,7 @@ function main() {
     const fileToRun = scriptArgs[1];
 
     if (fileToRun == null) {
-      std.err.puts(
-        `Please specify a file to run. For example: ${scriptArgs[0]} ./my-script.js\nFor more info, run ${scriptArgs[0]} --help.\n`
-      );
-      std.exit(1);
+      replTarget();
     } else {
       runFileTarget(fileToRun);
     }
