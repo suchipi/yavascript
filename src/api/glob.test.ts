@@ -147,7 +147,7 @@ test("error reading dead link does not stop search", async () => {
     error: false,
     stderr: `glob encountered error: No such file or directory (errno = 2, path = ${
       symlinksDir + "/dead-link"
-    })\n`,
+    }, linkpath = ./nowhere-real)\n`,
     stdout:
       inspect(expected.map((filename) => path.join(symlinksDir, filename))) +
       "\n",
