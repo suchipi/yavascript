@@ -1,5 +1,3 @@
-import inspectOptionsForPrint from "../../inspect-options-for-print";
-
 /*
  * QuickJS Read Eval Print Loop (modified)
  *
@@ -27,6 +25,8 @@ import inspectOptionsForPrint from "../../inspect-options-for-print";
  */
 import * as std from "std";
 import * as os from "os";
+import printError from "../../print-error";
+import inspectOptionsForPrint from "../../inspect-options-for-print";
 
 export function startRepl() {
   /* add 'os' and 'std' bindings */
@@ -998,13 +998,9 @@ export function startRepl() {
       /* set the last result */
       globalThis._ = result;
     } catch (error) {
+      globalThis._error = error;
       std.puts(colors[styles.error_msg]);
-      if (error instanceof Error) {
-        console.log(error);
-      } else {
-        std.puts("Non-error value was thrown: ");
-        console.log(error);
-      }
+      printError(error, std.out);
       std.puts(colors.none);
     }
   }
