@@ -3,10 +3,15 @@ import minimatch from "minimatch";
 import { exists } from "./filesystem";
 import { pwd, paths } from "./paths";
 
+export type GlobOptions = {
+  followSymlinks?: boolean;
+  trace?: (...args: Array<any>) => void;
+};
+
 export function glob(
   dir: string,
   patterns: Array<string>,
-  { followSymlinks = false } = {}
+  options: GlobOptions = {}
 ): Array<string> {
   if (!exists(dir)) {
     throw new Error(`No such directory: ${dir} (from ${pwd()})`);
@@ -34,16 +39,31 @@ export function glob(
   const matches: Array<string> = [];
 
   function find(searchDir: string) {
+    if (options.trace) {
+      options.trace.call(null, `reading children of ${searchDir}`);
+    }
     const children = os.readdir(searchDir);
+
+    if (options.trace) {
+      options.trace.call(
+        null,
+        `found ${children.length} children of ${searchDir}`
+      );
+    }
+
     for (const child of children) {
       if (child === ".") continue;
       if (child === "..") continue;
 
       const fullName = searchDir + "/" + child;
 
+      if (options.trace) {
+        options.trace.call(null, `checking ${fullName}`);
+      }
+
       try {
         let stat: os.Stats;
-        if (followSymlinks) {
+        if (options.followSymlinks) {
           stat = os.stat(fullName);
         } else {
           stat = os.lstat(fullName);
@@ -52,7 +72,19 @@ export function glob(
         if (
           allPatterns.every(({ pattern, negated }) => {
             let didMatch = minimatch(fullName, pattern);
+
+            if (options.trace) {
+              const info = JSON.stringify({
+                didMatch,
+                pattern,
+                negated,
+                fullName,
+              });
+              options.trace.call(null, `match info: ${info}`);
+            }
+
             if (negated) didMatch = !didMatch;
+
             return didMatch;
           })
         ) {
@@ -70,15 +102,24 @@ export function glob(
           // took care of all of this for us... because you end up needing
           // to be aware of the glob pattern parsing and syntax in order to
           // know the optimal traversal path.
-          if (
-            !negatedPatterns.some((pattern) => minimatch(fullName, pattern))
-          ) {
+          if (negatedPatterns.some((pattern) => minimatch(fullName, pattern))) {
+            if (options.trace) {
+              options.trace.call(
+                null,
+                `not traversing deeper into dir as it matches a negated pattern: ${fullName}`
+              );
+            }
+          } else {
             find(fullName);
           }
         }
       } catch (err: any) {
         try {
-          console.warn(`glob encountered error: ${err.message}`);
+          const message = `glob encountered error: ${err.message}`;
+          if (options.trace) {
+            options.trace.call(null, message);
+          }
+          console.warn(message);
         } catch (err2) {
           // ignore
         }

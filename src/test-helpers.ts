@@ -3,7 +3,8 @@ import path from "path";
 import print from "@suchipi/print";
 import inspectOptionsForPrint from "./inspect-options-for-print";
 
-const rootDir = path.resolve(__dirname, "..");
+export const rootDir = (...parts: Array<string>) =>
+  path.resolve(__dirname, "..", ...parts);
 
 function getBinaryPath(platform: string) {
   if (platform === "win32") {
@@ -49,7 +50,7 @@ export function inspect(value: any): string {
 export function cleanOutput(input: string): string {
   return input
     .replace(/yavascript-internal\.js:\d+/g, "yavascript-internal.js")
-    .replace(new RegExp(rootDir, "g"), "<rootDir>");
+    .replace(new RegExp(rootDir(), "g"), "<rootDir>");
 }
 
 export function cleanResult(input: EvaluateResult): EvaluateResult {

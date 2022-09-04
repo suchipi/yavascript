@@ -1,16 +1,14 @@
 ///<reference types="@test-it/core/globals" />
-import path from "path";
-import { evaluate, inspect } from "../test-helpers";
+import { evaluate, inspect, cleanResult, rootDir } from "../test-helpers";
 
-const globDir = path.join(__dirname, "test_fixtures/glob");
-const symlinksDir = path.join(__dirname, "test_fixtures/symlinks");
+const globDir = rootDir("src/api/test_fixtures/glob");
+const symlinksDir = rootDir("src/api/test_fixtures/symlinks");
 
 function testGlob(
   name: string,
   dir: string,
   patterns: Array<string>,
   expected: Array<string>,
-  options?: { followSymlinks?: boolean },
   testFn?: (descr: string, body: () => any) => any
 ) {
   // So you can do test.only, etc
@@ -19,20 +17,15 @@ function testGlob(
   testFn(name, async () => {
     const args: Array<any> = [dir, patterns];
 
-    if (options) {
-      args.push(options);
-    }
-
     const result = await evaluate(
       `glob(${args.map((arg) => JSON.stringify(arg)).join(", ")})`
     );
 
-    expect(result).toEqual({
+    expect(cleanResult(result)).toEqual({
       code: 0,
       error: false,
       stderr: "",
-      stdout:
-        inspect(expected.map((filename) => path.join(dir, filename))) + "\n",
+      stdout: inspect(expected) + "\n",
     });
   });
 }
@@ -41,7 +34,14 @@ testGlob(
   "simple glob",
   globDir,
   ["*"],
-  ["hi.something.js", "potato", "hi.js", "hi.txt", "cabana", "hi"]
+  [
+    "<rootDir>/src/api/test_fixtures/glob/hi.something.js",
+    "<rootDir>/src/api/test_fixtures/glob/potato",
+    "<rootDir>/src/api/test_fixtures/glob/hi.js",
+    "<rootDir>/src/api/test_fixtures/glob/hi.txt",
+    "<rootDir>/src/api/test_fixtures/glob/cabana",
+    "<rootDir>/src/api/test_fixtures/glob/hi",
+  ]
 );
 
 testGlob(
@@ -49,17 +49,17 @@ testGlob(
   globDir,
   ["**/*"],
   [
-    "hi.something.js",
-    "potato",
-    "potato/banana",
-    "potato/banana/yo.txt",
-    "potato/banana/yo.js",
-    "potato/eggplant",
-    "hi.js",
-    "hi.txt",
-    "cabana",
-    "hi",
-    "hi/there.txt",
+    "<rootDir>/src/api/test_fixtures/glob/hi.something.js",
+    "<rootDir>/src/api/test_fixtures/glob/potato",
+    "<rootDir>/src/api/test_fixtures/glob/potato/banana",
+    "<rootDir>/src/api/test_fixtures/glob/potato/banana/yo.txt",
+    "<rootDir>/src/api/test_fixtures/glob/potato/banana/yo.js",
+    "<rootDir>/src/api/test_fixtures/glob/potato/eggplant",
+    "<rootDir>/src/api/test_fixtures/glob/hi.js",
+    "<rootDir>/src/api/test_fixtures/glob/hi.txt",
+    "<rootDir>/src/api/test_fixtures/glob/cabana",
+    "<rootDir>/src/api/test_fixtures/glob/hi",
+    "<rootDir>/src/api/test_fixtures/glob/hi/there.txt",
   ]
 );
 
@@ -67,14 +67,22 @@ testGlob(
   "glob targeting specific filetypes",
   globDir,
   ["**/*.txt"],
-  ["potato/banana/yo.txt", "hi.txt", "hi/there.txt"]
+  [
+    "<rootDir>/src/api/test_fixtures/glob/potato/banana/yo.txt",
+    "<rootDir>/src/api/test_fixtures/glob/hi.txt",
+    "<rootDir>/src/api/test_fixtures/glob/hi/there.txt",
+  ]
 );
 
 testGlob(
   "glob targeting specific filetypes 2",
   globDir,
   ["**/*.js"],
-  ["hi.something.js", "potato/banana/yo.js", "hi.js"]
+  [
+    "<rootDir>/src/api/test_fixtures/glob/hi.something.js",
+    "<rootDir>/src/api/test_fixtures/glob/potato/banana/yo.js",
+    "<rootDir>/src/api/test_fixtures/glob/hi.js",
+  ]
 );
 
 testGlob(
@@ -82,12 +90,12 @@ testGlob(
   globDir,
   ["**/*.{js,txt}"],
   [
-    "hi.something.js",
-    "potato/banana/yo.txt",
-    "potato/banana/yo.js",
-    "hi.js",
-    "hi.txt",
-    "hi/there.txt",
+    "<rootDir>/src/api/test_fixtures/glob/hi.something.js",
+    "<rootDir>/src/api/test_fixtures/glob/potato/banana/yo.txt",
+    "<rootDir>/src/api/test_fixtures/glob/potato/banana/yo.js",
+    "<rootDir>/src/api/test_fixtures/glob/hi.js",
+    "<rootDir>/src/api/test_fixtures/glob/hi.txt",
+    "<rootDir>/src/api/test_fixtures/glob/hi/there.txt",
   ]
 );
 
@@ -96,14 +104,14 @@ testGlob(
   globDir,
   ["**/*", "!**/*.js"],
   [
-    "potato",
-    "potato/banana",
-    "potato/banana/yo.txt",
-    "potato/eggplant",
-    "hi.txt",
-    "cabana",
-    "hi",
-    "hi/there.txt",
+    "<rootDir>/src/api/test_fixtures/glob/potato",
+    "<rootDir>/src/api/test_fixtures/glob/potato/banana",
+    "<rootDir>/src/api/test_fixtures/glob/potato/banana/yo.txt",
+    "<rootDir>/src/api/test_fixtures/glob/potato/eggplant",
+    "<rootDir>/src/api/test_fixtures/glob/hi.txt",
+    "<rootDir>/src/api/test_fixtures/glob/cabana",
+    "<rootDir>/src/api/test_fixtures/glob/hi",
+    "<rootDir>/src/api/test_fixtures/glob/hi/there.txt",
   ]
 );
 
@@ -112,8 +120,8 @@ testGlob(
   globDir,
   ["**/*.js", "**/hi*"],
   [
-    "hi.something.js",
-    "hi.js",
+    "<rootDir>/src/api/test_fixtures/glob/hi.something.js",
+    "<rootDir>/src/api/test_fixtures/glob/hi.js",
     // Note that hi.txt is not present even though it matches the second pattern
   ]
 );
@@ -123,10 +131,9 @@ testGlob(
   globDir,
   ["**/{hi,yo}*", "!**/*.js"],
   [
-    "potato/banana/yo.txt",
-    "hi.txt",
-    // should "hi" be here? I guess so
-    "hi",
+    "<rootDir>/src/api/test_fixtures/glob/potato/banana/yo.txt",
+    "<rootDir>/src/api/test_fixtures/glob/hi.txt",
+    "<rootDir>/src/api/test_fixtures/glob/hi",
   ]
 );
 
@@ -136,21 +143,17 @@ test("error reading dead link does not stop search", async () => {
   );
 
   const expected = [
-    "some-folder",
-    "link-to-file",
-    "link-to-folder",
-    "some-file",
+    "<rootDir>/src/api/test_fixtures/symlinks/some-folder",
+    "<rootDir>/src/api/test_fixtures/symlinks/link-to-file",
+    "<rootDir>/src/api/test_fixtures/symlinks/link-to-folder",
+    "<rootDir>/src/api/test_fixtures/symlinks/some-file",
   ];
 
-  expect(result).toEqual({
+  expect(cleanResult(result)).toEqual({
     code: 0,
     error: false,
-    stderr: `glob encountered error: No such file or directory (errno = 2, path = ${
-      symlinksDir + "/dead-link"
-    }, linkpath = ./nowhere-real)\n`,
-    stdout:
-      inspect(expected.map((filename) => path.join(symlinksDir, filename))) +
-      "\n",
+    stderr: `glob encountered error: No such file or directory (errno = 2, path = <rootDir>/src/api/test_fixtures/symlinks/dead-link, linkpath = ./nowhere-real)\n`,
+    stdout: inspect(expected) + "\n",
   });
 });
 
@@ -158,14 +161,20 @@ testGlob(
   "doesn't read symlinks if you don't pass followSymlinks: true",
   symlinksDir,
   ["**/*"],
-  ["some-folder", "link-to-file", "link-to-folder", "dead-link", "some-file"]
+  [
+    "<rootDir>/src/api/test_fixtures/symlinks/some-folder",
+    "<rootDir>/src/api/test_fixtures/symlinks/link-to-file",
+    "<rootDir>/src/api/test_fixtures/symlinks/link-to-folder",
+    "<rootDir>/src/api/test_fixtures/symlinks/dead-link",
+    "<rootDir>/src/api/test_fixtures/symlinks/some-file",
+  ]
 );
 
 testGlob(
   "you have to specify leading dot to get stuff starting with a dot",
   symlinksDir,
   ["**/.*"],
-  ["some-folder/.gitkeep"]
+  ["<rootDir>/src/api/test_fixtures/symlinks/some-folder/.gitkeep"]
 );
 
 testGlob(
@@ -173,11 +182,68 @@ testGlob(
   symlinksDir,
   ["**/{.,}*"],
   [
-    "some-folder",
-    "some-folder/.gitkeep",
-    "link-to-file",
-    "link-to-folder",
-    "dead-link",
-    "some-file",
+    "<rootDir>/src/api/test_fixtures/symlinks/some-folder",
+    "<rootDir>/src/api/test_fixtures/symlinks/some-folder/.gitkeep",
+    "<rootDir>/src/api/test_fixtures/symlinks/link-to-file",
+    "<rootDir>/src/api/test_fixtures/symlinks/link-to-folder",
+    "<rootDir>/src/api/test_fixtures/symlinks/dead-link",
+    "<rootDir>/src/api/test_fixtures/symlinks/some-file",
   ]
 );
+
+test("using trace", async () => {
+  const result = await evaluate(
+    `glob(${JSON.stringify(
+      globDir
+    )}, ["**/*.txt", "!**/potato/**"], { trace: console.error })`
+  );
+
+  const expectedTraceMessages = [
+    `reading children of <rootDir>/src/api/test_fixtures/glob`,
+    `found 8 children of <rootDir>/src/api/test_fixtures/glob`,
+    `checking <rootDir>/src/api/test_fixtures/glob/hi.something.js`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.something.js"}`,
+    `checking <rootDir>/src/api/test_fixtures/glob/potato`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/potato"}`,
+    `reading children of <rootDir>/src/api/test_fixtures/glob/potato`,
+    `found 4 children of <rootDir>/src/api/test_fixtures/glob/potato`,
+    `checking <rootDir>/src/api/test_fixtures/glob/potato/banana`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/potato/banana"}`,
+    `not traversing deeper into dir as it matches a negated pattern: <rootDir>/src/api/test_fixtures/glob/potato/banana`,
+    `checking <rootDir>/src/api/test_fixtures/glob/potato/eggplant`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/potato/eggplant"}`,
+    `checking <rootDir>/src/api/test_fixtures/glob/hi.js`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.js"}`,
+    `checking <rootDir>/src/api/test_fixtures/glob/hi.txt`,
+    `match info: {"didMatch":true,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.txt"}`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/potato/**","negated":true,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.txt"}`,
+    `checking <rootDir>/src/api/test_fixtures/glob/cabana`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/cabana"}`,
+    `reading children of <rootDir>/src/api/test_fixtures/glob/cabana`,
+    `found 3 children of <rootDir>/src/api/test_fixtures/glob/cabana`,
+    `checking <rootDir>/src/api/test_fixtures/glob/cabana/.gitkeep`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/cabana/.gitkeep"}`,
+    `checking <rootDir>/src/api/test_fixtures/glob/hi`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi"}`,
+    `reading children of <rootDir>/src/api/test_fixtures/glob/hi`,
+    `found 4 children of <rootDir>/src/api/test_fixtures/glob/hi`,
+    `checking <rootDir>/src/api/test_fixtures/glob/hi/there.txt`,
+    `match info: {"didMatch":true,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi/there.txt"}`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/potato/**","negated":true,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi/there.txt"}`,
+    `checking <rootDir>/src/api/test_fixtures/glob/hi/.yeah`,
+    `match info: {"didMatch":false,"pattern":"<rootDir>/src/api/test_fixtures/glob/**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi/.yeah"}`,
+    ``,
+  ].join("\n");
+
+  const expectedResult = [
+    "<rootDir>/src/api/test_fixtures/glob/hi.txt",
+    "<rootDir>/src/api/test_fixtures/glob/hi/there.txt",
+  ];
+
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: expectedTraceMessages,
+    stdout: inspect(expectedResult) + "\n",
+  });
+});
