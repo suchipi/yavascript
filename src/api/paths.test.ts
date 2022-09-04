@@ -21,9 +21,7 @@ test("cd and pwd", async () => {
 
   const result = await evaluate(script, { cwd: rootDir });
 
-  result.stdout = result.stdout.replace(new RegExp(rootDir, "g"), "<rootDir>");
-
-  expect(result).toEqual({
+  expect(cleanResult(result)).toEqual({
     code: 0,
     error: false,
     stderr: "",
@@ -46,9 +44,7 @@ test("cd affects working directory of exec", async () => {
 
   const result = await evaluate(script, { cwd: rootDir });
 
-  result.stdout = result.stdout.replace(new RegExp(rootDir, "g"), "<rootDir>");
-
-  expect(result).toEqual({
+  expect(cleanResult(result)).toEqual({
     code: 0,
     error: false,
     stderr: "",
@@ -81,9 +77,7 @@ test("realpath resolution behavior", async () => {
 
   const result = await evaluate(script, { cwd: rootDir });
 
-  result.stdout = result.stdout.replace(new RegExp(rootDir, "g"), "<rootDir>");
-
-  expect(result).toEqual({
+  expect(cleanResult(result)).toEqual({
     code: 0,
     error: false,
     stderr: "",

@@ -3,6 +3,8 @@ import path from "path";
 import print from "@suchipi/print";
 import inspectOptionsForPrint from "./inspect-options-for-print";
 
+const rootDir = path.resolve(__dirname, "..");
+
 function getBinaryPath(platform: string) {
   if (platform === "win32") {
     return path.resolve(__dirname, "..", "bin", "windows", "yavascript.exe");
@@ -44,17 +46,16 @@ export function inspect(value: any): string {
   return print(value, inspectOptionsForPrint);
 }
 
-export function cleanStack(input: string): string {
-  return input.replace(
-    /yavascript-internal\.js:\d+/g,
-    "yavascript-internal.js"
-  );
+export function cleanOutput(input: string): string {
+  return input
+    .replace(/yavascript-internal\.js:\d+/g, "yavascript-internal.js")
+    .replace(new RegExp(rootDir, "g"), "<rootDir>");
 }
 
 export function cleanResult(input: EvaluateResult): EvaluateResult {
   return {
     ...input,
-    stdout: cleanStack(input.stdout),
-    stderr: cleanStack(input.stderr),
+    stdout: cleanOutput(input.stdout),
+    stderr: cleanOutput(input.stderr),
   };
 }
