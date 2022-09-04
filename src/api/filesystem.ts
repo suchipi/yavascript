@@ -92,7 +92,6 @@ export function exists(path: string): boolean {
   }
 }
 
-// TODO: change to recursive and share symlink depth with isDir
 function getPathInfo(path: string) {
   if (isLink(path)) {
     try {
