@@ -45,40 +45,24 @@ export function writeFile(path: string, data: string | ArrayBuffer): void {
   }
 }
 
-function isDir_internal(
-  path: string,
-  linkDepth: number,
-  originalPath: string
-): boolean {
+export function isDir(path: string): boolean {
   try {
     const stats = os.lstat(path);
 
-    if (Boolean(os.S_IFLNK & stats.mode)) {
-      if (linkDepth > isDir.symlinkLimit) {
-        throw new Error(
-          `isDir followed ${isDir.symlinkLimit} symlinks trying to see if ${originalPath} was a directory. Something's probably not quite right. If you're sure you wanna keep going, set isDir.symlinkLimit to a higher number, or Infinity.`
-        );
-      }
-
-      return isDir_internal(readlink(path), linkDepth + 1, originalPath);
+    if (Boolean((os.S_IFMT & stats.mode) === os.S_IFLNK)) {
+      return isDir(os.realpath(path));
     }
 
-    return Boolean(os.S_IFDIR & stats.mode);
+    return Boolean((os.S_IFMT & stats.mode) === os.S_IFDIR);
   } catch {
     return false;
   }
 }
 
-export function isDir(path: string): boolean {
-  return isDir_internal(path, 0, path);
-}
-
-isDir.symlinkLimit = 100;
-
 export function isLink(path: string): boolean {
   try {
     const stats = os.lstat(path);
-    return Boolean(os.S_IFLNK & stats.mode);
+    return Boolean((os.S_IFMT & stats.mode) === os.S_IFLNK);
   } catch {
     return false;
   }

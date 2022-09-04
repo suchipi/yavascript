@@ -142,4 +142,136 @@ test("writeFile", async () => {
 
   const content = fs.readFileSync(targetFile, "utf-8");
   expect(content).toBe("hiiii~!!! :D あ");
+
+  fs.unlinkSync(targetFile);
+});
+
+test("isDir - on dir", async () => {
+  const result = await evaluate(
+    `isDir("./src/api/test_fixtures/glob/cabana")`,
+    { cwd: rootDir }
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: inspect(true) + "\n",
+  });
+});
+
+test("isDir - on file", async () => {
+  const result = await evaluate(
+    `isDir("./src/api/test_fixtures/glob/hi.txt")`,
+    { cwd: rootDir }
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: inspect(false) + "\n",
+  });
+});
+
+test("isDir - on link to folder", async () => {
+  const result = await evaluate(
+    `isDir("./src/api/test_fixtures/symlinks/link-to-folder")`,
+    { cwd: rootDir }
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: inspect(true) + "\n",
+  });
+});
+
+test("isDir - on link to file", async () => {
+  const result = await evaluate(
+    `isDir("./src/api/test_fixtures/symlinks/link-to-file")`,
+    { cwd: rootDir }
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: inspect(false) + "\n",
+  });
+});
+
+test("isDir - on dead link", async () => {
+  const result = await evaluate(
+    `isDir("./src/api/test_fixtures/symlinks/dead-link")`,
+    { cwd: rootDir }
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: inspect(false) + "\n",
+  });
+});
+
+test("isLink - on dir", async () => {
+  const result = await evaluate(
+    `isLink("./src/api/test_fixtures/glob/cabana")`,
+    { cwd: rootDir }
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: inspect(false) + "\n",
+  });
+});
+
+test("isLink - on file", async () => {
+  const result = await evaluate(
+    `isLink("./src/api/test_fixtures/glob/hi.txt")`,
+    { cwd: rootDir }
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: inspect(false) + "\n",
+  });
+});
+
+test("isLink - on link to folder", async () => {
+  const result = await evaluate(
+    `isLink("./src/api/test_fixtures/symlinks/link-to-folder")`,
+    { cwd: rootDir }
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: inspect(true) + "\n",
+  });
+});
+
+test("isLink - on link to file", async () => {
+  const result = await evaluate(
+    `isLink("./src/api/test_fixtures/symlinks/link-to-file")`,
+    { cwd: rootDir }
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: inspect(true) + "\n",
+  });
+});
+
+test("isLink - on dead link", async () => {
+  const result = await evaluate(
+    `isLink("./src/api/test_fixtures/symlinks/dead-link")`,
+    { cwd: rootDir }
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: inspect(true) + "\n",
+  });
 });
