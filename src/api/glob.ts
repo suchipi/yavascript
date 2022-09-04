@@ -20,14 +20,20 @@ export function glob(
   const startingDir = paths.resolve(dir);
   const allPatterns = patterns.map((pattern) => {
     if (pattern.startsWith("!")) {
+      const nonNegated = pattern.slice(1);
+
       return {
         negated: true,
-        pattern: paths.resolve("./" + pattern.slice(1), startingDir),
+        pattern: paths.isAbsolute(nonNegated)
+          ? nonNegated
+          : paths.resolve("./" + nonNegated, startingDir),
       };
     } else {
       return {
         negated: false,
-        pattern: paths.resolve("./" + pattern, startingDir),
+        pattern: paths.isAbsolute(pattern)
+          ? pattern
+          : paths.resolve("./" + pattern, startingDir),
       };
     }
   });
