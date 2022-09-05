@@ -135,32 +135,73 @@ export function ensureDir(path: string) {
   }
 }
 
-function copyRaw(from: string, to: string): void {
-  const filesToCloseLater: Array<std.FILE> = [];
+function copyRaw(
+  from: string,
+  to: string,
+  trace?: (...args: Array<any>) => void
+): void {
+  let filesToCloseLater: Record<string, std.FILE> = {};
 
   try {
+    if (trace) {
+      trace("opening", from, "(mode: rb)");
+    }
     const fromFile = std.open(from, "rb");
-    filesToCloseLater.push(fromFile);
+    filesToCloseLater[from] = fromFile;
 
+    if (trace) {
+      trace("opening", to, "(mode: w)");
+    }
     const toFile = std.open(to, "w");
-    filesToCloseLater.push(toFile);
+    filesToCloseLater[to] = toFile;
 
     const chunkSize = 256 * 1024; // 256KB
     const buffer = new ArrayBuffer(chunkSize);
 
-    let pos = 0;
-    while (!fromFile.eof()) {
-      const bytesRead = fromFile.read(buffer, pos, chunkSize);
-      if (bytesRead === 0) break;
-      toFile.write(buffer, pos, bytesRead);
-      pos += bytesRead;
+    const fromSize = os.stat(from).size;
+
+    if (trace) {
+      trace("copying data", { from, to, chunkSize });
     }
+    while (!fromFile.eof()) {
+      const amountRemaining = fromSize - fromFile.tell();
+      if (trace) {
+        trace(`${amountRemaining} bytes remaining`);
+      }
+      if (amountRemaining === 0) break;
+      const amountToRead = Math.min(amountRemaining, chunkSize);
+
+      const bytesRead = fromFile.read(buffer, 0, amountToRead);
+      if (trace) {
+        trace(`read ${bytesRead} bytes into buffer`);
+      }
+      if (bytesRead === 0) break;
+      if (trace) {
+        trace(`writing ${bytesRead} bytes from buffer into file`);
+      }
+      toFile.write(buffer, 0, bytesRead);
+    }
+    if (trace) {
+      trace("reached eof");
+    }
+  } catch (err) {
+    if (trace) {
+      trace("copyRaw failed:", { from, to, err });
+    }
+    throw err;
   } finally {
     try {
-      for (const file of filesToCloseLater) {
+      for (const [fileName, file] of Object.entries(filesToCloseLater)) {
+        if (trace) {
+          trace("closing", fileName);
+        }
         file.close();
       }
+      filesToCloseLater = {};
     } catch (err) {
+      if (trace) {
+        trace("copyRaw failed to close a file:", { from, to, err });
+      }
       // ignored
     }
   }
@@ -174,7 +215,7 @@ export type CopyOptions = {
 export function copy(
   from: string,
   to: string,
-  options: CopyOptions = { whenTargetExists: "error" }
+  { whenTargetExists = "error", trace }: CopyOptions = {}
 ): void {
   if (!exists(from)) {
     throw new Error(`Source path does not exist: ${from}`);
@@ -183,8 +224,8 @@ export function copy(
   const sourceInfo = getPathInfo(from);
   const targetInfo = getPathInfo(to);
 
-  if (options.trace) {
-    options.trace.call(null, "copying", { from, to });
+  if (trace) {
+    trace("copy requested", { from, to });
   }
 
   switch (`${sourceInfo} -> ${targetInfo}`) {
@@ -198,40 +239,43 @@ export function copy(
       // Copy file into dir
       const filename = basename(from);
       const target = paths.join(to, filename);
-      copyRaw(from, target);
+      copyRaw(from, target, trace);
       return;
     }
     case "file -> nonexistent": {
       // Copy to file at target path
-      copyRaw(from, to);
+      copyRaw(from, to, trace);
       return;
     }
     case "file -> file": {
       // Either overwrite, error, or skip, depending on whenTargetExists
-      if (options.whenTargetExists === "error") {
+      if (whenTargetExists === "error") {
         throw new Error(
           `File already exists: ${JSON.stringify(
             to
           )}. To skip or overwrite existing files, pass 'whenTargetExists' as an option to 'copy', with a value of either "skip" or "overwrite".`
         );
-      }
-
-      if (options.whenTargetExists === "skip") {
+      } else if (whenTargetExists === "skip") {
         return;
+      } else if (whenTargetExists === "overwrite") {
+        copyRaw(from, to, trace);
+      } else {
+        throw new Error(`Invalid whenTargetExists value: ${whenTargetExists}`);
       }
-
-      copyRaw(from, to);
       return;
     }
     case "dir -> nonexistent": {
       // Create new dir at target path and copy contents into it recursively
+      if (trace) {
+        trace("ensuring dir", to);
+      }
       ensureDir(to);
 
       const children = ls(from);
       for (const child of children) {
         const filename = basename(child);
         const target = paths.join(to, filename);
-        copy(child, target, options);
+        copy(child, target, { whenTargetExists, trace });
       }
       return;
     }
@@ -239,13 +283,16 @@ export function copy(
       // Create new dir within target path and copy contents into it recursively
       const dirname = basename(from);
       const targetDir = paths.join(to, dirname);
+      if (trace) {
+        trace("ensuring dir", targetDir);
+      }
       ensureDir(targetDir);
 
       const children = ls(from);
       for (const child of children) {
         const filename = basename(child);
         const target = paths.join(targetDir, filename);
-        copy(child, target, options);
+        copy(child, target, { whenTargetExists, trace });
       }
       return;
     }

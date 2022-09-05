@@ -470,3 +470,42 @@ test("ensureDir - file collision errors", async () => {
 
   fs.rmSync(outerTarget, { recursive: true, force: true });
 });
+
+test("copy", async () => {
+  const source = "./src/api/test_fixtures/copy/blah";
+  const target = "./src/api/test_fixtures/copy/blah_copy";
+
+  // wanna have an empty folder in this test, but empty folders
+  // can't be in git
+  if (!fs.existsSync(path.join(source, "/blah3"))) {
+    fs.mkdirSync(path.join(source, "/blah3"));
+  }
+
+  if (fs.existsSync(target)) {
+    fs.rmSync(target, { recursive: true, force: true });
+  }
+
+  const result = await evaluate(
+    `copy(${JSON.stringify(source)}, ${JSON.stringify(target)})`
+  );
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: "",
+  });
+
+  const blah2 = path.join(target, "blah2");
+  const blah3 = path.join(target, "blah3");
+  const blah2_hiTxt = path.join(target, "blah2", "hi.txt");
+
+  expect(fs.existsSync(target)).toBe(true);
+  expect(fs.statSync(target).isDirectory()).toBe(true);
+  expect(fs.existsSync(blah2)).toBe(true);
+  expect(fs.statSync(blah2).isDirectory()).toBe(true);
+  expect(fs.existsSync(blah3)).toBe(true);
+  expect(fs.statSync(blah3).isDirectory()).toBe(true);
+  expect(fs.readFileSync(blah2_hiTxt, "utf-8")).toBe("yeah hi there\n");
+
+  fs.rmSync(target, { recursive: true, force: true });
+});
