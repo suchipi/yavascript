@@ -1,5 +1,5 @@
 #!/usr/bin/env yavascript
-/// <reference path="../dist/yavascript.d.ts" />
+/// <reference path="../yavascript.d.ts" />
 
 echo(paths.join("/tmp", "/blaaa/"));
 echo(paths.join(__dirname, "./git-stuff.js"));
