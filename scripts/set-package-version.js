@@ -1,5 +1,5 @@
 #!/usr/bin/env yavascript
-/// <reference path="../dist/yavascript.d.ts" />
+/// <reference path="../yavascript.d.ts" />
 import "./lib/set-rootdir.js";
 
 const currentVersion = JSON.parse(readFile("./package.json")).version;

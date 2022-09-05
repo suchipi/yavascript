@@ -383,7 +383,7 @@ declare function ensureDir(path: string): string;
 /**
  * Options for {@link copy}.
  */
-export type CopyOptions = {
+declare type CopyOptions = {
   /**
    * What to do when attempting to copy something into a location where
    * something else already exists.
@@ -411,7 +411,7 @@ export type CopyOptions = {
  *
  * Provides the same functionality as the command `cp -R`.
  */
-export function copy(from: string, to: string, options?: CopyOptions): void;
+declare function copy(from: string, to: string, options?: CopyOptions): void;
 
 // ------------
 // --- glob ---
@@ -420,7 +420,7 @@ export function copy(from: string, to: string, options?: CopyOptions): void;
 /**
  * Options for {@link glob}.
  */
-export type GlobOptions = {
+declare type GlobOptions = {
   /**
    * Whether to treat symlinks to directories as if they themselves were
    * directories, traversing into them.
