@@ -15,12 +15,12 @@ fi
 popd > /dev/null
 
 # grab JS dependencies from npm
-npm install
+docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" node:17.4.0 npm install
 
 # generate dist/index.js (bundles in dependencies from npm)
 mkdir -p dist
 rm -rf dist
-npx kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js
+docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" node:17.4.0 npx kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js
 
 # to make the stack traces clearer, we change the filename that will get baked into the binary:
 mv dist/index.js ./yavascript-internal.js
