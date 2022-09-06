@@ -57,6 +57,7 @@ import {
   yellow,
 } from "./strings";
 import { console, echo, print } from "./console";
+import { pipe } from "./pipe";
 
 export function installApi(target: typeof globalThis) {
   Object.assign(target, {
@@ -123,6 +124,8 @@ export function installApi(target: typeof globalThis) {
     console,
     echo,
     print,
+
+    pipe,
 
     // Convenience aliases for parity with TypeScript primitive types
     number: Number,

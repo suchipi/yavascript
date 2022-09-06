@@ -635,6 +635,124 @@ declare function hidden(input: string | number): string;
 /** Wrap a string with the ANSI control characters that will make it print with a horizontal line through its center. */
 declare function strikethrough(input: string | number): string;
 
+// ------------
+// --- pipe ---
+// ------------
+
+/**
+ * The data source of a pipe operation; either an in-memory object, or a
+ * file stream.
+ *
+ * - Use `maxLength` to limit how much data to read.
+ * - Use `until` to stop reading once a certain byte or character has been
+ *   read.
+ * - Use `path` or `fd` to open a file.
+ */
+declare type PipeSource =
+  | { data: string; maxLength?: number; until?: string | byte }
+  | ArrayBuffer
+  | { data: ArrayBuffer; maxLength?: number; until?: string | byte }
+  | SharedArrayBuffer
+  | { data: SharedArrayBuffer; maxLength?: number; until?: string | byte }
+  | TypedArray
+  | { data: TypedArray; maxLength?: number; until?: string | byte }
+  | DataView
+  | { data: DataView; maxLength?: number; until?: string | byte }
+  | FILE
+  | {
+      data: FILE;
+      maxLength?: number;
+      until?: string | byte;
+    }
+  | { path: string; maxLength?: number; until?: string | byte }
+  | { fd: number; maxLength?: number; until?: string | byte };
+
+/**
+ * The target destination of a pipe operation; either an in-memory object, or a
+ * file stream.
+ *
+ * - Use `intoExisting` to put data into an existing object or file handle.
+ * - Use `intoNew` to put data into a new object.
+ * - Use `path` or `fd` to create a new file handle and put data into it.
+ */
+export type PipeDestination =
+  | { intoExisting: ArrayBuffer | SharedArrayBuffer | DataView | FILE }
+  | {
+      intoNew:
+        | ArrayBufferConstructor
+        | SharedArrayBufferConstructor
+        | DataViewConstructor
+        | TypedArrayConstructor
+        | StringConstructor
+        | DataViewConstructor;
+    }
+  | { path: string }
+  | { fd: number };
+
+/**
+ * Copy data from one source into the given target. Returns the number of bytes
+ * written, and the target that data was written into.
+ *
+ * NOTE: If the target is a {@link std.FILE}, *including if it was created by
+ * calling this function with `path` or `fd`*, it will NOT be closed by this
+ * function. You need to close it yourself.
+ */
+declare interface Pipe {
+  /**
+   * Copy data from one source into the given target. Returns the number of bytes
+   * written, and the target that data was written into.
+   *
+   * NOTE: If the target is a {@link std.FILE}, *including if it was created by
+   * calling this function with `path` or `fd`*, it will NOT be closed by this
+   * function. You need to close it yourself.
+   */
+  <Target>(from: PipeSource, to: PipeDestination & { intoExisting: Target }): {
+    bytesTransferred: number;
+    target: Target;
+  };
+
+  /**
+   * Copy data from one source into the given target. Returns the number of bytes
+   * written, and the target that data was written into.
+   *
+   * NOTE: If the target is a {@link std.FILE}, *including if it was created by
+   * calling this function with `path` or `fd`*, it will NOT be closed by this
+   * function. You need to close it yourself.
+   */
+  <Target>(
+    from: PipeSource,
+    to: PipeDestination & { intoExisting: { new (...args: any): Target } }
+  ): { bytesTransferred: number; target: Target };
+
+  /**
+   * Copy data from one source into the given target. Returns the number of bytes
+   * written, and the target that data was written into.
+   *
+   * NOTE: If the target is a {@link std.FILE}, *including if it was created by
+   * calling this function with `path` or `fd`*, it will NOT be closed by this
+   * function. You need to close it yourself.
+   */
+  (from: PipeSource, to: { path: string }): {
+    bytesTransferred: number;
+    target: FILE;
+  };
+
+  /**
+   * Copy data from one source into the given target. Returns the number of bytes
+   * written, and the target that data was written into.
+   *
+   * NOTE: If the target is a {@link std.FILE}, *including if it was created by
+   * calling this function with `path` or `fd`*, it will NOT be closed by this
+   * function. You need to close it yourself.
+   */
+  (from: PipeSource, to: { fd: number }): {
+    bytesTransferred: number;
+    target: FILE;
+  };
+}
+
+declare const pipe: Pipe;
+
 // -------------------------------------------
 // --- other globals and convenience types ---
 // -------------------------------------------
@@ -665,9 +783,6 @@ declare var string: StringConstructor;
 declare var boolean: BooleanConstructor;
 declare var bigint: BigIntConstructor;
 declare var symbol: SymbolConstructor;
-
-declare var std: typeof import("std");
-declare var os: typeof import("os");
 
 // ------------------------------------------
 // QuickJS APIs, which YavaScript builds upon
@@ -704,6 +819,71 @@ declare var console: {
   /** Same as {@link print}(). */
   info: typeof print;
 };
+
+/** An object representing a file handle. */
+declare interface FILE {
+  /** Close the file.  */
+  close(): void;
+
+  /** Outputs the string with the UTF-8 encoding. */
+  puts(str: string): void;
+
+  /**
+   * Formatted printf.
+   *
+   * The same formats as the standard C library `printf` are supported. Integer format types (e.g. `%d`) truncate the Numbers or BigInts to 32 bits. Use the `l` modifier (e.g. `%ld`) to truncate to 64 bits.
+   */
+  printf(fmt: string, ...args: Array<any>): void;
+
+  /** Flush the buffered file. Wrapper for C `fflush`. */
+  flush(): void;
+
+  /** Sync the buffered file to disk. Wrapper for C `fsync`. */
+  sync(): void;
+
+  /**
+   * Seek to a given file position (whence is `std.SEEK_*`).
+   *
+   * `offset` can be a number or a bigint.
+   */
+  seek(offset: number, whence: number): void;
+
+  /** Return the current file position. */
+  tell(): number;
+
+  /** Return the current file position as a bigint. */
+  tello(): BigInt;
+
+  /** Return true if end of file. */
+  eof(): boolean;
+
+  /** Return the associated OS handle. */
+  fileno(): number;
+
+  /** Read `length` bytes from the file to the ArrayBuffer `buffer` at byte position `position` (wrapper to the libc `fread`). Returns the number of bytes read, or `0` if the end of the file has been reached.  */
+  read(buffer: ArrayBuffer, position: number, length: number): number;
+
+  /** Write `length` bytes from the ArrayBuffer `buffer` at byte position `position` into the file (wrapper to the libc `fwrite`). Returns the number of bytes written. */
+  write(buffer: ArrayBuffer, position: number, length: number): number;
+
+  /**
+   * Return the next line from the file, assuming UTF-8 encoding, excluding the trailing line feed or EOF.
+   *
+   * If the end of the file has been reached, then `null` will be returned instead of a string.
+   *
+   * Note: Although the trailing line feed has been removed, a carriage return (`\r`) may still be present.
+   */
+  getline(): string | null;
+
+  /** Read `maxSize` bytes from the file and return them as a string assuming UTF-8 encoding. If `maxSize` is not present, the file is read up its end. */
+  readAsString(maxSize?: number): string;
+
+  /** Return the next byte from the file. Return -1 if the end of file is reached. */
+  getByte(): number;
+
+  /** Write one byte to the file. */
+  putByte(value: number): void;
+}
 
 declare module "std" {
   /**
@@ -961,74 +1141,6 @@ declare module "std" {
    * - octal (0o prefix) and hexadecimal (0x prefix) numbers
    */
   export function parseExtJSON(str: string): any;
-
-  /** An object representing a file handle. */
-  export class FILE {
-    /** Close the file.  */
-    close(): void;
-
-    /** Outputs the string with the UTF-8 encoding. */
-    puts(str: string): void;
-
-    /**
-     * Formatted printf.
-     *
-     * The same formats as the standard C library `printf` are supported. Integer format types (e.g. `%d`) truncate the Numbers or BigInts to 32 bits. Use the `l` modifier (e.g. `%ld`) to truncate to 64 bits.
-     */
-    printf(fmt: string, ...args: Array<any>): void;
-
-    /** Flush the buffered file. Wrapper for C `fflush`. */
-    flush(): void;
-
-    /** Sync the buffered file to disk. Wrapper for C `fsync`. */
-    sync(): void;
-
-    /**
-     * Seek to a given file position (whence is `std.SEEK_*`).
-     *
-     * `offset` can be a number or a bigint.
-     */
-    seek(
-      offset: number,
-      whence: typeof SEEK_SET | typeof SEEK_CUR | typeof SEEK_END
-    ): void;
-
-    /** Return the current file position. */
-    tell(): number;
-
-    /** Return the current file position as a bigint. */
-    tello(): BigInt;
-
-    /** Return true if end of file. */
-    eof(): boolean;
-
-    /** Return the associated OS handle. */
-    fileno(): number;
-
-    /** Read `length` bytes from the file to the ArrayBuffer `buffer` at byte position `position` (wrapper to the libc `fread`). Returns the number of bytes read, or `0` if the end of the file has been reached.  */
-    read(buffer: ArrayBuffer, position: number, length: number): number;
-
-    /** Write `length` bytes from the ArrayBuffer `buffer` at byte position `position` into the file (wrapper to the libc `fwrite`). Returns the number of bytes written. */
-    write(buffer: ArrayBuffer, position: number, length: number): number;
-
-    /**
-     * Return the next line from the file, assuming UTF-8 encoding, excluding the trailing line feed or EOF.
-     *
-     * If the end of the file has been reached, then `null` will be returned instead of a string.
-     *
-     * Note: Although the trailing line feed has been removed, a carriage return (`\r`) may still be present.
-     */
-    getline(): string | null;
-
-    /** Read `maxSize` bytes from the file and return them as a string assuming UTF-8 encoding. If `maxSize` is not present, the file is read up its end. */
-    readAsString(maxSize?: number): string;
-
-    /** Return the next byte from the file. Return -1 if the end of file is reached. */
-    getByte(): number;
-
-    /** Write one byte to the file. */
-    putByte(value: number): void;
-  }
 }
 
 declare module "os" {
