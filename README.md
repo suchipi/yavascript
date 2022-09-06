@@ -1,7 +1,5 @@
 # yavascript
 
-<!-- NOTE: this file is also used as help text by the CLI. Don't use markdown syntax below this line unless said syntax would also be clearly readable as plain text. -->
-
 YavaScript is a bash-like script runner which is distributed as a single
 statically-linked binary. Scripts are written in JavaScript. There are global
 APIs available for all the things you'd normally want to do in a bash script,
@@ -40,4 +38,16 @@ supporting the ES2020 specification.
 - Original QuickJS engine: https://bellard.org/quickjs/
 - The fork we use: https://github.com/suchipi/quickjs/
 
-YavaScript is written with <3 by Lily Scott.
+## Compiling
+
+### Binaries (all platforms)
+
+You will need docker installed, then run `./scripts/build.sh`.
+
+### Docker image
+
+You will need docker installed, then run `docker build -t yourusername/yavascript .`.
+
+---
+
+YavaScript is written with <3 by Lily Skye.

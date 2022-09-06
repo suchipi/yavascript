@@ -24,6 +24,7 @@ import {
   get__filename,
 } from "./paths";
 import { glob } from "./glob";
+import { is } from "./is";
 import { isGitignored, repoRoot } from "./repo";
 import {
   quote,
@@ -85,6 +86,8 @@ export function installApi(target: typeof globalThis) {
 
     glob,
 
+    is,
+
     isGitignored,
     repoRoot,
 
@@ -120,6 +123,13 @@ export function installApi(target: typeof globalThis) {
     console,
     echo,
     print,
+
+    // Convenience aliases for parity with TypeScript primitive types
+    number: Number,
+    string: String,
+    boolean: Boolean,
+    bigint: BigInt,
+    symbol: Symbol,
   });
 
   Object.defineProperties(target, {
