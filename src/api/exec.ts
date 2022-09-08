@@ -32,8 +32,8 @@ const exec = (
     std.err.puts("+ exec: " + JSON.stringify(args) + "\n");
   }
 
-  let tmpOut: std.FILE | null = null;
-  let tmpErr: std.FILE | null = null;
+  let tmpOut: FILE | null = null;
+  let tmpErr: FILE | null = null;
   if (captureOutput) {
     tmpOut = std.tmpfile();
     tmpErr = std.tmpfile();

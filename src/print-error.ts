@@ -1,9 +1,9 @@
 import * as std from "std";
-import inspectOptionsForPrint from "./inspect-options-for-print";
+import * as inspectOptions from "./inspect-options";
 
 const normalProps = new Set(["name", "message", "stack"]);
 
-export default function printError(error: any, file: std.FILE) {
+export default function printError(error: any, file: FILE) {
   if (
     typeof error === "object" &&
     error != null &&
@@ -38,13 +38,13 @@ export default function printError(error: any, file: std.FILE) {
         propsObj[key] = error[key];
       }
       file.puts(" ");
-      file.puts(inspect(propsObj, inspectOptionsForPrint));
+      file.puts(inspect(propsObj, inspectOptions.forPrint));
     }
 
     file.puts("\n");
   } else {
     file.puts("Non-error value was thrown: ");
-    file.puts(inspect(error, inspectOptionsForPrint));
+    file.puts(inspect(error, inspectOptions.forPrint));
     file.puts("\n");
   }
 }

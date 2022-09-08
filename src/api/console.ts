@@ -1,8 +1,8 @@
 import * as std from "std";
-import inspectOptionsForPrint from "../inspect-options-for-print";
+import * as inspectOptions from "../inspect-options";
 
 const makeInspectLog =
-  (file: std.FILE) =>
+  (file: FILE) =>
   (...args: Array<any>) => {
     for (let i = 0; i < args.length; i++) {
       if (i !== 0) {
@@ -15,7 +15,7 @@ const makeInspectLog =
         str = arg;
       } else {
         try {
-          str = inspect(arg, inspectOptionsForPrint);
+          str = inspect(arg, inspectOptions.forPrint);
         } catch (err) {
           try {
             std.err.puts((err as any).message + "\n");

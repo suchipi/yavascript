@@ -1,7 +1,7 @@
 import { spawn, Options as SpawnOptions } from "first-base";
 import path from "path";
 import print from "@suchipi/print";
-import inspectOptionsForPrint from "./inspect-options-for-print";
+import * as inspectOptions from "./inspect-options";
 
 export const rootDir = (...parts: Array<string>) =>
   path.resolve(__dirname, "..", ...parts);
@@ -44,7 +44,7 @@ export async function evaluate(
 
 export function inspect(value: any): string {
   // options to inspect here match what is given to console.log
-  return print(value, inspectOptionsForPrint);
+  return print(value, inspectOptions.forPrint);
 }
 
 export function cleanOutput(input: string): string {

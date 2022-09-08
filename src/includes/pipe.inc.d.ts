@@ -35,16 +35,16 @@ declare type PipeSource =
  * - Use `path` or `fd` to create a new file handle and put data into it.
  */
 export type PipeDestination =
-  | { intoExisting: ArrayBuffer | SharedArrayBuffer | DataView | FILE }
-  | {
-      intoNew:
-        | ArrayBufferConstructor
-        | SharedArrayBufferConstructor
-        | DataViewConstructor
-        | TypedArrayConstructor
-        | StringConstructor
-        | DataViewConstructor;
-    }
+  | ArrayBuffer
+  | SharedArrayBuffer
+  | DataView
+  | FILE
+  | ArrayBufferConstructor
+  | SharedArrayBufferConstructor
+  | DataViewConstructor
+  | TypedArrayConstructor
+  | StringConstructor
+  | DataViewConstructor
   | { path: string }
   | { fd: number };
 
@@ -52,42 +52,16 @@ export type PipeDestination =
  * Copy data from one source into the given target. Returns the number of bytes
  * written, and the target that data was written into.
  *
- * NOTE: If the target is a {@link std.FILE}, *including if it was created by
+ * NOTE: If the target is a {@link FILE}, *including if it was created by
  * calling this function with `path` or `fd`*, it will NOT be closed by this
  * function. You need to close it yourself.
  */
-declare interface Pipe {
+export interface Pipe {
   /**
    * Copy data from one source into the given target. Returns the number of bytes
    * written, and the target that data was written into.
    *
-   * NOTE: If the target is a {@link std.FILE}, *including if it was created by
-   * calling this function with `path` or `fd`*, it will NOT be closed by this
-   * function. You need to close it yourself.
-   */
-  <Target>(from: PipeSource, to: PipeDestination & { intoExisting: Target }): {
-    bytesTransferred: number;
-    target: Target;
-  };
-
-  /**
-   * Copy data from one source into the given target. Returns the number of bytes
-   * written, and the target that data was written into.
-   *
-   * NOTE: If the target is a {@link std.FILE}, *including if it was created by
-   * calling this function with `path` or `fd`*, it will NOT be closed by this
-   * function. You need to close it yourself.
-   */
-  <Target>(
-    from: PipeSource,
-    to: PipeDestination & { intoExisting: { new (...args: any): Target } }
-  ): { bytesTransferred: number; target: Target };
-
-  /**
-   * Copy data from one source into the given target. Returns the number of bytes
-   * written, and the target that data was written into.
-   *
-   * NOTE: If the target is a {@link std.FILE}, *including if it was created by
+   * NOTE: If the target is a {@link FILE}, *including if it was created by
    * calling this function with `path` or `fd`*, it will NOT be closed by this
    * function. You need to close it yourself.
    */
@@ -95,18 +69,41 @@ declare interface Pipe {
     bytesTransferred: number;
     target: FILE;
   };
-
   /**
    * Copy data from one source into the given target. Returns the number of bytes
    * written, and the target that data was written into.
    *
-   * NOTE: If the target is a {@link std.FILE}, *including if it was created by
+   * NOTE: If the target is a {@link FILE}, *including if it was created by
    * calling this function with `path` or `fd`*, it will NOT be closed by this
    * function. You need to close it yourself.
    */
   (from: PipeSource, to: { fd: number }): {
     bytesTransferred: number;
     target: FILE;
+  };
+
+  /**
+   * Copy data from one source into the given target. Returns the number of bytes
+   * written, and the target that data was written into.
+   *
+   * NOTE: If the target is a {@link FILE}, *including if it was created by
+   * calling this function with `path` or `fd`*, it will NOT be closed by this
+   * function. You need to close it yourself.
+   */
+  <Dest extends PipeDestination>(from: PipeSource, to: Dest): {
+    bytesTransferred: number;
+    target: Dest extends ArrayBuffer | SharedArrayBuffer | DataView | FILE
+      ? Dest
+      : Dest extends
+          | ArrayBufferConstructor
+          | SharedArrayBufferConstructor
+          | DataViewConstructor
+          | TypedArrayConstructor
+          | DataViewConstructor
+      ? Dest["prototype"]
+      : Dest extends StringConstructor
+      ? string
+      : never;
   };
 }
 

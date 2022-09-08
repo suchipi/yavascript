@@ -2,6 +2,7 @@ import * as std from "std";
 import { TypedArray, TypedArrayConstructor } from "./typed-array";
 import { byte } from "./byte";
 import { is } from "./is";
+import * as inspectOptions from "../inspect-options";
 
 export type PipeSource =
   | { data: string; maxLength?: number; until?: string | byte }
@@ -45,16 +46,6 @@ function getReadable(from: PipeSource): Readable {
   }
 
   if (is.object(from)) {
-    if ((from as any).data != null) {
-      source = (from as any).data;
-    } else if (typeof (from as any).path === "string") {
-      source = std.open((from as any).path, "rb");
-      shouldCloseFile = true;
-    } else if (typeof (from as any).fd === "number") {
-      source = std.fdopen((from as any).fd, "rb");
-      shouldCloseFile = true;
-    }
-
     if (is.number(from.maxLength)) {
       maxLength = from.maxLength;
     }
@@ -85,10 +76,27 @@ function getReadable(from: PipeSource): Readable {
 
       until = from.until as byte;
     }
+
+    if ((from as any).data != null) {
+      source = (from as any).data;
+    } else if (typeof (from as any).path === "string") {
+      source = std.open((from as any).path, "rb");
+      shouldCloseFile = true;
+    } else if (typeof (from as any).fd === "number") {
+      source = std.fdopen((from as any).fd, "rb");
+      shouldCloseFile = true;
+    } else {
+      source = from as any;
+    }
   }
 
   if (source == null) {
-    const err = new Error(`Invalid argument (from = ${from})`);
+    const err = new Error(
+      `Invalid argument (from = ${inspect(
+        from,
+        inspectOptions.forError
+      ).replace(/\n+/g, " ")})`
+    );
     Object.assign(err, { from });
     throw err;
   }
@@ -99,7 +107,11 @@ function getReadable(from: PipeSource): Readable {
     is.SharedArrayBuffer(source) ||
     is.DataView(source)
   ) {
-    const view = is.DataView(source) ? source : new DataView(source);
+    const view = is.DataView(source)
+      ? source
+      : is.TypedArray(source)
+      ? new DataView(source.buffer)
+      : new DataView(source);
 
     let offset = 0;
     let reachedUntil = false;
@@ -180,23 +192,28 @@ function getReadable(from: PipeSource): Readable {
       },
     };
   } else {
-    const err = new Error(`Invalid readable source (from = ${from})`);
+    const err = new Error(
+      `Invalid readable source (from = ${inspect(
+        from,
+        inspectOptions.forError
+      ).replace(/\n+/g, " ")}))`
+    );
     Object.assign(err, { from });
     throw err;
   }
 }
 
 export type PipeDestination =
-  | { intoExisting: ArrayBuffer | SharedArrayBuffer | DataView | FILE }
-  | {
-      intoNew:
-        | ArrayBufferConstructor
-        | SharedArrayBufferConstructor
-        | DataViewConstructor
-        | TypedArrayConstructor
-        | StringConstructor
-        | DataViewConstructor;
-    }
+  | ArrayBuffer
+  | SharedArrayBuffer
+  | DataView
+  | FILE
+  | ArrayBufferConstructor
+  | SharedArrayBufferConstructor
+  | DataViewConstructor
+  | TypedArrayConstructor
+  | StringConstructor
+  | DataViewConstructor
   | { path: string }
   | { fd: number };
 
@@ -225,7 +242,7 @@ type Writable = {
 };
 
 function getWritable(to: PipeDestination): Writable {
-  if (!is.object(to)) {
+  if (!(is.object(to) || is.function(to))) {
     const err = new Error(`Invalid argument (to = ${to})`);
     Object.assign(err, { to });
     throw err;
@@ -233,25 +250,24 @@ function getWritable(to: PipeDestination): Writable {
 
   const filesToClose: Array<FILE> = [];
 
-  if (is.string((to as any).path)) {
-    const file = std.open((to as any).path, "w");
-    filesToClose.push(file);
-    to = { intoExisting: file };
-  } else if (is.number((to as any).fd)) {
-    const file = std.fdopen((to as any).fd, "w");
-    filesToClose.push(file);
-    to = { intoExisting: file };
-  }
-
   try {
-    if (Object.hasOwnProperty.call(to, "intoExisting")) {
-      const narrowedTo: Exclude<
-        PipeDestination,
-        { path: string } | { fd: number } | { intoNew: any }
-      > = to as any;
+    let target: any;
 
-      const target = narrowedTo.intoExisting;
-
+    if (is.string((to as any).path)) {
+      const file = std.open((to as any).path, "w");
+      filesToClose.push(file);
+      target = file;
+    } else if (is.number((to as any).fd)) {
+      const file = std.fdopen((to as any).fd, "w");
+      filesToClose.push(file);
+      target = file;
+    } else if (
+      is.ArrayBuffer(to) ||
+      is.SharedArrayBuffer(to) ||
+      is.DataView(to) ||
+      is.FILE(to)
+    ) {
+      target = to;
       if (
         is.ArrayBuffer(target) ||
         is.SharedArrayBuffer(target) ||
@@ -292,18 +308,9 @@ function getWritable(to: PipeDestination): Writable {
             return target;
           },
         };
-      } else {
-        const err = new Error(`Invalid argument (to = ${to})`);
-        Object.assign(err, { to });
-        throw err;
       }
-    } else if (Object.hasOwnProperty.call(to, "intoNew")) {
-      const narrowedTo: Exclude<
-        PipeDestination,
-        { path: string } | { fd: number } | { intoExisting: any }
-      > = to as any;
-
-      const targetConstructor = narrowedTo.intoNew;
+    } else if (is.function(to)) {
+      const targetConstructor: any = to;
       switch (targetConstructor) {
         case String: {
           let target = "";
@@ -374,17 +381,14 @@ function getWritable(to: PipeDestination): Writable {
     }
     throw err;
   }
+
+  // Shouldn't be possible to get here, but...
+  const err = new Error(`Internal error: Unhandled destination (to = ${to})`);
+  Object.assign(err, { to });
+  throw err;
 }
 
 export interface Pipe {
-  <Target>(from: PipeSource, to: PipeDestination & { intoExisting: Target }): {
-    bytesTransferred: number;
-    target: Target;
-  };
-  <Target>(
-    from: PipeSource,
-    to: PipeDestination & { intoExisting: { new (...args: any): Target } }
-  ): { bytesTransferred: number; target: Target };
   (from: PipeSource, to: { path: string }): {
     bytesTransferred: number;
     target: FILE;
@@ -393,10 +397,30 @@ export interface Pipe {
     bytesTransferred: number;
     target: FILE;
   };
+
+  <Dest extends PipeDestination>(from: PipeSource, to: Dest): {
+    bytesTransferred: number;
+    target: Dest extends ArrayBuffer | SharedArrayBuffer | DataView | FILE
+      ? Dest
+      : Dest extends
+          | ArrayBufferConstructor
+          | SharedArrayBufferConstructor
+          | DataViewConstructor
+          | TypedArrayConstructor
+          | DataViewConstructor
+      ? Dest["prototype"]
+      : Dest extends StringConstructor
+      ? string
+      : never;
+  };
 }
 
 // TODO: child process stdio should be pipeable; would need to introduce child
 // type to return from exec
+//
+// TODO: doesn't seem to handle null character within string properly
+//
+// TODO: close created fds by default, like source does (if you want unclosed, open them yourself)
 export const pipe: Pipe = (
   from: PipeSource,
   to: PipeDestination

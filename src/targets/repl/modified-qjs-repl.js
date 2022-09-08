@@ -26,7 +26,7 @@
 import * as std from "std";
 import * as os from "os";
 import printError from "../../print-error";
-import inspectOptionsForPrint from "../../inspect-options-for-print";
+import * as inspectOptions from "../../inspect-options";
 import { NOTHING } from "./special";
 import * as esmToRequire from "../../esm-to-require";
 
@@ -1003,10 +1003,10 @@ export function startRepl() {
       eval_time = new Date().getTime() - now;
       std.puts(colors.none);
       if (result !== NOTHING) {
-        std.puts(inspect(result, inspectOptionsForPrint));
+        std.puts(inspect(result, inspectOptions.forPrint));
         std.puts(colors.none);
+        std.puts("\n");
       }
-      std.puts("\n");
       /* set the last result */
       globalThis._ = result;
     } catch (error) {
