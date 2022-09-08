@@ -1,6 +1,6 @@
 {
   "include": ["./quickjs/src/quickjs-libc/quickjs-libc.d.ts", "./src/**/*.ts"],
-  "exclude": ["./src/globals.d.ts"],
+  "exclude": ["./src/includes"],
 
   "compilerOptions": {
     "declaration": true,

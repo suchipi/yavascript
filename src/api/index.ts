@@ -58,6 +58,7 @@ import {
 } from "./strings";
 import { console, echo, print } from "./console";
 import { pipe } from "./pipe";
+import { bigint, boolean, number, string, symbol } from "./others";
 
 export function installApi(target: typeof globalThis) {
   Object.assign(target, {
@@ -127,12 +128,11 @@ export function installApi(target: typeof globalThis) {
 
     pipe,
 
-    // Convenience aliases for parity with TypeScript primitive types
-    number: Number,
-    string: String,
-    boolean: Boolean,
-    bigint: BigInt,
-    symbol: Symbol,
+    bigint,
+    boolean,
+    number,
+    string,
+    symbol,
   });
 
   Object.defineProperties(target, {

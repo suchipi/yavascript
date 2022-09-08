@@ -1,17 +1,12 @@
-
 // NOTE: This copy of yavascript.d.ts reflects what is in git.
 // APIs may differ from what you have installed.
 // If available, consult the copy of yavascript.d.ts that was distributed with your install.
 
-
+// ===============
 // ---------------
 // YavaScript APIs
 // ---------------
-
-// -----------
-// --- env ---
-// -----------
-
+// ===============
 /**
  * An object representing the process's environment variables. You can read
  * from it to read environment variables, write into it to set environment
@@ -20,9 +15,241 @@
  */
 declare const env: { [key: string]: string | undefined };
 
-// ------------
-// --- exec ---
-// ------------
+/**
+ * Return the contents of a directory, as absolute paths. `.` and `..` are
+ * omitted.
+ *
+ * Use the `relativePaths` option to get relative paths instead (relative to
+ * the parent directory).
+ */
+declare function ls(
+  dir?: string,
+  options?: { relativePaths?: boolean }
+): Array<string>;
+
+/**
+ * Read a symlink.
+ *
+ * Returns the target of the symlink, which may be absolute or relative.
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ */
+declare function readlink(path: string): string;
+
+/**
+ * Read the contents of a file from disk, as a UTF-8 string.
+ */
+declare function readFile(path: string): string;
+
+/**
+ * Write the contents of a string or ArrayBuffer to a file.
+ *
+ * Strings are written using the UTF-8 encoding.
+ */
+declare function writeFile(path: string, data: string | ArrayBuffer): void;
+
+/**
+ * Function which returns true if the path points to a directory, or if the
+ * path points to a symlink which points to a directory. Otherwise, it returns
+ * false.
+ */
+interface IsDir {
+  /**
+   * Returns true if the path points to a directory, or if the path points to
+   * a symlink which points to a directory. Otherwise, returns false.
+   */
+  (path: string): boolean;
+
+  /**
+   * Maximum number of symlinks to follow before erroring. Defaults to 100.
+   */
+  symlinkLimit: number;
+}
+
+/**
+ * Function which returns true if the path points to a directory, or if the
+ * path points to a symlink which points to a directory. Otherwise, it returns
+ * false.
+ */
+declare const isDir: IsDir;
+
+/**
+ * Returns true if the path points to a symlink.
+ */
+declare function isLink(path: string): boolean;
+
+/**
+ * Delete the file or directory at the specified path.
+ *
+ * If the directory isn't empty, its contents will be deleted, too.
+ *
+ * Provides the same functionality as the command `rm -rf`.
+ */
+declare function remove(path: string): void;
+
+/**
+ * Returns true if a file or directory exists at the specified path.
+ *
+ * Provides the same functionality as the command `test -e`.
+ */
+declare function exists(path: string): boolean;
+
+/**
+ * Create directories for each of the provided path components,
+ * if they don't already exist.
+ *
+ * Provides the same functionality as the command `mkdir -p`.
+ */
+declare function ensureDir(path: string): string;
+
+/**
+ * Options for {@link copy}.
+ */
+declare type CopyOptions = {
+  /**
+   * What to do when attempting to copy something into a location where
+   * something else already exists.
+   *
+   * Defaults to "error".
+   */
+  whenTargetExists?: "overwrite" | "skip" | "error";
+
+  /**
+   * If provided, this function will be called multiple times as `copy`
+   * traverses the filesystem, to help you understand what's going on and/or
+   * troubleshoot things. In most cases, it makes sense to use a logging
+   * function here, like so:
+   *
+   * ```js
+   * copy("./source", "./destination", { trace: console.log });
+   * ```
+   */
+  trace?: (...args: Array<any>) => void;
+};
+
+/**
+ * Copy a file or folder from one location to another.
+ * Folders are copied recursively.
+ *
+ * Provides the same functionality as the command `cp -R`.
+ */
+declare function copy(from: string, to: string, options?: CopyOptions): void;
+
+/**
+ * Change the process's current working directory to the specified path.
+ *
+ * Provides the same functionality as the shell builtin of the same name.
+ */
+declare function cd(path: string): void;
+
+/**
+ * Return the process's current working directory.
+ *
+ * Provides the same functionality as the shell builtin of the same name.
+ */
+declare function pwd(): string;
+
+/**
+ * Get the absolute path given a relative path. Symlinks are also resolved.
+ *
+ * The path's target file/directory must exist.
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ */
+declare function realpath(path: string): string;
+
+/**
+ * Removes the final component from a path string.
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ */
+declare function dirname(path: string): string;
+
+/**
+ * Return the last component of a path string.
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ */
+declare function basename(path: string): string;
+
+/**
+ * Returns the file extension of the file at a given path.
+ *
+ * If the file has no extension (eg `Makefile`, etc), then `''` will be returned.
+ *
+ * Pass `{ full: true }` to get compound extensions, eg `.d.ts` or `.test.js` instead of just `.ts`/`.js`.
+ */
+declare function extname(
+  pathOrFilename: string,
+  options?: { full?: boolean }
+): string;
+
+/**
+ * A namespace object providing several path-string-related APIs.
+ */
+declare const paths: {
+  /**
+   * The separator character the host operating system uses between path
+   * components, ie. the slashes in a filepath. On windows, it's a backslash, and
+   * on all other OSes, it's a forward slash.
+   */
+  OS_PATH_SEPARATOR: "/" | "\\";
+
+  /**
+   * Split a path string (or array of path strings) on / or \\, returning an
+   * Array of strings.
+   *
+   * Trailing slashes and duplicate path separators will be removed.
+   *
+   * If the path starts with `/`, the first string in the Array will be empty.
+   */
+  split(path: string | Array<string>): Array<string>;
+
+  /**
+   * Detect which path separator is present in the given path or array of
+   * paths: `\` or `/`.
+   *
+   * If neither is present, `/` will be returned.
+   */
+  detectSeparator(input: string | Array<string>): string;
+
+  /**
+   * Create a path string from one or more path or path component strings.
+   * {@link paths.OS_PATH_SEPARATOR} will be used to combine parts.
+   *
+   * This function does not resolve `..` or `.`. Use {@link paths.resolve} for that.
+   */
+  join(...parts: Array<string>): string;
+
+  /**
+   * Resolves all `..` and `.` components in a path, returning an absolute
+   * path.
+   *
+   * Use `from` to specify where leading `.` or `..` characters should be
+   * resolved relative to. If unspecified, it defaults to `pwd()`.
+   */
+  resolve(path: string, from?: string): string;
+
+  /**
+   * Returns whether the path starts with either a leading slash or a windows
+   * drive letter.
+   */
+  isAbsolute(path: string): boolean;
+};
+
+/**
+ * The absolute path to the current file (whether script or module).
+ *
+ * Behaves the same as in Node.js, except that it's present within ES modules.
+ */
+declare const __filename: string;
+
+/**
+ * The absolute path to the directory the current file is inside of.
+ *
+ * Behaves the same as in Node.js, except that it's present within ES modules.
+ */
+declare const __dirname: string;
 
 declare type BaseExecOptions = {
   /** Sets the current working directory for the child process. */
@@ -150,273 +377,6 @@ declare function $(args: Array<string> | string): {
   stderr: string;
 };
 
-// -------------
-// --- paths ---
-// -------------
-
-/**
- * Change the process's current working directory to the specified path.
- *
- * Provides the same functionality as the shell builtin of the same name.
- */
-declare function cd(path: string): void;
-
-/**
- * Return the process's current working directory.
- *
- * Provides the same functionality as the shell builtin of the same name.
- */
-declare function pwd(): string;
-
-/**
- * Get the absolute path given a relative path. Symlinks are also resolved.
- *
- * The path's target file/directory must exist.
- *
- * Provides the same functionality as the unix binary of the same name.
- */
-declare function realpath(path: string): string;
-
-/**
- * Removes the final component from a path string.
- *
- * Provides the same functionality as the unix binary of the same name.
- */
-declare function dirname(path: string): string;
-
-/**
- * Return the last component of a path string.
- *
- * Provides the same functionality as the unix binary of the same name.
- */
-declare function basename(path: string): string;
-
-/**
- * Returns the file extension of the file at a given path.
- *
- * If the file has no extension (eg `Makefile`, etc), then `''` will be returned.
- *
- * Pass `{ full: true }` to get compound extensions, eg `.d.ts` or `.test.js` instead of just `.ts`/`.js`.
- */
-declare function extname(
-  pathOrFilename: string,
-  options?: { full?: boolean }
-): string;
-
-/**
- * A namespace object providing several path-string-related APIs.
- */
-declare const paths: {
-  /**
-   * The separator character the host operating system uses between path
-   * components, ie. the slashes in a filepath. On windows, it's a backslash, and
-   * on all other OSes, it's a forward slash.
-   */
-  OS_PATH_SEPARATOR: "/" | "\\";
-
-  /**
-   * Split a path string (or array of path strings) on / or \\, returning an
-   * Array of strings.
-   *
-   * Trailing slashes and duplicate path separators will be removed.
-   *
-   * If the path starts with `/`, the first string in the Array will be empty.
-   */
-  split(path: string | Array<string>): Array<string>;
-
-  /**
-   * Detect which path separator is present in the given path or array of
-   * paths: `\` or `/`.
-   *
-   * If neither is present, `/` will be returned.
-   */
-  detectSeparator(input: string | Array<string>): string;
-
-  /**
-   * Create a path string from one or more path or path component strings.
-   * {@link paths.OS_PATH_SEPARATOR} will be used to combine parts.
-   *
-   * This function does not resolve `..` or `.`. Use {@link paths.resolve} for that.
-   */
-  join(...parts: Array<string>): string;
-
-  /**
-   * Resolves all `..` and `.` components in a path, returning an absolute
-   * path.
-   *
-   * Use `from` to specify where leading `.` or `..` characters should be
-   * resolved relative to. If unspecified, it defaults to `pwd()`.
-   */
-  resolve(path: string, from?: string): string;
-
-  /**
-   * Returns whether the path starts with either a leading slash or a windows
-   * drive letter.
-   */
-  isAbsolute(path: string): boolean;
-};
-
-/**
- * The absolute path to the current file (whether script or module).
- *
- * Behaves the same as in Node.js, except that it's present within ES modules.
- */
-declare const __filename: string;
-
-/**
- * The absolute path to the directory the current file is inside of.
- *
- * Behaves the same as in Node.js, except that it's present within ES modules.
- */
-declare const __dirname: string;
-
-// ------------
-// --- repo ---
-// ------------
-
-/**
- * Returns the absolute path to the root folder of the git/hg repo.
- *
- * This is done by running `git rev-parse --show-toplevel` and `hg root`.
- *
- * If `relativeTo` is provided, the git and hg commands will be executed in
- * that folder instead of in `pwd()`.
- */
-declare function repoRoot(relativeTo?: string): string;
-
-/**
- * Returns whether the provided path is ignored by git.
- */
-declare function isGitignored(path: string): boolean;
-
-// ------------------
-// --- filesystem ---
-// ------------------
-
-/**
- * Return the contents of a directory, as absolute paths. `.` and `..` are
- * omitted.
- *
- * Use the `relativePaths` option to get relative paths instead (relative to
- * the parent directory).
- */
-declare function ls(
-  dir?: string,
-  options?: { relativePaths?: boolean }
-): Array<string>;
-
-/**
- * Read a symlink.
- *
- * Returns the target of the symlink, which may be absolute or relative.
- *
- * Provides the same functionality as the unix binary of the same name.
- */
-declare function readlink(path: string): string;
-
-/**
- * Read the contents of a file from disk, as a UTF-8 string.
- */
-declare function readFile(path: string): string;
-
-/**
- * Write the contents of a string or ArrayBuffer to a file.
- *
- * Strings are written using the UTF-8 encoding.
- */
-declare function writeFile(path: string, data: string | ArrayBuffer): void;
-
-/**
- * Function which returns true if the path points to a directory, or if the
- * path points to a symlink which points to a directory. Otherwise, it returns
- * false.
- */
-interface IsDir {
-  /**
-   * Returns true if the path points to a directory, or if the path points to
-   * a symlink which points to a directory. Otherwise, returns false.
-   */
-  (path: string): boolean;
-
-  /**
-   * Maximum number of symlinks to follow before erroring. Defaults to 100.
-   */
-  symlinkLimit: number;
-}
-
-/**
- * Function which returns true if the path points to a directory, or if the
- * path points to a symlink which points to a directory. Otherwise, it returns
- * false.
- */
-declare const isDir: IsDir;
-
-/**
- * Returns true if the path points to a symlink.
- */
-declare function isLink(path: string): boolean;
-
-/**
- * Delete the file or directory at the specified path.
- *
- * If the directory isn't empty, its contents will be deleted, too.
- *
- * Provides the same functionality as the command `rm -rf`.
- */
-declare function remove(path: string): void;
-
-/**
- * Returns true if a file or directory exists at the specified path.
- *
- * Provides the same functionality as the command `test -e`.
- */
-declare function exists(path: string): boolean;
-
-/**
- * Create directories for each of the provided path components,
- * if they don't already exist.
- *
- * Provides the same functionality as the command `mkdir -p`.
- */
-declare function ensureDir(path: string): string;
-
-/**
- * Options for {@link copy}.
- */
-declare type CopyOptions = {
-  /**
-   * What to do when attempting to copy something into a location where
-   * something else already exists.
-   *
-   * Defaults to "error".
-   */
-  whenTargetExists?: "overwrite" | "skip" | "error";
-
-  /**
-   * If provided, this function will be called multiple times as `copy`
-   * traverses the filesystem, to help you understand what's going on and/or
-   * troubleshoot things. In most cases, it makes sense to use a logging
-   * function here, like so:
-   *
-   * ```js
-   * copy("./source", "./destination", { trace: console.log });
-   * ```
-   */
-  trace?: (...args: Array<any>) => void;
-};
-
-/**
- * Copy a file or folder from one location to another.
- * Folders are copied recursively.
- *
- * Provides the same functionality as the command `cp -R`.
- */
-declare function copy(from: string, to: string, options?: CopyOptions): void;
-
-// ------------
-// --- glob ---
-// ------------
-
 /**
  * Options for {@link glob}.
  */
@@ -454,9 +414,81 @@ declare function glob(
   options?: GlobOptions
 ): Array<string>;
 
-// ----------
-// --- is ---
-// ----------
+/**
+ * Print one or more values to stdout.
+ */
+declare const echo: typeof console.log;
+
+/**
+ * Remove ANSI control characters from a string.
+ */
+declare function stripAnsi(input: string): string;
+
+/**
+ * Wrap a string in double quotes, and escape any double-quotes inside using `\"`.
+ */
+declare function quote(input: string): string;
+
+// Colors
+
+/** Wrap a string with the ANSI control characters that will make it print as black text. */
+declare function black(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print as red text. */
+declare function red(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print as green text. */
+declare function green(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print as yellow text. */
+declare function yellow(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print as blue text. */
+declare function blue(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print as magenta text. */
+declare function magenta(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print as cyan text. */
+declare function cyan(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print as white text. */
+declare function white(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print as gray text. */
+declare function gray(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print as grey text. */
+declare function grey(input: string | number): string;
+
+// Background Colors
+
+/** Wrap a string with the ANSI control characters that will make it have a black background. */
+declare function bgBlack(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it have a red background. */
+declare function bgRed(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it have a green background. */
+declare function bgGreen(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it have a yellow background. */
+declare function bgYellow(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it have a blue background. */
+declare function bgBlue(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it have a magenta background. */
+declare function bgMagenta(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it have a cyan background. */
+declare function bgCyan(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it have a white background. */
+declare function bgWhite(input: string | number): string;
+
+// Modifiers
+
+/** Wrap a string with the ANSI control character that resets all styling. */
+declare function reset(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print with a bold style. */
+declare function bold(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print with a dimmed style. */
+declare function dim(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print italicized. */
+declare function italic(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print underlined. */
+declare function underline(input: string | number): string;
+/** Wrap a string with ANSI control characters such that its foreground (text) and background colors are swapped. */
+declare function inverse(input: string | number): string;
+/** Wrap a string with ANSI control characters such that it is hidden. */
+declare function hidden(input: string | number): string;
+/** Wrap a string with the ANSI control characters that will make it print with a horizontal line through its center. */
+declare function strikethrough(input: string | number): string;
 
 declare type TypedArray =
   | Int8Array
@@ -550,94 +582,6 @@ declare const is: {
   AsyncGenerator(value: any): value is AsyncGenerator<unknown, any, unknown>;
   AsyncGeneratorFunction(value: any): value is AsyncGeneratorFunction;
 };
-
-// ---------------
-// --- console ---
-// ---------------
-
-/**
- * Print one or more values to stdout.
- */
-declare const echo: typeof console.log;
-
-// ---------------
-// --- strings ---
-// ---------------
-
-/**
- * Remove ANSI control characters from a string.
- */
-declare function stripAnsi(input: string): string;
-
-/**
- * Wrap a string in double quotes, and escape any double-quotes inside using `\"`.
- */
-declare function quote(input: string): string;
-
-// Colors
-
-/** Wrap a string with the ANSI control characters that will make it print as black text. */
-declare function black(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print as red text. */
-declare function red(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print as green text. */
-declare function green(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print as yellow text. */
-declare function yellow(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print as blue text. */
-declare function blue(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print as magenta text. */
-declare function magenta(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print as cyan text. */
-declare function cyan(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print as white text. */
-declare function white(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print as gray text. */
-declare function gray(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print as grey text. */
-declare function grey(input: string | number): string;
-
-// Background Colors
-
-/** Wrap a string with the ANSI control characters that will make it have a black background. */
-declare function bgBlack(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it have a red background. */
-declare function bgRed(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it have a green background. */
-declare function bgGreen(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it have a yellow background. */
-declare function bgYellow(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it have a blue background. */
-declare function bgBlue(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it have a magenta background. */
-declare function bgMagenta(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it have a cyan background. */
-declare function bgCyan(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it have a white background. */
-declare function bgWhite(input: string | number): string;
-
-// Modifiers
-
-/** Wrap a string with the ANSI control character that resets all styling. */
-declare function reset(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print with a bold style. */
-declare function bold(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print with a dimmed style. */
-declare function dim(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print italicized. */
-declare function italic(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print underlined. */
-declare function underline(input: string | number): string;
-/** Wrap a string with ANSI control characters such that its foreground (text) and background colors are swapped. */
-declare function inverse(input: string | number): string;
-/** Wrap a string with ANSI control characters such that it is hidden. */
-declare function hidden(input: string | number): string;
-/** Wrap a string with the ANSI control characters that will make it print with a horizontal line through its center. */
-declare function strikethrough(input: string | number): string;
-
-// ------------
-// --- pipe ---
-// ------------
 
 /**
  * The data source of a pipe operation; either an in-memory object, or a
@@ -753,9 +697,20 @@ declare interface Pipe {
 
 declare const pipe: Pipe;
 
-// -------------------------------------------
-// --- other globals and convenience types ---
-// -------------------------------------------
+/**
+ * Returns the absolute path to the root folder of the git/hg repo.
+ *
+ * This is done by running `git rev-parse --show-toplevel` and `hg root`.
+ *
+ * If `relativeTo` is provided, the git and hg commands will be executed in
+ * that folder instead of in `pwd()`.
+ */
+declare function repoRoot(relativeTo?: string): string;
+
+/**
+ * Returns whether the provided path is ignored by git.
+ */
+declare function isGitignored(path: string): boolean;
 
 // prettier-ignore
 /** Any integer in the range [0, 255]. */
@@ -784,10 +739,11 @@ declare var boolean: BooleanConstructor;
 declare var bigint: BigIntConstructor;
 declare var symbol: SymbolConstructor;
 
+// ==========================================
 // ------------------------------------------
 // QuickJS APIs, which YavaScript builds upon
 // ------------------------------------------
-
+// ==========================================
 // Definitions of the globals and modules added by quickjs-libc
 
 /**
@@ -1621,4 +1577,3 @@ declare interface InspectFunction {
  * @returns A string representation of `value`.
  */
 declare var inspect: InspectFunction;
-
