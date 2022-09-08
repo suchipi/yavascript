@@ -4,21 +4,24 @@ import { exists } from "./filesystem";
 import { pwd, paths } from "./paths";
 
 export type GlobOptions = {
+  dir?: string;
   followSymlinks?: boolean;
   trace?: (...args: Array<any>) => void;
 };
 
 export function glob(
-  dir: string,
-  patterns: Array<string>,
+  patterns: string | Array<string>,
   options: GlobOptions = {}
 ): Array<string> {
+  const dir = options.dir ?? pwd();
+  const patternsArray = Array.isArray(patterns) ? patterns : [patterns];
+
   if (!exists(dir)) {
     throw new Error(`No such directory: ${dir} (from ${pwd()})`);
   }
 
   const startingDir = paths.resolve(dir);
-  const allPatterns = patterns.map((pattern) => {
+  const allPatterns = patternsArray.map((pattern) => {
     if (pattern.startsWith("!")) {
       const nonNegated = pattern.slice(1);
 

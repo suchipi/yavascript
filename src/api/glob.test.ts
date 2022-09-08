@@ -7,7 +7,7 @@ const symlinksDir = rootDir("src/api/test_fixtures/symlinks");
 function testGlob(
   name: string,
   dir: string,
-  patterns: Array<string>,
+  patterns: Array<string> | string,
   expected: Array<string>,
   testFn?: (descr: string, body: () => any) => any
 ) {
@@ -15,7 +15,7 @@ function testGlob(
   if (!testFn) testFn = test;
 
   testFn(name, async () => {
-    const args: Array<any> = [dir, patterns];
+    const args: Array<any> = [patterns, { dir }];
 
     const result = await evaluate(
       `glob(${args.map((arg) => JSON.stringify(arg)).join(", ")})`
@@ -43,6 +43,15 @@ testGlob(
     "<rootDir>/src/api/test_fixtures/glob/hi",
   ]
 );
+
+testGlob("single glob", globDir, "*", [
+  "<rootDir>/src/api/test_fixtures/glob/hi.something.js",
+  "<rootDir>/src/api/test_fixtures/glob/potato",
+  "<rootDir>/src/api/test_fixtures/glob/hi.js",
+  "<rootDir>/src/api/test_fixtures/glob/hi.txt",
+  "<rootDir>/src/api/test_fixtures/glob/cabana",
+  "<rootDir>/src/api/test_fixtures/glob/hi",
+]);
 
 testGlob(
   "simple starglob",
@@ -139,7 +148,10 @@ testGlob(
 
 test("error reading dead link does not stop search", async () => {
   const result = await evaluate(
-    `glob(${JSON.stringify(symlinksDir)}, ["**/*"], { followSymlinks: true })`
+    `glob(["**/*"], {
+      followSymlinks: true,
+      dir: ${JSON.stringify(symlinksDir)}
+    })`
   );
 
   const expected = [
@@ -193,9 +205,10 @@ testGlob(
 
 test("using trace", async () => {
   const result = await evaluate(
-    `glob(${JSON.stringify(
-      globDir
-    )}, ["**/*.txt", "!**/potato/**"], { trace: console.error })`
+    `glob(["**/*.txt", "!**/potato/**"], {
+      trace: console.error,
+      dir: ${JSON.stringify(globDir)}
+    })`
   );
 
   const expectedTraceMessages = [

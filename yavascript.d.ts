@@ -400,6 +400,11 @@ declare type GlobOptions = {
    * ```
    */
   trace?: (...args: Array<any>) => void;
+
+  /**
+   * Directory to interpret glob patterns relative to. Defaults to `pwd()`.
+   */
+  dir?: string;
 };
 
 /**
@@ -409,8 +414,7 @@ declare type GlobOptions = {
  * options.
  */
 declare function glob(
-  dir: string,
-  patterns: Array<string>,
+  patterns: string | Array<string>,
   options?: GlobOptions
 ): Array<string>;
 
