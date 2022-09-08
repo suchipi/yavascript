@@ -89,4 +89,6 @@ declare const is: {
   };
   AsyncGenerator(value: any): value is AsyncGenerator<unknown, any, unknown>;
   AsyncGeneratorFunction(value: any): value is AsyncGeneratorFunction;
+
+  FILE(value: any): value is FILE;
 };

@@ -1,5 +1,4 @@
 import * as std from "std";
-import * as os from "os";
 import { TypedArray, TypedArrayConstructor } from "./typed-array";
 import { byte } from "./byte";
 import { is } from "./is";
@@ -14,8 +13,8 @@ export type PipeSource =
   | { data: TypedArray; maxLength?: number; until?: string | byte }
   | DataView
   | { data: DataView; maxLength?: number; until?: string | byte }
-  | std.FILE
-  | { data: std.FILE; maxLength?: number; until?: string | byte }
+  | FILE
+  | { data: FILE; maxLength?: number; until?: string | byte }
   | { path: string; maxLength?: number; until?: string | byte }
   | { fd: number; maxLength?: number; until?: string | byte };
 
@@ -30,7 +29,7 @@ function getReadable(from: PipeSource): Readable {
     | SharedArrayBuffer
     | TypedArray
     | DataView
-    | std.FILE
+    | FILE
     | string
     | null = null;
 
@@ -126,8 +125,8 @@ function getReadable(from: PipeSource): Readable {
         return byte as byte;
       },
     };
-  } else if (source instanceof std.FILE) {
-    const file = source as std.FILE;
+  } else if (is.FILE(source)) {
+    const file = source as FILE;
 
     let offset = 0;
     let reachedUntil = false;
@@ -188,7 +187,7 @@ function getReadable(from: PipeSource): Readable {
 }
 
 export type PipeDestination =
-  | { intoExisting: ArrayBuffer | SharedArrayBuffer | DataView | std.FILE }
+  | { intoExisting: ArrayBuffer | SharedArrayBuffer | DataView | FILE }
   | {
       intoNew:
         | ArrayBufferConstructor
@@ -228,7 +227,7 @@ function getWritable(to: PipeDestination): Writable {
     throw err;
   }
 
-  const filesToClose: Array<std.FILE> = [];
+  const filesToClose: Array<FILE> = [];
 
   if (is.string((to as any).path)) {
     const file = std.open((to as any).path, "w");
@@ -272,7 +271,7 @@ function getWritable(to: PipeDestination): Writable {
             return target;
           },
         };
-      } else if (target instanceof std.FILE) {
+      } else if (is.FILE(target)) {
         return {
           write(byte: byte): boolean {
             try {
@@ -379,11 +378,11 @@ export interface Pipe {
   ): { bytesTransferred: number; target: Target };
   (from: PipeSource, to: { path: string }): {
     bytesTransferred: number;
-    target: std.FILE;
+    target: FILE;
   };
   (from: PipeSource, to: { fd: number }): {
     bytesTransferred: number;
-    target: std.FILE;
+    target: FILE;
   };
 }
 

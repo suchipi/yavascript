@@ -585,6 +585,8 @@ declare const is: {
   };
   AsyncGenerator(value: any): value is AsyncGenerator<unknown, any, unknown>;
   AsyncGeneratorFunction(value: any): value is AsyncGeneratorFunction;
+
+  FILE(value: any): value is FILE;
 };
 
 /**
@@ -901,6 +903,14 @@ declare module "std" {
    * @param stackLevels - How many levels up the stack to search for a filename. Defaults to 0, which uses the current stack frame.
    */
   export function getFileNameFromStack(stackLevels: number): string;
+
+  /**
+   * Return a boolean indicating whether the provided value is a FILE object.
+   *
+   * @param value - The value to check.
+   * @returns Whether the value was a `FILE` or not.
+   */
+  export function isFILE(value: any): boolean;
 
   /**
    * Open a file (wrapper to the libc `fopen()`).
