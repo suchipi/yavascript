@@ -2,6 +2,7 @@ import * as os from "os";
 import minimatch from "minimatch";
 import { exists } from "./filesystem";
 import { pwd, paths } from "./paths";
+import { makeErrorWithProperties } from "../error-with-properties";
 
 export type GlobOptions = {
   dir?: string;
@@ -24,9 +25,7 @@ function compile(pattern: string, startingDir: string) {
 
   const regexp = minimatch.makeRe(normalized);
   if (!regexp) {
-    const err = new Error(`Invalid glob pattern (pattern = ${pattern})`);
-    Object.assign(err, { pattern });
-    throw err;
+    throw makeErrorWithProperties("Invalid glob pattern", { pattern });
   }
 
   return regexp;

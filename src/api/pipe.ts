@@ -2,7 +2,7 @@ import * as std from "std";
 import { TypedArray, TypedArrayConstructor } from "./typed-array";
 import { byte } from "./byte";
 import { is } from "./is";
-import * as inspectOptions from "../inspect-options";
+import { makeErrorWithProperties } from "../error-with-properties";
 
 export type PipeSource =
   | { data: string; maxLength?: number; until?: string | byte }
@@ -53,11 +53,10 @@ function getReadable(from: PipeSource): Readable {
     if (is.string(from.until)) {
       if (from.until.length !== 1) {
         const received = from.until;
-        const err = new Error(
-          `Only single-byte strings or integers from 0 to 255 may be used as 'until' (received = ${received})`
+        throw makeErrorWithProperties(
+          "Only single-byte strings or integers from 0 to 255 may be used as 'until'",
+          { received }
         );
-        Object.assign(err, { received });
-        throw err;
       }
 
       until = from.until.charCodeAt(0) as byte;
@@ -67,11 +66,10 @@ function getReadable(from: PipeSource): Readable {
       const isInteger = from.until % 1 === 0;
       if (from.until < 0 || !isInteger || from.until > 255) {
         const received = from.until;
-        const err = new Error(
-          `Only single-byte strings or integers from 0 to 255 may be used as 'until' (received = ${received})`
+        throw makeErrorWithProperties(
+          "Only single-byte strings or integers from 0 to 255 may be used as 'until'",
+          { received }
         );
-        Object.assign(err, { received });
-        throw err;
       }
 
       until = from.until as byte;
@@ -91,14 +89,7 @@ function getReadable(from: PipeSource): Readable {
   }
 
   if (source == null) {
-    const err = new Error(
-      `Invalid argument (from = ${inspect(
-        from,
-        inspectOptions.forError
-      ).replace(/\n+/g, " ")})`
-    );
-    Object.assign(err, { from });
-    throw err;
+    throw makeErrorWithProperties("Invalid argument", { from });
   }
 
   if (
@@ -192,14 +183,7 @@ function getReadable(from: PipeSource): Readable {
       },
     };
   } else {
-    const err = new Error(
-      `Invalid readable source (from = ${inspect(
-        from,
-        inspectOptions.forError
-      ).replace(/\n+/g, " ")}))`
-    );
-    Object.assign(err, { from });
-    throw err;
+    throw makeErrorWithProperties("Invalid readable source", { from });
   }
 }
 
@@ -243,9 +227,7 @@ type Writable = {
 
 function getWritable(to: PipeDestination): Writable {
   if (!(is.object(to) || is.function(to))) {
-    const err = new Error(`Invalid argument (to = ${to})`);
-    Object.assign(err, { to });
-    throw err;
+    throw makeErrorWithProperties("Invalid argument", { to });
   }
 
   const filesToClose: Array<FILE> = [];
@@ -371,9 +353,7 @@ function getWritable(to: PipeDestination): Writable {
         }
       }
     } else {
-      const err = new Error(`Invalid argument (to = ${to})`);
-      Object.assign(err, { to });
-      throw err;
+      throw makeErrorWithProperties("Invalid argument", { to });
     }
   } catch (err) {
     for (const file of filesToClose) {
@@ -383,9 +363,9 @@ function getWritable(to: PipeDestination): Writable {
   }
 
   // Shouldn't be possible to get here, but...
-  const err = new Error(`Internal error: Unhandled destination (to = ${to})`);
-  Object.assign(err, { to });
-  throw err;
+  throw makeErrorWithProperties("Internal error: Unhandled destination", {
+    to,
+  });
 }
 
 export interface Pipe {

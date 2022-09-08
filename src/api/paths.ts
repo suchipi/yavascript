@@ -1,5 +1,6 @@
 import * as std from "std";
 import * as os from "os";
+import { makeErrorWithProperties } from "../error-with-properties";
 
 export function cd(path: string): void {
   os.chdir(path);
@@ -88,16 +89,10 @@ export const paths = {
           if (newParts.length > 0) {
             newParts.pop();
           } else {
-            const err = new Error(
-              `Cannot resolve leading .. from path ${JSON.stringify(
-                from
-              )} (path = ${path})`
-            );
-            Object.assign(err, {
+            throw makeErrorWithProperties("Cannot resolve leading ..", {
               from,
               path,
             });
-            throw err;
           }
         }
       } else if (currentPart != null) {

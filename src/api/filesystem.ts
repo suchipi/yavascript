@@ -1,6 +1,7 @@
 import * as std from "std";
 import * as os from "os";
 import { basename, paths, pwd } from "./paths";
+import { makeErrorWithProperties } from "../error-with-properties";
 
 export function ls(
   dir: string = pwd(),
@@ -140,7 +141,7 @@ function copyRaw(
   to: string,
   trace?: (...args: Array<any>) => void
 ): void {
-  let filesToCloseLater: Record<string, std.FILE> = {};
+  let filesToCloseLater: Record<string, FILE> = {};
 
   try {
     if (trace) {
@@ -299,12 +300,10 @@ export function copy(
     case "nonexistent -> nonexistent":
     case "nonexistent -> dir":
     case "nonexistent -> file": {
-      const error: any = new Error(
-        `Attempting to copy a nonexistent file (from = ${from}, to = ${to})`
-      );
-      error.from = from;
-      error.to = to;
-      throw error;
+      throw makeErrorWithProperties("Attempting to copy a nonexistent file", {
+        from,
+        to,
+      });
     }
 
     default: {
