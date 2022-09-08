@@ -1,4 +1,4 @@
 export default {
-    __filename,
-    __dirname
-}
+  __filename,
+  __dirname,
+};

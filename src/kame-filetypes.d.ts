@@ -1,4 +1,4 @@
 declare module "*.md" {
-    const content: string;
-    export = content;
+  const content: string;
+  export = content;
 }
