@@ -9,6 +9,29 @@ export type GlobOptions = {
   trace?: (...args: Array<any>) => void;
 };
 
+function compile(pattern: string, startingDir: string) {
+  let prefix = "";
+  if (pattern.startsWith("!")) {
+    prefix = "!";
+    pattern = pattern.slice(1);
+  }
+
+  const normalized =
+    prefix +
+    (paths.isAbsolute(pattern)
+      ? pattern
+      : paths.resolve("./" + pattern, startingDir));
+
+  const regexp = minimatch.makeRe(normalized);
+  if (!regexp) {
+    const err = new Error(`Invalid glob pattern (pattern = ${pattern})`);
+    Object.assign(err, { pattern });
+    throw err;
+  }
+
+  return regexp;
+}
+
 export function glob(
   patterns: string | Array<string>,
   options: GlobOptions = {}
@@ -22,28 +45,14 @@ export function glob(
 
   const startingDir = paths.resolve(dir);
   const allPatterns = patternsArray.map((pattern) => {
-    if (pattern.startsWith("!")) {
-      const nonNegated = pattern.slice(1);
-
-      return {
-        negated: true,
-        pattern: paths.isAbsolute(nonNegated)
-          ? nonNegated
-          : paths.resolve("./" + nonNegated, startingDir),
-      };
-    } else {
-      return {
-        negated: false,
-        pattern: paths.isAbsolute(pattern)
-          ? pattern
-          : paths.resolve("./" + pattern, startingDir),
-      };
-    }
+    return {
+      negated: pattern.startsWith("!"),
+      pattern,
+      regexp: compile(pattern, startingDir),
+    };
   });
 
-  const negatedPatterns = allPatterns
-    .filter(({ negated }) => negated)
-    .map(({ pattern }) => pattern);
+  const negatedPatterns = allPatterns.filter(({ negated }) => negated);
 
   const matches: Array<string> = [];
 
@@ -79,8 +88,8 @@ export function glob(
         }
 
         if (
-          allPatterns.every(({ pattern, negated }) => {
-            let didMatch = minimatch(fullName, pattern);
+          allPatterns.every(({ pattern, negated, regexp }) => {
+            let didMatch = regexp.test(fullName);
 
             if (options.trace) {
               const info = JSON.stringify({
@@ -91,8 +100,6 @@ export function glob(
               });
               options.trace.call(null, `match info: ${info}`);
             }
-
-            if (negated) didMatch = !didMatch;
 
             return didMatch;
           })
@@ -111,14 +118,25 @@ export function glob(
           // took care of all of this for us... because you end up needing
           // to be aware of the glob pattern parsing and syntax in order to
           // know the optimal traversal path.
-          if (negatedPatterns.some((pattern) => minimatch(fullName, pattern))) {
-            if (options.trace) {
-              options.trace.call(
-                null,
-                `not traversing deeper into dir as it matches a negated pattern: ${fullName}`
-              );
+          let shouldGoDeeper = true;
+          for (const { regexp, pattern } of negatedPatterns) {
+            const matchesNegated = !regexp.test(fullName);
+            if (matchesNegated) {
+              if (options.trace) {
+                options.trace.call(
+                  null,
+                  `not traversing deeper into dir as it matches a negated pattern: ${JSON.stringify(
+                    { dir: fullName, pattern }
+                  )}`
+                );
+              }
+
+              shouldGoDeeper = false;
+              break;
             }
-          } else {
+          }
+
+          if (shouldGoDeeper) {
             find(fullName);
           }
         }
