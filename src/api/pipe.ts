@@ -191,13 +191,13 @@ export type PipeDestination =
   | ArrayBuffer
   | SharedArrayBuffer
   | DataView
+  | TypedArray
   | FILE
   | ArrayBufferConstructor
   | SharedArrayBufferConstructor
   | DataViewConstructor
   | TypedArrayConstructor
   | StringConstructor
-  | DataViewConstructor
   | { path: string }
   | { fd: number };
 
@@ -227,7 +227,10 @@ type Writable = {
 
 function getWritable(to: PipeDestination): Writable {
   if (!(is.object(to) || is.function(to))) {
-    throw makeErrorWithProperties("Invalid argument", { to });
+    throw makeErrorWithProperties(
+      "'to' must be a function or object, but received something else",
+      { to }
+    );
   }
 
   const filesToClose: Array<FILE> = [];
@@ -247,18 +250,24 @@ function getWritable(to: PipeDestination): Writable {
       is.ArrayBuffer(to) ||
       is.SharedArrayBuffer(to) ||
       is.DataView(to) ||
+      is.TypedArray(to) ||
       is.FILE(to)
     ) {
       target = to;
       if (
         is.ArrayBuffer(target) ||
         is.SharedArrayBuffer(target) ||
-        is.DataView(target)
+        is.DataView(target) ||
+        is.TypedArray(target)
       ) {
         let offset = 0;
         let limit = target.byteLength;
 
-        const view = is.DataView(target) ? target : new DataView(target);
+        const view = is.DataView(target)
+          ? target
+          : is.TypedArray(target)
+          ? new DataView(target.buffer)
+          : new DataView(target);
 
         return {
           write(byte: byte): boolean {
@@ -270,9 +279,6 @@ function getWritable(to: PipeDestination): Writable {
             return true;
           },
           result() {
-            if (!is.DataView(target)) {
-              return resizeBuffer(target, offset);
-            }
             return target;
           },
         };
@@ -287,7 +293,14 @@ function getWritable(to: PipeDestination): Writable {
             }
           },
           result() {
-            return target;
+            for (const file of filesToClose) {
+              file.close();
+            }
+            if (filesToClose.length > 0) {
+              return to;
+            } else {
+              return target;
+            }
           },
         };
       }
@@ -368,49 +381,38 @@ function getWritable(to: PipeDestination): Writable {
   });
 }
 
-export interface Pipe {
-  (from: PipeSource, to: { path: string }): {
-    bytesTransferred: number;
-    target: FILE;
-  };
-  (from: PipeSource, to: { fd: number }): {
-    bytesTransferred: number;
-    target: FILE;
-  };
-
-  <Dest extends PipeDestination>(from: PipeSource, to: Dest): {
-    bytesTransferred: number;
-    target: Dest extends ArrayBuffer | SharedArrayBuffer | DataView | FILE
-      ? Dest
-      : Dest extends
-          | ArrayBufferConstructor
-          | SharedArrayBufferConstructor
-          | DataViewConstructor
-          | TypedArrayConstructor
-          | DataViewConstructor
-      ? Dest["prototype"]
-      : Dest extends StringConstructor
-      ? string
-      : never;
-  };
-}
-
 // TODO: child process stdio should be pipeable; would need to introduce child
 // type to return from exec
-//
-// TODO: doesn't seem to handle null character within string properly
-//
-// TODO: close created fds by default, like source does (if you want unclosed, open them yourself)
-export const pipe: Pipe = (
+export const pipe = <Dest extends PipeDestination>(
   from: PipeSource,
-  to: PipeDestination
-): { bytesTransferred: number; target: any } => {
+  to: Dest
+): {
+  bytesTransferred: number;
+  target: Dest extends
+    | ArrayBuffer
+    | SharedArrayBuffer
+    | DataView
+    | FILE
+    | { path: string }
+    | { fd: number }
+    ? Dest
+    : Dest extends
+        | ArrayBufferConstructor
+        | SharedArrayBufferConstructor
+        | DataViewConstructor
+        | TypedArrayConstructor
+        | DataViewConstructor
+    ? Dest["prototype"]
+    : Dest extends StringConstructor
+    ? string
+    : never;
+} => {
   const readable = getReadable(from);
   const writable = getWritable(to);
 
   let bytesTransferred = 0;
   let byte: byte | null;
-  while ((byte = readable.read())) {
+  while (((byte = readable.read()), byte != null)) {
     const wrote = writable.write(byte);
     if (!wrote) break;
     bytesTransferred++;

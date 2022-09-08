@@ -1,5 +1,7 @@
 import * as inspectOptions from "./inspect-options";
 
+const MAX_ERROR_MESSAGE_LENGTH = 1000 - 3; // minus 3 for ellipsis
+
 export function makeErrorWithProperties<
   Properties extends { [key: string]: any }
 >(message: string, properties: Properties): Error & Properties {
@@ -21,6 +23,11 @@ export function makeErrorWithProperties<
     }
     errorMessage += ")";
   }
+
+  if (errorMessage.length > MAX_ERROR_MESSAGE_LENGTH) {
+    errorMessage = errorMessage.slice(0, MAX_ERROR_MESSAGE_LENGTH) + "...";
+  }
+
   const err = new Error(errorMessage);
   return Object.assign(err, properties);
 }

@@ -634,76 +634,44 @@ export type PipeDestination =
   | ArrayBuffer
   | SharedArrayBuffer
   | DataView
+  | TypedArray
   | FILE
   | ArrayBufferConstructor
   | SharedArrayBufferConstructor
   | DataViewConstructor
   | TypedArrayConstructor
   | StringConstructor
-  | DataViewConstructor
   | { path: string }
   | { fd: number };
 
 /**
  * Copy data from one source into the given target. Returns the number of bytes
  * written, and the target that data was written into.
- *
- * NOTE: If the target is a {@link FILE}, *including if it was created by
- * calling this function with `path` or `fd`*, it will NOT be closed by this
- * function. You need to close it yourself.
  */
-export interface Pipe {
-  /**
-   * Copy data from one source into the given target. Returns the number of bytes
-   * written, and the target that data was written into.
-   *
-   * NOTE: If the target is a {@link FILE}, *including if it was created by
-   * calling this function with `path` or `fd`*, it will NOT be closed by this
-   * function. You need to close it yourself.
-   */
-  (from: PipeSource, to: { path: string }): {
-    bytesTransferred: number;
-    target: FILE;
-  };
-  /**
-   * Copy data from one source into the given target. Returns the number of bytes
-   * written, and the target that data was written into.
-   *
-   * NOTE: If the target is a {@link FILE}, *including if it was created by
-   * calling this function with `path` or `fd`*, it will NOT be closed by this
-   * function. You need to close it yourself.
-   */
-  (from: PipeSource, to: { fd: number }): {
-    bytesTransferred: number;
-    target: FILE;
-  };
-
-  /**
-   * Copy data from one source into the given target. Returns the number of bytes
-   * written, and the target that data was written into.
-   *
-   * NOTE: If the target is a {@link FILE}, *including if it was created by
-   * calling this function with `path` or `fd`*, it will NOT be closed by this
-   * function. You need to close it yourself.
-   */
-  <Dest extends PipeDestination>(from: PipeSource, to: Dest): {
-    bytesTransferred: number;
-    target: Dest extends ArrayBuffer | SharedArrayBuffer | DataView | FILE
-      ? Dest
-      : Dest extends
-          | ArrayBufferConstructor
-          | SharedArrayBufferConstructor
-          | DataViewConstructor
-          | TypedArrayConstructor
-          | DataViewConstructor
-      ? Dest["prototype"]
-      : Dest extends StringConstructor
-      ? string
-      : never;
-  };
-}
-
-declare const pipe: Pipe;
+declare function pipe<Dest extends PipeDestination>(
+  from: PipeSource,
+  to: Dest
+): {
+  bytesTransferred: number;
+  target: Dest extends
+    | ArrayBuffer
+    | SharedArrayBuffer
+    | DataView
+    | FILE
+    | { path: string }
+    | { fd: number }
+    ? Dest
+    : Dest extends
+        | ArrayBufferConstructor
+        | SharedArrayBufferConstructor
+        | DataViewConstructor
+        | TypedArrayConstructor
+        | DataViewConstructor
+    ? Dest["prototype"]
+    : Dest extends StringConstructor
+    ? string
+    : never;
+};
 
 /**
  * Returns the absolute path to the root folder of the git/hg repo.
