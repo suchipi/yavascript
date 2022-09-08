@@ -27,6 +27,8 @@ import * as std from "std";
 import * as os from "os";
 import printError from "../../print-error";
 import inspectOptionsForPrint from "../../inspect-options-for-print";
+import { NOTHING } from "./special";
+import * as esmToRequire from "../../esm-to-require";
 
 export function startRepl() {
   /* add 'os' and 'std' bindings */
@@ -987,13 +989,23 @@ export function startRepl() {
     var result;
 
     try {
+      const newExpr = esmToRequire.transform(expr);
+      if (newExpr !== expr) {
+        std.puts(colors.gray);
+        std.puts(`-> ${newExpr.replace(/\s+/g, " ")}`);
+        std.puts(colors.none);
+        std.puts("\n");
+        expr = newExpr;
+      }
       var now = new Date().getTime();
       /* eval as a script */
       result = std.evalScript(expr, { backtraceBarrier: true });
       eval_time = new Date().getTime() - now;
       std.puts(colors.none);
-      std.puts(inspect(result, inspectOptionsForPrint));
-      std.puts(colors.none);
+      if (result !== NOTHING) {
+        std.puts(inspect(result, inspectOptionsForPrint));
+        std.puts(colors.none);
+      }
       std.puts("\n");
       /* set the last result */
       globalThis._ = result;

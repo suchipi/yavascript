@@ -1,4 +1,6 @@
+import * as std from "std";
 import kleur from "kleur";
+import { NOTHING } from "../targets/repl/special";
 
 kleur.enabled = true;
 
@@ -7,6 +9,12 @@ import stripAnsi from "strip-ansi";
 export { stripAnsi };
 
 export const quote = (str: string) => JSON.stringify(str);
+
+export function clear() {
+  std.out.puts("\u001b[2J\u001b[0;0H"); // Clear screen
+  std.out.puts("\u001b[3J"); // Clear scrollback
+  return NOTHING;
+}
 
 const {
   bgBlack,

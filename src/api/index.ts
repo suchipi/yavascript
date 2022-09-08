@@ -28,6 +28,7 @@ import { is } from "./is";
 import { isGitignored, repoRoot } from "./repo";
 import {
   quote,
+  clear,
   stripAnsi,
   bgBlack,
   bgBlue,
@@ -94,6 +95,7 @@ export function installApi(target: typeof globalThis) {
     repoRoot,
 
     quote,
+    clear,
     stripAnsi,
     bgBlack,
     bgBlue,

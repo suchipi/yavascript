@@ -207,9 +207,13 @@ function resizeBuffer<BufferType extends ArrayBuffer | SharedArrayBuffer>(
   const newBuffer = is.ArrayBuffer(inputBuffer)
     ? new ArrayBuffer(newSize)
     : new SharedArrayBuffer(newSize);
-  const oldView = new Uint8Array(inputBuffer);
-  const newView = new Uint8Array(newBuffer);
-  newView.set(oldView, 0);
+  const oldView = new DataView(inputBuffer);
+  const newView = new DataView(newBuffer);
+
+  const byteCount = Math.min(newSize, inputBuffer.byteLength);
+  for (let i = 0; i < byteCount; i++) {
+    newView.setUint8(i, oldView.getUint8(i));
+  }
   return newBuffer as any;
 }
 
@@ -217,7 +221,7 @@ type Writable = {
   // Returns whether the byte was written; if it wasn't, it means some sort of
   // limit was hit (max length, etc).
   write(byte: byte): boolean;
-  target(): any;
+  result(): any;
 };
 
 function getWritable(to: PipeDestination): Writable {
@@ -267,7 +271,10 @@ function getWritable(to: PipeDestination): Writable {
             offset++;
             return true;
           },
-          target() {
+          result() {
+            if (!is.DataView(target)) {
+              return resizeBuffer(target, offset);
+            }
             return target;
           },
         };
@@ -281,7 +288,7 @@ function getWritable(to: PipeDestination): Writable {
               return false;
             }
           },
-          target() {
+          result() {
             return target;
           },
         };
@@ -306,7 +313,7 @@ function getWritable(to: PipeDestination): Writable {
               target += String.fromCharCode(byte);
               return true;
             },
-            target() {
+            result() {
               return target;
             },
           };
@@ -333,10 +340,11 @@ function getWritable(to: PipeDestination): Writable {
               offset++;
               return true;
             },
-            target() {
+            result() {
               switch (targetConstructor) {
                 case ArrayBuffer:
                 case SharedArrayBuffer: {
+                  buffer = resizeBuffer(buffer, offset);
                   return buffer;
                 }
                 case DataView: {
@@ -345,6 +353,7 @@ function getWritable(to: PipeDestination): Writable {
                 // String is not reachable here because it was handled in an
                 // earlier switch statement
                 default: {
+                  buffer = resizeBuffer(buffer, offset);
                   return new (targetConstructor as TypedArrayConstructor)(
                     buffer
                   );
@@ -404,5 +413,5 @@ export const pipe: Pipe = (
   }
   readable.close();
 
-  return { bytesTransferred, target: writable.target() };
+  return { bytesTransferred, target: writable.result() };
 };
