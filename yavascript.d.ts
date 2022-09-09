@@ -754,7 +754,11 @@ declare var console: {
 
 /** An object representing a file handle. */
 declare interface FILE {
-  /** Close the file.  */
+  /**
+   * Close the file handle. Note that for files other than stdin/stdout/stderr,
+   * the file will be closed automatically when the `FILE` object is
+   * garbage-collected.
+   */
   close(): void;
 
   /** Outputs the string with the UTF-8 encoding. */
