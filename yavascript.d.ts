@@ -755,6 +755,22 @@ declare var console: {
 /** An object representing a file handle. */
 declare interface FILE {
   /**
+   * Human-readable description of where this FILE points.
+   *
+   * If `target` is a number, the FILE was opened with fdopen, and `target` is
+   * the fd. Otherwise, `target` will be an arbitrary string that describes the
+   * file; it may be the absolute path to the file, the relative path to the
+   * file at time of its opening, or some other string like "stdin" or
+   * "tmpfile".
+   *
+   * You should *not* use this property for anything other than logging and
+   * debugging. It is *only* provided for debugging and/or troubleshooting
+   * purposes. The value of this property could change at any time when
+   * upgrading yavascript, even if upgrading by a minor or patch release.
+   */
+  target: string | number;
+
+  /**
    * Close the file handle. Note that for files other than stdin/stdout/stderr,
    * the file will be closed automatically when the `FILE` object is
    * garbage-collected.
