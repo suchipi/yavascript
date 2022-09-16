@@ -4,6 +4,7 @@ import { parseArgString } from "./parseArgString";
 import { pwd } from "./paths";
 import { env } from "./env";
 import { makeErrorWithProperties } from "../error-with-properties";
+import traceAll from "./traceAll";
 
 export type ChildProcessOptions = {
   cwd?: string;
@@ -48,7 +49,7 @@ export class ChildProcess {
       err: options?.stdio?.err ?? std.err,
     };
 
-    this.trace = options.trace;
+    this.trace = options.trace ?? traceAll.getDefaultTrace();
   }
 
   /** returns pid */
@@ -114,7 +115,7 @@ const exec = (
     captureOutput = false,
     cwd,
     env,
-    trace,
+    trace = traceAll.getDefaultTrace(),
   } = options;
 
   if (typeof args === "string") {

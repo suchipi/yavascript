@@ -63,6 +63,7 @@ import {
 import { console, echo, print } from "./console";
 import { pipe } from "./pipe";
 import { bigint, boolean, number, string, symbol } from "./others";
+import traceAll from "./traceAll";
 
 export default function installApi(target: typeof globalThis) {
   Object.assign(target, {
@@ -138,6 +139,8 @@ export default function installApi(target: typeof globalThis) {
     number,
     string,
     symbol,
+
+    traceAll,
   });
 
   Object.defineProperties(target, {

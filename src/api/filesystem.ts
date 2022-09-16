@@ -2,6 +2,7 @@ import * as std from "std";
 import * as os from "os";
 import { basename, paths, pwd } from "./paths";
 import { makeErrorWithProperties } from "../error-with-properties";
+import traceAll from "./traceAll";
 
 export function ls(
   dir: string = pwd(),
@@ -139,7 +140,9 @@ export function ensureDir(path: string) {
 function copyRaw(
   from: string,
   to: string,
-  trace?: (...args: Array<any>) => void
+  trace:
+    | undefined
+    | ((...args: Array<any>) => void) = traceAll.getDefaultTrace()
 ): void {
   let filesToCloseLater: Record<string, FILE> = {};
 

@@ -3,6 +3,7 @@ import minimatch from "minimatch";
 import { exists } from "./filesystem";
 import { pwd, paths } from "./paths";
 import { makeErrorWithProperties } from "../error-with-properties";
+import traceAll from "./traceAll";
 
 export type GlobOptions = {
   dir?: string;
@@ -36,6 +37,7 @@ export function glob(
   options: GlobOptions = {}
 ): Array<string> {
   const dir = options.dir ?? pwd();
+  const trace = options.trace ?? traceAll.getDefaultTrace();
   const patternsArray = Array.isArray(patterns) ? patterns : [patterns];
 
   if (!exists(dir)) {
@@ -56,16 +58,13 @@ export function glob(
   const matches: Array<string> = [];
 
   function find(searchDir: string) {
-    if (options.trace) {
-      options.trace.call(null, `reading children of ${searchDir}`);
+    if (trace) {
+      trace(`reading children of ${searchDir}`);
     }
     const children = os.readdir(searchDir);
 
-    if (options.trace) {
-      options.trace.call(
-        null,
-        `found ${children.length} children of ${searchDir}`
-      );
+    if (trace) {
+      trace(`found ${children.length} children of ${searchDir}`);
     }
 
     for (const child of children) {
@@ -74,8 +73,8 @@ export function glob(
 
       const fullName = searchDir + "/" + child;
 
-      if (options.trace) {
-        options.trace.call(null, `checking ${fullName}`);
+      if (trace) {
+        trace(`checking ${fullName}`);
       }
 
       try {
@@ -90,14 +89,13 @@ export function glob(
           allPatterns.every(({ pattern, negated, regexp }) => {
             let didMatch = regexp.test(fullName);
 
-            if (options.trace) {
-              const info = JSON.stringify({
+            if (trace) {
+              trace("match info:", {
                 didMatch,
                 pattern,
                 negated,
                 fullName,
               });
-              options.trace.call(null, `match info: ${info}`);
             }
 
             return didMatch;
@@ -121,9 +119,8 @@ export function glob(
           for (const { regexp, pattern } of negatedPatterns) {
             const matchesNegated = !regexp.test(fullName);
             if (matchesNegated) {
-              if (options.trace) {
-                options.trace.call(
-                  null,
+              if (trace) {
+                trace(
                   `not traversing deeper into dir as it matches a negated pattern: ${JSON.stringify(
                     { dir: fullName, pattern }
                   )}`
@@ -142,8 +139,8 @@ export function glob(
       } catch (err: any) {
         try {
           const message = `glob encountered error: ${err.message}`;
-          if (options.trace) {
-            options.trace.call(null, message);
+          if (trace) {
+            trace(message);
           }
           console.warn(message);
         } catch (err2) {
