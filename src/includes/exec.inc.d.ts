@@ -4,6 +4,17 @@ declare type BaseExecOptions = {
 
   /** Sets environment variables within the process. */
   env?: { [key: string | number]: string | number | boolean };
+
+  /**
+   * If provided, this function will be called multiple times as `exec`
+   * runs, to help you understand what's going on and/or troubleshoot things.
+   * In most cases, it makes sense to use a logging function here, like so:
+   *
+   * ```js
+   * exec(["echo", "hi"], { trace: console.log });
+   * ```
+   */
+  trace?: (...args: Array<any>) => void;
 };
 
 declare interface Exec {
@@ -116,9 +127,6 @@ declare interface Exec {
   ):
     | { stdout: string; stderr: string; status: number; signal: undefined }
     | { stdout: string; stderr: string; status: undefined; signal: number };
-
-  /** Log all executed commands to stderr. `isOn` is optional and defaults to `true`. Pass `false` to disable logging. */
-  enableLogging(isOn?: boolean): void;
 }
 
 /** Run a child process using the provided arguments. The first value in the arguments array is the program to run. */

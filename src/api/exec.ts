@@ -5,32 +5,32 @@ import { pwd } from "./paths";
 import { env } from "./env";
 import { makeErrorWithProperties } from "../error-with-properties";
 
-let logging = false;
-
-function enableLogging(isOn: boolean = true) {
-  logging = isOn;
-}
-
-type ChildProcessOptions = {
+export type ChildProcessOptions = {
   cwd?: string;
   env?: { [key: string | number]: string | number | boolean };
+  stdio?: {
+    in?: FILE;
+    out?: FILE;
+    err?: FILE;
+  };
+  trace?: (...args: Array<any>) => void;
 };
 
-class ChildProcess {
+export class ChildProcess {
   args: Array<string>;
   cwd: string;
   env: { [key: string]: string };
-
   stdio: {
     in: FILE;
     out: FILE;
     err: FILE;
   };
+  trace?: (...args: Array<any>) => void;
 
   pid: number | null = null;
 
-  constructor(args: Array<string>, options: ChildProcessOptions = {}) {
-    this.args = args;
+  constructor(args: string | Array<string>, options: ChildProcessOptions = {}) {
+    this.args = typeof args === "string" ? parseArgString(args) : args;
     this.cwd = options.cwd || pwd();
 
     const baseEnv = options.env || env;
@@ -43,14 +43,20 @@ class ChildProcess {
     }
 
     this.stdio = {
-      in: std.in,
-      out: std.out,
-      err: std.err,
+      in: options?.stdio?.in ?? std.in,
+      out: options?.stdio?.out ?? std.out,
+      err: options?.stdio?.err ?? std.err,
     };
+
+    this.trace = options.trace;
   }
 
   /** returns pid */
   start(): number {
+    if (this.trace) {
+      this.trace.call(null, "ChildProcess.start:", this.args);
+    }
+
     this.pid = os.exec(this.args, {
       block: false,
       cwd: this.cwd,
@@ -76,9 +82,17 @@ class ChildProcess {
       const [ret, status] = os.waitpid(pid);
       if (ret == pid) {
         if (os.WIFEXITED(status)) {
-          return { status: os.WEXITSTATUS(status), signal: undefined };
+          const ret = { status: os.WEXITSTATUS(status), signal: undefined };
+          if (this.trace) {
+            this.trace.call(null, "ChildProcess result:", this.args, "->", ret);
+          }
+          return ret;
         } else if (os.WIFSIGNALED(status)) {
-          return { status: undefined, signal: os.WTERMSIG(status) };
+          const ret = { status: undefined, signal: os.WTERMSIG(status) };
+          if (this.trace) {
+            this.trace.call(null, "ChildProcess result:", this.args, "->");
+          }
+          return ret;
         }
       }
     }
@@ -92,6 +106,7 @@ const exec = (
     env?: { [key: string | number]: string | number | boolean };
     failOnNonZeroStatus?: boolean;
     captureOutput?: boolean;
+    trace?: (...args: Array<any>) => void;
   } = {}
 ): any => {
   const {
@@ -99,17 +114,14 @@ const exec = (
     captureOutput = false,
     cwd,
     env,
+    trace,
   } = options;
 
   if (typeof args === "string") {
     args = parseArgString(args);
   }
 
-  const child = new ChildProcess(args, { cwd, env });
-
-  if (logging) {
-    std.err.puts("+ exec: " + JSON.stringify(args) + "\n");
-  }
+  const child = new ChildProcess(args, { cwd, env, trace });
 
   let tmpOut: FILE | null = null;
   let tmpErr: FILE | null = null;
@@ -124,14 +136,6 @@ const exec = (
   try {
     child.start();
     result = child.waitUntilComplete();
-
-    if (logging) {
-      std.err.puts(
-        "+ exec result: " +
-          JSON.stringify(args) +
-          ` -> ${JSON.stringify(result)}\n`
-      );
-    }
 
     if (failOnNonZeroStatus && result.status !== 0) {
       throw makeErrorWithProperties(
@@ -162,8 +166,8 @@ const exec = (
       );
     }
   } catch (err) {
-    if (logging) {
-      std.err.puts(`+ exec error: ${inspect(err)}\n`);
+    if (trace) {
+      trace("exec error:", err);
     }
     throw err;
   } finally {
@@ -171,8 +175,6 @@ const exec = (
     if (tmpErr != null) tmpErr.close();
   }
 };
-
-exec.enableLogging = enableLogging;
 
 export { exec };
 

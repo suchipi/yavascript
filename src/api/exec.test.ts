@@ -227,16 +227,22 @@ test("exec's string parsing does not parse globs", async () => {
 
 test("logging", async () => {
   const result = await evaluate(
-    `exec.enableLogging(); exec('echo hi'); exec(['echo', '   hi']);`
+    `exec('echo hi', { trace: console.error }); exec(['echo', '   hi'], { trace: console.error });`
   );
   expect(result).toEqual({
     code: 0,
     error: false,
     stderr: [
-      `+ exec: ["echo","hi"]`,
-      `+ exec result: ["echo","hi"] -> {"status":0}`,
-      `+ exec: ["echo","   hi"]`,
-      `+ exec result: ["echo","   hi"] -> {"status":0}`,
+      `ChildProcess.start: ${inspect(["echo", "hi"])}`,
+      `ChildProcess result: ${inspect(["echo", "hi"])} -> ${inspect({
+        status: 0,
+        signal: undefined,
+      })}`,
+      `ChildProcess.start: ${inspect(["echo", "   hi"])}`,
+      `ChildProcess result: ${inspect(["echo", "   hi"])} -> ${inspect({
+        status: 0,
+        signal: undefined,
+      })}`,
       ``,
     ].join("\n"),
     stdout: "hi\n   hi\n",
