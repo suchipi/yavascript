@@ -49,7 +49,9 @@ declare interface Exec {
        */
       captureOutput: false;
     }
-  ): { status: number };
+  ):
+    | { status: number; signal: undefined }
+    | { status: undefined; signal: number };
 
   (
     args: Array<string> | string,
@@ -62,7 +64,9 @@ declare interface Exec {
        */
       failOnNonZeroStatus: false;
     }
-  ): { status: number };
+  ):
+    | { status: number; signal: undefined }
+    | { status: undefined; signal: number };
 
   (
     args: Array<string> | string,
@@ -109,7 +113,9 @@ declare interface Exec {
       failOnNonZeroStatus: false;
       captureOutput: true;
     }
-  ): { stdout: string; stderr: string; status: number };
+  ):
+    | { stdout: string; stderr: string; status: number; signal: undefined }
+    | { stdout: string; stderr: string; status: undefined; signal: number };
 
   /** Log all executed commands to stderr. `isOn` is optional and defaults to `true`. Pass `false` to disable logging. */
   enableLogging(isOn?: boolean): void;

@@ -1,11 +1,88 @@
 import * as std from "std";
 import * as os from "os";
 import { parseArgString } from "./parseArgString";
+import { pwd } from "./paths";
+import { env } from "./env";
+import { makeErrorWithProperties } from "../error-with-properties";
 
 let logging = false;
 
 function enableLogging(isOn: boolean = true) {
   logging = isOn;
+}
+
+type ChildProcessOptions = {
+  cwd?: string;
+  env?: { [key: string | number]: string | number | boolean };
+};
+
+class ChildProcess {
+  args: Array<string>;
+  cwd: string;
+  env: { [key: string]: string };
+
+  stdio: {
+    in: FILE;
+    out: FILE;
+    err: FILE;
+  };
+
+  pid: number | null = null;
+
+  constructor(args: Array<string>, options: ChildProcessOptions = {}) {
+    this.args = args;
+    this.cwd = options.cwd || pwd();
+
+    const baseEnv = options.env || env;
+
+    this.env = {};
+    for (const [key, value] of Object.entries(baseEnv)) {
+      if (value != null) {
+        this.env[String(key)] = String(value);
+      }
+    }
+
+    this.stdio = {
+      in: std.in,
+      out: std.out,
+      err: std.err,
+    };
+  }
+
+  /** returns pid */
+  start(): number {
+    this.pid = os.exec(this.args, {
+      block: false,
+      cwd: this.cwd,
+      env: this.env,
+      stdin: this.stdio.in.fileno(),
+      stdout: this.stdio.out.fileno(),
+      stderr: this.stdio.err.fileno(),
+    });
+    return this.pid;
+  }
+
+  waitUntilComplete():
+    | { status: number; signal: undefined }
+    | { status: undefined; signal: number } {
+    const pid = this.pid;
+    if (pid == null) {
+      throw new Error(
+        "Cannot wait for a child process that hasn't yet been started"
+      );
+    }
+
+    while (true) {
+      const [ret, status] = os.waitpid(pid);
+      if (ret == pid) {
+        if (os.WIFEXITED(status)) {
+          return { status: os.WEXITSTATUS(status), signal: undefined };
+        } else if (os.WIFSIGNALED(status)) {
+          return { status: undefined, signal: os.WTERMSIG(status) };
+        }
+      }
+    }
+  }
 }
 
 const exec = (
@@ -28,6 +105,8 @@ const exec = (
     args = parseArgString(args);
   }
 
+  const child = new ChildProcess(args, { cwd, env });
+
   if (logging) {
     std.err.puts("+ exec: " + JSON.stringify(args) + "\n");
   }
@@ -36,48 +115,36 @@ const exec = (
   let tmpErr: FILE | null = null;
   if (captureOutput) {
     tmpOut = std.tmpfile();
+    child.stdio.out = tmpOut;
     tmpErr = std.tmpfile();
+    child.stdio.err = tmpErr;
   }
 
+  let result: ReturnType<typeof child.waitUntilComplete> | null = null;
   try {
-    const execOpts: os.ExecOptions = {};
-    if (captureOutput) {
-      execOpts.stdout = tmpOut!.fileno();
-      execOpts.stderr = tmpErr!.fileno();
-    } else {
-      execOpts.stdin = std.in.fileno();
-      execOpts.stdout = std.out.fileno();
-      execOpts.stderr = std.err.fileno();
-    }
-
-    if (cwd != null) {
-      execOpts.cwd = cwd;
-    }
-
-    if (env != null) {
-      execOpts.env = env;
-    }
-
-    const status = os.exec(args, execOpts);
+    child.start();
+    result = child.waitUntilComplete();
 
     if (logging) {
       std.err.puts(
-        "+ exec result: " + JSON.stringify(args) + ` -> ${status}\n`
+        "+ exec result: " +
+          JSON.stringify(args) +
+          ` -> ${JSON.stringify(result)}\n`
       );
     }
 
-    if (failOnNonZeroStatus && status !== 0) {
-      const err = new Error(`Command failed: ${JSON.stringify(args)}`);
-      // @ts-ignore property status not found on error
-      err.status = status;
-      throw err;
+    if (failOnNonZeroStatus && result.status !== 0) {
+      throw makeErrorWithProperties(
+        `Command failed: ${JSON.stringify(args)}`,
+        result
+      );
     }
 
     if (!captureOutput) {
       if (failOnNonZeroStatus) {
         return undefined;
       } else {
-        return { status };
+        return result;
       }
     }
 
@@ -88,7 +155,7 @@ const exec = (
       const stdout = tmpOut.readAsString();
       const stderr = tmpErr.readAsString();
 
-      return { stdout, stderr, status };
+      return { stdout, stderr, ...result };
     } else {
       throw new Error(
         "Internal error: tmpOut and tmpErr weren't set, but attempted to return stdout and stderr. This indicates a bug in the exec function"

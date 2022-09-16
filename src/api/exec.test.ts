@@ -26,9 +26,10 @@ test("exec false - string", async () => {
   expect(cleanResult(result)).toEqual({
     code: 1,
     error: false,
-    stderr: `Error: Command failed: [\"false\"]
+    stderr: `Error: Command failed: [\"false\"] (status = 1, signal = undefined)
+  at makeErrorWithProperties (yavascript-internal.js)
   at exec (yavascript-internal.js)
-  at <eval> (<evalScript>) ${inspect({ status: 1 })}\n`,
+  at <eval> (<evalScript>) ${inspect({ status: 1, signal: undefined })}\n`,
     stdout: "",
   });
 });
@@ -38,9 +39,10 @@ test("exec false - array", async () => {
   expect(cleanResult(result)).toEqual({
     code: 1,
     error: false,
-    stderr: `Error: Command failed: [\"false\"]
+    stderr: `Error: Command failed: [\"false\"] (status = 1, signal = undefined)
+  at makeErrorWithProperties (yavascript-internal.js)
   at exec (yavascript-internal.js)
-  at <eval> (<evalScript>) ${inspect({ status: 1 })}\n`,
+  at <eval> (<evalScript>) ${inspect({ status: 1, signal: undefined })}\n`,
     stdout: "",
   });
 });
@@ -110,6 +112,7 @@ test("exec with captureOutput true", async () => {
         stdout: "hi there\n",
         stderr: "",
         status: 0,
+        signal: undefined,
       }) + "\n",
   });
 });
@@ -125,6 +128,7 @@ test("exec with failOnNonZeroStatus false - running 'false'", async () => {
     stdout:
       inspect({
         status: 1,
+        signal: undefined,
       }) + "\n",
   });
 });
@@ -140,6 +144,7 @@ test("exec with failOnNonZeroStatus false - running 'true'", async () => {
     stdout:
       inspect({
         status: 0,
+        signal: undefined,
       }) + "\n",
   });
 });
@@ -155,6 +160,7 @@ test("$ echo hi - string", async () => {
         stdout: "hi\n",
         stderr: "",
         status: 0,
+        signal: undefined,
       }) + "\n",
   });
 });
@@ -170,6 +176,7 @@ test("$ echo hi - array", async () => {
         stdout: "hi\n",
         stderr: "",
         status: 0,
+        signal: undefined,
       }) + "\n",
   });
 });
@@ -180,10 +187,11 @@ test("$ false", async () => {
     code: 1,
     error: false,
     stdout: "",
-    stderr: `Error: Command failed: [\"false\"]
+    stderr: `Error: Command failed: [\"false\"] (status = 1, signal = undefined)
+  at makeErrorWithProperties (yavascript-internal.js)
   at exec (yavascript-internal.js)
   at $ (yavascript-internal.js)
-  at <eval> (<evalScript>) ${inspect({ status: 1 })}\n`,
+  at <eval> (<evalScript>) ${inspect({ status: 1, signal: undefined })}\n`,
   });
 });
 
@@ -226,9 +234,9 @@ test("logging", async () => {
     error: false,
     stderr: [
       `+ exec: ["echo","hi"]`,
-      `+ exec result: ["echo","hi"] -> 0`,
+      `+ exec result: ["echo","hi"] -> {"status":0}`,
       `+ exec: ["echo","   hi"]`,
-      `+ exec result: ["echo","   hi"] -> 0`,
+      `+ exec result: ["echo","   hi"] -> {"status":0}`,
       ``,
     ].join("\n"),
     stdout: "hi\n   hi\n",

@@ -302,7 +302,9 @@ declare interface Exec {
        */
       captureOutput: false;
     }
-  ): { status: number };
+  ):
+    | { status: number; signal: undefined }
+    | { status: undefined; signal: number };
 
   (
     args: Array<string> | string,
@@ -315,7 +317,9 @@ declare interface Exec {
        */
       failOnNonZeroStatus: false;
     }
-  ): { status: number };
+  ):
+    | { status: number; signal: undefined }
+    | { status: undefined; signal: number };
 
   (
     args: Array<string> | string,
@@ -362,7 +366,9 @@ declare interface Exec {
       failOnNonZeroStatus: false;
       captureOutput: true;
     }
-  ): { stdout: string; stderr: string; status: number };
+  ):
+    | { stdout: string; stderr: string; status: number; signal: undefined }
+    | { stdout: string; stderr: string; status: undefined; signal: number };
 
   /** Log all executed commands to stderr. `isOn` is optional and defaults to `true`. Pass `false` to disable logging. */
   enableLogging(isOn?: boolean): void;
@@ -1365,6 +1371,24 @@ declare module "os" {
 
   /** Constant for the `options` argument of `waitpid`. */
   export var WNOHANG: number;
+  /** Constant for the `options` argument of `waitpid`. */
+  export var WUNTRACED: number;
+
+  /** Function to be used to interpret the 'status' return value of `waitpid`. */
+  export function WEXITSTATUS(status: number): number;
+  /** Function to be used to interpret the 'status' return value of `waitpid`. */
+  export function WTERMSIG(status: number): number;
+  /** Function to be used to interpret the 'status' return value of `waitpid`. */
+  export function WSTOPSIG(status: number): number;
+
+  /** Function to be used to interpret the 'status' return value of `waitpid`. */
+  export function WIFEXITED(status: number): boolean;
+  /** Function to be used to interpret the 'status' return value of `waitpid`. */
+  export function WIFSIGNALED(status: number): boolean;
+  /** Function to be used to interpret the 'status' return value of `waitpid`. */
+  export function WIFSTOPPED(status: number): boolean;
+  /** Function to be used to interpret the 'status' return value of `waitpid`. */
+  export function WIFCONTINUED(status: number): boolean;
 
   /** `dup` Unix system call. */
   export function dup(fd: number): number;

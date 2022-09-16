@@ -1,7 +1,7 @@
 import * as std from "std";
 import printError from "./print-error";
 
-import { installApi } from "./api";
+import installApi from "./api/_installApi";
 installApi(globalThis);
 
 import helpTarget from "./targets/help";

@@ -1,3 +1,6 @@
+// This file has an underscore at the beginning of its name so that it is at
+// the top of the list in the text editor's sidebar
+
 import { env } from "./env";
 import { exec, $ } from "./exec";
 import {
@@ -61,7 +64,7 @@ import { console, echo, print } from "./console";
 import { pipe } from "./pipe";
 import { bigint, boolean, number, string, symbol } from "./others";
 
-export function installApi(target: typeof globalThis) {
+export default function installApi(target: typeof globalThis) {
   Object.assign(target, {
     env,
 
