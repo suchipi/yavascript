@@ -53,7 +53,7 @@ in_docker suchipi/quickjs-build:windows-from-linux x86_64-w64-mingw32-gcc -stati
 rm dist/yavascript.c
 
 # generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
-./scripts/assemble-dts.sh
+in_docker node:17.4.0 ./scripts/assemble-dts.sh
 
 # copy stuff into npm folder
 cp -R bin npm
