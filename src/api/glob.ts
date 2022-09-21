@@ -90,12 +90,15 @@ export function glob(
             let didMatch = regexp.test(fullName);
 
             if (trace) {
-              trace("match info:", {
-                didMatch,
-                pattern,
-                negated,
-                fullName,
-              });
+              trace(
+                "match info:",
+                JSON.stringify({
+                  didMatch,
+                  pattern,
+                  negated,
+                  fullName,
+                })
+              );
             }
 
             return didMatch;
