@@ -1635,3 +1635,90 @@ declare interface InspectFunction {
  * @returns A string representation of `value`.
  */
 declare var inspect: InspectFunction;
+
+/**
+ * Synchronously import a module.
+ *
+ * `source` will be resolved relative to the calling file.
+ *
+ * If `source` does not have a file extension, and a file without an extension
+ * cannot be found, the engine will check for files with the extensions in
+ * {@link require.searchExtensions}, and use one of those if present. This
+ * behavior also happens when using normal `import` statements.
+ *
+ * For example, if you write:
+ *
+ * ```js
+ * import something from "./somewhere";
+ * ```
+ *
+ * but there's no file named `somewhere` in the same directory as the file
+ * where that import appears, and `require.searchExtensions` is the default
+ * value:
+ *
+ * ```js
+ * [".js"]
+ * ```
+ *
+ * then the engine will look for `somewhere.js`. If that doesn't exist, the
+ * engine will look for `somewhere/index.js`. If *that* doesn't exist, an error
+ * will be thrown.
+ *
+ * If you add more extensions to `require.searchExtensions`, then the engine
+ * will use those, too. It will search in the same order as the strings appear
+ * in the `require.searchExtensions` array.
+ */
+declare var require: ((source: string) => { [key: string]: any }) & {
+  /**
+   * A list of filetype extensions that may be omitted from an import specifier
+   * string.
+   *
+   * Defaults to `[".js"]`. You can add more strings to this array to
+   * make the engine search for additional files when resolving a
+   * require/import.
+   *
+   * See the doc comment on {@link require} for more information.
+   *
+   * NOTE: If you add a new extension to this array, you will likely also want
+   * to add to {@link require.loaders}.
+   */
+  searchExtensions: Array<string>;
+
+  /**
+   * User-defined functions which will handle getting the JavaScript code
+   * associated with a module.
+   *
+   * The key for each property in this object should be a file extension
+   * string, eg `".jsx"`. The value for each property should be a function
+   * which receives the filepath to a module, and should load that file from
+   * disk (or elsewhere), then return a string containing JavaScript code that
+   * corresponds to that module.
+   *
+   * By adding to this object, you can make it possible to import non-js
+   * filetypes; compile-to-JS languages like JSX, TypeScript, and CoffeeScript
+   * can be compiled at import time, and asset files like .txt files or .png
+   * files can be converted into an appropriate data structure at import time.
+   *
+   * As an example, to make it possible to import .txt files, you might do:
+   * ```js
+   * import * as std from "std";
+   *
+   * require.loaders[".txt"] = (filename) => {
+   *   const content = std.loadFile(filename);
+   *   return `export default ${JSON.stringify(content)}`;
+   * }
+   * ```
+   * (leveraging `JSON.stringify`'s ability to escape quotes).
+   *
+   * Then, later in your code, you can do:
+   * ```js
+   * import names from "./names.txt";
+   * ```
+   *
+   * And `names` will be a string containing the contents of names.txt.
+   *
+   * NOTE: When adding to this object, you may also wish to add to
+   * {@link require.searchExtensions}.
+   */
+  loaders: { [extensionWithDot: string]: (filename: string) => string };
+};

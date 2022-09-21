@@ -1,3 +1,3 @@
-export default function replTarget() {
-  require("./modified-qjs-repl").startRepl();
+export default function replTarget(lang: string) {
+  require("./modified-qjs-repl").startRepl(lang);
 }

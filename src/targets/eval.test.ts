@@ -48,6 +48,22 @@ describe("eval target", () => {
           stderr: "",
         });
       });
+
+      it("can evaluate coffeescript", async () => {
+        const run = spawn(binaryPath, [
+          flag,
+          `console.log "hi"`,
+          "--lang",
+          "coffeescript",
+        ]);
+        await run.completion;
+        expect(run.result).toEqual({
+          code: 0,
+          error: false,
+          stdout: "hi\n",
+          stderr: "",
+        });
+      });
     });
   });
 });

@@ -2,10 +2,35 @@ import std from "std";
 import os from "os";
 import * as esmToRequire from "../esm-to-require";
 import { NOTHING } from "./repl/special";
+import CoffeeScript from "coffeescript";
 
-export default function evalTarget(codeToRun: string) {
+export default function evalTarget(inputCode: string, lang: string) {
   // Make os and std available as globals
   Object.assign(globalThis, { os, std });
+
+  let codeToRun: string | null = null;
+  switch (lang) {
+    case "javascript": {
+      codeToRun = inputCode;
+      break;
+    }
+    case "coffeescript": {
+      codeToRun = CoffeeScript.compile(inputCode, { bare: true });
+      break;
+    }
+    default: {
+      std.err.puts(
+        `Invalid --lang: ${JSON.stringify(
+          lang
+        )}. Valid values for --lang are "javascript" or "coffeescript".\n`
+      );
+      std.exit(1);
+    }
+  }
+
+  if (codeToRun == null) {
+    throw new Error(`Unhandled lang: ${lang}`);
+  }
 
   const transformedCode = esmToRequire.transform(codeToRun);
   const result = std.evalScript(transformedCode, { backtraceBarrier: true });

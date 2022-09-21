@@ -29,8 +29,30 @@ import printError from "../../print-error";
 import * as inspectOptions from "../../inspect-options";
 import { NOTHING } from "./special";
 import * as esmToRequire from "../../esm-to-require";
+import CoffeeScript from "coffeescript";
 
-export function startRepl() {
+export function startRepl(lang) {
+  let compileExpression;
+  switch (lang) {
+    case "javascript": {
+      compileExpression = (expr) => esmToRequire.transform(expr);
+      break;
+    }
+    case "coffeescript": {
+      compileExpression = (expr) =>
+        esmToRequire.transform(CoffeeScript.compile(expr, { bare: true }));
+      break;
+    }
+    default: {
+      std.err.puts(
+        `Invalid --lang: ${JSON.stringify(
+          lang
+        )}. Valid values for --lang are "javascript" or "coffeescript".\n`
+      );
+      std.exit(1);
+    }
+  }
+
   /* add 'os' and 'std' bindings */
   globalThis.os = os;
   globalThis.std = std;
@@ -989,7 +1011,7 @@ export function startRepl() {
     var result;
 
     try {
-      const newExpr = esmToRequire.transform(expr);
+      const newExpr = compileExpression(expr);
       if (newExpr !== expr) {
         std.puts(colors.gray);
         std.puts(`-> ${newExpr.replace(/\s+/g, " ")}`);

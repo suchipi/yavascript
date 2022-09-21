@@ -10,14 +10,16 @@ Usage: One of these:
   yavascript <path/to/file-to-run.js>
   yavascript -e '<code-to-run>'
   yavascript --eval '<code-to-run>'
+  yavascript -e '<code-to-run>' --lang 'coffeescript'
+  yavascript --eval '<code-to-run>' --lang 'coffeescript'
   yavascript -v
   yavascript --version
   yavascript --license
 
 YavaScript is a bash-like script runner which is distributed as a single
-statically-linked binary. Scripts are written in JavaScript. There are global
-APIs available for all the things you'd normally want to do in a bash script,
-such as:
+statically-linked binary. Scripts are written in JavaScript or CoffeeScript.
+There are global APIs available for all the things you'd normally want to do in
+a bash script, such as:
 
 - Running programs
 - Accessing environment variables
