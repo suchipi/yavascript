@@ -1,6 +1,7 @@
 // NOTE: This copy of yavascript.d.ts reflects what is in git.
 // APIs may differ from what you have installed.
-// If available, consult the copy of yavascript.d.ts that was distributed with your install.
+// Run `yavascript --print-types > yavascript.d.ts` to get the types
+// corresponding to your specific `yavascript` binary.
 
 // ===============
 // ---------------

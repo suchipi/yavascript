@@ -44,12 +44,7 @@ export function startRepl(lang) {
       break;
     }
     default: {
-      std.err.puts(
-        `Invalid --lang: ${JSON.stringify(
-          lang
-        )}. Valid values for --lang are "javascript" or "coffeescript".\n`
-      );
-      std.exit(1);
+      throw new Error(`Unhandled lang: ${lang}`);
     }
   }
 

@@ -21,9 +21,13 @@ in_docker() {
 # grab JS dependencies from npm
 in_docker node:17.4.0 npm install
 
-# generate dist/index.js (bundles in dependencies from npm)
-mkdir -p dist
 rm -rf dist
+mkdir -p dist
+
+# generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
+in_docker node:17.4.0 ./scripts/assemble-dts.sh
+
+# generate dist/index.js (bundles in dependencies from npm)
 in_docker node:17.4.0 npm run bundle
 
 # to make the stack traces clearer, we change the filename that will get baked into the binary:
@@ -51,9 +55,6 @@ in_docker suchipi/quickjs-build:windows-from-linux x86_64-w64-mingw32-gcc -stati
 
 # remove dist/yavascript.c
 rm dist/yavascript.c
-
-# generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
-in_docker node:17.4.0 ./scripts/assemble-dts.sh
 
 # copy stuff into npm folder
 cp -R bin npm

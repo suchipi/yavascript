@@ -7,6 +7,7 @@ export default function helpTarget() {
 
 Usage: One of these:
   yavascript
+  yavascript --lang 'coffeescript'
   yavascript <path/to/file-to-run.js>
   yavascript -e '<code-to-run>'
   yavascript --eval '<code-to-run>'
@@ -15,6 +16,7 @@ Usage: One of these:
   yavascript -v
   yavascript --version
   yavascript --license
+  yavascript --print-types
 
 YavaScript is a bash-like script runner which is distributed as a single
 statically-linked binary. Scripts are written in JavaScript or CoffeeScript.
@@ -43,8 +45,12 @@ either not present in bash or are cumbersome to use in bash, namely:
 - Getting the absolute path to the root folder of the current git/mercurial repo (repoRoot function)
 
 To view the APIs, consult the file yavascript.d.ts which was distributed with
-this program, or online at https://github.com/suchipi/yavascript/blob/main/yavascript.d.ts.
-This file contains TypeScript type definitions which can be given to your IDE
+this program. If you don't have that file or don't know where it is, you can
+run \`yavascript --print-types > yavascript.d.ts\` to regenerate it. If you
+don't have YavaScript installed, you can view the file online at
+https://github.com/suchipi/yavascript/blob/main/yavascript.d.ts.
+
+yavascript.d.ts contains TypeScript type definitions which can be given to your IDE
 to assist you when writing scripts.
 
 YavaScript is powered by a fork of the QuickJS JavaScript Engine, originally

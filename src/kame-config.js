@@ -29,6 +29,15 @@ exports.resolve = (id, fromFilePath) => {
     }
 
     default: {
+      if (id.endsWith("?contentString")) {
+        return (
+          defaultResolver.resolve(
+            id.replace(/\?contentString$/, ""),
+            fromFilePath
+          ) + "?contentString"
+        );
+      }
+
       return defaultResolver.resolve(id, fromFilePath);
     }
   }
@@ -37,6 +46,12 @@ exports.resolve = (id, fromFilePath) => {
 exports.load = (filename) => {
   if (filename.endsWith(".md")) {
     const content = fs.readFileSync(filename, "utf-8");
+    return `module.exports = ${JSON.stringify(content)};`;
+  } else if (filename.endsWith("?contentString")) {
+    const content = fs.readFileSync(
+      filename.replace(/\?contentString$/, ""),
+      "utf-8"
+    );
     return `module.exports = ${JSON.stringify(content)};`;
   } else {
     return defaultLoader.load(filename);

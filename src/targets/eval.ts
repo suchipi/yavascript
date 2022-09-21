@@ -19,17 +19,8 @@ export default function evalTarget(inputCode: string, lang: string) {
       break;
     }
     default: {
-      std.err.puts(
-        `Invalid --lang: ${JSON.stringify(
-          lang
-        )}. Valid values for --lang are "javascript" or "coffeescript".\n`
-      );
-      std.exit(1);
+      throw new Error(`Unhandled lang: ${lang}`);
     }
-  }
-
-  if (codeToRun == null) {
-    throw new Error(`Unhandled lang: ${lang}`);
   }
 
   const transformedCode = esmToRequire.transform(codeToRun);
