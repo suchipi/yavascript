@@ -15,7 +15,7 @@ if [[ "$SKIP_QJS" == "" ]]; then
 fi
 
 in_docker() {
-  docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" $@
+  docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" --user "$(id -u):$(id -g)" $@
 }
 
 # grab JS dependencies from npm
