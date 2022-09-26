@@ -17,7 +17,7 @@ declare type GlobOptions = {
    * function here, like so:
    *
    * ```js
-   * glob(pwd(), ["./*.js"], { trace: console.log });
+   * glob(["./*.js"], { trace: console.log });
    * ```
    */
   trace?: (...args: Array<any>) => void;
