@@ -411,7 +411,7 @@ declare type GlobOptions = {
    * function here, like so:
    *
    * ```js
-   * glob(pwd(), ["./*.js"], { trace: console.log });
+   * glob(["./*.js"], { trace: console.log });
    * ```
    */
   trace?: (...args: Array<any>) => void;
@@ -607,6 +607,13 @@ declare const is: {
   AsyncGeneratorFunction(value: any): value is AsyncGeneratorFunction;
 
   FILE(value: any): value is FILE;
+
+  JSX: {
+    /** Returns whether `value` is a JSX Element object as created via JSX syntax. */
+    Element(value: any): value is JSX.Element;
+    /** Returns whether `value` is a JSX fragment element as created via JSX syntax. */
+    Fragment(value: any): value is JSX.Fragment;
+  };
 };
 
 /**

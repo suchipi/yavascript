@@ -2,7 +2,7 @@ import std from "std";
 import os from "os";
 import * as esmToRequire from "../esm-to-require";
 import { NOTHING } from "./repl/special";
-import CoffeeScript from "coffeescript";
+import compilers from "../compilers";
 
 export default function evalTarget(inputCode: string, lang: string) {
   // Make os and std available as globals
@@ -15,7 +15,7 @@ export default function evalTarget(inputCode: string, lang: string) {
       break;
     }
     case "coffeescript": {
-      codeToRun = CoffeeScript.compile(inputCode, { bare: true });
+      codeToRun = compilers.coffee(inputCode, { expression: true });
       break;
     }
     default: {

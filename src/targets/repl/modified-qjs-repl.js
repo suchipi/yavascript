@@ -29,7 +29,7 @@ import printError from "../../print-error";
 import * as inspectOptions from "../../inspect-options";
 import { NOTHING } from "./special";
 import * as esmToRequire from "../../esm-to-require";
-import CoffeeScript from "coffeescript";
+import * as compilers from "../../compilers";
 
 export function startRepl(lang) {
   let compileExpression;
@@ -40,7 +40,7 @@ export function startRepl(lang) {
     }
     case "coffeescript": {
       compileExpression = (expr) =>
-        esmToRequire.transform(CoffeeScript.compile(expr, { bare: true }));
+        esmToRequire.transform(compilers.coffee(expr, { expression: true }));
       break;
     }
     default: {

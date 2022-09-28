@@ -63,6 +63,7 @@ import {
 import { console, echo, print } from "./console";
 import { pipe } from "./pipe";
 import { bigint, boolean, number, string, symbol } from "./others";
+import { JSX } from "./jsx";
 import traceAll from "./traceAll";
 
 export default function installApi(target: typeof globalThis) {
@@ -139,6 +140,8 @@ export default function installApi(target: typeof globalThis) {
     number,
     string,
     symbol,
+
+    JSX,
 
     traceAll,
   });

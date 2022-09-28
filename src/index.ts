@@ -4,8 +4,7 @@ import printError from "./print-error";
 import installApi from "./api/_installApi";
 installApi(globalThis);
 
-import installCoffeeScriptHandlers from "./extension-handlers/coffee";
-installCoffeeScriptHandlers();
+import "./extension-handlers/_load-all";
 
 import helpTarget from "./targets/help";
 import versionTarget from "./targets/version";

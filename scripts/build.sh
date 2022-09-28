@@ -32,6 +32,7 @@ in_docker node:17.4.0 npm run bundle
 
 # to make the stack traces clearer, we change the filename that will get baked into the binary:
 cp dist/index.js ./yavascript-internal.js
+
 # generate dist/yavascript.c
 in_docker suchipi/quickjs-build:linux-from-linux ./quickjs/docker/artifacts/linux-from-linux/qjsc.target -e -D os -D std -o dist/yavascript.c yavascript-internal.js
 
@@ -52,9 +53,6 @@ in_docker suchipi/quickjs-build:linux-from-linux gcc -static -o bin/linux/yavasc
 # generate bin/windows/yavascript
 mkdir -p bin/windows
 in_docker suchipi/quickjs-build:windows-from-linux x86_64-w64-mingw32-gcc -static -o bin/windows/yavascript.exe dist/yavascript.c quickjs/docker/artifacts/windows-from-linux/quickjs.target.a -Iquickjs/src/quickjs-libc -lm -lpthread
-
-# remove dist/yavascript.c
-rm dist/yavascript.c
 
 # copy stuff into npm folder
 cp -R bin npm

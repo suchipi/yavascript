@@ -5,6 +5,7 @@
   "author": "Lily Skye <me@suchipi.com>",
   "license": "MIT",
   "devDependencies": {
+    "@babel/standalone": "^7.19.3",
     "@suchipi/print": "^2.2.0",
     "@test-it/cli": "^0.7.4",
     "@test-it/core": "^0.7.4",
