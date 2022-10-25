@@ -30,8 +30,6 @@ fi
 # grab JS dependencies from npm
 in_docker node:17.4.0 npm install
 
-exit 0
-
 rm -rf dist
 mkdir -p dist
 
