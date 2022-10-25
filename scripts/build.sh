@@ -14,12 +14,23 @@ if [[ "$SKIP_QJS" == "" ]]; then
   popd > /dev/null
 fi
 
+if [[ "$(uname)" == "Darwin" ]]; then
+# Don't do uid/gid remapping in macOS, as Docker Desktop does its own
+# uid/gid mapping from root to the normal user
+in_docker() {
+  docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" $@
+}
+else
+# But *do* do it on Linux, where they're probably not using Docker Desktop
 in_docker() {
   docker run --rm -it -v $PWD:/opt/yavascript -w "/opt/yavascript" --user "$(id -u):$(id -g)" $@
 }
+fi
 
 # grab JS dependencies from npm
 in_docker node:17.4.0 npm install
+
+exit 0
 
 rm -rf dist
 mkdir -p dist
