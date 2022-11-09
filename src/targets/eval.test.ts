@@ -64,6 +64,112 @@ describe("eval target", () => {
           stderr: "",
         });
       });
+
+      it("can evaluate jsx", async () => {
+        const run = spawn(binaryPath, [
+          flag,
+          `<div><a key="hi" href="#" /><></></div>`,
+          "--lang",
+          "jsx",
+        ]);
+
+        const Element = Symbol("JSX.Element");
+        const Fragment = Symbol("JSX.Fragment");
+
+        await run.completion;
+        expect(run.result).toEqual({
+          code: 0,
+          error: false,
+          stdout:
+            inspect({
+              $$typeof: Element,
+              type: "div",
+              props: {
+                children: [
+                  {
+                    $$typeof: Element,
+                    type: "a",
+                    props: {
+                      key: "hi",
+                      href: "#",
+                    },
+                    key: "hi",
+                  },
+                  {
+                    $$typeof: Element,
+                    type: Fragment,
+                    props: null,
+                    key: null,
+                  },
+                ],
+              },
+              key: null,
+            }) + "\n",
+          stderr: "",
+        });
+      });
+
+      ["ts", "typescript"].forEach((lang) => {
+        it(`can evaluate typescript (via --lang ${lang})`, async () => {
+          const run = spawn(binaryPath, [
+            flag,
+            `(function something<T>(blah: number): T { return 5 as any; }).name`,
+            "--lang",
+            lang,
+          ]);
+          await run.completion;
+          expect(run.result).toEqual({
+            code: 0,
+            error: false,
+            stdout: "something\n",
+            stderr: "",
+          });
+        });
+      });
+
+      it("can evaluate tsx", async () => {
+        const run = spawn(binaryPath, [
+          flag,
+          `(function something(blah: number) { return <div><a key="hi" href="#" /><></></div> })()`,
+          "--lang",
+          "tsx",
+        ]);
+
+        const Element = Symbol("JSX.Element");
+        const Fragment = Symbol("JSX.Fragment");
+
+        await run.completion;
+        expect(run.result).toEqual({
+          code: 0,
+          error: false,
+          stdout:
+            inspect({
+              $$typeof: Element,
+              type: "div",
+              props: {
+                children: [
+                  {
+                    $$typeof: Element,
+                    type: "a",
+                    props: {
+                      key: "hi",
+                      href: "#",
+                    },
+                    key: "hi",
+                  },
+                  {
+                    $$typeof: Element,
+                    type: Fragment,
+                    props: null,
+                    key: null,
+                  },
+                ],
+              },
+              key: null,
+            }) + "\n",
+          stderr: "",
+        });
+      });
     });
   });
 });
