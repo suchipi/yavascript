@@ -404,6 +404,106 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
+-------------- lines-and-columns --------------
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Brian Donovan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+-------------- sucrase --------------
+
+The MIT License (MIT)
+
+Copyright (c) 2012-2018 various contributors (see AUTHORS)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+The AUTHORS file for sucrase says:
+
+Direct contributors to the Sucrase project:
+Alan Pierce
+
+Sucrase contains a modified fork of Babylon, which itself was forked from Acorn.
+Babel and Babylon are copyright 2014-2018 Sebastian McKenzie
+See https://babeljs.io/team for a list of contributors to the Babel project.
+
+List of Acorn contributors:
+Adrian Rakovsky
+Alistair Braidwood
+Andres Suarez
+Aparajita Fishman
+Arian Stolwijk
+Artem Govorov
+Brandon Mills
+Charles Hughes
+Conrad Irwin
+David Bonnet
+Forbes Lindesay
+Gilad Peleg
+impinball
+Ingvar Stepanyan
+Jesse McCarthy
+Jiaxing Wang
+Joel Kemp
+Johannes Herr
+Jürg Lehni
+keeyipchan
+Kevin Kwok
+krator
+Marijn Haverbeke
+Martin Carlberg
+Mathias Bynens
+Mathieu 'p01' Henri
+Max Schaefer
+Max Zerzouri
+Mihai Bazon
+Mike Rennie
+Nick Fitzgerald
+Oskar Schöldström
+Paul Harper
+Peter Rust
+PlNG
+r-e-d
+Rich Harris
+Sebastian McKenzie
+zsjforcn
+
 -------------- yavascript --------------
 
 YavaScript script interpreter

@@ -28,6 +28,23 @@ exports.resolve = (id, fromFilePath) => {
       // intentional fallthrough
     }
 
+    case "commander":
+    case "glob":
+    case "mz":
+    case "pirates": {
+      if (fromFilePath.startsWith("node_modules/sucrase")) {
+        // CLI-related or node-related deps of sucrase that we shouldn't need
+        return stubPath;
+      }
+      // intentional fallthrough
+    }
+
+    case "ts-interface-checker": {
+      // ts-interface-checker is Apache 2.0, but we want yavascript to be MIT.
+      // So we use a stub that doesn't do any actual runtime checking.
+      return path.resolve(__dirname, "kame-ts-interface-checker-stub.js");
+    }
+
     default: {
       if (id.endsWith("?contentString")) {
         return (
