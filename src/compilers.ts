@@ -1,4 +1,4 @@
-import * as Babel from "@babel/standalone";
+import * as Sucrase from "sucrase";
 import * as CoffeeScript from "coffeescript";
 
 export type CompilerOptions = {
@@ -6,70 +6,56 @@ export type CompilerOptions = {
   expression?: boolean;
 };
 
-function compileUsingBabel(
+function compileUsingSucrase(
   code: string,
   options: CompilerOptions | undefined | null,
-  presets: any
+  sucraseOptions: Sucrase.Options
 ) {
-  const babelOptions = {
-    presets,
-    filename: options?.filename,
-  };
+  if (options?.filename) {
+    sucraseOptions.filePath = options.filename;
+  }
 
   if (options?.expression) {
-    // TODO: babel standalone doesn't have transform expression; would need to
+    // TODO: sucrase doesn't have transform expression; would need to
     // do parseExpression + transformAst + generate + get node from body's
     // first expression statement.
-    const result = Babel.transform("(" + code + ")", babelOptions);
+    const result = Sucrase.transform("(" + code + ")", sucraseOptions);
     return result.code.replace(/;$/, "");
   } else {
-    const result = Babel.transform(code, babelOptions);
+    const result = Sucrase.transform(code, sucraseOptions);
     return result.code;
   }
 }
 
 const compilers = {
   tsx(code: string, options?: CompilerOptions): string {
-    const presets = [
-      "typescript",
-      [
-        "react",
-        {
-          // We read this from the global because the user is allowed to
-          // change JSX.pragma to change this.
-          pragma: globalThis.JSX.pragma,
-          // We read this from the global because the user is allowed to
-          // change JSX.pragmaFrag to change this.
-          pragmaFrag: globalThis.JSX.pragmaFrag,
-        },
-      ],
-    ];
-
-    return compileUsingBabel(code, options, presets);
+    return compileUsingSucrase(code, options, {
+      transforms: ["typescript", "jsx"],
+      // We read this from the global because the user is allowed to
+      // change JSX.pragma to change this.
+      jsxPragma: globalThis.JSX.pragma,
+      // We read this from the global because the user is allowed to
+      // change JSX.pragmaFrag to change this.
+      jsxFragmentPragma: globalThis.JSX.pragmaFrag,
+    });
   },
 
   ts(code: string, options?: CompilerOptions): string {
-    const presets = ["typescript"];
-
-    return compileUsingBabel(code, options, presets);
+    return compileUsingSucrase(code, options, {
+      transforms: ["typescript"],
+    });
   },
 
   jsx(code: string, options?: CompilerOptions): string {
-    const presets = [
-      [
-        "react",
-        {
-          // We read this from the global because the user is allowed to
-          // change JSX.pragma to change this.
-          pragma: globalThis.JSX.pragma,
-          // We read this from the global because the user is allowed to
-          // change JSX.pragmaFrag to change this.
-          pragmaFrag: globalThis.JSX.pragmaFrag,
-        },
-      ],
-    ];
-
-    return compileUsingBabel(code, options, presets);
+    return compileUsingSucrase(code, options, {
+      transforms: ["jsx"],
+      // We read this from the global because the user is allowed to
+      // change JSX.pragma to change this.
+      jsxPragma: globalThis.JSX.pragma,
+      // We read this from the global because the user is allowed to
+      // change JSX.pragmaFrag to change this.
+      jsxFragmentPragma: globalThis.JSX.pragmaFrag,
+    });
   },
 
   coffee(code: string, options?: CompilerOptions): string {
