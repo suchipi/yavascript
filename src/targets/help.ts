@@ -7,16 +7,19 @@ export default function helpTarget() {
 
 Usage: One of these:
   yavascript
-  yavascript --lang 'coffeescript'
+  yavascript --lang <some-language>
   yavascript <path/to/file-to-run.js>
   yavascript -e '<code-to-run>'
   yavascript --eval '<code-to-run>'
-  yavascript -e '<code-to-run>' --lang 'coffeescript'
-  yavascript --eval '<code-to-run>' --lang 'coffeescript'
+  yavascript -e '<code-to-run>' --lang <some-language>
+  yavascript --eval '<code-to-run>' --lang <some-language>
   yavascript -v
   yavascript --version
   yavascript --license
   yavascript --print-types
+
+Where <some-language> can be one of: "js", "javascript", "ts", "typescript",
+"jsx", "tsx", "coffee", or "coffeescript".
 
 YavaScript is a bash-like script runner which is distributed as a single
 statically-linked binary. Scripts are written in JavaScript or CoffeeScript.

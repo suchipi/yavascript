@@ -29,24 +29,14 @@ import printError from "../../print-error";
 import * as inspectOptions from "../../inspect-options";
 import { NOTHING } from "./special";
 import * as esmToRequire from "../../esm-to-require";
-import * as compilers from "../../compilers";
+import { langToCompiler } from "../../langs";
 
 export function startRepl(lang) {
-  let compileExpression;
-  switch (lang) {
-    case "javascript": {
-      compileExpression = (expr) => esmToRequire.transform(expr);
-      break;
-    }
-    case "coffeescript": {
-      compileExpression = (expr) =>
-        esmToRequire.transform(compilers.coffee(expr, { expression: true }));
-      break;
-    }
-    default: {
-      throw new Error(`Unhandled lang: ${lang}`);
-    }
-  }
+  const compiler = langToCompiler(lang);
+  const compileExpression = (expr) => {
+    const compiledCode = compiler(expr, { expression: true });
+    return esmToRequire.transform(compiledCode);
+  };
 
   /* add 'os' and 'std' bindings */
   globalThis.os = os;

@@ -15,12 +15,26 @@ function compileUsingSucrase(
     sucraseOptions.filePath = options.filename;
   }
 
+  // All this does is make jsx elements not have __self and __fileName,
+  // which imho is better for yavascript itself since __self will often
+  // be the global, which makes logging JSX elements really obnoxious
+  sucraseOptions.production = true;
+
   if (options?.expression) {
     // TODO: sucrase doesn't have transform expression; would need to
     // do parseExpression + transformAst + generate + get node from body's
     // first expression statement.
     const result = Sucrase.transform("(" + code + ")", sucraseOptions);
-    return result.code.replace(/;$/, "");
+    const withoutTrailingSemi = result.code.replace(/;$/, "");
+    if (
+      withoutTrailingSemi[0] === "(" &&
+      withoutTrailingSemi[withoutTrailingSemi.length - 1] === ")"
+    ) {
+      // unwrap parens we added
+      return withoutTrailingSemi.slice(1, -1);
+    } else {
+      return withoutTrailingSemi;
+    }
   } else {
     const result = Sucrase.transform(code, sucraseOptions);
     return result.code;
@@ -28,6 +42,10 @@ function compileUsingSucrase(
 }
 
 const compilers = {
+  js(code: string, options?: CompilerOptions): string {
+    return code;
+  },
+
   tsx(code: string, options?: CompilerOptions): string {
     return compileUsingSucrase(code, options, {
       transforms: ["typescript", "jsx"],

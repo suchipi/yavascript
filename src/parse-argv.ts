@@ -1,4 +1,5 @@
 import * as std from "std";
+import { LANGS } from "./langs";
 
 export default function parseArgv(argv: Array<string>): {
   flags: {
@@ -41,11 +42,14 @@ export default function parseArgv(argv: Array<string>): {
         flags.eval = nextArg;
         i++;
       } else if (arg === "--lang") {
-        if (nextArg !== "javascript" && nextArg !== "coffeescript") {
+        if (!nextArg || !LANGS.has(nextArg)) {
+          const validLangs = Array.from(LANGS);
           std.err.puts(
             `Invalid --lang: ${JSON.stringify(
               nextArg
-            )}. Valid values for --lang are "javascript" or "coffeescript".\n`
+            )}.\nValid values for --lang are ${validLangs
+              .slice(0, -1)
+              .join(", ")} or ${validLangs[validLangs.length - 1]}.\n`
           );
           std.exit(1);
         }
