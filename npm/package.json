@@ -1,6 +1,6 @@
 {
   "name": "yavascript",
-  "version": "0.0.5-git",
+  "version": "0.0.6",
   "main": "lib/index.js",
   "bin": "lib/cli.js",
   "types": "yavascript.d.ts",
