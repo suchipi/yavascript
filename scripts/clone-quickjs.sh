@@ -5,5 +5,5 @@ if [ ! -e 'quickjs' ]; then
 fi
 
 pushd quickjs > /dev/null
-git checkout 42df4db469a537a0dc092aca4ddd8021b7508cfb
+git checkout 6fb7410b3f14133cbf2185ece0803fdca90c946d
 popd

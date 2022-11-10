@@ -13,7 +13,7 @@ fnm use
 
 # Build quickjs
 pushd quickjs
-make tup
+meta/build.sh
 popd
 
 # generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
@@ -26,8 +26,8 @@ npm run bundle
 cp dist/index.js ./yavascript-internal.js
 
 # generate dist/yavascript.c
-./quickjs/build/src/qjsc/qjsc.target -e -D os -D std -o dist/yavascript.c yavascript-internal.js
+./quickjs/src/qjsc/qjsc.host -e -D os -D std -o dist/yavascript.c yavascript-internal.js
 
 # generate bin/linux/yavascript
 mkdir -p bin/linux
-gcc -static -o bin/linux/yavascript dist/yavascript.c quickjs/build/src/archives/full/quickjs-full.target.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
+gcc -static -o bin/linux/yavascript dist/yavascript.c quickjs/src/archives/full/quickjs-full.host.a -Iquickjs/src/quickjs-libc -lm -lpthread -ldl
