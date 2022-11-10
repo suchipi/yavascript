@@ -4,8 +4,7 @@ set -ex
 # Move to repo root
 cd $(git rev-parse --show-toplevel)
 
-git submodule init
-git submodule update
+scripts/clone-quickjs.sh
 
 # build quickjs (dep of yavascript)
 if [[ "$SKIP_QJS" == "" ]]; then
