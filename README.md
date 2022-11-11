@@ -1,7 +1,7 @@
 # yavascript
 
 YavaScript is a bash-like script runner which is distributed as a single
-statically-linked binary. Scripts are written in JavaScript or CoffeeScript.
+statically-linked binary. Scripts are written in JavaScript, TypeScript, JSX/TSX, or CoffeeScript.
 There are global APIs available for all the things you'd normally want to do in
 a bash script, such as:
 
