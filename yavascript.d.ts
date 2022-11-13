@@ -652,7 +652,7 @@ declare type PipeSource =
  * - Use `intoNew` to put data into a new object.
  * - Use `path` or `fd` to create a new file handle and put data into it.
  */
-export type PipeDestination =
+declare type PipeDestination =
   | ArrayBuffer
   | SharedArrayBuffer
   | DataView
