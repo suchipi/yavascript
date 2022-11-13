@@ -42,7 +42,7 @@ in_docker node:17.4.0 npm run bundle
 cp dist/index.js ./yavascript-internal.js
 
 # generate dist/yavascript.c
-in_docker suchipi/quickjs-builder ./quickjs/meta/artifacts/linux/qjsc.target -e -D os -D std -o dist/yavascript.c yavascript-internal.js
+in_docker suchipi/quickjs-builder ./quickjs/meta/artifacts/linux/qjsc.target -e -D os -D std -S 8000000 -o dist/yavascript.c yavascript-internal.js
 
 mkdir -p bin
 
