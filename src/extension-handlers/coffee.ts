@@ -1,8 +1,6 @@
-import * as std from "std";
 import compilers from "../compilers";
 
-Module.compilers[".coffee"] = (filename: string) => {
-  const content = std.loadFile(filename);
+Module.compilers[".coffee"] = (filename: string, content: string) => {
   const compiled = compilers.coffee(content, { filename });
   return compiled;
 };

@@ -1,8 +1,6 @@
-import * as std from "std";
 import compilers from "../compilers";
 
-Module.compilers[".ts"] = (filename: string) => {
-  const content = std.loadFile(filename);
+Module.compilers[".ts"] = (filename: string, content: string) => {
   const compiled = compilers.ts(content, { filename });
   return compiled;
 };

@@ -1,8 +1,6 @@
-import * as std from "std";
 import compilers from "../compilers";
 
-Module.compilers[".jsx"] = (filename: string) => {
-  const content = std.loadFile(filename);
+Module.compilers[".jsx"] = (filename: string, content: string) => {
   const compiled = compilers.jsx(content, { filename });
   return compiled;
 };
