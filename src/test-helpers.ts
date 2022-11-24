@@ -6,11 +6,11 @@ import * as inspectOptions from "./inspect-options";
 export const rootDir = (...parts: Array<string>) =>
   path.resolve(__dirname, "..", ...parts);
 
-function getBinaryPath(platform: string) {
+function getBinaryPath(platform: string, arch: string) {
   if (platform === "win32") {
     return path.resolve(__dirname, "..", "bin", "windows", "yavascript.exe");
   } else if (platform === "darwin") {
-    if (process.arch.startsWith("arm")) {
+    if (arch.startsWith("arm")) {
       return path.resolve(__dirname, "..", "bin", "darwin-arm", "yavascript");
     } else {
       return path.resolve(__dirname, "..", "bin", "darwin", "yavascript");
@@ -22,7 +22,10 @@ function getBinaryPath(platform: string) {
   }
 }
 
-var binaryPath = getBinaryPath(process.platform);
+var binaryPath = getBinaryPath(
+  process.platform,
+  process.env.YS_TESTS_ARCH || process.arch
+);
 
 export { binaryPath, getBinaryPath };
 
