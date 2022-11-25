@@ -1,6 +1,12 @@
 ///<reference types="@test-it/core/globals" />
 import path from "path";
-import { evaluate, cleanResult, inspect, getBinaryPath } from "../test-helpers";
+import {
+  evaluate,
+  cleanResult,
+  inspect,
+  getBinaryPath,
+  TMP,
+} from "../test-helpers";
 import { spawn } from "first-base";
 
 const rootDir = path.resolve(__dirname, "..", "..");
@@ -31,7 +37,7 @@ test("cd and pwd", async () => {
         "<rootDir>/src",
         "<rootDir>",
         "<rootDir>/scripts",
-        "/tmp",
+        TMP,
       ].join("\n") + "\n",
   });
 });
@@ -83,7 +89,7 @@ test("realpath resolution behavior", async () => {
     stderr: "",
     stdout:
       [
-        "/tmp",
+        TMP,
         "<rootDir>/src/api/test_fixtures/symlinks",
         "<rootDir>/src/api/test_fixtures",
 
@@ -250,8 +256,8 @@ test("extname (windows-style path)", async () => {
   });
 });
 
-// this test will only work on linux and only if you have wine installed
-test("paths.OS_PATH_SEPARATOR", async () => {
+// this test will only work on non-windows
+test("paths.OS_PATH_SEPARATOR (unix behavior)", async () => {
   const resultNative = await evaluate(`paths.OS_PATH_SEPARATOR`);
   expect(resultNative).toEqual({
     code: 0,
@@ -259,9 +265,12 @@ test("paths.OS_PATH_SEPARATOR", async () => {
     stdout: "/" + "\n",
     stderr: "",
   });
+});
 
+// this test will only work on linux and only if you have wine installed
+test("paths.OS_PATH_SEPARATOR (windows behavior, via wine)", async () => {
   const wineRun = spawn("wine", [
-    getBinaryPath("win32"),
+    getBinaryPath("win32", process.arch),
     "-e",
     `paths.OS_PATH_SEPARATOR`,
   ]);

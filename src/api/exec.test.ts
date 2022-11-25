@@ -1,5 +1,12 @@
 ///<reference types="@test-it/core/globals" />
-import { evaluate, binaryPath, inspect, cleanResult } from "../test-helpers";
+
+import {
+  evaluate,
+  binaryPath,
+  inspect,
+  cleanResult,
+  TMP,
+} from "../test-helpers";
 
 test("exec true - string", async () => {
   const result = await evaluate(`exec("true")`);
@@ -85,7 +92,7 @@ test("exec with cwd", async () => {
     code: 0,
     error: false,
     stderr: "",
-    stdout: "/tmp\n",
+    stdout: TMP + "\n",
   });
 });
 

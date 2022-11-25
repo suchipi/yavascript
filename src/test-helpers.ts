@@ -1,7 +1,12 @@
 import { spawn, Options as SpawnOptions } from "first-base";
+import child_process from "child_process";
 import path from "path";
 import print from "@suchipi/print";
 import * as inspectOptions from "./inspect-options";
+
+export const TMP = child_process
+  .execSync("realpath /tmp", { encoding: "utf-8" })
+  .trim();
 
 export const rootDir = (...parts: Array<string>) =>
   path.resolve(__dirname, "..", ...parts);

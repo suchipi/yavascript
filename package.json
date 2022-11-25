@@ -20,8 +20,8 @@
     "build": "./scripts/build.sh",
     "bundle": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js",
     "test": "[ -z \"$CI\" ] && npm run test:dev || npm run test:ci",
-    "test:dev": "test-it --watch --watch-ignore 'src/api/test_fixtures/**/*'",
-    "test:ci": "test-it"
+    "test:dev": "env YS_TESTS_ARCH=\"`uname -m`\" test-it --watch --watch-ignore 'src/api/test_fixtures/**/*'",
+    "test:ci": "env YS_TESTS_ARCH=\"`uname -m`\" test-it"
   },
   "dependencies": {
     "@suchipi/is": "^1.0.0",
