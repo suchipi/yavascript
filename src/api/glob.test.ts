@@ -1,8 +1,18 @@
 ///<reference types="@test-it/core/globals" />
-import { evaluate, inspect, cleanResult, rootDir } from "../test-helpers";
+import {
+  evaluate,
+  cleanResult,
+  rootDir,
+  EvaluateResult,
+} from "../test-helpers";
 
 const globDir = rootDir("src/api/test_fixtures/glob");
 const symlinksDir = rootDir("src/api/test_fixtures/symlinks");
+
+function compareResult(result: EvaluateResult, expected: Array<string>) {
+  const res = JSON.parse(result.stdout);
+  expect([...res].sort()).toEqual([...expected.sort()]);
+}
 
 function testGlob(
   name: string,
@@ -18,7 +28,9 @@ function testGlob(
     const args: Array<any> = [patterns, { dir }];
 
     const result = await evaluate(
-      `glob(${args.map((arg) => JSON.stringify(arg)).join(", ")})`
+      `JSON.stringify(glob(${args
+        .map((arg) => JSON.stringify(arg))
+        .join(", ")}))`
     );
 
     expect(result).toMatchObject({
@@ -27,11 +39,8 @@ function testGlob(
       stderr: "",
     });
 
-    const output = cleanResult(result).stdout;
-
-    for (const line of expected) {
-      expect(output).toMatch(line);
-    }
+    const cleaned = cleanResult(result);
+    compareResult(cleaned, expected);
   });
 }
 
@@ -153,10 +162,10 @@ testGlob(
 
 test("error reading dead link does not stop search", async () => {
   const result = await evaluate(
-    `glob(["**/*"], {
+    `JSON.stringify(glob(["**/*"], {
       followSymlinks: true,
       dir: ${JSON.stringify(symlinksDir)}
-    })`
+    }))`
   );
 
   const expected = [
@@ -171,15 +180,10 @@ test("error reading dead link does not stop search", async () => {
   expect(cleaned).toMatchObject({
     code: 0,
     error: false,
+    stderr: `glob encountered error: No such file or directory (errno = 2, path = <rootDir>/src/api/test_fixtures/symlinks/dead-link, linkpath = ./nowhere-real)\n`,
   });
 
-  expect(cleaned.stderr).toBe(
-    `glob encountered error: No such file or directory (errno = 2, path = <rootDir>/src/api/test_fixtures/symlinks/dead-link, linkpath = ./nowhere-real)\n`
-  );
-
-  for (const line of expected) {
-    expect(cleaned.stdout).toMatch(line);
-  }
+  compareResult(cleaned, expected);
 });
 
 testGlob(
@@ -218,10 +222,10 @@ testGlob(
 
 test("using trace", async () => {
   const result = await evaluate(
-    `glob(["**/*.txt", "!**/potato/**"], {
+    `JSON.stringify(glob(["**/*.txt", "!**/potato/**"], {
       trace: console.error,
       dir: ${JSON.stringify(globDir)}
-    })`
+    }))`
   );
 
   const expectedTraceMessages = [
@@ -274,15 +278,9 @@ test("using trace", async () => {
     error: false,
   });
 
-  for (const line of expectedResult) {
-    expect(cleaned.stdout).toMatch(line);
-  }
+  compareResult(cleaned, expectedResult);
 
-  for (const line of expectedTraceMessages) {
-    expect(cleaned.stderr).toMatch(line);
-  }
-
-  expect(cleaned.stderr.split("\n").length).toBe(
-    expectedTraceMessages.split("\n").length
+  expect(expectedTraceMessages.split("\n").sort()).toEqual(
+    cleaned.stderr.split("\n").sort()
   );
 });
