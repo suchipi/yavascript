@@ -21,12 +21,17 @@ function testGlob(
       `glob(${args.map((arg) => JSON.stringify(arg)).join(", ")})`
     );
 
-    expect(cleanResult(result)).toEqual({
+    expect(result).toMatchObject({
       code: 0,
       error: false,
       stderr: "",
-      stdout: inspect(expected) + "\n",
     });
+
+    const output = cleanResult(result).stdout;
+
+    for (const line of expected) {
+      expect(output).toMatch(line);
+    }
   });
 }
 
@@ -161,12 +166,20 @@ test("error reading dead link does not stop search", async () => {
     "<rootDir>/src/api/test_fixtures/symlinks/some-file",
   ];
 
-  expect(cleanResult(result)).toEqual({
+  const cleaned = cleanResult(result);
+
+  expect(cleaned).toMatchObject({
     code: 0,
     error: false,
-    stderr: `glob encountered error: No such file or directory (errno = 2, path = <rootDir>/src/api/test_fixtures/symlinks/dead-link, linkpath = ./nowhere-real)\n`,
-    stdout: inspect(expected) + "\n",
   });
+
+  expect(cleaned.stderr).toBe(
+    `glob encountered error: No such file or directory (errno = 2, path = <rootDir>/src/api/test_fixtures/symlinks/dead-link, linkpath = ./nowhere-real)\n`
+  );
+
+  for (const line of expected) {
+    expect(cleaned.stdout).toMatch(line);
+  }
 });
 
 testGlob(
@@ -255,10 +268,21 @@ test("using trace", async () => {
   //     .join("\n")
   // );
 
-  expect(cleanResult(result)).toEqual({
+  const cleaned = cleanResult(result);
+  expect(cleaned).toMatchObject({
     code: 0,
     error: false,
-    stderr: expectedTraceMessages,
-    stdout: inspect(expectedResult) + "\n",
   });
+
+  for (const line of expectedResult) {
+    expect(cleaned.stdout).toMatch(line);
+  }
+
+  for (const line of expectedTraceMessages) {
+    expect(cleaned.stderr).toMatch(line);
+  }
+
+  expect(cleaned.stderr.split("\n").length).toBe(
+    expectedTraceMessages.split("\n").length
+  );
 });
