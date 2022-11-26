@@ -30,6 +30,12 @@ export function readlink(path: string): string {
   }
 }
 
+export function cat(path: string): string {
+  const content = std.loadFile(path);
+  std.out.puts(content);
+  return content;
+}
+
 export function readFile(path: string): string {
   return std.loadFile(path);
 }
