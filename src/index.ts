@@ -1,10 +1,7 @@
 import * as std from "std";
 import printError from "./print-error";
 
-import installApi from "./api/_installApi";
-installApi(globalThis);
-
-import "./extension-handlers/_load-all";
+import "./primordials";
 
 import helpTarget from "./targets/help";
 import versionTarget from "./targets/version";

@@ -18,7 +18,9 @@
   },
   "scripts": {
     "build": "./scripts/build.sh",
-    "bundle": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js",
+    "bundle": "npm run bundle:main && npm run bundle:primordials",
+    "bundle:main": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/index.ts --output dist/index.js",
+    "bundle:primordials": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/primordials.ts --output dist/primordials.js",
     "test": "[ -z \"$CI\" ] && npm run test:dev || npm run test:ci",
     "test:dev": "env YS_TESTS_ARCH=\"`uname -m`\" test-it --watch --watch-ignore 'src/api/test_fixtures/**/*'",
     "test:ci": "env YS_TESTS_ARCH=\"`uname -m`\" test-it"
