@@ -24,24 +24,12 @@ fi
 # generate dist/index.js (bundles in dependencies from npm)
 npm run bundle
 
-# to make the stack traces clearer, we change the filename that will get baked into the binary:
-cp dist/index.js ./yavascript-internal.js
-
-# generate dist/yavascript.c
-./quickjs/build/qjsc.host -e -D os -D std -S 8000000 -o dist/yavascript.c yavascript-internal.js
-
 if [[ "$(uname)" == "Darwin" ]]; then
-  CC="clang"
-  LDFLAGS=""
+  if [[ "$(uname -m)" == "x86_64" ]]; then
+    cat quickjs/build/darwin-x86/qjsbootstrap.target dist/index.js > dist/yavascript && chmod +x dist/yavascript
+  else
+    cat quickjs/build/darwin-arm/qjsbootstrap.target dist/index.js > dist/yavascript && chmod +x dist/yavascript
+  fi
 else
-  CC="gcc"
-  LDFLAGS="-static"
+  cat quickjs/build/linux/qjsbootstrap.target dist/index.js > dist/yavascript && chmod +x dist/yavascript
 fi
-
-"$CC" \
-  "$LDFLAGS" \
-  -o dist/yavascript \
-  dist/yavascript.c \
-  quickjs/build/quickjs-full.host.a \
-  -Iquickjs/src/quickjs-libc -Iquickjs/src/quickjs \
-  -lm -lpthread -ldl
