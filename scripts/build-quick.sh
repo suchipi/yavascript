@@ -24,12 +24,6 @@ fi
 # generate dist/index.js (bundles in dependencies from npm)
 npm run bundle
 
-if [[ "$(uname)" == "Darwin" ]]; then
-  if [[ "$(uname -m)" == "x86_64" ]]; then
-    cat quickjs/build/darwin-x86/qjsbootstrap.target dist/index.js > dist/yavascript && chmod +x dist/yavascript
-  else
-    cat quickjs/build/darwin-arm/qjsbootstrap.target dist/index.js > dist/yavascript && chmod +x dist/yavascript
-  fi
-else
-  cat quickjs/build/linux/qjsbootstrap.target dist/index.js > dist/yavascript && chmod +x dist/yavascript
-fi
+# generate dist/yavascript (final binary)
+cat quickjs/build/qjsbootstrap.target dist/index.js > dist/yavascript
+chmod +x dist/yavascript
