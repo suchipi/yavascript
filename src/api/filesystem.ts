@@ -30,9 +30,12 @@ export function readlink(path: string): string {
   }
 }
 
-export function cat(path: string): string {
-  const content = std.loadFile(path);
-  std.out.puts(content);
+export function cat(...paths: Array<string>): string {
+  let content = "";
+  for (const path of paths) {
+    content += std.loadFile(path);
+    std.out.puts(content);
+  }
   return content;
 }
 

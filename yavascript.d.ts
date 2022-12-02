@@ -43,10 +43,10 @@ declare function readlink(path: string): string;
 declare function readFile(path: string): string;
 
 /**
- * Read the contents of a file from disk as a UTF-8 string,
+ * Read the contents of one of more files from disk as one UTF-8 string,
  * print that string to stdout, then return it.
  */
-declare function cat(path: string): string;
+export function cat(...paths: Array<string>): string;
 
 /**
  * Write the contents of a string or ArrayBuffer to a file.
