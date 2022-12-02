@@ -1,36 +1,5 @@
 import * as std from "std";
-import * as inspectOptions from "../inspect-options";
-
-const makeInspectLog =
-  (file: FILE) =>
-  (...args: Array<any>) => {
-    for (let i = 0; i < args.length; i++) {
-      if (i !== 0) {
-        file.puts(" ");
-      }
-      const arg = args[i];
-
-      let str: string;
-      if (typeof arg === "string") {
-        str = arg;
-      } else {
-        try {
-          str = inspect(arg, inspectOptions.forPrint);
-        } catch (err) {
-          try {
-            std.err.puts((err as any).message + "\n");
-          } catch (err) {
-            // I give up
-          }
-          str = String(arg);
-        }
-      }
-
-      file.puts(str);
-    }
-
-    file.puts("\n");
-  };
+import { makeInspectLog } from "./shared/make-inspect-log";
 
 // To overwrite the quickjs console object
 export const console = {
@@ -39,8 +8,6 @@ export const console = {
   warn: makeInspectLog(std.err),
   error: makeInspectLog(std.err),
 };
-
-export const echo = makeInspectLog(std.out);
 
 // To overwrite the quickjs globalThis.print
 export const print = makeInspectLog(std.out);

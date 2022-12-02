@@ -1,6 +1,7 @@
 // This file has an underscore at the beginning of its name so that it is at
 // the top of the list in the text editor's sidebar
 
+import { echo } from "./commands";
 import { env } from "./env";
 import { exec, $ } from "./exec";
 import {
@@ -61,7 +62,7 @@ import {
   white,
   yellow,
 } from "./strings";
-import { console, echo, print } from "./console";
+import { console, print } from "./console";
 import { pipe } from "./pipe";
 import { bigint, boolean, number, string, symbol } from "./others";
 import { JSX } from "./jsx";
@@ -69,6 +70,8 @@ import traceAll from "./traceAll";
 
 export default function installApi(target: typeof globalThis) {
   Object.assign(target, {
+    echo,
+
     env,
 
     exec,
@@ -132,7 +135,6 @@ export default function installApi(target: typeof globalThis) {
     yellow,
 
     console,
-    echo,
     print,
 
     pipe,
