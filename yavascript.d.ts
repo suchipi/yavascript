@@ -1027,6 +1027,15 @@ declare module "std" {
   ): { [key: string]: any };
 
   /**
+   * Return the resolved path to a module.
+   *
+   * @param filename - The relative or absolute path to the file to import. Relative paths are resolved relative to the file calling `importModule`, or `basename` if present.
+   * @param basename - If present and `filename` is a relative path, `filename` will be resolved relative to this basename.
+   * @returns The resolved module path.
+   */
+  export function resolveModule(filename: string, basename?: string): string;
+
+  /**
    * Load the file `filename` and return it as a string assuming UTF-8 encoding.
    *
    * @param filename - The relative or absolute path to the file to load. Relative paths are resolved relative to the process's current working directory.
@@ -1864,4 +1873,9 @@ declare class Module {
  * will use those, too. It will search in the same order as the strings appear
  * in the `Module.searchExtensions` array.
  */
-declare var require: (source: string) => Module;
+declare var require: ((source: string) => { [key: string]: any }) & {
+  /**
+   * Resolves the normalized path to a modules, relative to the calling file.
+   */
+  resolve: (source: string) => string;
+};

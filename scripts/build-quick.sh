@@ -25,5 +25,5 @@ fi
 npm run bundle
 
 # generate dist/yavascript (final binary)
-cat quickjs/build/qjsbootstrap.target dist/index.js > dist/yavascript
+cat quickjs/build/bin/qjsbootstrap dist/index.js > dist/yavascript
 chmod +x dist/yavascript
