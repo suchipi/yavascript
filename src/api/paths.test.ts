@@ -121,7 +121,7 @@ test("realpath against dead link throws error", async () => {
       [
         `Error: No such file or directory (errno = 2, path = ./dead-link)`,
         `  at realpath (native)`,
-        `  at realpath (yavascript-internal.js)`,
+        `  at realpath (<rootDir>/bin/linux/yavascript)`,
         `  at <eval> (<evalScript>) ${inspect({
           errno: 2,
           path: "./dead-link",
@@ -143,7 +143,7 @@ test("realpath against non-existent target throws error", async () => {
       [
         `Error: No such file or directory (errno = 2, path = ./this doesn't exist, bro)`,
         `  at realpath (native)`,
-        `  at realpath (yavascript-internal.js)`,
+        `  at realpath (<rootDir>/bin/linux/yavascript)`,
         `  at <eval> (<evalScript>) ${inspect({
           errno: 2,
           path: "./this doesn't exist, bro",

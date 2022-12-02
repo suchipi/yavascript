@@ -34,8 +34,8 @@ test("exec false - string", async () => {
     code: 1,
     error: false,
     stderr: `Error: Command failed: [\"false\"] (status = 1, signal = undefined)
-  at makeErrorWithProperties (yavascript-internal.js)
-  at exec (yavascript-internal.js)
+  at makeErrorWithProperties (<rootDir>/bin/linux/yavascript)
+  at exec (<rootDir>/bin/linux/yavascript)
   at <eval> (<evalScript>) ${inspect({ status: 1, signal: undefined })}\n`,
     stdout: "",
   });
@@ -47,8 +47,8 @@ test("exec false - array", async () => {
     code: 1,
     error: false,
     stderr: `Error: Command failed: [\"false\"] (status = 1, signal = undefined)
-  at makeErrorWithProperties (yavascript-internal.js)
-  at exec (yavascript-internal.js)
+  at makeErrorWithProperties (<rootDir>/bin/linux/yavascript)
+  at exec (<rootDir>/bin/linux/yavascript)
   at <eval> (<evalScript>) ${inspect({ status: 1, signal: undefined })}\n`,
     stdout: "",
   });
@@ -195,9 +195,9 @@ test("$ false", async () => {
     error: false,
     stdout: "",
     stderr: `Error: Command failed: [\"false\"] (status = 1, signal = undefined)
-  at makeErrorWithProperties (yavascript-internal.js)
-  at exec (yavascript-internal.js)
-  at $ (yavascript-internal.js)
+  at makeErrorWithProperties (<rootDir>/bin/linux/yavascript)
+  at exec (<rootDir>/bin/linux/yavascript)
+  at $ (<rootDir>/bin/linux/yavascript)
   at <eval> (<evalScript>) ${inspect({ status: 1, signal: undefined })}\n`,
   });
 });
