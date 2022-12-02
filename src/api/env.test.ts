@@ -67,13 +67,13 @@ test("env is printable", async () => {
 });
 
 test("own keys of env object", async () => {
-  const result = await evaluate(`Object.keys(env)`, {
+  const result = await evaluate(`JSON.stringify(Object.keys(env))`, {
     env: { BLAH_BLAH: "yeah", woohoo: "yes" },
   });
   expect(result).toEqual({
     code: 0,
     error: false,
     stderr: "",
-    stdout: inspect(["BLAH_BLAH", "woohoo"]) + "\n",
+    stdout: JSON.stringify(["BLAH_BLAH", "woohoo"]) + "\n",
   });
 });
