@@ -1,19 +1,16 @@
 // This file has an underscore at the beginning of its name so that it is at
 // the top of the list in the text editor's sidebar
 
-import { echo } from "./commands";
+import { cat, echo, ls, readlink } from "./commands";
 import { env } from "./env";
 import { exec, $ } from "./exec";
 import {
   exists,
   isDir,
   isLink,
-  ls,
   readFile,
-  cat,
   remove,
   writeFile,
-  readlink,
   ensureDir,
   copy,
 } from "./filesystem";
@@ -70,7 +67,10 @@ import traceAll from "./traceAll";
 
 export default function installApi(target: typeof globalThis) {
   Object.assign(target, {
+    cat,
     echo,
+    ls,
+    readlink,
 
     env,
 
@@ -80,12 +80,9 @@ export default function installApi(target: typeof globalThis) {
     exists,
     isDir,
     isLink,
-    ls,
     readFile,
-    cat,
     remove,
     writeFile,
-    readlink,
     ensureDir,
     copy,
 

@@ -1,43 +1,9 @@
 import * as std from "std";
 import * as os from "os";
-import { basename, paths, pwd } from "./paths";
+import { basename, paths } from "./paths";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
-
-export function ls(
-  dir: string = pwd(),
-  options: { relativePaths?: boolean } = { relativePaths: false }
-): Array<string> {
-  if (!isDir(dir)) {
-    throw new Error(`Not a directory: ${dir}`);
-  }
-  let children = os
-    .readdir(dir)
-    .filter((child) => child !== "." && child !== "..");
-  if (!options.relativePaths) {
-    const parent = os.realpath(dir);
-    children = children.map((child) => paths.join(parent, child));
-  }
-
-  return children;
-}
-
-export function readlink(path: string): string {
-  if (os.readlink == null) {
-    throw new Error(`readlink is not yet supported in ${os.platform}`);
-  } else {
-    return os.readlink(path);
-  }
-}
-
-export function cat(...paths: Array<string>): string {
-  let content = "";
-  for (const path of paths) {
-    content += std.loadFile(path);
-    std.out.puts(content);
-  }
-  return content;
-}
+import { ls } from "./commands";
 
 export function readFile(path: string): string {
   return std.loadFile(path);
