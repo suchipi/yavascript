@@ -1,7 +1,7 @@
 // This file has an underscore at the beginning of its name so that it is at
 // the top of the list in the text editor's sidebar
 
-import { cat, echo, ls, readlink } from "./commands";
+import { cat, echo, ls, readlink } from "./commands/_all";
 import { env } from "./env";
 import { exec, $ } from "./exec";
 import {

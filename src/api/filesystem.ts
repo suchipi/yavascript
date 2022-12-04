@@ -3,7 +3,7 @@ import * as os from "os";
 import { basename, paths } from "./paths";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
-import { ls } from "./commands";
+import { ls } from "./commands/_all";
 
 export function readFile(path: string): string {
   return std.loadFile(path);
