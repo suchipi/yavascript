@@ -58,6 +58,7 @@ export function inspect(value: any): string {
 export function cleanOutput(input: string): string {
   return input
     .replace(/yavascript:\d+/g, "yavascript")
+    .replace(/\/bin\/[^/]+\/yavascript/g, "/bin/.../yavascript")
     .replace(new RegExp(rootDir(), "g"), "<rootDir>");
 }
 
