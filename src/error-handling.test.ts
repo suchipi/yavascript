@@ -1,4 +1,3 @@
-///<reference types="@test-it/core/globals" />
 import { evaluate, inspect } from "./test-helpers";
 
 test("prints thrown errors to stderr", async () => {

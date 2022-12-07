@@ -5,12 +5,13 @@
   "author": "Lily Skye <me@suchipi.com>",
   "license": "MIT",
   "devDependencies": {
+    "@littlethings/test": "^2.0.1",
     "@suchipi/print": "^2.2.0",
-    "@test-it/cli": "^0.7.4",
-    "@test-it/core": "^0.7.4",
     "@types/coffeescript": "^2.5.2",
+    "@types/jest": "^29.2.4",
     "@types/minimatch": "^5.1.2",
     "@types/node": "^18.7.7",
+    "expect": "^29.3.1",
     "first-base": "^0.2.0",
     "kame": "^0.9.1",
     "prettier": "^2.7.1",
@@ -21,9 +22,7 @@
     "bundle": "npm run bundle:main && npm run bundle:primordials",
     "bundle:main": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/index.ts --output dist/index.js",
     "bundle:primordials": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/primordials.ts --output dist/primordials.js",
-    "test": "[ -z \"$CI\" ] && npm run test:dev || npm run test:ci",
-    "test:dev": "env YS_TESTS_ARCH=\"`uname -m`\" test-it --watch --watch-ignore 'src/api/test_fixtures/**/*'",
-    "test:ci": "env YS_TESTS_ARCH=\"`uname -m`\" test-it"
+    "test": "littletest -r ./src/test-setup.ts"
   },
   "dependencies": {
     "@suchipi/is": "^1.0.0",

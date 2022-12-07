@@ -1,4 +1,3 @@
-///<reference types="@test-it/core/globals" />
 import { spawn } from "first-base";
 import { binaryPath, inspect } from "../test-helpers";
 

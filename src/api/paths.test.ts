@@ -1,4 +1,3 @@
-///<reference types="@test-it/core/globals" />
 import path from "path";
 import {
   evaluate,

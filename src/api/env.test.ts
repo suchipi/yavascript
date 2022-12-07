@@ -1,4 +1,3 @@
-///<reference types="@test-it/core/globals" />
 import { evaluate, binaryPath, inspect } from "../test-helpers";
 
 test("reading env", async () => {

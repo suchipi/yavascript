@@ -1,4 +1,3 @@
-///<reference types="@test-it/core/globals" />
 import { cleanResult, evaluate, inspect } from "../test-helpers";
 
 test("string -> new Uint8Array", async () => {

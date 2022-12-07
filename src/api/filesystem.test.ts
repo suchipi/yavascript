@@ -1,4 +1,3 @@
-///<reference types="@test-it/core/globals" />
 import fs from "fs";
 import path from "path";
 import { evaluate, inspect, cleanResult } from "../test-helpers";

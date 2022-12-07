@@ -1,4 +1,3 @@
-///<reference types="@test-it/core/globals" />
 import { transform } from "./esm-to-require";
 
 test("ignores non-esm", async () => {
