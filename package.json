@@ -5,7 +5,7 @@
   "author": "Lily Skye <me@suchipi.com>",
   "license": "MIT",
   "devDependencies": {
-    "@littlethings/test": "^2.0.1",
+    "@littlethings/test": "^3.0.0",
     "@suchipi/print": "^2.2.0",
     "@types/coffeescript": "^2.5.2",
     "@types/jest": "^29.2.4",
