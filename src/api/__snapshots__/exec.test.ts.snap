@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`$ echo hi - array 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "{
-  stdout: \\"hi\\\\n\\"
-  stderr: \\"\\"
+  stdout: "hi\\n"
+  stderr: ""
   status: 0
   signal: undefined
 }
@@ -16,13 +16,13 @@ Object {
 `;
 
 exports[`$ echo hi - string 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "{
-  stdout: \\"hi\\\\n\\"
-  stderr: \\"\\"
+  stdout: "hi\\n"
+  stderr: ""
   status: 0
   signal: undefined
 }
@@ -31,10 +31,10 @@ Object {
 `;
 
 exports[`$ false 1`] = `
-Object {
+{
   "code": 1,
   "error": false,
-  "stderr": "Error: Command failed: [\\"false\\"] (status = 1, signal = undefined)
+  "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
   at makeErrorWithProperties (<rootDir>/bin/.../yavascript)
   at exec (<rootDir>/bin/.../yavascript)
   at $ (<rootDir>/bin/.../yavascript)
@@ -48,28 +48,28 @@ Object {
 `;
 
 exports[`exec - child process receives args 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "[
-  \\"<rootDir>/bin/.../yavascript\\"
-  \\"-e\\"
-  \\"scriptArgs\\"
-  \\"bla\\"
-  \\"blah\\"
-  \\"--\\"
-  \\"haha\\"
+  "<rootDir>/bin/.../yavascript"
+  "-e"
+  "scriptArgs"
+  "bla"
+  "blah"
+  "--"
+  "haha"
 ]
 ",
 }
 `;
 
 exports[`exec false - array 1`] = `
-Object {
+{
   "code": 1,
   "error": false,
-  "stderr": "Error: Command failed: [\\"false\\"] (status = 1, signal = undefined)
+  "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
   at makeErrorWithProperties (<rootDir>/bin/.../yavascript)
   at exec (<rootDir>/bin/.../yavascript)
   at <eval> (<evalScript>) {
@@ -82,10 +82,10 @@ Object {
 `;
 
 exports[`exec false - string 1`] = `
-Object {
+{
   "code": 1,
   "error": false,
-  "stderr": "Error: Command failed: [\\"false\\"] (status = 1, signal = undefined)
+  "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
   at makeErrorWithProperties (<rootDir>/bin/.../yavascript)
   at exec (<rootDir>/bin/.../yavascript)
   at <eval> (<evalScript>) {
@@ -98,7 +98,7 @@ Object {
 `;
 
 exports[`exec parses arg string properly 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -108,7 +108,7 @@ Object {
 `;
 
 exports[`exec true - array 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -117,7 +117,7 @@ Object {
 `;
 
 exports[`exec true - string 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -126,13 +126,13 @@ Object {
 `;
 
 exports[`exec with captureOutput true 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "{
-  stdout: \\"hi there\\\\n\\"
-  stderr: \\"\\"
+  stdout: "hi there\\n"
+  stderr: ""
   status: 0
   signal: undefined
 }
@@ -141,7 +141,7 @@ Object {
 `;
 
 exports[`exec with cwd 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -151,7 +151,7 @@ Object {
 `;
 
 exports[`exec with env 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -161,19 +161,19 @@ Object {
 `;
 
 exports[`exec with env vars 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "{
-  HI_MOM: \\"yup\\"
+  HI_MOM: "yup"
 }
 ",
 }
 `;
 
 exports[`exec with failOnNonZeroStatus false - running 'false' 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -186,7 +186,7 @@ Object {
 `;
 
 exports[`exec with failOnNonZeroStatus false - running 'true' 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -199,7 +199,7 @@ Object {
 `;
 
 exports[`exec's string parsing does not interpolate env vars 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -209,7 +209,7 @@ Object {
 `;
 
 exports[`exec's string parsing does not parse globs 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -219,27 +219,27 @@ Object {
 `;
 
 exports[`logging 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "ChildProcess.start: [
-  \\"echo\\"
-  \\"hi\\"
+  "echo"
+  "hi"
 ]
 ChildProcess result: [
-  \\"echo\\"
-  \\"hi\\"
+  "echo"
+  "hi"
 ] -> {
   status: 0
   signal: undefined
 }
 ChildProcess.start: [
-  \\"echo\\"
-  \\"   hi\\"
+  "echo"
+  "   hi"
 ]
 ChildProcess result: [
-  \\"echo\\"
-  \\"   hi\\"
+  "echo"
+  "   hi"
 ] -> {
   status: 0
   signal: undefined

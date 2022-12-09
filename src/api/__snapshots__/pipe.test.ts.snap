@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`can handle NUL byte in content 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -16,7 +16,7 @@ Object {
 `;
 
 exports[`string -> existing Uint8Array (exact size) 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -31,7 +31,7 @@ Object {
 `;
 
 exports[`string -> existing Uint8Array (larger; overwrites but leaves existing data alone) 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -47,7 +47,7 @@ Object {
 `;
 
 exports[`string -> existing Uint8Array (smaller; truncates) 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -62,7 +62,7 @@ Object {
 `;
 
 exports[`string -> new Uint8Array 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",

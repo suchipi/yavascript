@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`readlink 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "[
-  \\"./nowhere-real\\"
-  \\"./some-file\\"
-  \\"./some-folder\\"
+  "./nowhere-real"
+  "./some-file"
+  "./some-folder"
 ]
 ",
 }

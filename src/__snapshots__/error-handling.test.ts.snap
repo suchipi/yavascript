@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`prints extra error properties to stderr 1`] = `
-Object {
+{
   "code": 1,
   "error": false,
   "stderr": "Error: hi
@@ -15,7 +15,7 @@ Object {
 `;
 
 exports[`prints thrown errors to stderr 1`] = `
-Object {
+{
   "code": 1,
   "error": false,
   "stderr": "ReferenceError: 'blahhhh' is not defined
@@ -26,10 +26,10 @@ Object {
 `;
 
 exports[`prints thrown non-errors to stderr 1`] = `
-Object {
+{
   "code": 1,
   "error": false,
-  "stderr": "Non-error value was thrown: \\"nope\\"
+  "stderr": "Non-error value was thrown: "nope"
 ",
   "stdout": "",
 }

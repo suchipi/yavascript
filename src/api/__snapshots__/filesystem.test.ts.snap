@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ensureDir - file collision errors 1`] = `
-Object {
+{
   "code": 1,
   "error": false,
   "stderr": "Error: Wanted to ensure that the directory path src/api/test_fixtures/ensure_dir/collision/file existed, but src/api/test_fixtures/ensure_dir/collision/file was a file, not a directory
@@ -13,7 +13,7 @@ Object {
 `;
 
 exports[`exists - dead link 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -23,7 +23,7 @@ Object {
 `;
 
 exports[`exists - existent target dir 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -33,7 +33,7 @@ Object {
 `;
 
 exports[`exists - existent target file 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -43,7 +43,7 @@ Object {
 `;
 
 exports[`exists - link to dir 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -53,7 +53,7 @@ Object {
 `;
 
 exports[`exists - link to file 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -63,7 +63,7 @@ Object {
 `;
 
 exports[`exists - nonexistent target 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -73,7 +73,7 @@ Object {
 `;
 
 exports[`isDir - on dead link 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -83,7 +83,7 @@ Object {
 `;
 
 exports[`isDir - on dir 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -93,7 +93,7 @@ Object {
 `;
 
 exports[`isDir - on file 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -103,7 +103,7 @@ Object {
 `;
 
 exports[`isDir - on link to file 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -113,7 +113,7 @@ Object {
 `;
 
 exports[`isDir - on link to folder 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -123,7 +123,7 @@ Object {
 `;
 
 exports[`isLink - on dead link 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -133,7 +133,7 @@ Object {
 `;
 
 exports[`isLink - on dir 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -143,7 +143,7 @@ Object {
 `;
 
 exports[`isLink - on file 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -153,7 +153,7 @@ Object {
 `;
 
 exports[`isLink - on link to file 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -163,7 +163,7 @@ Object {
 `;
 
 exports[`isLink - on link to folder 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -173,7 +173,7 @@ Object {
 `;
 
 exports[`readFile 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -184,14 +184,14 @@ Object {
 `;
 
 exports[`readlink 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "[
-  \\"./nowhere-real\\"
-  \\"./some-file\\"
-  \\"./some-folder\\"
+  "./nowhere-real"
+  "./some-file"
+  "./some-folder"
 ]
 ",
 }

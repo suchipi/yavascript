@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`basename (windows-style path) 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -11,7 +11,7 @@ Object {
 `;
 
 exports[`basename 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -21,7 +21,7 @@ Object {
 `;
 
 exports[`cd affects working directory of exec 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -31,7 +31,7 @@ Object {
 `;
 
 exports[`cd and pwd 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -45,17 +45,17 @@ Object {
 `;
 
 exports[`dirname (windows-style path) 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
-  "stdout": "C:\\\\Users
+  "stdout": "C:\\Users
 ",
 }
 `;
 
 exports[`dirname 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -65,7 +65,7 @@ Object {
 `;
 
 exports[`extname (windows-style path) 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -78,7 +78,7 @@ Object {
 `;
 
 exports[`extname 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -98,33 +98,33 @@ Object {
 `;
 
 exports[`paths.detectSeparator 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "/
-\\\\
+\\
 /
 ",
 }
 `;
 
 exports[`paths.join 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "one/two
 /one/two/three/four
 bla/blah/hi
-.\\\\bla\\\\blah\\\\hi\\\\there
-.\\\\bla\\\\blah\\\\hi\\\\there
+.\\bla\\blah\\hi\\there
+.\\bla\\blah\\hi\\there
 ",
 }
 `;
 
 exports[`paths.resolve with absolute path with . and ..s in it 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -134,7 +134,7 @@ Object {
 `;
 
 exports[`paths.resolve with already-absolute path 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
@@ -144,115 +144,115 @@ Object {
 `;
 
 exports[`paths.split (windows-style paths) 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "[
-  \\"C:\\"
-  \\"some\\"
-  \\"path\\"
-  \\"some\\"
-  \\"where\\"
+  "C:"
+  "some"
+  "path"
+  "some"
+  "where"
 ]
 [
-  \\"D:\\"
-  \\"with\\"
-  \\"trailing\\"
-  \\"slash\\"
+  "D:"
+  "with"
+  "trailing"
+  "slash"
 ]
 [
-  \\".\\"
-  \\"this\\"
-  \\"one's\\"
-  \\"relative\\"
+  "."
+  "this"
+  "one's"
+  "relative"
 ]
 [
-  \\"..\\"
+  ".."
 ]
 [
-  \\"..\\"
-  \\"yeah\\"
+  ".."
+  "yeah"
 ]
 [
-  \\"hi\\"
+  "hi"
 ]
 [
-  \\"hello\\"
-  \\"mario\\"
+  "hello"
+  "mario"
 ]
 [
-  \\"E:\\"
-  \\"what\\"
+  "E:"
+  "what"
 ]
 [
-  \\"Z:\\"
-  \\"who\\"
-  \\"tf\\"
-  \\"keeps putting\\"
-  \\"double\\"
-  \\"slashes\\"
+  "Z:"
+  "who"
+  "tf"
+  "keeps putting"
+  "double"
+  "slashes"
 ]
 ",
 }
 `;
 
 exports[`paths.split 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
   "stdout": "[
-  \\"\\"
-  \\"some\\"
-  \\"path\\"
-  \\"some\\"
-  \\"where\\"
+  ""
+  "some"
+  "path"
+  "some"
+  "where"
 ]
 [
-  \\"\\"
-  \\"with\\"
-  \\"trailing\\"
-  \\"slash\\"
+  ""
+  "with"
+  "trailing"
+  "slash"
 ]
 [
-  \\".\\"
-  \\"this\\"
-  \\"one's\\"
-  \\"relative\\"
+  "."
+  "this"
+  "one's"
+  "relative"
 ]
 [
-  \\"..\\"
+  ".."
 ]
 [
-  \\"..\\"
-  \\"yeah\\"
+  ".."
+  "yeah"
 ]
 [
-  \\"hi\\"
+  "hi"
 ]
 [
-  \\"hello\\"
-  \\"mario\\"
+  "hello"
+  "mario"
 ]
 [
-  \\"\\"
-  \\"what\\"
+  ""
+  "what"
 ]
 [
-  \\"\\"
-  \\"who\\"
-  \\"tf\\"
-  \\"keeps putting\\"
-  \\"double\\"
-  \\"slashes\\"
+  ""
+  "who"
+  "tf"
+  "keeps putting"
+  "double"
+  "slashes"
 ]
 ",
 }
 `;
 
 exports[`realpath against dead link throws error 1`] = `
-Object {
+{
   "code": 1,
   "error": false,
   "stderr": "Error: No such file or directory (errno = 2, path = ./dead-link)
@@ -260,7 +260,7 @@ Object {
   at realpath (<rootDir>/bin/.../yavascript)
   at <eval> (<evalScript>) {
   errno: 2
-  path: \\"./dead-link\\"
+  path: "./dead-link"
 }
 ",
   "stdout": "",
@@ -268,7 +268,7 @@ Object {
 `;
 
 exports[`realpath against non-existent target throws error 1`] = `
-Object {
+{
   "code": 1,
   "error": false,
   "stderr": "Error: No such file or directory (errno = 2, path = ./this doesn't exist, bro)
@@ -276,7 +276,7 @@ Object {
   at realpath (<rootDir>/bin/.../yavascript)
   at <eval> (<evalScript>) {
   errno: 2
-  path: \\"./this doesn't exist, bro\\"
+  path: "./this doesn't exist, bro"
 }
 ",
   "stdout": "",
@@ -284,7 +284,7 @@ Object {
 `;
 
 exports[`realpath resolution behavior 1`] = `
-Object {
+{
   "code": 0,
   "error": false,
   "stderr": "",
