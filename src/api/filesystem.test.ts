@@ -17,14 +17,35 @@ test("readlink", async () => {
     `[readlink("dead-link"), readlink("link-to-file"), readlink("link-to-folder")]`,
     { cwd: symlinksFixturesDir }
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "[
+      "./nowhere-real"
+      "./some-file"
+      "./some-folder"
+    ]
+    ",
+    }
+  `);
 });
 
 test("readFile", async () => {
   const result = await evaluate(
     `readFile("${fileContentFixturesDir}/hello.txt")`
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "hello, world!!! :D
+    あ
+    ",
+    }
+  `);
 });
 
 test("writeFile", async () => {
@@ -52,68 +73,148 @@ test("writeFile", async () => {
 
 test("isDir - on dir", async () => {
   const result = await evaluate(`isDir("./src/api/test_fixtures/glob/cabana")`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    ",
+    }
+  `);
 });
 
 test("isDir - on file", async () => {
   const result = await evaluate(`isDir("./src/api/test_fixtures/glob/hi.txt")`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "false
+    ",
+    }
+  `);
 });
 
 test("isDir - on link to folder", async () => {
   const result = await evaluate(
     `isDir("./src/api/test_fixtures/symlinks/link-to-folder")`
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    ",
+    }
+  `);
 });
 
 test("isDir - on link to file", async () => {
   const result = await evaluate(
     `isDir("./src/api/test_fixtures/symlinks/link-to-file")`
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "false
+    ",
+    }
+  `);
 });
 
 test("isDir - on dead link", async () => {
   const result = await evaluate(
     `isDir("./src/api/test_fixtures/symlinks/dead-link")`
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "false
+    ",
+    }
+  `);
 });
 
 test("isLink - on dir", async () => {
   const result = await evaluate(
     `isLink("./src/api/test_fixtures/glob/cabana")`
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "false
+    ",
+    }
+  `);
 });
 
 test("isLink - on file", async () => {
   const result = await evaluate(
     `isLink("./src/api/test_fixtures/glob/hi.txt")`
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "false
+    ",
+    }
+  `);
 });
 
 test("isLink - on link to folder", async () => {
   const result = await evaluate(
     `isLink("./src/api/test_fixtures/symlinks/link-to-folder")`
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    ",
+    }
+  `);
 });
 
 test("isLink - on link to file", async () => {
   const result = await evaluate(
     `isLink("./src/api/test_fixtures/symlinks/link-to-file")`
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    ",
+    }
+  `);
 });
 
 test("isLink - on dead link", async () => {
   const result = await evaluate(
     `isLink("./src/api/test_fixtures/symlinks/dead-link")`
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    ",
+    }
+  `);
 });
 
 test("remove - on file", async () => {
@@ -195,7 +296,15 @@ test("exists - existent target file", async () => {
   expect(fs.existsSync(target)).toBe(true);
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    ",
+    }
+  `);
 });
 
 test("exists - existent target dir", async () => {
@@ -204,7 +313,15 @@ test("exists - existent target dir", async () => {
   expect(fs.existsSync(target)).toBe(true);
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    ",
+    }
+  `);
 });
 
 test("exists - nonexistent target", async () => {
@@ -213,7 +330,15 @@ test("exists - nonexistent target", async () => {
   expect(fs.existsSync(target)).toBe(false);
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "false
+    ",
+    }
+  `);
 });
 
 test("exists - link to file", async () => {
@@ -222,7 +347,15 @@ test("exists - link to file", async () => {
   expect(fs.existsSync(target)).toBe(true);
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    ",
+    }
+  `);
 });
 
 test("exists - link to dir", async () => {
@@ -231,7 +364,15 @@ test("exists - link to dir", async () => {
   expect(fs.existsSync(target)).toBe(true);
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    ",
+    }
+  `);
 });
 
 // weird that this says it doesn't exist, but that's consistent with os.access
@@ -242,7 +383,15 @@ test("exists - dead link", async () => {
   expect(fs.existsSync(target)).toBe(false);
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "false
+    ",
+    }
+  `);
 });
 
 test("ensureDir", async () => {
@@ -283,7 +432,17 @@ test("ensureDir - file collision errors", async () => {
   fs.writeFileSync(target, "hi");
 
   const result = await evaluate(`ensureDir(${JSON.stringify(target)})`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": false,
+      "stderr": "Error: Wanted to ensure that the directory path src/api/test_fixtures/ensure_dir/collision/file existed, but src/api/test_fixtures/ensure_dir/collision/file was a file, not a directory
+      at ensureDir (<rootDir>/bin/.../yavascript)
+      at <eval> (<evalScript>)
+    ",
+      "stdout": "",
+    }
+  `);
 
   fs.rmSync(outerTarget, { recursive: true, force: true });
 });

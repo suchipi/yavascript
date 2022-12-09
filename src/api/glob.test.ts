@@ -250,5 +250,34 @@ test("using trace", async () => {
 
   // message order varies with OS
   const traceMessages = cleaned.stderr.split("\n").sort().join("\n");
-  expect(traceMessages).toMatchSnapshot();
+  expect(traceMessages).toMatchInlineSnapshot(`
+    "
+    checking <rootDir>/src/api/test_fixtures/glob/cabana
+    checking <rootDir>/src/api/test_fixtures/glob/cabana/.gitkeep
+    checking <rootDir>/src/api/test_fixtures/glob/hi
+    checking <rootDir>/src/api/test_fixtures/glob/hi.js
+    checking <rootDir>/src/api/test_fixtures/glob/hi.something.js
+    checking <rootDir>/src/api/test_fixtures/glob/hi.txt
+    checking <rootDir>/src/api/test_fixtures/glob/hi/.yeah
+    checking <rootDir>/src/api/test_fixtures/glob/hi/there.txt
+    checking <rootDir>/src/api/test_fixtures/glob/potato
+    found 3 children of <rootDir>/src/api/test_fixtures/glob/cabana
+    found 4 children of <rootDir>/src/api/test_fixtures/glob/hi
+    found 8 children of <rootDir>/src/api/test_fixtures/glob
+    match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/cabana"}
+    match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/cabana/.gitkeep"}
+    match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi"}
+    match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.js"}
+    match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.something.js"}
+    match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi/.yeah"}
+    match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/potato"}
+    match info: {"didMatch":true,"pattern":"!**/potato/**","negated":true,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.txt"}
+    match info: {"didMatch":true,"pattern":"!**/potato/**","negated":true,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi/there.txt"}
+    match info: {"didMatch":true,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.txt"}
+    match info: {"didMatch":true,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi/there.txt"}
+    not traversing deeper into dir as it matches a negated pattern: {"dir":"<rootDir>/src/api/test_fixtures/glob/potato","pattern":"!**/potato/**"}
+    reading children of <rootDir>/src/api/test_fixtures/glob
+    reading children of <rootDir>/src/api/test_fixtures/glob/cabana
+    reading children of <rootDir>/src/api/test_fixtures/glob/hi"
+  `);
 });

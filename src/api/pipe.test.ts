@@ -3,7 +3,20 @@ import { evaluate } from "../test-helpers";
 test("string -> new Uint8Array", async () => {
   const input = { data: "Hello, world!" };
   const result = await evaluate(`pipe(${JSON.stringify(input)}, Uint8Array)`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      bytesTransferred: 13
+      target: Uint8Array [
+        │0x00000000│ 48 65 6C 6C 6F 2C 20 77 6F 72 6C 64 21
+      ]
+    }
+    ",
+    }
+  `);
 });
 
 test("string -> existing Uint8Array (exact size)", async () => {
@@ -17,7 +30,20 @@ test("string -> existing Uint8Array (exact size)", async () => {
     `pipe(${JSON.stringify(input)}, new Uint8Array(${outputBytes.length}))`
   );
 
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      bytesTransferred: 13
+      target: Uint8Array [
+        │0x00000000│ 48 65 6C 6C 6F 2C 20 77 6F 72 6C 64 21
+      ]
+    }
+    ",
+    }
+  `);
 });
 
 test("string -> existing Uint8Array (smaller; truncates)", async () => {
@@ -31,7 +57,20 @@ test("string -> existing Uint8Array (smaller; truncates)", async () => {
     `pipe(${JSON.stringify(input)}, new Uint8Array(${outputBytes.length - 4}))`
   );
 
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      bytesTransferred: 9
+      target: Uint8Array [
+        │0x00000000│ 48 65 6C 6C 6F 2C 20 77 6F
+      ]
+    }
+    ",
+    }
+  `);
 });
 
 test("string -> existing Uint8Array (larger; overwrites but leaves existing data alone)", async () => {
@@ -47,7 +86,21 @@ test("string -> existing Uint8Array (larger; overwrites but leaves existing data
     }).fill(1)))`
   );
 
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      bytesTransferred: 13
+      target: Uint8Array [
+        │0x00000000│ 48 65 6C 6C 6F 2C 20 77 6F 72 6C 64 21 01 01 01
+        │0x00000010│ 01
+      ]
+    }
+    ",
+    }
+  `);
 });
 
 // TODO: every other combination of input/output...
@@ -63,5 +116,18 @@ test("can handle NUL byte in content", async () => {
     `pipe(new Uint8Array(${JSON.stringify(input)}), Uint8Array)`
   );
 
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      bytesTransferred: 16
+      target: Uint8Array [
+        │0x00000000│ 4E 45 53 1A 02 02 11 00 00 00 00 00 00 00 00 00
+      ]
+    }
+    ",
+    }
+  `);
 });

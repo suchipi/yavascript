@@ -19,7 +19,19 @@ test("cd and pwd", async () => {
   `;
 
   const result = await evaluate(script, { cwd: rootDir });
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "<rootDir>
+    <rootDir>/src
+    <rootDir>
+    <rootDir>/scripts
+    /tmp
+    ",
+    }
+  `);
 });
 
 test("cd affects working directory of exec", async () => {
@@ -29,7 +41,15 @@ test("cd affects working directory of exec", async () => {
   `;
 
   const result = await evaluate(script, { cwd: rootDir });
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "<rootDir>/src
+    ",
+    }
+  `);
 });
 
 test("realpath resolution behavior", async () => {
@@ -56,41 +76,120 @@ test("realpath resolution behavior", async () => {
   `;
 
   const result = await evaluate(script, { cwd: rootDir });
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "/tmp
+    <rootDir>/src/api/test_fixtures/symlinks
+    <rootDir>/src/api/test_fixtures
+    <rootDir>/src/api/test_fixtures/symlinks/some-folder
+    <rootDir>/src/api/test_fixtures/symlinks/some-file
+    <rootDir>/src/api/test_fixtures/symlinks/some-folder
+    <rootDir>/src/api/test_fixtures/symlinks/some-file
+    <rootDir>/src/api/test_fixtures/symlinks/some-folder
+    <rootDir>/src/api/test_fixtures/symlinks/some-file
+    <rootDir>/src/api/test_fixtures/symlinks/some-folder
+    <rootDir>/src/api/test_fixtures/symlinks/some-file
+    <rootDir>
+    ",
+    }
+  `);
 });
 
 test("realpath against dead link throws error", async () => {
   const result = await evaluate(`realpath("./dead-link")`, {
     cwd: symlinkFixturesDir,
   });
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": false,
+      "stderr": "Error: No such file or directory (errno = 2, path = ./dead-link)
+      at realpath (native)
+      at realpath (<rootDir>/bin/.../yavascript)
+      at <eval> (<evalScript>) {
+      errno: 2
+      path: "./dead-link"
+    }
+    ",
+      "stdout": "",
+    }
+  `);
 });
 
 test("realpath against non-existent target throws error", async () => {
   const result = await evaluate(`realpath("./this doesn't exist, bro")`, {
     cwd: rootDir,
   });
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": false,
+      "stderr": "Error: No such file or directory (errno = 2, path = ./this doesn't exist, bro)
+      at realpath (native)
+      at realpath (<rootDir>/bin/.../yavascript)
+      at <eval> (<evalScript>) {
+      errno: 2
+      path: "./this doesn't exist, bro"
+    }
+    ",
+      "stdout": "",
+    }
+  `);
 });
 
 test("dirname", async () => {
   const result = await evaluate(`dirname("/hi/there/yeah")`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "/hi/there
+    ",
+    }
+  `);
 });
 
 test("dirname (windows-style path)", async () => {
   const result = await evaluate(`dirname("C:\\\\Users\\\\Suchipi")`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "C:\\Users
+    ",
+    }
+  `);
 });
 
 test("basename", async () => {
   const result = await evaluate(`basename("/hi/there/yeah")`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "yeah
+    ",
+    }
+  `);
 });
 
 test("basename (windows-style path)", async () => {
   const result = await evaluate(`basename("C:\\\\Users\\\\Suchipi")`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Suchipi
+    ",
+    }
+  `);
 });
 
 test("extname", async () => {
@@ -113,7 +212,25 @@ test("extname", async () => {
   `;
 
   const result = await evaluate(script);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": ".js
+    .js
+    .js
+    .js
+    .test.js
+    .test.js
+    .js
+    .js
+
+
+
+    ",
+    }
+  `);
 });
 
 test("extname (windows-style path)", async () => {
@@ -125,7 +242,18 @@ test("extname (windows-style path)", async () => {
   `;
 
   const result = await evaluate(script);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": ".js
+    .js
+    .test.js
+    .js
+    ",
+    }
+  `);
 });
 
 // this test will only work on non-windows
@@ -174,7 +302,59 @@ test("paths.split", async () => {
   `;
 
   const result = await evaluate(script);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "[
+      ""
+      "some"
+      "path"
+      "some"
+      "where"
+    ]
+    [
+      ""
+      "with"
+      "trailing"
+      "slash"
+    ]
+    [
+      "."
+      "this"
+      "one's"
+      "relative"
+    ]
+    [
+      ".."
+    ]
+    [
+      ".."
+      "yeah"
+    ]
+    [
+      "hi"
+    ]
+    [
+      "hello"
+      "mario"
+    ]
+    [
+      ""
+      "what"
+    ]
+    [
+      ""
+      "who"
+      "tf"
+      "keeps putting"
+      "double"
+      "slashes"
+    ]
+    ",
+    }
+  `);
 });
 
 test("paths.split (windows-style paths)", async () => {
@@ -191,7 +371,59 @@ test("paths.split (windows-style paths)", async () => {
   `;
 
   const result = await evaluate(script);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "[
+      "C:"
+      "some"
+      "path"
+      "some"
+      "where"
+    ]
+    [
+      "D:"
+      "with"
+      "trailing"
+      "slash"
+    ]
+    [
+      "."
+      "this"
+      "one's"
+      "relative"
+    ]
+    [
+      ".."
+    ]
+    [
+      ".."
+      "yeah"
+    ]
+    [
+      "hi"
+    ]
+    [
+      "hello"
+      "mario"
+    ]
+    [
+      "E:"
+      "what"
+    ]
+    [
+      "Z:"
+      "who"
+      "tf"
+      "keeps putting"
+      "double"
+      "slashes"
+    ]
+    ",
+    }
+  `);
 });
 
 test("paths.detectSeparator", async () => {
@@ -202,7 +434,17 @@ test("paths.detectSeparator", async () => {
   `;
 
   const result = await evaluate(script);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "/
+    \\
+    /
+    ",
+    }
+  `);
 });
 
 test("paths.join", async () => {
@@ -215,15 +457,43 @@ test("paths.join", async () => {
   `;
 
   const result = await evaluate(script);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "one/two
+    /one/two/three/four
+    bla/blah/hi
+    .\\bla\\blah\\hi\\there
+    .\\bla\\blah\\hi\\there
+    ",
+    }
+  `);
 });
 
 test("paths.resolve with already-absolute path", async () => {
   const result = await evaluate(`paths.resolve("/hi/there/yeah")`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "/hi/there/yeah
+    ",
+    }
+  `);
 });
 
 test("paths.resolve with absolute path with . and ..s in it", async () => {
   const result = await evaluate(`paths.resolve("/hi/./there/yeah/../yup/./")`);
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "/hi/there/yup
+    ",
+    }
+  `);
 });

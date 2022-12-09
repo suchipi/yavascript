@@ -12,5 +12,17 @@ test("readlink", async () => {
     `[readlink("dead-link"), readlink("link-to-file"), readlink("link-to-folder")]`,
     { cwd: symlinksFixturesDir }
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "[
+      "./nowhere-real"
+      "./some-file"
+      "./some-folder"
+    ]
+    ",
+    }
+  `);
 });

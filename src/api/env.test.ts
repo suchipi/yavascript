@@ -4,14 +4,30 @@ test("reading env", async () => {
   const result = await evaluate(`env.BLAH_BLAH`, {
     env: { BLAH_BLAH: "yeah" },
   });
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "yeah
+    ",
+    }
+  `);
 });
 
 test("setting env", async () => {
   const result = await evaluate(`env.BLAH_BLAH = 'yes'; env.BLAH_BLAH`, {
     env: { BLAH_BLAH: "yeah" },
   });
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "yes
+    ",
+    }
+  `);
 });
 
 test("setting env affects child processes", async () => {
@@ -23,26 +39,61 @@ test("setting env affects child processes", async () => {
       env: { BLAH_BLAH: "yeah" },
     }
   );
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "yes
+    ",
+    }
+  `);
 });
 
 test("clearing env", async () => {
   const result = await evaluate(`delete env.BLAH_BLAH; typeof env.BLAH_BLAH`, {
     env: { BLAH_BLAH: "yeah" },
   });
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "undefined
+    ",
+    }
+  `);
 });
 
 test("env is printable", async () => {
   const result = await evaluate(`env`, {
     env: { BLAH_BLAH: "yeah", woohoo: "yes" },
   });
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      BLAH_BLAH: "yeah"
+      woohoo: "yes"
+    }
+    ",
+    }
+  `);
 });
 
 test("own keys of env object", async () => {
   const result = await evaluate(`JSON.stringify(Object.keys(env))`, {
     env: { BLAH_BLAH: "yeah", woohoo: "yes" },
   });
-  expect(result).toMatchSnapshot();
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "["BLAH_BLAH","woohoo"]
+    ",
+    }
+  `);
 });
