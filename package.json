@@ -25,7 +25,7 @@
     "bundle": "npm run bundle:main && npm run bundle:primordials",
     "bundle:main": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/index.ts --output dist/index.js",
     "bundle:primordials": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/primordials.ts --output dist/primordials.js",
-    "test": "jest"
+    "test": "jest --config=./jest/config.js"
   },
   "dependencies": {
     "@suchipi/is": "^1.0.0",

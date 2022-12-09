@@ -3,6 +3,7 @@ const babelConfig = require("./babel-config");
 
 /** @type {import('jest').Config} */
 const config = {
+  rootDir: path.resolve(__dirname, ".."),
   transform: {
     "\\.[jt]sx?$": ["babel-jest", babelConfig],
   },
