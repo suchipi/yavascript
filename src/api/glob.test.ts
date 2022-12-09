@@ -227,37 +227,6 @@ test("using trace", async () => {
     }))`
   );
 
-  const expectedTraceMessages = [
-    `reading children of <rootDir>/src/api/test_fixtures/glob`,
-    `found 8 children of <rootDir>/src/api/test_fixtures/glob`,
-    `checking <rootDir>/src/api/test_fixtures/glob/hi.something.js`,
-    `match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.something.js"}`,
-    `checking <rootDir>/src/api/test_fixtures/glob/potato`,
-    `match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/potato"}`,
-    `not traversing deeper into dir as it matches a negated pattern: {"dir":"<rootDir>/src/api/test_fixtures/glob/potato","pattern":"!**/potato/**"}`,
-    `checking <rootDir>/src/api/test_fixtures/glob/hi.js`,
-    `match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.js"}`,
-    `checking <rootDir>/src/api/test_fixtures/glob/hi.txt`,
-    `match info: {"didMatch":true,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.txt"}`,
-    `match info: {"didMatch":true,"pattern":"!**/potato/**","negated":true,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi.txt"}`,
-    `checking <rootDir>/src/api/test_fixtures/glob/cabana`,
-    `match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/cabana"}`,
-    `reading children of <rootDir>/src/api/test_fixtures/glob/cabana`,
-    `found 3 children of <rootDir>/src/api/test_fixtures/glob/cabana`,
-    `checking <rootDir>/src/api/test_fixtures/glob/cabana/.gitkeep`,
-    `match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/cabana/.gitkeep"}`,
-    `checking <rootDir>/src/api/test_fixtures/glob/hi`,
-    `match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi"}`,
-    `reading children of <rootDir>/src/api/test_fixtures/glob/hi`,
-    `found 4 children of <rootDir>/src/api/test_fixtures/glob/hi`,
-    `checking <rootDir>/src/api/test_fixtures/glob/hi/there.txt`,
-    `match info: {"didMatch":true,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi/there.txt"}`,
-    `match info: {"didMatch":true,"pattern":"!**/potato/**","negated":true,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi/there.txt"}`,
-    `checking <rootDir>/src/api/test_fixtures/glob/hi/.yeah`,
-    `match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/api/test_fixtures/glob/hi/.yeah"}`,
-    ``,
-  ].join("\n");
-
   const expectedResult = [
     "<rootDir>/src/api/test_fixtures/glob/hi.txt",
     "<rootDir>/src/api/test_fixtures/glob/hi/there.txt",
@@ -279,7 +248,7 @@ test("using trace", async () => {
 
   compareResult(cleaned, expectedResult);
 
-  expect(expectedTraceMessages.split("\n").sort()).toEqual(
-    cleaned.stderr.split("\n").sort()
-  );
+  // message order varies with OS
+  const traceMessages = cleaned.stderr.split("\n").sort().join("\n");
+  expect(traceMessages).toMatchSnapshot();
 });

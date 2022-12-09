@@ -1,5 +1,5 @@
 import path from "path";
-import { evaluate, inspect, cleanResult } from "../../test-helpers";
+import { evaluate, cleanResult } from "../../test-helpers";
 
 const rootDir = path.resolve(__dirname, "..", "..", "..");
 const globFixturesDir = path.join(rootDir, "src/api/test_fixtures/glob");

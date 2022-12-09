@@ -4,24 +4,14 @@ test("reading env", async () => {
   const result = await evaluate(`env.BLAH_BLAH`, {
     env: { BLAH_BLAH: "yeah" },
   });
-  expect(result).toEqual({
-    code: 0,
-    error: false,
-    stderr: "",
-    stdout: "yeah\n",
-  });
+  expect(result).toMatchSnapshot();
 });
 
 test("setting env", async () => {
   const result = await evaluate(`env.BLAH_BLAH = 'yes'; env.BLAH_BLAH`, {
     env: { BLAH_BLAH: "yeah" },
   });
-  expect(result).toEqual({
-    code: 0,
-    error: false,
-    stderr: "",
-    stdout: "yes\n",
-  });
+  expect(result).toMatchSnapshot();
 });
 
 test("setting env affects child processes", async () => {
@@ -33,46 +23,26 @@ test("setting env affects child processes", async () => {
       env: { BLAH_BLAH: "yeah" },
     }
   );
-  expect(result).toEqual({
-    code: 0,
-    error: false,
-    stderr: "",
-    stdout: "yes\n",
-  });
+  expect(result).toMatchSnapshot();
 });
 
 test("clearing env", async () => {
   const result = await evaluate(`delete env.BLAH_BLAH; typeof env.BLAH_BLAH`, {
     env: { BLAH_BLAH: "yeah" },
   });
-  expect(result).toEqual({
-    code: 0,
-    error: false,
-    stderr: "",
-    stdout: "undefined\n",
-  });
+  expect(result).toMatchSnapshot();
 });
 
 test("env is printable", async () => {
   const result = await evaluate(`env`, {
     env: { BLAH_BLAH: "yeah", woohoo: "yes" },
   });
-  expect(result).toEqual({
-    code: 0,
-    error: false,
-    stderr: "",
-    stdout: inspect({ BLAH_BLAH: "yeah", woohoo: "yes" }) + "\n",
-  });
+  expect(result).toMatchSnapshot();
 });
 
 test("own keys of env object", async () => {
   const result = await evaluate(`JSON.stringify(Object.keys(env))`, {
     env: { BLAH_BLAH: "yeah", woohoo: "yes" },
   });
-  expect(result).toEqual({
-    code: 0,
-    error: false,
-    stderr: "",
-    stdout: JSON.stringify(["BLAH_BLAH", "woohoo"]) + "\n",
-  });
+  expect(result).toMatchSnapshot();
 });

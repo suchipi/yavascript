@@ -1,0 +1,271 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`eval target via --eval can evaluate coffeescript 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "hi
+",
+}
+`;
+
+exports[`eval target via --eval can evaluate jsx 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  $$typeof: Symbol(JSX.Element)
+  type: \\"div\\"
+  props: {
+    children: [
+      {
+        $$typeof: Symbol(JSX.Element)
+        type: \\"a\\"
+        props: {
+          key: \\"hi\\"
+          href: \\"#\\"
+        }
+        key: \\"hi\\"
+      }
+      {
+        $$typeof: Symbol(JSX.Element)
+        type: Symbol(JSX.Fragment)
+        props: null
+        key: null
+      }
+    ]
+  }
+  key: null
+}
+",
+}
+`;
+
+exports[`eval target via --eval can evaluate tsx 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  $$typeof: Symbol(JSX.Element)
+  type: \\"div\\"
+  props: {
+    children: [
+      {
+        $$typeof: Symbol(JSX.Element)
+        type: \\"a\\"
+        props: {
+          key: \\"hi\\"
+          href: \\"#\\"
+        }
+        key: \\"hi\\"
+      }
+      {
+        $$typeof: Symbol(JSX.Element)
+        type: Symbol(JSX.Fragment)
+        props: null
+        key: null
+      }
+    ]
+  }
+  key: null
+}
+",
+}
+`;
+
+exports[`eval target via --eval can evaluate typescript (via --lang ts) 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "something
+",
+}
+`;
+
+exports[`eval target via --eval can evaluate typescript (via --lang typescript) 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "something
+",
+}
+`;
+
+exports[`eval target via --eval doesn't print anything when the code results in undefined 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "",
+}
+`;
+
+exports[`eval target via --eval evaluates the specified code 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "hi
+",
+}
+`;
+
+exports[`eval target via --eval prints non-empty completion value 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "hello
+",
+}
+`;
+
+exports[`eval target via --eval prints the result when it's not undefined 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "24
+",
+}
+`;
+
+exports[`eval target via -e can evaluate coffeescript 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "hi
+",
+}
+`;
+
+exports[`eval target via -e can evaluate jsx 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  $$typeof: Symbol(JSX.Element)
+  type: \\"div\\"
+  props: {
+    children: [
+      {
+        $$typeof: Symbol(JSX.Element)
+        type: \\"a\\"
+        props: {
+          key: \\"hi\\"
+          href: \\"#\\"
+        }
+        key: \\"hi\\"
+      }
+      {
+        $$typeof: Symbol(JSX.Element)
+        type: Symbol(JSX.Fragment)
+        props: null
+        key: null
+      }
+    ]
+  }
+  key: null
+}
+",
+}
+`;
+
+exports[`eval target via -e can evaluate tsx 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  $$typeof: Symbol(JSX.Element)
+  type: \\"div\\"
+  props: {
+    children: [
+      {
+        $$typeof: Symbol(JSX.Element)
+        type: \\"a\\"
+        props: {
+          key: \\"hi\\"
+          href: \\"#\\"
+        }
+        key: \\"hi\\"
+      }
+      {
+        $$typeof: Symbol(JSX.Element)
+        type: Symbol(JSX.Fragment)
+        props: null
+        key: null
+      }
+    ]
+  }
+  key: null
+}
+",
+}
+`;
+
+exports[`eval target via -e can evaluate typescript (via --lang ts) 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "something
+",
+}
+`;
+
+exports[`eval target via -e can evaluate typescript (via --lang typescript) 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "something
+",
+}
+`;
+
+exports[`eval target via -e doesn't print anything when the code results in undefined 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "",
+}
+`;
+
+exports[`eval target via -e evaluates the specified code 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "hi
+",
+}
+`;
+
+exports[`eval target via -e prints non-empty completion value 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "hello
+",
+}
+`;
+
+exports[`eval target via -e prints the result when it's not undefined 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "24
+",
+}
+`;

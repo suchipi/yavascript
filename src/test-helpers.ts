@@ -2,6 +2,7 @@ import { spawn, Options as SpawnOptions } from "first-base";
 import child_process from "child_process";
 import path from "path";
 import print from "@suchipi/print";
+import stripAnsi from "strip-ansi";
 import * as inspectOptions from "./inspect-options";
 
 export const TMP = child_process
@@ -56,10 +57,12 @@ export function inspect(value: any): string {
 }
 
 export function cleanOutput(input: string): string {
-  return input
+  const cleanStr = input
     .replace(/yavascript:\d+/g, "yavascript")
     .replace(/\/bin\/[^/]+\/yavascript/g, "/bin/.../yavascript")
+    .replace(new RegExp(TMP, "g"), "/tmp")
     .replace(new RegExp(rootDir(), "g"), "<rootDir>");
+  return stripAnsi(cleanStr);
 }
 
 export function cleanResult(input: EvaluateResult): EvaluateResult {

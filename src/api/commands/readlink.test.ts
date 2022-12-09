@@ -1,5 +1,5 @@
 import path from "path";
-import { evaluate, inspect, cleanResult } from "../../test-helpers";
+import { evaluate } from "../../test-helpers";
 
 const rootDir = path.resolve(__dirname, "..", "..", "..");
 const symlinksFixturesDir = path.join(
@@ -9,14 +9,8 @@ const symlinksFixturesDir = path.join(
 
 test("readlink", async () => {
   const result = await evaluate(
-    `JSON.stringify([readlink("dead-link"), readlink("link-to-file"), readlink("link-to-folder")])`,
+    `[readlink("dead-link"), readlink("link-to-file"), readlink("link-to-folder")]`,
     { cwd: symlinksFixturesDir }
   );
-  expect(cleanResult(result)).toEqual({
-    code: 0,
-    error: false,
-    stderr: "",
-    stdout:
-      JSON.stringify(["./nowhere-real", "./some-file", "./some-folder"]) + "\n",
-  });
+  expect(result).toMatchSnapshot();
 });

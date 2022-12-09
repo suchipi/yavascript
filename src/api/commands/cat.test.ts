@@ -1,15 +1,11 @@
-import fs from "fs";
 import path from "path";
-import { evaluate, inspect } from "../../test-helpers";
+import { evaluate } from "../../test-helpers";
 
 const rootDir = path.resolve(__dirname, "..", "..", "..");
 const fileContentFixturesDir = path.join(
   rootDir,
   "src/api/test_fixtures/file_content"
 );
-
-const hello = "hello, world!!! :D\nあ";
-const hello2 = "trailing newline incoming\n";
 
 test("cat - single file - prints to stdout", async () => {
   const result = await evaluate(
@@ -19,12 +15,7 @@ test("cat - single file - prints to stdout", async () => {
   `,
     { cwd: fileContentFixturesDir }
   );
-  expect(result).toEqual({
-    code: 0,
-    error: false,
-    stderr: "",
-    stdout: hello,
-  });
+  expect(result).toMatchSnapshot();
 });
 
 test("cat - single file - returns string", async () => {
@@ -35,12 +26,7 @@ test("cat - single file - returns string", async () => {
   `,
     { cwd: fileContentFixturesDir }
   );
-  expect(result).toEqual({
-    code: 0,
-    error: false,
-    stderr: hello + "\n",
-    stdout: hello,
-  });
+  expect(result).toMatchSnapshot();
 });
 
 test("cat - multiple files - prints to stdout", async () => {
@@ -52,12 +38,7 @@ test("cat - multiple files - prints to stdout", async () => {
     { cwd: fileContentFixturesDir }
   );
 
-  expect(result).toEqual({
-    code: 0,
-    error: false,
-    stderr: "",
-    stdout: hello + hello2,
-  });
+  expect(result).toMatchSnapshot();
 });
 
 test("cat - multiple files - returns string", async () => {
@@ -68,10 +49,5 @@ test("cat - multiple files - returns string", async () => {
   `,
     { cwd: fileContentFixturesDir }
   );
-  expect(result).toEqual({
-    code: 0,
-    error: false,
-    stderr: hello + hello2 + "\n",
-    stdout: hello + hello2,
-  });
+  expect(result).toMatchSnapshot();
 });

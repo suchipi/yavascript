@@ -7,45 +7,25 @@ describe("eval target", () => {
       it("evaluates the specified code", async () => {
         const run = spawn(binaryPath, [flag, `console.log("hi")`]);
         await run.completion;
-        expect(run.result).toEqual({
-          code: 0,
-          error: false,
-          stdout: "hi\n",
-          stderr: "",
-        });
+        expect(run.result).toMatchSnapshot();
       });
 
       it("prints the result when it's not undefined", async () => {
         const run = spawn(binaryPath, [flag, `24`]);
         await run.completion;
-        expect(run.result).toEqual({
-          code: 0,
-          error: false,
-          stdout: inspect(24) + "\n",
-          stderr: "",
-        });
+        expect(run.result).toMatchSnapshot();
       });
 
       it("doesn't print anything when the code results in undefined", async () => {
         const run = spawn(binaryPath, [flag, `void 0`]);
         await run.completion;
-        expect(run.result).toEqual({
-          code: 0,
-          error: false,
-          stdout: "",
-          stderr: "",
-        });
+        expect(run.result).toMatchSnapshot();
       });
 
       it("prints non-empty completion value", async () => {
         const run = spawn(binaryPath, [flag, `"hello"; var a = 5;`]);
         await run.completion;
-        expect(run.result).toEqual({
-          code: 0,
-          error: false,
-          stdout: "hello\n",
-          stderr: "",
-        });
+        expect(run.result).toMatchSnapshot();
       });
 
       it("can evaluate coffeescript", async () => {
@@ -56,12 +36,7 @@ describe("eval target", () => {
           "coffeescript",
         ]);
         await run.completion;
-        expect(run.result).toEqual({
-          code: 0,
-          error: false,
-          stdout: "hi\n",
-          stderr: "",
-        });
+        expect(run.result).toMatchSnapshot();
       });
 
       it("can evaluate jsx", async () => {
@@ -71,41 +46,8 @@ describe("eval target", () => {
           "--lang",
           "jsx",
         ]);
-
-        const Element = Symbol("JSX.Element");
-        const Fragment = Symbol("JSX.Fragment");
-
         await run.completion;
-        expect(run.result).toEqual({
-          code: 0,
-          error: false,
-          stdout:
-            inspect({
-              $$typeof: Element,
-              type: "div",
-              props: {
-                children: [
-                  {
-                    $$typeof: Element,
-                    type: "a",
-                    props: {
-                      key: "hi",
-                      href: "#",
-                    },
-                    key: "hi",
-                  },
-                  {
-                    $$typeof: Element,
-                    type: Fragment,
-                    props: null,
-                    key: null,
-                  },
-                ],
-              },
-              key: null,
-            }) + "\n",
-          stderr: "",
-        });
+        expect(run.result).toMatchSnapshot();
       });
 
       ["ts", "typescript"].forEach((lang) => {
@@ -117,12 +59,7 @@ describe("eval target", () => {
             lang,
           ]);
           await run.completion;
-          expect(run.result).toEqual({
-            code: 0,
-            error: false,
-            stdout: "something\n",
-            stderr: "",
-          });
+          expect(run.result).toMatchSnapshot();
         });
       });
 
@@ -134,40 +71,8 @@ describe("eval target", () => {
           "tsx",
         ]);
 
-        const Element = Symbol("JSX.Element");
-        const Fragment = Symbol("JSX.Fragment");
-
         await run.completion;
-        expect(run.result).toEqual({
-          code: 0,
-          error: false,
-          stdout:
-            inspect({
-              $$typeof: Element,
-              type: "div",
-              props: {
-                children: [
-                  {
-                    $$typeof: Element,
-                    type: "a",
-                    props: {
-                      key: "hi",
-                      href: "#",
-                    },
-                    key: "hi",
-                  },
-                  {
-                    $$typeof: Element,
-                    type: Fragment,
-                    props: null,
-                    key: null,
-                  },
-                ],
-              },
-              key: null,
-            }) + "\n",
-          stderr: "",
-        });
+        expect(run.result).toMatchSnapshot();
       });
     });
   });

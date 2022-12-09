@@ -1,0 +1,137 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`console.error multiple 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "hi {
+  hi: true
+} hi again
+",
+  "stdout": "",
+}
+`;
+
+exports[`console.error object 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "{
+  hi: true
+}
+",
+  "stdout": "",
+}
+`;
+
+exports[`console.error string 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "hi
+",
+  "stdout": "",
+}
+`;
+
+exports[`console.info multiple 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "hi {
+  hi: true
+} hi again
+",
+}
+`;
+
+exports[`console.info object 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  hi: true
+}
+",
+}
+`;
+
+exports[`console.info string 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "hi
+",
+}
+`;
+
+exports[`console.log multiple 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "hi {
+  hi: true
+} hi again
+",
+}
+`;
+
+exports[`console.log object 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  hi: true
+}
+",
+}
+`;
+
+exports[`console.log string 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "hi
+",
+}
+`;
+
+exports[`console.warn multiple 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "hi {
+  hi: true
+} hi again
+",
+  "stdout": "",
+}
+`;
+
+exports[`console.warn object 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "{
+  hi: true
+}
+",
+  "stdout": "",
+}
+`;
+
+exports[`console.warn string 1`] = `
+Object {
+  "code": 0,
+  "error": false,
+  "stderr": "hi
+",
+  "stdout": "",
+}
+`;
