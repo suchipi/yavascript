@@ -26,17 +26,20 @@ in_docker() {
 }
 fi
 
+NODE_VERSION_WITH_V="$(cat .node-version)"
+NODE_VERSION="${NODE_VERSION_WITH_V/v/}"
+
 # grab JS dependencies from npm
-in_docker node:17.4.0 npm install
+in_docker node:${NODE_VERSION} npm install
 
 rm -rf dist
 mkdir -p dist
 
 # generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
-in_docker node:17.4.0 meta/scripts/assemble-dts.sh
+in_docker node:${NODE_VERSION} meta/scripts/assemble-dts.sh
 
 # generate dist/index.js (bundles in dependencies from npm)
-in_docker node:17.4.0 npm run bundle
+in_docker node:${NODE_VERSION} npm run bundle
 
 mkdir -p bin
 
