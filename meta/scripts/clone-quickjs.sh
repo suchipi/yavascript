@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd meta
+
 if [ ! -e 'quickjs' ]; then
   git clone git@github.com:suchipi/quickjs.git
 fi

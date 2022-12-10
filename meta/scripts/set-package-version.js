@@ -1,6 +1,7 @@
 #!/usr/bin/env yavascript
-/// <reference path="../yavascript.d.ts" />
-import "./lib/set-rootdir.js";
+/// <reference path="../../yavascript.d.ts" />
+
+cd(repoRoot());
 
 const currentVersion = JSON.parse(readFile("./package.json")).version;
 console.log(`current version: ${currentVersion}`);
@@ -11,7 +12,7 @@ if (!newVersion) {
 }
 console.log(`new version: ${newVersion}`);
 
-const pkgJsonFiles = ["./package.json", "./npm/package.json"];
+const pkgJsonFiles = ["./package.json", "./meta/npm/package.json"];
 
 for (const pkgJsonFile of pkgJsonFiles) {
   const pkg = JSON.parse(readFile(pkgJsonFile));

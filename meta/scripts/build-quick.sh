@@ -13,17 +13,17 @@ fnm use
 
 if [[ "$SKIP_QJS" == "" ]]; then
   # Build quickjs
-  pushd quickjs > /dev/null
+  pushd meta/quickjs > /dev/null
   meta/build.sh
   popd > /dev/null
 fi
 
 # generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
-./scripts/assemble-dts.sh
+meta/scripts/assemble-dts.sh
 
 # generate dist/index.js (bundles in dependencies from npm)
 npm run bundle
 
 # generate dist/yavascript (final binary)
-cat quickjs/build/bin/qjsbootstrap dist/index.js > dist/yavascript
+cat meta/quickjs/build/bin/qjsbootstrap dist/index.js > dist/yavascript
 chmod +x dist/yavascript

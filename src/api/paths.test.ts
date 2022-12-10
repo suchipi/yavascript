@@ -12,7 +12,7 @@ test("cd and pwd", async () => {
     echo(pwd());
     cd("..");
     echo(pwd());
-    cd("./scripts");
+    cd("./meta");
     echo(pwd());
     cd("/tmp");
     echo(pwd());
@@ -27,7 +27,7 @@ test("cd and pwd", async () => {
       "stdout": "<rootDir>
     <rootDir>/src
     <rootDir>
-    <rootDir>/scripts
+    <rootDir>/meta
     /tmp
     ",
     }

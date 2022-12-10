@@ -46,7 +46,7 @@ declare function readFile(path: string): string;
  * Read the contents of one of more files from disk as one UTF-8 string,
  * print that string to stdout, then return it.
  */
-export function cat(...paths: Array<string>): string;
+declare function cat(...paths: Array<string>): string;
 
 /**
  * Write the contents of a string or ArrayBuffer to a file.
@@ -1050,7 +1050,7 @@ declare module "std" {
    *
    * @param stackLevels - How many levels up the stack to search for a filename. Defaults to 0, which uses the current stack frame.
    */
-  export function getFileNameFromStack(stackLevels: number): string;
+  export function getFileNameFromStack(stackLevels?: number): string;
 
   /**
    * Return a boolean indicating whether the provided value is a FILE object.
@@ -1554,16 +1554,19 @@ declare module "os" {
   /** Sleep for `delay_ms` milliseconds. */
   export function sleep(delay_ms: number): void;
 
-  export type Timer = number & { __is: "Timer" };
+  export type OSTimer = { [Symbol.toStringTag]: "OSTimer" };
 
   /** Call the function func after delay ms. Return a handle to the timer. */
-  export function setTimeout(func: () => void, delay: number): Timer;
+  export function setTimeout(
+    func: (...args: any) => any,
+    delay: number
+  ): OSTimer;
 
   /** Cancel a timer. */
-  export function clearTimeout(handle: Timer): void;
+  export function clearTimeout(handle: OSTimer): void;
 
-  /** Return a string representing the platform: "linux", "darwin", "win32" or "js". */
-  export var platform: "linux" | "darwin" | "win32" | "js";
+  /** Return a string representing the platform: "linux", "darwin", "win32", "freebsd", or "js" (emscripten). */
+  export var platform: "linux" | "darwin" | "win32" | "freebsd" | "js";
 
   /**
    * Things that can be put into Worker.postMessage.
@@ -1880,3 +1883,11 @@ declare var require: ((source: string) => { [key: string]: any }) & {
    */
   resolve: (source: string) => string;
 };
+
+declare var setTimeout: typeof import("os").setTimeout;
+declare var clearTimeout: typeof import("os").clearTimeout;
+
+declare type Interval = { [Symbol.toStringTag]: "Interval" };
+
+declare function setInterval(func: (...args: any) => any, ms: number): Interval;
+declare function clearInterval(interval: Interval): void;

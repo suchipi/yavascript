@@ -1,6 +1,8 @@
 const kame = require("kame");
 const runtime = new kame.Runtime();
-const { cleanResult } = runtime.load(require.resolve("../src/test-helpers.ts"));
+const { cleanResult } = runtime.load(
+  require.resolve("../../src/test-helpers.ts")
+);
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 const cleaned = new WeakMap();

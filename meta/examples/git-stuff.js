@@ -1,5 +1,5 @@
 #!/usr/bin/env yavascript
-/// <reference path="../yavascript.d.ts" />
+/// <reference path="../../yavascript.d.ts" />
 
 exec(["git", "status"]);
 

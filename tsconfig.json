@@ -1,13 +1,13 @@
 {
-  "include": ["./quickjs/src/quickjs-libc/quickjs-libc.d.ts", "./src/**/*.ts"],
-  "exclude": ["./src/includes", "./examples"],
+  "include": ["meta/quickjs/src/quickjs-libc/quickjs-libc.d.ts", "src/**/*.ts"],
+  "exclude": ["src/includes", "meta/examples"],
 
   "compilerOptions": {
     "declaration": true,
     "lib": ["es2020"],
     "target": "es2020",
     "module": "ES2020",
-    "outDir": "./dist",
+    "outDir": "dist",
 
     "strict": true,
     "noImplicitAny": false,

@@ -1,5 +1,5 @@
 #!/usr/bin/env yavascript
-/// <reference path="../yavascript.d.ts" />
+/// <reference path="../../yavascript.d.ts" />
 
 // JSX syntax gets compiled to expressions referencing `JSX.createElement` and
 // `JSX.Fragment`, which are both defined as a global. To change how JSX gets

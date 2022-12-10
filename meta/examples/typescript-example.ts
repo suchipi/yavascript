@@ -1,5 +1,5 @@
 #!/usr/bin/env yavascript
-/// <reference path="../yavascript.d.ts" />
+/// <reference path="../../yavascript.d.ts" />
 
 // YavaScript has builtin support for parsing and executing TypeScript files.
 
