@@ -28,7 +28,7 @@ declare function readFile(path: string): string;
  * Read the contents of one of more files from disk as one UTF-8 string,
  * print that string to stdout, then return it.
  */
-export function cat(...paths: Array<string>): string;
+declare function cat(...paths: Array<string>): string;
 
 /**
  * Write the contents of a string or ArrayBuffer to a file.
