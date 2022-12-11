@@ -1,7 +1,19 @@
 // This file has an underscore at the beginning of its name so that it is at
 // the top of the list in the text editor's sidebar
 
-import { cat, echo, ls, readlink, printf } from "./commands/_all";
+import {
+  basename,
+  cat,
+  cd,
+  dirname,
+  echo,
+  extname,
+  ls,
+  printf,
+  pwd,
+  readlink,
+  realpath,
+} from "./commands/_all";
 import * as stubs from "./commands/_stubs";
 import { env } from "./env";
 import { exec, $ } from "./exec";
@@ -15,17 +27,7 @@ import {
   ensureDir,
   copy,
 } from "./filesystem";
-import {
-  cd,
-  pwd,
-  realpath,
-  dirname,
-  basename,
-  extname,
-  paths,
-  get__dirname,
-  get__filename,
-} from "./paths";
+import { paths } from "./paths";
 import { glob } from "./glob";
 import { is } from "./is";
 import { isGitignored, repoRoot } from "./repo";
@@ -65,6 +67,7 @@ import { pipe } from "./pipe";
 import { bigint, boolean, number, string, symbol } from "./others";
 import { JSX } from "./jsx";
 import traceAll from "./traceAll";
+import { get__filename, get__dirname } from "./__filename-and-__dirname";
 
 export default function installApi(target: typeof globalThis) {
   Object.assign(target, {

@@ -116,56 +116,6 @@ declare type CopyOptions = {
 declare function copy(from: string, to: string, options?: CopyOptions): void;
 
 /**
- * Change the process's current working directory to the specified path. If no
- * path is specified, moves to the user's home directory.
- *
- * Provides the same functionality as the shell builtin of the same name.
- */
-declare function cd(path?: string): void;
-
-/**
- * Return the process's current working directory.
- *
- * Provides the same functionality as the shell builtin of the same name.
- */
-declare function pwd(): string;
-
-/**
- * Get the absolute path given a relative path. Symlinks are also resolved.
- *
- * The path's target file/directory must exist.
- *
- * Provides the same functionality as the unix binary of the same name.
- */
-declare function realpath(path: string): string;
-
-/**
- * Removes the final component from a path string.
- *
- * Provides the same functionality as the unix binary of the same name.
- */
-declare function dirname(path: string): string;
-
-/**
- * Return the last component of a path string.
- *
- * Provides the same functionality as the unix binary of the same name.
- */
-declare function basename(path: string): string;
-
-/**
- * Returns the file extension of the file at a given path.
- *
- * If the file has no extension (eg `Makefile`, etc), then `''` will be returned.
- *
- * Pass `{ full: true }` to get compound extensions, eg `.d.ts` or `.test.js` instead of just `.ts`/`.js`.
- */
-declare function extname(
-  pathOrFilename: string,
-  options?: { full?: boolean }
-): string;
-
-/**
  * A namespace object providing several path-string-related APIs.
  */
 declare const paths: {
@@ -233,15 +183,49 @@ declare const __filename: string;
 declare const __dirname: string;
 
 /**
+ * Return the last component of a path string.
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ */
+declare function basename(path: string): string;
+
+/**
  * Read the contents of one of more files from disk as one UTF-8 string,
  * print that string to stdout, then return it.
  */
 declare function cat(...paths: Array<string>): string;
 
 /**
+ * Change the process's current working directory to the specified path. If no
+ * path is specified, moves to the user's home directory.
+ *
+ * Provides the same functionality as the shell builtin of the same name.
+ */
+declare function cd(path?: string): void;
+
+/**
+ * Removes the final component from a path string.
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ */
+declare function dirname(path: string): string;
+
+/**
  * Print one or more values to stdout.
  */
 declare const echo: typeof console.log;
+
+/**
+ * Returns the file extension of the file at a given path.
+ *
+ * If the file has no extension (eg `Makefile`, etc), then `''` will be returned.
+ *
+ * Pass `{ full: true }` to get compound extensions, eg `.d.ts` or `.test.js` instead of just `.ts`/`.js`.
+ */
+declare function extname(
+  pathOrFilename: string,
+  options?: { full?: boolean }
+): string;
 
 /**
  * Return the contents of a directory, as absolute paths. `.` and `..` are
@@ -261,6 +245,13 @@ declare function ls(
 declare function printf(format: string, ...args: Array<any>): void;
 
 /**
+ * Return the process's current working directory.
+ *
+ * Provides the same functionality as the shell builtin of the same name.
+ */
+declare function pwd(): string;
+
+/**
  * Read a symlink.
  *
  * Returns the target of the symlink, which may be absolute or relative.
@@ -268,6 +259,15 @@ declare function printf(format: string, ...args: Array<any>): void;
  * Provides the same functionality as the unix binary of the same name.
  */
 declare function readlink(path: string): string;
+
+/**
+ * Get the absolute path given a relative path. Symlinks are also resolved.
+ *
+ * The path's target file/directory must exist.
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ */
+declare function realpath(path: string): string;
 
 declare type BaseExecOptions = {
   /** Sets the current working directory for the child process. */

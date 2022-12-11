@@ -1,55 +1,5 @@
-import * as std from "std";
 import * as os from "os";
 import { makeErrorWithProperties } from "../error-with-properties";
-import { env } from "./env";
-
-export function cd(path?: string): void {
-  if (path == null) {
-    path = env.HOME;
-  }
-  if (path == null) {
-    throw new Error(
-      "Please either specify a path or set the HOME environment variable"
-    );
-  }
-  os.chdir(path);
-}
-
-export function pwd(): string {
-  return os.getcwd();
-}
-
-export function realpath(path: string): string {
-  return os.realpath(path);
-}
-
-export function dirname(path: string) {
-  const separator = paths.detectSeparator(path);
-  return paths.split(path).slice(0, -1).join(separator);
-}
-
-export function basename(path: string): string {
-  const parts = paths.split(path);
-  return parts[parts.length - 1];
-}
-
-export function extname(
-  pathOrFilename: string,
-  options: { full?: boolean } = {}
-): string {
-  const filename = basename(pathOrFilename);
-  const parts = filename.split(".");
-
-  if (parts.length === 1) {
-    return "";
-  }
-
-  if (options.full) {
-    return "." + parts.slice(1).join(".");
-  } else {
-    return "." + parts[parts.length - 1];
-  }
-}
 
 export const paths = {
   OS_PATH_SEPARATOR: os.platform === "win32" ? "\\" : "/",
@@ -81,7 +31,7 @@ export const paths = {
     return paths.split(parts).join(separator);
   },
 
-  resolve(path: string, from: string = pwd()): string {
+  resolve(path: string, from: string = os.getcwd()): string {
     const parts = paths.split(path);
 
     const newParts: Array<string> = [];
@@ -127,14 +77,3 @@ export const paths = {
     return false;
   },
 };
-
-// Not public API; exported for __filename, which *is* a public API
-export function get__filename(depth: number): string {
-  return os.realpath(std.getFileNameFromStack(depth));
-}
-
-// Not public API; exported for __dirname, which *is* a public API
-export function get__dirname(depth: number): string {
-  const filename = os.realpath(std.getFileNameFromStack(depth));
-  return dirname(filename);
-}
