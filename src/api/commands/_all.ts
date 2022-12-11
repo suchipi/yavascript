@@ -4,4 +4,5 @@
 export { cat } from "./cat";
 export { echo } from "./echo";
 export { ls } from "./ls";
+export { printf } from "./printf";
 export { readlink } from "./readlink";

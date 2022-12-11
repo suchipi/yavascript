@@ -17,36 +17,9 @@
 declare const env: { [key: string]: string | undefined };
 
 /**
- * Return the contents of a directory, as absolute paths. `.` and `..` are
- * omitted.
- *
- * Use the `relativePaths` option to get relative paths instead (relative to
- * the parent directory).
- */
-declare function ls(
-  dir?: string,
-  options?: { relativePaths?: boolean }
-): Array<string>;
-
-/**
- * Read a symlink.
- *
- * Returns the target of the symlink, which may be absolute or relative.
- *
- * Provides the same functionality as the unix binary of the same name.
- */
-declare function readlink(path: string): string;
-
-/**
  * Read the contents of a file from disk, as a UTF-8 string.
  */
 declare function readFile(path: string): string;
-
-/**
- * Read the contents of one of more files from disk as one UTF-8 string,
- * print that string to stdout, then return it.
- */
-declare function cat(...paths: Array<string>): string;
 
 /**
  * Write the contents of a string or ArrayBuffer to a file.
@@ -259,6 +232,43 @@ declare const __filename: string;
  */
 declare const __dirname: string;
 
+/**
+ * Read the contents of one of more files from disk as one UTF-8 string,
+ * print that string to stdout, then return it.
+ */
+declare function cat(...paths: Array<string>): string;
+
+/**
+ * Print one or more values to stdout.
+ */
+declare const echo: typeof console.log;
+
+/**
+ * Return the contents of a directory, as absolute paths. `.` and `..` are
+ * omitted.
+ *
+ * Use the `relativePaths` option to get relative paths instead (relative to
+ * the parent directory).
+ */
+declare function ls(
+  dir?: string,
+  options?: { relativePaths?: boolean }
+): Array<string>;
+
+/**
+ * Print data to stdout using C-style format specifiers.
+ */
+declare function printf(format: string, ...args: Array<any>): void;
+
+/**
+ * Read a symlink.
+ *
+ * Returns the target of the symlink, which may be absolute or relative.
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ */
+declare function readlink(path: string): string;
+
 declare type BaseExecOptions = {
   /** Sets the current working directory for the child process. */
   cwd?: string;
@@ -439,11 +449,6 @@ declare function glob(
   patterns: string | Array<string>,
   options?: GlobOptions
 ): Array<string>;
-
-/**
- * Print one or more values to stdout.
- */
-declare const echo: typeof console.log;
 
 /**
  * Remove ANSI control characters from a string.

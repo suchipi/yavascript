@@ -1,34 +1,7 @@
 /**
- * Return the contents of a directory, as absolute paths. `.` and `..` are
- * omitted.
- *
- * Use the `relativePaths` option to get relative paths instead (relative to
- * the parent directory).
- */
-declare function ls(
-  dir?: string,
-  options?: { relativePaths?: boolean }
-): Array<string>;
-
-/**
- * Read a symlink.
- *
- * Returns the target of the symlink, which may be absolute or relative.
- *
- * Provides the same functionality as the unix binary of the same name.
- */
-declare function readlink(path: string): string;
-
-/**
  * Read the contents of a file from disk, as a UTF-8 string.
  */
 declare function readFile(path: string): string;
-
-/**
- * Read the contents of one of more files from disk as one UTF-8 string,
- * print that string to stdout, then return it.
- */
-declare function cat(...paths: Array<string>): string;
 
 /**
  * Write the contents of a string or ArrayBuffer to a file.

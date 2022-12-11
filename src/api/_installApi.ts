@@ -1,7 +1,7 @@
 // This file has an underscore at the beginning of its name so that it is at
 // the top of the list in the text editor's sidebar
 
-import { cat, echo, ls, readlink } from "./commands/_all";
+import { cat, echo, ls, readlink, printf } from "./commands/_all";
 import { env } from "./env";
 import { exec, $ } from "./exec";
 import {
@@ -71,6 +71,7 @@ export default function installApi(target: typeof globalThis) {
     echo,
     ls,
     readlink,
+    printf,
 
     env,
 

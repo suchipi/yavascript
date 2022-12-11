@@ -3,7 +3,7 @@ set -ex
 
 mkdir -p dist
 
-M4="m4 -Isrc/includes -Isrc/templates -Imeta/quickjs/src/quickjs-libc"
+M4="m4 -Isrc/includes -Isrc/includes/commands -Isrc/templates -Imeta/quickjs/src/quickjs-libc"
 
 $M4 src/templates/yavascript.d.ts.tmpl > dist/yavascript.d.ts
 npx prettier --write dist/yavascript.d.ts
