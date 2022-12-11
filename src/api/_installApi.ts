@@ -2,6 +2,7 @@
 // the top of the list in the text editor's sidebar
 
 import { cat, echo, ls, readlink, printf } from "./commands/_all";
+import * as stubs from "./commands/_stubs";
 import { env } from "./env";
 import { exec, $ } from "./exec";
 import {
@@ -160,4 +161,14 @@ export default function installApi(target: typeof globalThis) {
       },
     },
   });
+
+  for (const [name, stub] of Object.entries(stubs)) {
+    Object.defineProperty(target, name, {
+      enumerable: false,
+      configurable: true,
+      get() {
+        return stub();
+      },
+    });
+  }
 }
