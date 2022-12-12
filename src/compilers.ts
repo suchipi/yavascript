@@ -6,6 +6,19 @@ export type CompilerOptions = {
   expression?: boolean;
 };
 
+function stripShebangs(input: string) {
+  let shebangs = 0;
+  const lines = input.split(/\r\n|\r|\n/g);
+
+  while (lines[0] != null && lines[0].startsWith("#!")) {
+    shebangs += 1;
+    lines.shift();
+  }
+
+  const newBlankLines = Array(shebangs).fill("");
+  return newBlankLines.concat(lines).join("\n");
+}
+
 function compileUsingSucrase(
   code: string,
   options: CompilerOptions | undefined | null,
@@ -47,7 +60,7 @@ const compilers = {
   },
 
   tsx(code: string, options?: CompilerOptions): string {
-    return compileUsingSucrase(code, options, {
+    return compileUsingSucrase(stripShebangs(code), options, {
       transforms: ["typescript", "jsx"],
       // We read this from the global because the user is allowed to
       // change JSX.pragma to change this.
@@ -59,13 +72,13 @@ const compilers = {
   },
 
   ts(code: string, options?: CompilerOptions): string {
-    return compileUsingSucrase(code, options, {
+    return compileUsingSucrase(stripShebangs(code), options, {
       transforms: ["typescript"],
     });
   },
 
   jsx(code: string, options?: CompilerOptions): string {
-    return compileUsingSucrase(code, options, {
+    return compileUsingSucrase(stripShebangs(code), options, {
       transforms: ["jsx"],
       // We read this from the global because the user is allowed to
       // change JSX.pragma to change this.
@@ -77,7 +90,7 @@ const compilers = {
   },
 
   coffee(code: string, options?: CompilerOptions): string {
-    const compiled = CoffeeScript.compile(code, {
+    const compiled = CoffeeScript.compile(stripShebangs(code), {
       bare: true,
       filename: options?.filename,
     });
