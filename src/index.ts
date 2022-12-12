@@ -44,12 +44,7 @@ function main() {
       let lang = flags.lang ?? "javascript";
       replTarget(lang);
     } else {
-      if (flags.lang) {
-        std.err.puts(
-          `WARNING: '--lang' has no impact when running files, as their language will be determined by their filetype extension. To silence this warning, do not pass '--lang'.\n`
-        );
-      }
-      runFileTarget(fileToRun);
+      runFileTarget(fileToRun, flags.lang || null);
     }
   }
 }
