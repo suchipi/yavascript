@@ -3,32 +3,32 @@ import child_process from "child_process";
 import path from "path";
 import print from "@suchipi/print";
 import stripAnsi from "strip-ansi";
+import { pathMarker } from "path-less-traveled";
 import * as inspectOptions from "./inspect-options";
 
 export const TMP = child_process
   .execSync("realpath /tmp", { encoding: "utf-8" })
   .trim();
 
-export const rootDir = (...parts: Array<string>) =>
-  path.resolve(__dirname, "..", ...parts);
+export const rootDir = pathMarker(path.resolve(__dirname, ".."));
 
 function getBinaryPath(platform: string, arch: string) {
   if (platform === "win32") {
-    return path.resolve(__dirname, "..", "bin", "windows", "yavascript.exe");
+    return rootDir("bin/windows/yavascript.exe");
   } else if (platform === "darwin") {
     if (arch.startsWith("arm")) {
-      return path.resolve(__dirname, "..", "bin", "darwin-arm", "yavascript");
+      return rootDir("bin/darwin-arm/yavascript");
     } else {
-      return path.resolve(__dirname, "..", "bin", "darwin", "yavascript");
+      return rootDir("bin/darwin/yavascript");
     }
   } else if (platform === "linux") {
-    return path.resolve(__dirname, "..", "bin", "linux", "yavascript");
+    return rootDir("bin/linux/yavascript");
   } else {
     throw new Error("Unsupported platform: " + platform);
   }
 }
 
-var binaryPath = getBinaryPath(
+const binaryPath = getBinaryPath(
   process.platform,
   process.env.YS_TESTS_ARCH || process.arch
 );
