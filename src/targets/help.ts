@@ -16,6 +16,7 @@ Usage: One of these:
   yavascript --version
   yavascript --license
   yavascript --print-types
+  yavascript --print-src
 
 Where <some-language> can be one of: "js", "javascript", "ts", "typescript",
 "jsx", "tsx", "coffee", or "coffeescript".

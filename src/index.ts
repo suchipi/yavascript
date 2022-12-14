@@ -10,6 +10,7 @@ import runFileTarget from "./targets/run-file";
 import evalTarget from "./targets/eval";
 import replTarget from "./targets/repl";
 import printTypesTarget from "./targets/print-types";
+import printSrcTarget from "./targets/print-src";
 
 import parseArgv from "./parse-argv";
 
@@ -37,6 +38,8 @@ function main() {
     licenseTarget();
   } else if (flags.printTypes) {
     printTypesTarget();
+  } else if (flags.printSrc) {
+    printSrcTarget();
   } else {
     const fileToRun = positionalArgs[0];
 

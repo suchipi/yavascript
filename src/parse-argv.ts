@@ -7,6 +7,7 @@ export default function parseArgv(argv: Array<string>): {
     version?: true;
     license?: true;
     printTypes?: true;
+    printSrc?: true;
     eval?: string | null;
     lang?: string | null;
   };
@@ -38,6 +39,8 @@ export default function parseArgv(argv: Array<string>): {
         flags.license = true;
       } else if (arg === "--print-types") {
         flags.printTypes = true;
+      } else if (arg === "--print-src") {
+        flags.printSrc = true;
       } else if (arg === "-e" || arg === "--eval") {
         flags.eval = nextArg;
         i++;
