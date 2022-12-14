@@ -68,6 +68,7 @@ import { bigint, boolean, number, string, symbol } from "./others";
 import { JSX } from "./jsx";
 import traceAll from "./traceAll";
 import { get__filename, get__dirname } from "./__filename-and-__dirname";
+import parseScriptArgs from "./parse-script-args";
 
 export default function installApi(target: typeof globalThis) {
   Object.assign(target, {
@@ -150,6 +151,7 @@ export default function installApi(target: typeof globalThis) {
     JSX,
 
     traceAll,
+    parseScriptArgs,
   });
 
   Object.defineProperties(target, {

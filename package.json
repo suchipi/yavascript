@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@suchipi/is": "^1.0.0",
+    "clef-parse": "^0.3.0",
     "coffeescript": "^2.7.0",
     "kleur": "^4.1.5",
     "minimatch": "^5.1.0",

@@ -1,6 +1,8 @@
 import * as std from "std";
 import { LANGS } from "./langs";
 
+// note: we intentionally don't use parseScriptArgs here, because we don't want
+// to accidentally change its public API by refactoring it for parseArgv's needs.
 export default function parseArgv(argv: Array<string>): {
   flags: {
     help?: true;

@@ -17,38 +17,46 @@ import parseArgv from "./parse-argv";
 function main() {
   const { flags, positionalArgs } = parseArgv(scriptArgs);
 
-  if (flags.help) {
-    helpTarget();
-  } else if (typeof flags.eval !== "undefined") {
-    let inputCode: string | null = flags.eval;
-    let lang = flags.lang ?? "javascript";
-
-    if (inputCode == null) {
-      std.err.puts(
-        `Please specify the code string to run. For example: ${scriptArgs[0]} -e 'echo("hi")'\nFor more info, run ${scriptArgs[0]} --help.`
-      );
-      std.exit(1);
-    } else {
-      evalTarget(inputCode, lang);
-    }
-  } else if (flags.version) {
-    versionTarget();
-    return;
-  } else if (flags.license) {
-    licenseTarget();
-  } else if (flags.printTypes) {
-    printTypesTarget();
-  } else if (flags.printSrc) {
-    printSrcTarget();
-  } else {
-    const fileToRun = positionalArgs[0];
-
-    if (fileToRun == null) {
+  // Only do these if there's no positional args, so that they can override
+  // what these flags mean in their own scripts.
+  if (positionalArgs.length == 0) {
+    if (flags.help) {
+      helpTarget();
+      return;
+    } else if (typeof flags.eval !== "undefined") {
+      let inputCode: string | null = flags.eval;
       let lang = flags.lang ?? "javascript";
-      replTarget(lang);
-    } else {
-      runFileTarget(fileToRun, flags.lang || null);
+
+      if (inputCode == null) {
+        std.err.puts(
+          `Please specify the code string to run. For example: ${scriptArgs[0]} -e 'echo("hi")'\nFor more info, run ${scriptArgs[0]} --help.`
+        );
+        std.exit(1);
+      } else {
+        evalTarget(inputCode, lang);
+        return;
+      }
+    } else if (flags.version) {
+      versionTarget();
+      return;
+    } else if (flags.license) {
+      licenseTarget();
+      return;
+    } else if (flags.printTypes) {
+      printTypesTarget();
+      return;
+    } else if (flags.printSrc) {
+      printSrcTarget();
+      return;
     }
+  }
+
+  const fileToRun = positionalArgs[0];
+  if (fileToRun == null) {
+    let lang = flags.lang ?? "javascript";
+    replTarget(lang);
+  } else {
+    runFileTarget(fileToRun, flags.lang || null);
   }
 }
 

@@ -257,6 +257,14 @@ Rich Harris
 Sebastian McKenzie
 zsjforcn
 
+-------------- clef-parse --------------
+
+MIT License
+
+Copyright (c) 2022 Lily Skye
+
+${MIT}
+
 -------------- yavascript --------------
 
 YavaScript script interpreter

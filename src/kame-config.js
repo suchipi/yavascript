@@ -17,26 +17,20 @@ exports.resolve = (id, fromFilePath) => {
     case "@babel/core":
       return "external:" + id;
 
+    // node builtins that we don't provide (coffeescript and others ask for
+    // these but don't need them)
     case "fs":
     case "path":
     case "vm": {
-      if (fromFilePath.startsWith("node_modules/coffeescript")) {
-        // coffeescript wants some node builtins that it doesn't actually need
-        // when you only use its compiler and not its eval/file-loading stuff
-        return stubPath;
-      }
-      // intentional fallthrough
+      return stubPath;
     }
 
+    // CLI-related or node-related deps of sucrase that we shouldn't need
     case "commander":
     case "glob":
     case "mz":
     case "pirates": {
-      if (fromFilePath.startsWith("node_modules/sucrase")) {
-        // CLI-related or node-related deps of sucrase that we shouldn't need
-        return stubPath;
-      }
-      // intentional fallthrough
+      return stubPath;
     }
 
     case "ts-interface-checker": {
@@ -72,8 +66,7 @@ exports.resolve = (id, fromFilePath) => {
 const runtimeForBuildtimeEval = new Runtime();
 
 exports.load = (filename) => {
-  if (filename === "/YAVASCRIPT_VERSION") {
-  } else if (filename.endsWith(".md")) {
+  if (filename.endsWith(".md")) {
     const content = fs.readFileSync(filename, "utf-8");
     return `module.exports = ${JSON.stringify(content)};`;
   } else if (filename.endsWith("?contentString")) {
