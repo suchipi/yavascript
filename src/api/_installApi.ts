@@ -69,6 +69,7 @@ import { JSX } from "./jsx";
 import traceAll from "./traceAll";
 import { get__filename, get__dirname } from "./__filename-and-__dirname";
 import parseScriptArgs from "./parse-script-args";
+import { startRepl } from "./start-repl";
 
 export default function installApi(target: typeof globalThis) {
   Object.assign(target, {
@@ -152,6 +153,7 @@ export default function installApi(target: typeof globalThis) {
 
     traceAll,
     parseScriptArgs,
+    startRepl,
   });
 
   Object.defineProperties(target, {
