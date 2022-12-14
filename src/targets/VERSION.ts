@@ -7,7 +7,7 @@ function run(cmd: string) {
 function getVersion(): string {
   let dirty = "";
   try {
-    run("git diff --quiet");
+    run("git diff --quiet . ':!bin'");
   } catch (err) {
     dirty = "-dirty";
   }
