@@ -1,7 +1,7 @@
 import * as std from "std";
-import * as pkg from "../../package.json";
+import version from "./VERSION?evalAtBuildTime";
 
 export default function versionTarget() {
-  std.out.puts(pkg.version);
+  std.out.puts(version);
   std.exit(0);
 }

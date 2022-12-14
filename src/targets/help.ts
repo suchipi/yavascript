@@ -1,9 +1,8 @@
 import * as std from "std";
-import * as pkg from "../../package.json";
-import readme from "../../README.md";
+import version from "./VERSION?evalAtBuildTime";
 
 export default function helpTarget() {
-  std.err.puts(`yavascript ${pkg.version}
+  std.err.puts(`yavascript ${version}
 
 Usage: One of these:
   yavascript

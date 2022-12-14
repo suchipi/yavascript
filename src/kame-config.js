@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { defaultResolver, defaultLoader } = require("kame");
+const { defaultResolver, defaultLoader, Runtime } = require("kame");
 
 const stubPath = path.resolve(__dirname, "kame-module-stub.js");
 
@@ -55,13 +55,25 @@ exports.resolve = (id, fromFilePath) => {
         );
       }
 
+      if (id.endsWith("?evalAtBuildTime")) {
+        return (
+          defaultResolver.resolve(
+            id.replace(/\?evalAtBuildTime$/, ""),
+            fromFilePath
+          ) + "?evalAtBuildTime"
+        );
+      }
+
       return defaultResolver.resolve(id, fromFilePath);
     }
   }
 };
 
+const runtimeForBuildtimeEval = new Runtime();
+
 exports.load = (filename) => {
-  if (filename.endsWith(".md")) {
+  if (filename === "/YAVASCRIPT_VERSION") {
+  } else if (filename.endsWith(".md")) {
     const content = fs.readFileSync(filename, "utf-8");
     return `module.exports = ${JSON.stringify(content)};`;
   } else if (filename.endsWith("?contentString")) {
@@ -70,6 +82,12 @@ exports.load = (filename) => {
       "utf-8"
     );
     return `module.exports = ${JSON.stringify(content)};`;
+  } else if (filename.endsWith("?evalAtBuildTime")) {
+    const modulePath = filename.replace(/\?evalAtBuildTime$/, "");
+
+    const result = runtimeForBuildtimeEval.load(modulePath);
+
+    return `module.exports = ${JSON.stringify(result)};`;
   } else {
     return defaultLoader.load(filename);
   }
