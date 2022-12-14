@@ -8,5 +8,5 @@ fi
 
 pushd quickjs > /dev/null
 git fetch origin
-git checkout 97b3e31610d62c985a7f6044e235e0d1738d35eb
+git checkout 7c2f6fd6579ab3345eb0c118d8d82165a751cb77
 popd
