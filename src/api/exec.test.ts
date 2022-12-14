@@ -37,9 +37,9 @@ test("exec false - string", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
-      at makeErrorWithProperties (<rootDir>/bin/.../yavascript)
-      at exec (<rootDir>/bin/.../yavascript)
-      at <eval> (<evalScript>) {
+      at makeErrorWithProperties
+      at exec
+      at <eval>
       status: 1
       signal: undefined
     }
@@ -56,9 +56,9 @@ test("exec false - array", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
-      at makeErrorWithProperties (<rootDir>/bin/.../yavascript)
-      at exec (<rootDir>/bin/.../yavascript)
-      at <eval> (<evalScript>) {
+      at makeErrorWithProperties
+      at exec
+      at <eval>
       status: 1
       signal: undefined
     }
@@ -80,7 +80,8 @@ test("exec - child process receives args", async () => {
       "error": false,
       "stderr": "",
       "stdout": "[
-      "<rootDir>/bin/.../yavascript"
+      Frozen
+      "<yavascript binary>"
       "-e"
       "scriptArgs"
       "bla"
@@ -239,10 +240,10 @@ test("$ false", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
-      at makeErrorWithProperties (<rootDir>/bin/.../yavascript)
-      at exec (<rootDir>/bin/.../yavascript)
-      at $ (<rootDir>/bin/.../yavascript)
-      at <eval> (<evalScript>) {
+      at makeErrorWithProperties
+      at exec
+      at $
+      at <eval>
       status: 1
       signal: undefined
     }

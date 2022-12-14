@@ -9,6 +9,7 @@ const config = {
   },
   watchPathIgnorePatterns: ["node_modules", "test_fixtures"],
   snapshotSerializers: [path.join(__dirname, "snapshotSerializer.js")],
+  testPathIgnorePatterns: ["/node_modules/", "<rootDir>/meta/"],
 };
 
 module.exports = config;

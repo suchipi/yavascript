@@ -437,8 +437,8 @@ test("ensureDir - file collision errors", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: Wanted to ensure that the directory path src/api/test_fixtures/ensure_dir/collision/file existed, but src/api/test_fixtures/ensure_dir/collision/file was a file, not a directory
-      at ensureDir (<rootDir>/bin/.../yavascript)
-      at <eval> (<evalScript>)
+      at ensureDir
+      at <eval>
     ",
       "stdout": "",
     }
