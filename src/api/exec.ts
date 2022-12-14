@@ -1,7 +1,7 @@
 import * as std from "std";
 import * as os from "os";
 import { parseArgString } from "./parseArgString";
-import { pwd } from "./paths";
+import { pwd } from "./commands/pwd";
 import { env } from "./env";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";

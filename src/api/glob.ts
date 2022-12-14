@@ -1,7 +1,8 @@
 import * as os from "os";
 import minimatch from "minimatch";
 import { exists } from "./filesystem";
-import { pwd, paths } from "./paths";
+import { pwd } from "./commands/pwd";
+import { paths } from "./paths";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
 

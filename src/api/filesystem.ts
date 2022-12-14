@@ -1,6 +1,7 @@
 import * as std from "std";
 import * as os from "os";
-import { basename, paths } from "./paths";
+import { basename } from "./commands/basename";
+import { paths } from "./paths";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
 import { ls } from "./commands/_all";

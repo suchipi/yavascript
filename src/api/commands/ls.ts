@@ -1,5 +1,6 @@
 import * as os from "os";
-import { paths, pwd } from "../paths";
+import { pwd } from "./pwd";
+import { paths } from "../paths";
 import { isDir } from "../filesystem";
 
 export function ls(

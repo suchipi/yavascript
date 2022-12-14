@@ -1,5 +1,6 @@
 import { exec } from "./exec";
-import { pwd, dirname } from "./paths";
+import { pwd } from "./commands/pwd";
+import { dirname } from "./commands/dirname";
 import { exists, isDir } from "./filesystem";
 
 export function repoRoot(relativeTo: string = pwd()): string {
