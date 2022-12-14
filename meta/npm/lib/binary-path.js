@@ -1,30 +1,33 @@
 var path = require("path");
 
-var binaryPath;
-if (process.platform === "win32") {
-  binaryPath = path.resolve(
-    __dirname,
-    "..",
-    "bin",
-    "windows",
-    "yavascript.exe"
-  );
-} else if (process.platform === "darwin") {
-  if (process.arch.startsWith("arm")) {
-    binaryPath = path.resolve(
-      __dirname,
-      "..",
-      "bin",
-      "darwin-arm",
-      "yavascript"
-    );
-  } else {
-    binaryPath = path.resolve(__dirname, "..", "bin", "darwin", "yavascript");
+var binDir = path.resolve(__dirname, "..", "bin");
+
+function getBinaryPath(platformAndArch) {
+  switch (platformAndArch) {
+    case "darwin-arm64": {
+      return path.join(binDir, "darwin-arm64", "yavascript");
+    }
+    case "darwin-x64": {
+      return path.join(binDir, "darwin-x86_64", "yavascript");
+    }
+    case "linux-arm64": {
+      return path.join(binDir, "linux-aarch64", "yavascript");
+    }
+    case "linux-x64": {
+      return path.join(binDir, "linux-amd64", "yavascript");
+    }
+    case "win32-x64": {
+      return path.join(binDir, "windows-x86_64", "yavascript.exe");
+    }
+    default: {
+      throw new Error("Unsupported platform: " + platformAndArch);
+    }
   }
-} else if (process.platform === "linux") {
-  binaryPath = path.resolve(__dirname, "..", "bin", "linux", "yavascript");
-} else {
-  throw new Error("Unsupported platform: " + process.platform);
 }
 
-module.exports = binaryPath;
+var binaryPath = getBinaryPath(process.platform + "-" + process.arch);
+
+module.exports = {
+  getBinaryPath: getBinaryPath,
+  binaryPath: binaryPath,
+};

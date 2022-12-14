@@ -43,21 +43,22 @@ in_docker node:${NODE_VERSION} npm run bundle
 
 mkdir -p bin
 
-# generate bin/darwin-arm/yavascript
-mkdir -p bin/darwin-arm
-cat meta/quickjs/build/darwin-arm64/bin/qjsbootstrap dist/index.js > bin/darwin-arm/yavascript && chmod +x bin/darwin-arm/yavascript
+for TARGET in \
+  darwin-arm64 \
+  darwin-x86_64 \
+  linux-amd64 \
+  linux-aarch64 \
+  windows-x86_64 \
+; do
+  if [[ $TARGET = win* ]]; then
+    EXE=".exe"
+  else
+    EXE=""
+  fi
 
-# generate bin/darwin/yavascript
-mkdir -p bin/darwin
-cat meta/quickjs/build/darwin-x86_64/bin/qjsbootstrap dist/index.js > bin/darwin/yavascript && chmod +x bin/darwin/yavascript
-
-# generate bin/linux/yavascript
-mkdir -p bin/linux
-cat meta/quickjs/build/linux-amd64/bin/qjsbootstrap dist/index.js > bin/linux/yavascript && chmod +x bin/linux/yavascript
-
-# generate bin/windows/yavascript.exe
-mkdir -p bin/windows
-cat meta/quickjs/build/windows-x86_64/bin/qjsbootstrap.exe dist/index.js > bin/windows/yavascript.exe && chmod +x bin/windows/yavascript.exe
+  mkdir -p bin/${TARGET}
+  cat meta/quickjs/build/${TARGET}/bin/qjsbootstrap${EXE} dist/index.js > bin/${TARGET}/yavascript${EXE} && chmod +x bin/${TARGET}/yavascript${EXE}
+done
 
 # copy stuff into npm folder
 cp -R bin meta/npm

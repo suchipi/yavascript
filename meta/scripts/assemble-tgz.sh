@@ -4,38 +4,32 @@ set -ex
 
 ROOT=$(realpath .)
 
+mkdir -p meta/tgz-release
 cd meta/tgz-release
 
 VERSION=`cat ${ROOT}/package.json | jq -r .version`
 
 rm -rf ./*
 
-mkdir -p ./{darwin,darwin-arm,linux,windows}/yavascript-${VERSION}/
+for TARGET in \
+  darwin-arm64 \
+  darwin-x86_64 \
+  linux-amd64 \
+  linux-aarch64 \
+  windows-x86_64 \
+; do
+  if [[ $TARGET = win* ]]; then
+    EXE=".exe"
+  else
+    EXE=""
+  fi
 
-cp ${ROOT}/bin/darwin/* ./darwin/yavascript-${VERSION}/
-cp ${ROOT}/dist/yavascript.d.ts ./darwin/yavascript-${VERSION}/
+  mkdir -p ./${TARGET}/yavascript-${VERSION}/
 
-cp ${ROOT}/bin/darwin-arm/* ./darwin-arm/yavascript-${VERSION}/
-cp ${ROOT}/dist/yavascript.d.ts ./darwin-arm/yavascript-${VERSION}/
+  cp ${ROOT}/bin/${TARGET}/* ./${TARGET}/yavascript-${VERSION}/
+  cp ${ROOT}/dist/yavascript.d.ts ./${TARGET}/yavascript-${VERSION}/
 
-cp ${ROOT}/bin/linux/* ./linux/yavascript-${VERSION}/
-cp ${ROOT}/dist/yavascript.d.ts ./linux/yavascript-${VERSION}/
-
-cp ${ROOT}/bin/windows/* ./windows/yavascript-${VERSION}/
-cp ${ROOT}/dist/yavascript.d.ts ./windows/yavascript-${VERSION}/
-
-pushd darwin > /dev/null
-tar -czvf yavascript-${VERSION}-darwin-amd64.tar.gz yavascript-${VERSION}/
-popd > /dev/null
-
-pushd darwin-arm > /dev/null
-tar -czvf yavascript-${VERSION}-darwin-arm.tar.gz yavascript-${VERSION}/
-popd > /dev/null
-
-pushd linux > /dev/null
-tar -czvf yavascript-${VERSION}-linux-amd64.tar.gz yavascript-${VERSION}/
-popd > /dev/null
-
-pushd windows > /dev/null
-tar -czvf yavascript-${VERSION}-windows-amd64.tar.gz yavascript-${VERSION}/
-popd > /dev/null
+  pushd "${TARGET}" > /dev/null
+  tar -czvf yavascript-${VERSION}-${TARGET}.tar.gz yavascript-${VERSION}/
+  popd > /dev/null
+done
