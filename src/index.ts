@@ -15,50 +15,54 @@ import versionTarget from "./targets/version";
 
 import parseArgv from "./parse-argv";
 
-function main(): number {
+function main(): void {
   const targetInfo = parseArgv(scriptArgs);
 
   switch (targetInfo.target) {
     case "eval": {
       const { code, lang } = targetInfo;
       evalTarget(code, lang ?? "javascript");
-      return 0;
+      return;
     }
     case "help": {
       const { mistake } = targetInfo;
       helpTarget();
-      return mistake ? 2 : 0;
+      if (mistake) {
+        std.exit(2);
+      }
+      return;
     }
     case "invalid": {
       const { message } = targetInfo;
       invalidTarget(message);
-      return 3;
+      std.exit(3);
+      return;
     }
     case "license": {
       licenseTarget();
-      return 0;
+      return;
     }
     case "print-src": {
       printSrcTarget();
-      return 0;
+      return;
     }
     case "print-types": {
       printTypesTarget();
-      return 0;
+      return;
     }
     case "repl": {
       const { lang } = targetInfo;
       replTarget(lang ?? "javascript");
-      return 0;
+      return;
     }
     case "run-file": {
       const { file, lang } = targetInfo;
       runFileTarget(file, lang);
-      return 0;
+      return;
     }
     case "version": {
       versionTarget();
-      return 0;
+      return;
     }
     default: {
       const here: never = targetInfo;
@@ -68,8 +72,7 @@ function main(): number {
 }
 
 try {
-  const status = main();
-  std.exit(status);
+  main();
 } catch (err) {
   printError(err, std.err);
   std.exit(1);
