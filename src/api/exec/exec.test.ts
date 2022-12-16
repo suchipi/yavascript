@@ -4,7 +4,7 @@ import {
   inspect,
   cleanResult,
   TMP,
-} from "../test-helpers";
+} from "../../test-helpers";
 
 test("exec true - string", async () => {
   const result = await evaluate(`exec("true")`);
@@ -43,6 +43,7 @@ test("exec false - string", async () => {
       status: 1
       signal: undefined
     }
+    To view the code inside "<yavascript binary>" as referred to in the above stack trace, run '<yavascript binary> --print-src > yavascript-source.js', then open the newly-created file 'yavascript-source.js.'
     ",
       "stdout": "",
     }
@@ -248,6 +249,7 @@ test("$ false", async () => {
       status: 1
       signal: undefined
     }
+    To view the code inside "<yavascript binary>" as referred to in the above stack trace, run '<yavascript binary> --print-src > yavascript-source.js', then open the newly-created file 'yavascript-source.js.'
     ",
       "stdout": "",
     }
