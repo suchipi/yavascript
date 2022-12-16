@@ -63,6 +63,7 @@ test("realpath against dead link throws error", async () => {
       errno: 2
       path: "./dead-link"
     }
+    To view the code inside "<yavascript binary>" as referred to in the above stack trace, run '<yavascript binary> --print-src > yavascript-source.js', then open the newly-created file 'yavascript-source.js.'
     ",
       "stdout": "",
     }

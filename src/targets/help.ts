@@ -65,5 +65,4 @@ supporting the ES2020 specification.
 
 YavaScript is written with <3 by Lily Skye.
 `);
-  std.exit(2);
 }

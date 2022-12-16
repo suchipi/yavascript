@@ -44,15 +44,19 @@ export default function printError(error: any, file: FILE) {
 
     file.puts("\n");
 
-    const execPath = os.execPath();
-    if (new RegExp(execPath).test(error.stack)) {
-      file.puts(
-        blue(
-          `To view the code inside ${JSON.stringify(
-            execPath
-          )} as referred to in the above stack trace, run '${execPath} --print-src > yavascript-source.js', then open the newly-created file 'yavascript-source.js.'\n`
-        )
-      );
+    try {
+      const execPath = os.execPath();
+      if (new RegExp(execPath).test(error.stack)) {
+        file.puts(
+          blue(
+            `To view the code inside ${JSON.stringify(
+              execPath
+            )} as referred to in the above stack trace, run '${execPath} --print-src > yavascript-source.js', then open the newly-created file 'yavascript-source.js.'\n`
+          )
+        );
+      }
+    } catch (err) {
+      // ignore
     }
   } else {
     file.puts("Non-error value was thrown: ");

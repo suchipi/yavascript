@@ -3,65 +3,73 @@ import printError from "./print-error";
 
 import "./primordials";
 
-import helpTarget from "./targets/help";
-import versionTarget from "./targets/version";
-import licenseTarget from "./targets/license";
-import runFileTarget from "./targets/run-file";
 import evalTarget from "./targets/eval";
-import replTarget from "./targets/repl";
-import printTypesTarget from "./targets/print-types";
+import helpTarget from "./targets/help";
+import invalidTarget from "./targets/invalid";
+import licenseTarget from "./targets/license";
 import printSrcTarget from "./targets/print-src";
+import printTypesTarget from "./targets/print-types";
+import replTarget from "./targets/repl";
+import runFileTarget from "./targets/run-file";
+import versionTarget from "./targets/version";
 
 import parseArgv from "./parse-argv";
 
-function main() {
-  const { flags, positionalArgs } = parseArgv(scriptArgs);
+function main(): number {
+  const targetInfo = parseArgv(scriptArgs);
 
-  // Only do these if there's no positional args, so that they can override
-  // what these flags mean in their own scripts.
-  if (positionalArgs.length == 0) {
-    if (flags.help) {
-      helpTarget();
-      return;
-    } else if (typeof flags.eval !== "undefined") {
-      let inputCode: string | null = flags.eval;
-      let lang = flags.lang ?? "javascript";
-
-      if (inputCode == null) {
-        std.err.puts(
-          `Please specify the code string to run. For example: ${scriptArgs[0]} -e 'echo("hi")'\nFor more info, run ${scriptArgs[0]} --help.`
-        );
-        std.exit(1);
-      } else {
-        evalTarget(inputCode, lang);
-        return;
-      }
-    } else if (flags.version) {
-      versionTarget();
-      return;
-    } else if (flags.license) {
-      licenseTarget();
-      return;
-    } else if (flags.printTypes) {
-      printTypesTarget();
-      return;
-    } else if (flags.printSrc) {
-      printSrcTarget();
-      return;
+  switch (targetInfo.target) {
+    case "eval": {
+      const { code, lang } = targetInfo;
+      evalTarget(code, lang ?? "javascript");
+      return 0;
     }
-  }
-
-  const fileToRun = positionalArgs[0];
-  if (fileToRun == null) {
-    let lang = flags.lang ?? "javascript";
-    replTarget(lang);
-  } else {
-    runFileTarget(fileToRun, flags.lang || null);
+    case "help": {
+      const { mistake } = targetInfo;
+      helpTarget();
+      return mistake ? 2 : 0;
+    }
+    case "invalid": {
+      const { message } = targetInfo;
+      invalidTarget(message);
+      return 3;
+    }
+    case "license": {
+      licenseTarget();
+      return 0;
+    }
+    case "print-src": {
+      printSrcTarget();
+      return 0;
+    }
+    case "print-types": {
+      printTypesTarget();
+      return 0;
+    }
+    case "repl": {
+      const { lang } = targetInfo;
+      replTarget(lang ?? "javascript");
+      return 0;
+    }
+    case "run-file": {
+      const { file, lang } = targetInfo;
+      runFileTarget(file, lang);
+      return 0;
+    }
+    case "version": {
+      versionTarget();
+      return 0;
+    }
+    default: {
+      const here: never = targetInfo;
+      throw new Error(`Unhandled target: ${JSON.stringify(targetInfo)}`);
+    }
   }
 }
 
 try {
-  main();
+  const status = main();
+  std.exit(status);
 } catch (err) {
   printError(err, std.err);
   std.exit(1);
