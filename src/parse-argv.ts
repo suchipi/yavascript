@@ -121,7 +121,7 @@ export default function parseArgv(argv: Array<string>): ParseArgvResult {
 
       info.lang = nextArg;
       i++;
-    } else if (info.eval == null) {
+    } else if (info.eval == null && info.file === null) {
       info.file = nextArg;
     }
   }
