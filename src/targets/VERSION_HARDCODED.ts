@@ -5,6 +5,10 @@ function run(cmd: string) {
 }
 
 function getVersion(): string {
+  if (process.env.YAVASCRIPT_VERSION) {
+    return process.env.YAVASCRIPT_VERSION;
+  }
+
   let dirty = "";
   try {
     run("git diff --quiet . ':!bin'");
