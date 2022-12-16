@@ -20,3 +20,6 @@ for (const pkgJsonFile of pkgJsonFiles) {
   writeFile(pkgJsonFile, JSON.stringify(pkg, null, 2) + "\n");
   console.log(`updated ${pkgJsonFile}`);
 }
+
+// update package-lock.json
+exec("npm install");
