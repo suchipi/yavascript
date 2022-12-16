@@ -1,0 +1,429 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(empty) 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+  ],
+  "result": {
+    "lang": null,
+    "target": "repl",
+  },
+}
+`;
+
+exports[`../something.js --lang 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "../something.js",
+    "--lang",
+  ],
+  "result": {
+    "message": "--lang requires an argument: The language to use.",
+    "target": "invalid",
+  },
+}
+`;
+
+exports[`../something.js --lang potato 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "../something.js",
+    "--lang",
+    "potato",
+  ],
+  "result": {
+    "message": "Invalid --lang: "potato".
+Valid values for --lang are js, javascript, ts, typescript, jsx, tsx, coffee or coffeescript.
+",
+    "target": "invalid",
+  },
+}
+`;
+
+exports[`/tmp/something -v --help 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "/tmp/something",
+    "-v",
+    "--help",
+  ],
+  "result": {
+    "file": "/tmp/something",
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;
+
+exports[`-- -v 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--",
+    "-v",
+  ],
+  "result": {
+    "lang": null,
+    "target": "repl",
+  },
+}
+`;
+
+exports[`-- 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--",
+  ],
+  "result": {
+    "lang": null,
+    "target": "repl",
+  },
+}
+`;
+
+exports[`--eval "2 + 2" --lang 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--eval",
+    "2 + 2",
+    "--lang",
+  ],
+  "result": {
+    "message": "--lang requires an argument: The language to use.",
+    "target": "invalid",
+  },
+}
+`;
+
+exports[`--eval "2 + 2" --lang coffee 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--eval",
+    "2 + 2",
+    "--lang",
+    "coffee",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "lang": "coffee",
+    "target": "eval",
+  },
+}
+`;
+
+exports[`--eval "2 + 2" 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--eval",
+    "2 + 2",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "lang": null,
+    "target": "eval",
+  },
+}
+`;
+
+exports[`--eval --lang js 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--eval",
+    "--lang",
+    "js",
+  ],
+  "result": {
+    "code": "--lang",
+    "lang": null,
+    "target": "eval",
+  },
+}
+`;
+
+exports[`--eval 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--eval",
+  ],
+  "result": {
+    "message": "Please specify the code string to run. For example: yavascript -e 'echo("hi")'",
+    "target": "invalid",
+  },
+}
+`;
+
+exports[`--help 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--help",
+  ],
+  "result": {
+    "target": "help",
+  },
+}
+`;
+
+exports[`--lang ../something.js 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--lang",
+    "../something.js",
+  ],
+  "result": {
+    "message": "Invalid --lang: "../something.js".
+Valid values for --lang are js, javascript, ts, typescript, jsx, tsx, coffee or coffeescript.
+",
+    "target": "invalid",
+  },
+}
+`;
+
+exports[`--lang 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--lang",
+  ],
+  "result": {
+    "message": "--lang requires an argument: The language to use.",
+    "target": "invalid",
+  },
+}
+`;
+
+exports[`--lang jsx ../something.js 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--lang",
+    "jsx",
+    "../something.js",
+  ],
+  "result": {
+    "file": "../something.js",
+    "lang": "jsx",
+    "target": "run-file",
+  },
+}
+`;
+
+exports[`--lang tsx --eval "2 + 2" 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--lang",
+    "tsx",
+    "--eval",
+    "2 + 2",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "lang": "tsx",
+    "target": "eval",
+  },
+}
+`;
+
+exports[`--lang tsx -e "2 + 2" 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--lang",
+    "tsx",
+    "-e",
+    "2 + 2",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "lang": "tsx",
+    "target": "eval",
+  },
+}
+`;
+
+exports[`--license 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--license",
+  ],
+  "result": {
+    "target": "license",
+  },
+}
+`;
+
+exports[`--print-src 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--print-src",
+  ],
+  "result": {
+    "target": "print-src",
+  },
+}
+`;
+
+exports[`--print-types 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--print-types",
+  ],
+  "result": {
+    "target": "print-types",
+  },
+}
+`;
+
+exports[`--version 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--version",
+  ],
+  "result": {
+    "target": "version",
+  },
+}
+`;
+
+exports[`-e "2 + 2" --lang coffee 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-e",
+    "2 + 2",
+    "--lang",
+    "coffee",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "lang": "coffee",
+    "target": "eval",
+  },
+}
+`;
+
+exports[`-e "2 + 2" 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-e",
+    "2 + 2",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "lang": null,
+    "target": "eval",
+  },
+}
+`;
+
+exports[`-e 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-e",
+  ],
+  "result": {
+    "message": "Please specify the code string to run. For example: yavascript -e 'echo("hi")'",
+    "target": "invalid",
+  },
+}
+`;
+
+exports[`-h 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-h",
+  ],
+  "result": {
+    "target": "help",
+  },
+}
+`;
+
+exports[`-v 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-v",
+  ],
+  "result": {
+    "target": "version",
+  },
+}
+`;
+
+exports[`-version 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-version",
+  ],
+  "result": {
+    "target": "version",
+  },
+}
+`;
+
+exports[`some-file -- --hi 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "some-file",
+    "--",
+    "--hi",
+  ],
+  "result": {
+    "file": "some-file",
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;
+
+exports[`something.js --lang coffee 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "something.js",
+    "--lang",
+    "coffee",
+  ],
+  "result": {
+    "file": "something.js",
+    "lang": "coffee",
+    "target": "run-file",
+  },
+}
+`;
+
+exports[`something.js 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "something.js",
+  ],
+  "result": {
+    "file": "something.js",
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;

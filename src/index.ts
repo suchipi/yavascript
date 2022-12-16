@@ -25,11 +25,7 @@ function main(): void {
       return;
     }
     case "help": {
-      const { mistake } = targetInfo;
       helpTarget();
-      if (mistake) {
-        std.exit(2);
-      }
       return;
     }
     case "invalid": {

@@ -3,7 +3,7 @@ import { LANGS } from "./langs";
 type ArgvTargetInfo<Name extends String, Rest = {}> = { target: Name } & Rest;
 
 export type ParseArgvResult =
-  | ArgvTargetInfo<"help", { mistake: boolean }>
+  | ArgvTargetInfo<"help">
   | ArgvTargetInfo<"version">
   | ArgvTargetInfo<"license">
   | ArgvTargetInfo<"print-types">
@@ -33,7 +33,7 @@ export default function parseArgv(argv: Array<string>): ParseArgvResult {
     switch (arg1) {
       case "-h":
       case "--help": {
-        return { target: "help", mistake: false };
+        return { target: "help" };
       }
       case "-v":
       case "--version":
@@ -83,8 +83,8 @@ export default function parseArgv(argv: Array<string>): ParseArgvResult {
   };
 
   for (let i = 0; i < rest.length; i++) {
-    const arg = argv[i];
-    const nextArg = argv[i + 1] || null;
+    const arg = rest[i];
+    const nextArg = rest[i + 1] || null;
 
     if (arg === "--") {
       break;
@@ -121,8 +121,8 @@ export default function parseArgv(argv: Array<string>): ParseArgvResult {
 
       info.lang = nextArg;
       i++;
-    } else if (info.eval == null && info.file === null) {
-      info.file = nextArg;
+    } else if (info.eval == null && info.file == null) {
+      info.file = arg;
     }
   }
 
