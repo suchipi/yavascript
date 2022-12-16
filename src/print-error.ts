@@ -45,7 +45,7 @@ export default function printError(error: any, file: FILE) {
     file.puts("\n");
 
     try {
-      const execPath = os.execPath();
+      const execPath = os.realpath(os.execPath());
       if (new RegExp(execPath).test(error.stack)) {
         file.puts(
           blue(

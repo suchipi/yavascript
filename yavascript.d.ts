@@ -1761,7 +1761,7 @@ declare module "os" {
   /** `access` Unix system call; checks if a file is readable, writable, executable, and/or exists (use {@link R_OK}, {@link W_OK}, {@link X_OK}, and/or {@link F_OK} for `accessMode`). Throws a descriptive error (with errno property) if the requested access is not available; otherwise, returns undefined. */
   export function access(path: string, accessMode: number): void;
 
-  /** gets the absolute path to the executable which is executing this JS code. symlinks will be resolved. */
+  /** gets the path to the executable which is executing this JS code. might be a relative path or symlink. */
   export function execPath(): string;
 }
 
