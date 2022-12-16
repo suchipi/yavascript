@@ -42,7 +42,7 @@ supporting the ES2020 specification.
 
 ### Binaries (all platforms)
 
-You will need docker installed, then run `./scripts/build.sh`.
+You will need docker installed, then run `meta/scripts/build.sh`.
 
 ### Docker image
 
