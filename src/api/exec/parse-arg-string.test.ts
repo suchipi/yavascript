@@ -1,4 +1,4 @@
-import { parseArgString } from "./parseArgString";
+import { parseArgString } from "./parse-arg-string";
 
 test("parseArgString: no quotes", () => {
   expect(parseArgString("hi there world")).toEqual(["hi", "there", "world"]);

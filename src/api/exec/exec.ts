@@ -1,6 +1,6 @@
 import * as std from "std";
 import * as os from "os";
-import { parseArgString } from "./parseArgString";
+import { parseArgString } from "./parse-arg-string";
 import { pwd } from "../commands/pwd";
 import { env } from "../env";
 import { makeErrorWithProperties } from "../../error-with-properties";
