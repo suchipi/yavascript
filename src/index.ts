@@ -13,10 +13,10 @@ import replTarget from "./targets/repl";
 import runFileTarget from "./targets/run-file";
 import versionTarget from "./targets/version";
 
-import parseArgv from "./parse-argv";
+import determineTarget from "./determine-target";
 
 function main(): void {
-  const targetInfo = parseArgv(scriptArgs);
+  const targetInfo = determineTarget(scriptArgs);
 
   switch (targetInfo.target) {
     case "eval": {

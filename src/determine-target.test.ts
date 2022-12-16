@@ -1,4 +1,4 @@
-import parseArgv from "./parse-argv";
+import determineTarget from "./determine-target";
 
 const inputs: Array<Array<string>> = [
   [], // repl
@@ -49,7 +49,7 @@ for (const input of inputs) {
 
   test(testName, () => {
     const argv = ["/usr/local/bin/yavascript", ...input];
-    const result = parseArgv(argv);
+    const result = determineTarget(argv);
     expect({ argv, result }).toMatchSnapshot();
   });
 }

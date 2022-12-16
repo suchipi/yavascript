@@ -1,19 +1,21 @@
 import { LANGS } from "./langs";
 
-type ArgvTargetInfo<Name extends String, Rest = {}> = { target: Name } & Rest;
+type TargetInfo<Name extends String, Rest = {}> = { target: Name } & Rest;
 
-export type ParseArgvResult =
-  | ArgvTargetInfo<"help">
-  | ArgvTargetInfo<"version">
-  | ArgvTargetInfo<"license">
-  | ArgvTargetInfo<"print-types">
-  | ArgvTargetInfo<"print-src">
-  | ArgvTargetInfo<"repl", { lang: string | null }>
-  | ArgvTargetInfo<"eval", { code: string; lang: string | null }>
-  | ArgvTargetInfo<"run-file", { file: string; lang: string | null }>
-  | ArgvTargetInfo<"invalid", { message: string }>;
+export type TargetDetermination =
+  | TargetInfo<"help">
+  | TargetInfo<"version">
+  | TargetInfo<"license">
+  | TargetInfo<"print-types">
+  | TargetInfo<"print-src">
+  | TargetInfo<"repl", { lang: string | null }>
+  | TargetInfo<"eval", { code: string; lang: string | null }>
+  | TargetInfo<"run-file", { file: string; lang: string | null }>
+  | TargetInfo<"invalid", { message: string }>;
 
-export default function parseArgv(argv: Array<string>): ParseArgvResult {
+export default function determineTarget(
+  argv: Array<string>
+): TargetDetermination {
   const [_yavascriptBinary, ...rest] = argv;
 
   if (rest.length === 0) {
