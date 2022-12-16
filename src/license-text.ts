@@ -265,6 +265,14 @@ Copyright (c) 2022 Lily Skye
 
 ${MIT}
 
+-------------- papaparse --------------
+
+MIT License
+
+Copyright (c) 2015 Matthew Holt
+
+${MIT}
+
 -------------- yavascript --------------
 
 YavaScript script interpreter

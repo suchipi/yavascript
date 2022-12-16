@@ -66,6 +66,7 @@ import { console, print } from "./console";
 import { pipe } from "./pipe";
 import { bigint, boolean, number, string, symbol } from "./others";
 import { JSX } from "./jsx";
+import { CSV } from "./csv";
 import traceAll from "./traceAll";
 import { get__filename, get__dirname } from "./__filename-and-__dirname";
 import parseScriptArgs from "./parse-script-args";
@@ -150,6 +151,7 @@ export default function installApi(target: typeof globalThis) {
     symbol,
 
     JSX,
+    CSV,
 
     traceAll,
     parseScriptArgs,
