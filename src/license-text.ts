@@ -273,6 +273,14 @@ Copyright (c) 2015 Matthew Holt
 
 ${MIT}
 
+-------------- yaml (npm package) --------------
+
+The ISC License
+
+Copyright Eemeli Aro <eemeli@gmail.com>
+
+${ISC}
+
 -------------- yavascript --------------
 
 YavaScript script interpreter

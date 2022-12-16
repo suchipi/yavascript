@@ -67,10 +67,12 @@ import { pipe } from "./pipe";
 import { bigint, boolean, number, string, symbol } from "./others";
 import { JSX } from "./jsx";
 import { CSV } from "./csv";
+import { YAML } from "./yaml";
 import traceAll from "./traceAll";
 import { get__filename, get__dirname } from "./__filename-and-__dirname";
 import parseScriptArgs from "./parse-script-args";
 import { startRepl } from "./start-repl";
+import { process } from "./node-compat";
 
 export default function installApi(target: typeof globalThis) {
   Object.assign(target, {
@@ -152,10 +154,13 @@ export default function installApi(target: typeof globalThis) {
 
     JSX,
     CSV,
+    YAML,
 
     traceAll,
     parseScriptArgs,
     startRepl,
+
+    process,
   });
 
   Object.defineProperties(target, {
