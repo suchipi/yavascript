@@ -1,36 +1,19 @@
 import { evaluate, getBinaryPath } from "../test-helpers";
 import { spawn } from "first-base";
 
-// this test will only work on non-windows
-test("paths.OS_PATH_SEPARATOR (unix behavior)", async () => {
-  const resultNative = await evaluate(`paths.OS_PATH_SEPARATOR`);
-  expect(resultNative).toEqual({
+test("paths.OS_PATH_SEPARATOR", async () => {
+  const result = await evaluate(`paths.OS_PATH_SEPARATOR`);
+  expect(result).toMatchObject({
     code: 0,
     error: false,
-    stdout: "/" + "\n",
     stderr: "",
   });
-});
 
-// this test will only work on linux and only if you have wine installed
-test("paths.OS_PATH_SEPARATOR (windows behavior, via wine)", async () => {
-  const wineRun = spawn("wine", [
-    getBinaryPath("win32", process.arch),
-    "-e",
-    `paths.OS_PATH_SEPARATOR`,
-  ]);
-  await wineRun.completion;
-  if (wineRun.result.error) {
-    throw new Error(
-      "Failed to run wine (this is expected when running tests on macOS)"
-    );
+  if (process.platform === "win32") {
+    expect(result.stdout).toBe("\\\n");
+  } else {
+    expect(result.stdout).toBe("/\n");
   }
-  expect(wineRun.result).toMatchObject({
-    code: 0,
-    error: false,
-    stdout: "\\" + "\r\n",
-    // stderr has some garbage in it we don't care about
-  });
 });
 
 test("paths.split", async () => {
