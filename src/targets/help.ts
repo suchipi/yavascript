@@ -4,65 +4,64 @@ import version from "./VERSION_HARDCODED?evalAtBuildTime";
 export default function helpTarget() {
   std.err.puts(`yavascript ${version}
 
-Usage: One of these:
+Usage: yavascript [options] [file-to-run]
+
+  (no options):       Run the REPL (read-eval-print-loop).
+
+  [file-to-run]:      Run the specified script.
+
+  -e <code> /
+  --eval <code>:      Evaluate a code string and print the result
+
+  --lang <language>:  Set the scripting language to use. Valid values are "js",
+                      "javascript", "ts", "typescript", "jsx", "tsx", "coffee",
+                      or "coffeescript". If not specified, the language will be
+                      inferred from the file extension. If the file has no
+                      extension, the language will be inferred from its
+                      contents.
+
+  -h / --help:        Show this text
+
+  -v / --version:     Print the version
+
+  --license:          Print open-source license information
+
+  --print-types:      Print the yavascript.d.ts file this program was
+                      distributed with. This file lists all the APIs made
+                      available to scripts executed with this program.
+
+  --print-src:        Print the JavaScript code embedded in this program that
+                      defines the YavaScript APIs and executes your code.
+
+Examples:
+
+  # Run the repl
   yavascript
-  yavascript --lang <some-language>
-  yavascript <path/to/file-to-run.js>
-  yavascript -e '<code-to-run>'
-  yavascript --eval '<code-to-run>'
-  yavascript -e '<code-to-run>' --lang <some-language>
-  yavascript --eval '<code-to-run>' --lang <some-language>
+
+  # Run the repl with a specific language
+  yavascript --lang 'ts'
+
+  # Run a file
+  yavascript myscript.js
+
+  # Run a file using a specific language
+  yavascript --lang 'coffee' ./myscript
+
+  # Run a code string
+  yavascript -e '2 + 2'
+  yavascript --eval '2 + 2'
+
+  # Run a code string with a specific language
+  yavascript -e 'Math.floor 2.5' --lang 'coffee'
+  yavascript --eval 'Math.floor 2.5' --lang 'coffee'
+
+  # Print various information
   yavascript -v
   yavascript --version
   yavascript --license
   yavascript --print-types
   yavascript --print-src
 
-Where <some-language> can be one of: "js", "javascript", "ts", "typescript",
-"jsx", "tsx", "coffee", or "coffeescript".
-
-YavaScript is a bash-like script runner which is distributed as a single
-statically-linked binary. Scripts are written in JavaScript or CoffeeScript.
-There are global APIs available for all the things you'd normally want to do in
-a bash script, such as:
-
-- Running programs
-- Accessing environment variables
-- Reading and writing file contents
-- Checking if files/folders exist
-- Removing files/folders
-- Reading and changing the current working directory
-- Using globs to get large lists of files
-- Printing stylized text to the terminal
-
-Additionally, since it's JavaScript, you get some other features that are
-either not present in bash or are cumbersome to use in bash, namely:
-
-- Arrays (lists) and Objects (key/value dictionaries)
-- Working with path strings
-- Working with JSON
-- Cross-file import/export using ECMAScript Modules
-- Splitting strings on delimeters
-- Pretty-printing of objects
-- Getting the path to the currently-running script (via import.meta.url or \`__filename\`)
-- Getting the absolute path to the root folder of the current git/mercurial repo (repoRoot function)
-
-To view the APIs, consult the file yavascript.d.ts which was distributed with
-this program. If you don't have that file or don't know where it is, you can
-run \`yavascript --print-types > yavascript.d.ts\` to regenerate it. If you
-don't have YavaScript installed, you can view the file online at
-https://github.com/suchipi/yavascript/blob/main/yavascript.d.ts.
-
-yavascript.d.ts contains TypeScript type definitions which can be given to your IDE
-to assist you when writing scripts.
-
-YavaScript is powered by a fork of the QuickJS JavaScript Engine, originally
-written by Fabrice Bellard. QuickJS is a small, fast JavaScript engine
-supporting the ES2020 specification.
-
-- Original QuickJS engine: https://bellard.org/quickjs/
-- The fork we use: https://github.com/suchipi/quickjs/
-
-YavaScript is written with <3 by Lily Skye.
+For more info, see: https://github.com/suchipi/yavascript/
 `);
 }
