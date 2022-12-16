@@ -1,3 +1,3 @@
 FROM scratch
-COPY ./bin/linux/yavascript /
+COPY ./bin/linux-amd64/yavascript /
 ENTRYPOINT ["/yavascript"]
