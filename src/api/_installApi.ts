@@ -14,6 +14,7 @@ import {
   pwd,
   readlink,
   realpath,
+  touch,
 } from "./commands/_all";
 import * as stubs from "./commands/_stubs";
 import { env } from "./env";
@@ -97,6 +98,7 @@ export default function installApi(target: typeof globalThis) {
     ensureDir,
     copy,
     chmod,
+    touch,
 
     cd,
     pwd,

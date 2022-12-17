@@ -395,6 +395,15 @@ declare function readlink(path: string): string;
  */
 declare function realpath(path: string): string;
 
+/**
+ * If the file at `path` exists, update its creation/modification timestamps.
+ *
+ * Otherwise, create an empty file at that path.
+ *
+ * @param path The target path for the file.
+ */
+declare function touch(path: string): void;
+
 declare type BaseExecOptions = {
   /** Sets the current working directory for the child process. */
   cwd?: string;

@@ -13,3 +13,4 @@ export { printf } from "./printf";
 export { pwd } from "./pwd";
 export { readlink } from "./readlink";
 export { realpath } from "./realpath";
+export { touch } from "./touch";
