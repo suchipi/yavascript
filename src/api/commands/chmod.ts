@@ -121,8 +121,6 @@ export function chmod(
   permissions:
     | number
     | string
-    | [ChmodPermissionsWho, ChmodPermissionsWhat]
-    | Array<[ChmodPermissionsWho, ChmodPermissionsWhat]>
     | Record<ChmodPermissionsWho, ChmodPermissionsWhat>,
   path: string
 ) {
@@ -138,23 +136,12 @@ export function chmod(
       } else {
         return asNum;
       }
-    } else if (Array.isArray(permissions)) {
-      if (permissions.length === 2) {
-        if (
-          typeof permissions[0] === "string" &&
-          typeof permissions[1] === "string"
-        ) {
-          return permsFor(permissions as any);
-        } else {
-          return permsFor(...(permissions as any));
-        }
-      }
     } else if (typeof permissions === "object" && permissions != null) {
       return permsFor(...(Object.entries(permissions) as any));
     }
 
     throw new Error(
-      `Invalid 'permissions' argument: ${permissions}. It should be a number, octal string, array, or object.`
+      `Invalid 'permissions' argument: ${permissions}. It should be a number, string, or object.`
     );
   })();
 
