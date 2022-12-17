@@ -4,6 +4,7 @@
 export { basename } from "./basename";
 export { cat } from "./cat";
 export { cd } from "./cd";
+export { chmod } from "./chmod";
 export { dirname } from "./dirname";
 export { echo } from "./echo";
 export { extname } from "./extname";

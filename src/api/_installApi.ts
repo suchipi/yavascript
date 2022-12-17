@@ -5,6 +5,7 @@ import {
   basename,
   cat,
   cd,
+  chmod,
   dirname,
   echo,
   extname,
@@ -95,6 +96,7 @@ export default function installApi(target: typeof globalThis) {
     writeFile,
     ensureDir,
     copy,
+    chmod,
 
     cd,
     pwd,
