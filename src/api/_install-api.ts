@@ -42,6 +42,10 @@ const isProps = makeGetterPropertyDescriptorMap({
   is: () => require("./is").is,
 });
 
+const assertProps = makeGetterPropertyDescriptorMap({
+  assert: () => require("./assert").assert,
+});
+
 const repoProps = makeGetterPropertyDescriptorMap({
   isGitignored: () => require("./repo").isGitignored,
   repoRoot: () => require("./repo").repoRoot,
@@ -137,6 +141,7 @@ export default function installApi(target: typeof globalThis) {
     ...pathsProps,
     ...globProps,
     ...isProps,
+    ...assertProps,
     ...repoProps,
     ...stringsProps,
     ...consoleProps,

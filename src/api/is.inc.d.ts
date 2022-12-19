@@ -27,7 +27,7 @@ declare const is: {
   boolean(value: any): value is boolean;
   Boolean(value: any): value is boolean;
   bigint(value: any): value is bigint;
-  BigInt(value: any): value is BigInt;
+  BigInt(value: any): value is bigint;
   symbol(value: any): value is symbol;
   Symbol(value: any): value is symbol;
   null(value: any): value is null;
