@@ -1,173 +1,155 @@
 // This file has an underscore at the beginning of its name so that it is at
 // the top of the list in the text editor's sidebar
+import { makeGetterPropertyDescriptorMap } from "../lazy-load";
 
-import {
-  basename,
-  cat,
-  cd,
-  chmod,
-  dirname,
-  echo,
-  extname,
-  ls,
-  printf,
-  pwd,
-  readlink,
-  realpath,
-  touch,
-} from "./commands/_all";
-import * as stubs from "./commands/_stubs";
-import { env } from "./env";
-import { exec, $ } from "./exec";
-import {
-  exists,
-  isDir,
-  isLink,
-  readFile,
-  remove,
-  writeFile,
-  ensureDir,
-  copy,
-} from "./filesystem";
-import { paths } from "./paths";
-import { glob } from "./glob";
-import { is } from "./is";
-import { isGitignored, repoRoot } from "./repo";
-import {
-  quote,
-  clear,
-  stripAnsi,
-  bgBlack,
-  bgBlue,
-  bgCyan,
-  bgGreen,
-  bgMagenta,
-  bgRed,
-  bgWhite,
-  bgYellow,
-  black,
-  blue,
-  bold,
-  cyan,
-  dim,
-  gray,
-  green,
-  grey,
-  hidden,
-  inverse,
-  italic,
-  magenta,
-  red,
-  reset,
-  strikethrough,
-  underline,
-  white,
-  yellow,
-} from "./strings";
-import { console, print } from "./console";
-import { pipe } from "./pipe";
-import { bigint, boolean, number, string, symbol } from "./others";
-import { JSX } from "./jsx";
-import { CSV } from "./csv";
-import { YAML } from "./yaml";
-import traceAll from "./traceAll";
+const quickjsBuiltinsProps = makeGetterPropertyDescriptorMap({
+  std: () => require("std"),
+  os: () => require("os"),
+});
+
+import commandsProps from "./commands/_all";
+import stubsProps from "./commands/_stubs";
+
+const envProps = makeGetterPropertyDescriptorMap({
+  env: () => require("./env").env,
+});
+
+const execProps = makeGetterPropertyDescriptorMap({
+  exec: () => require("./exec").exec,
+  $: () => require("./exec").$,
+});
+
+const filesystemProps = makeGetterPropertyDescriptorMap({
+  exists: () => require("./filesystem").exists,
+  isDir: () => require("./filesystem").isDir,
+  isLink: () => require("./filesystem").isLink,
+  readFile: () => require("./filesystem").readFile,
+  remove: () => require("./filesystem").remove,
+  writeFile: () => require("./filesystem").writeFile,
+  ensureDir: () => require("./filesystem").ensureDir,
+  copy: () => require("./filesystem").copy,
+});
+
+const pathsProps = makeGetterPropertyDescriptorMap({
+  paths: () => require("./paths").paths,
+});
+
+const globProps = makeGetterPropertyDescriptorMap({
+  glob: () => require("./glob").glob,
+});
+
+const isProps = makeGetterPropertyDescriptorMap({
+  is: () => require("./is").is,
+});
+
+const repoProps = makeGetterPropertyDescriptorMap({
+  isGitignored: () => require("./repo").isGitignored,
+  repoRoot: () => require("./repo").repoRoot,
+});
+
+const stringsProps = makeGetterPropertyDescriptorMap({
+  quote: () => require("./strings").quote,
+  clear: () => require("./strings").clear,
+  stripAnsi: () => require("./strings").stripAnsi,
+  bgBlack: () => require("./strings").bgBlack,
+  bgBlue: () => require("./strings").bgBlue,
+  bgCyan: () => require("./strings").bgCyan,
+  bgGreen: () => require("./strings").bgGreen,
+  bgMagenta: () => require("./strings").bgMagenta,
+  bgRed: () => require("./strings").bgRed,
+  bgWhite: () => require("./strings").bgWhite,
+  bgYellow: () => require("./strings").bgYellow,
+  black: () => require("./strings").black,
+  blue: () => require("./strings").blue,
+  bold: () => require("./strings").bold,
+  cyan: () => require("./strings").cyan,
+  dim: () => require("./strings").dim,
+  gray: () => require("./strings").gray,
+  green: () => require("./strings").green,
+  grey: () => require("./strings").grey,
+  hidden: () => require("./strings").hidden,
+  inverse: () => require("./strings").inverse,
+  italic: () => require("./strings").italic,
+  magenta: () => require("./strings").magenta,
+  red: () => require("./strings").red,
+  reset: () => require("./strings").reset,
+  strikethrough: () => require("./strings").strikethrough,
+  underline: () => require("./strings").underline,
+  white: () => require("./strings").white,
+  yellow: () => require("./strings").yellow,
+});
+
+const consoleProps = makeGetterPropertyDescriptorMap({
+  console: () => require("./console").console,
+  print: () => require("./console").print,
+});
+
+const pipeProps = makeGetterPropertyDescriptorMap({
+  pipe: () => require("./pipe").pipe,
+});
+
+const othersProps = makeGetterPropertyDescriptorMap({
+  bigint: () => require("./others").bigint,
+  boolean: () => require("./others").boolean,
+  number: () => require("./others").number,
+  string: () => require("./others").string,
+  symbol: () => require("./others").symbol,
+});
+
+const jsxProps = makeGetterPropertyDescriptorMap({
+  JSX: () => require("./jsx").JSX,
+});
+
+const csvProps = makeGetterPropertyDescriptorMap({
+  CSV: () => require("./csv").CSV,
+});
+
+const yamlProps = makeGetterPropertyDescriptorMap({
+  YAML: () => require("./yaml").YAML,
+});
+
+const traceAllProps = makeGetterPropertyDescriptorMap({
+  traceAll: () => require("./traceAll").traceAll,
+});
+
+const parseScriptArgsProps = makeGetterPropertyDescriptorMap({
+  parseScriptArgs: () => require("./parse-script-args").default,
+});
+
+const startReplProps = makeGetterPropertyDescriptorMap({
+  startRepl: () => require("./start-repl").startRepl,
+});
+
+const nodeCompatProps = makeGetterPropertyDescriptorMap({
+  process: () => require("./node-compat").process,
+});
+
 import { get__filename, get__dirname } from "./__filename-and-__dirname";
-import parseScriptArgs from "./parse-script-args";
-import { startRepl } from "./start-repl";
-import { process } from "./node-compat";
 
 export default function installApi(target: typeof globalThis) {
-  Object.assign(target, {
-    cat,
-    echo,
-    ls,
-    readlink,
-    printf,
-
-    env,
-
-    exec,
-    $,
-
-    exists,
-    isDir,
-    isLink,
-    readFile,
-    remove,
-    writeFile,
-    ensureDir,
-    copy,
-    chmod,
-    touch,
-
-    cd,
-    pwd,
-    realpath,
-    dirname,
-    basename,
-    extname,
-    paths,
-
-    glob,
-
-    is,
-
-    isGitignored,
-    repoRoot,
-
-    quote,
-    clear,
-    stripAnsi,
-    bgBlack,
-    bgBlue,
-    bgCyan,
-    bgGreen,
-    bgMagenta,
-    bgRed,
-    bgWhite,
-    bgYellow,
-    black,
-    blue,
-    bold,
-    cyan,
-    dim,
-    gray,
-    green,
-    grey,
-    hidden,
-    inverse,
-    italic,
-    magenta,
-    red,
-    reset,
-    strikethrough,
-    underline,
-    white,
-    yellow,
-
-    console,
-    print,
-
-    pipe,
-
-    bigint,
-    boolean,
-    number,
-    string,
-    symbol,
-
-    JSX,
-    CSV,
-    YAML,
-
-    traceAll,
-    parseScriptArgs,
-    startRepl,
-
-    process,
-  });
-
   Object.defineProperties(target, {
+    ...quickjsBuiltinsProps,
+    ...commandsProps,
+    ...stubsProps,
+    ...envProps,
+    ...execProps,
+    ...filesystemProps,
+    ...pathsProps,
+    ...globProps,
+    ...isProps,
+    ...repoProps,
+    ...stringsProps,
+    ...consoleProps,
+    ...pipeProps,
+    ...othersProps,
+    ...jsxProps,
+    ...csvProps,
+    ...yamlProps,
+    ...traceAllProps,
+    ...parseScriptArgsProps,
+    ...startReplProps,
+    ...nodeCompatProps,
+
     __filename: {
       get() {
         return get__filename(2);
@@ -179,14 +161,4 @@ export default function installApi(target: typeof globalThis) {
       },
     },
   });
-
-  for (const [name, stub] of Object.entries(stubs)) {
-    Object.defineProperty(target, name, {
-      enumerable: false,
-      configurable: true,
-      get() {
-        return stub();
-      },
-    });
-  }
 }

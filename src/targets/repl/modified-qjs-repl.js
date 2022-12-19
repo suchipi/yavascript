@@ -38,10 +38,6 @@ export function startRepl(lang) {
     return esmToRequire.transform(compiledCode);
   };
 
-  /* add 'os' and 'std' bindings */
-  globalThis.os = os;
-  globalThis.std = std;
-
   /* close global objects */
   var Object = globalThis.Object;
   var String = globalThis.String;

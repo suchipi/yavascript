@@ -1,5 +1,11 @@
-import * as Sucrase from "sucrase";
-import * as CoffeeScript from "coffeescript";
+import { memoize } from "./lazy-load";
+
+const getSucrase: () => typeof import("sucrase") = memoize(
+  () => require("sucrase") as any
+);
+const getCoffeeScript: () => typeof import("coffeescript") = memoize(
+  () => require("coffeescript") as any
+);
 
 export type CompilerOptions = {
   filename?: string;
@@ -22,7 +28,7 @@ function stripShebangs(input: string) {
 function compileUsingSucrase(
   code: string,
   options: CompilerOptions | undefined | null,
-  sucraseOptions: Sucrase.Options
+  sucraseOptions: import("sucrase").Options
 ) {
   if (options?.filename) {
     sucraseOptions.filePath = options.filename;
@@ -37,7 +43,7 @@ function compileUsingSucrase(
     // TODO: sucrase doesn't have transform expression; would need to
     // do parseExpression + transformAst + generate + get node from body's
     // first expression statement.
-    const result = Sucrase.transform("(" + code + ")", sucraseOptions);
+    const result = getSucrase().transform("(" + code + ")", sucraseOptions);
     const withoutTrailingSemi = result.code.replace(/;$/, "");
     if (
       withoutTrailingSemi[0] === "(" &&
@@ -49,7 +55,7 @@ function compileUsingSucrase(
       return withoutTrailingSemi;
     }
   } else {
-    const result = Sucrase.transform(code, sucraseOptions);
+    const result = getSucrase().transform(code, sucraseOptions);
     return result.code;
   }
 }
@@ -90,7 +96,7 @@ const compilers = {
   },
 
   coffee(code: string, options?: CompilerOptions): string {
-    const compiled = CoffeeScript.compile(stripShebangs(code), {
+    const compiled = getCoffeeScript().compile(stripShebangs(code), {
       bare: true,
       filename: options?.filename,
     });

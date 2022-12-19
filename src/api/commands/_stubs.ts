@@ -1,15 +1,19 @@
-export function mkdir() {
-  throw new Error(
-    "'mkdir' is not part of the yavascript API. Use 'ensureDir' instead"
-  );
-}
+import { makeGetterPropertyDescriptorMap } from "../../lazy-load";
 
-export function cp() {
-  throw new Error("'cp' is not part of the yavascript API. Use 'copy' instead");
-}
-
-export function rm() {
-  throw new Error(
-    "'rm' is not part of the yavascript API. Use 'remove' instead"
-  );
-}
+export default makeGetterPropertyDescriptorMap({
+  mkdir() {
+    throw new Error(
+      "'mkdir' is not part of the yavascript API. Use 'ensureDir' instead"
+    );
+  },
+  cp() {
+    throw new Error(
+      "'cp' is not part of the yavascript API. Use 'copy' instead"
+    );
+  },
+  rm() {
+    throw new Error(
+      "'rm' is not part of the yavascript API. Use 'remove' instead"
+    );
+  },
+});

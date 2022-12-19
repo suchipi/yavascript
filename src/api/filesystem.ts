@@ -4,7 +4,7 @@ import { basename } from "./commands/basename";
 import { paths } from "./paths";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
-import { ls } from "./commands/_all";
+import { ls } from "./commands/ls";
 
 export function readFile(path: string): string {
   return std.loadFile(path);

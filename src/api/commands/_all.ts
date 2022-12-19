@@ -1,16 +1,19 @@
 // This file has an underscore at the beginning of its name so that it is at
 // the top of the list in the text editor's sidebar
+import { makeGetterPropertyDescriptorMap } from "../../lazy-load";
 
-export { basename } from "./basename";
-export { cat } from "./cat";
-export { cd } from "./cd";
-export { chmod } from "./chmod";
-export { dirname } from "./dirname";
-export { echo } from "./echo";
-export { extname } from "./extname";
-export { ls } from "./ls";
-export { printf } from "./printf";
-export { pwd } from "./pwd";
-export { readlink } from "./readlink";
-export { realpath } from "./realpath";
-export { touch } from "./touch";
+export default makeGetterPropertyDescriptorMap({
+  basename: () => require("./basename"),
+  cat: () => require("./cat"),
+  cd: () => require("./cd"),
+  chmod: () => require("./chmod"),
+  dirname: () => require("./dirname"),
+  echo: () => require("./echo"),
+  extname: () => require("./extname"),
+  ls: () => require("./ls"),
+  printf: () => require("./printf"),
+  pwd: () => require("./pwd"),
+  readlink: () => require("./readlink"),
+  realpath: () => require("./realpath"),
+  touch: () => require("./touch"),
+});

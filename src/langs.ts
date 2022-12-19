@@ -1,5 +1,3 @@
-import compilers from "./compilers";
-
 export const LANGS = new Set([
   "js",
   "javascript",
@@ -12,6 +10,9 @@ export const LANGS = new Set([
 ]);
 
 export function langToCompiler(lang: string) {
+  const compilers: typeof import("./compilers").default =
+    require("./compilers").default;
+
   switch (lang) {
     case "js":
     case "javascript": {
