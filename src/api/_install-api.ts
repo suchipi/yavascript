@@ -2,6 +2,9 @@
 // the top of the list in the text editor's sidebar
 import { makeGetterPropertyDescriptorMap } from "../lazy-load";
 
+import { grepFile, grepString, installToStringProto } from "./grep";
+import { install as installRegexpEscape } from "./regexp-escape";
+
 const quickjsBuiltinsProps = makeGetterPropertyDescriptorMap({
   std: () => require("std"),
   os: () => require("os"),
@@ -166,4 +169,12 @@ export default function installApi(target: typeof globalThis) {
       },
     },
   });
+
+  Object.assign(target, {
+    grepFile,
+    grepString,
+  });
+
+  installToStringProto(target.String.prototype);
+  installRegexpEscape(target.RegExp);
 }

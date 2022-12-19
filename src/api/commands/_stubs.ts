@@ -16,4 +16,9 @@ export default makeGetterPropertyDescriptorMap({
       "'rm' is not part of the yavascript API. Use 'remove' instead"
     );
   },
+  grep() {
+    throw new Error(
+      "'grep', as a global function, is not part of the yavascript API. Use 'grepFile', 'grepString', or String.prototype.grep instead"
+    );
+  },
 });
