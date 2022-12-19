@@ -3,6 +3,7 @@ export const forPrint: InspectOptions = {
   noAmp: true,
   colours: true,
   indent: "  ",
+  noSource: true,
 };
 
 export const forError: InspectOptions = {
@@ -10,4 +11,5 @@ export const forError: InspectOptions = {
   noAmp: true,
   colours: false,
   indent: "",
+  noSource: true,
 };
