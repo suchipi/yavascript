@@ -41,6 +41,12 @@ in_docker node:${NODE_VERSION} meta/scripts/assemble-dts.sh
 # generate dist/index.js (bundles in dependencies from npm)
 in_docker node:${NODE_VERSION} npm run bundle
 
+# compile dist/index.js to bytecode
+in_docker node:${NODE_VERSION} meta/quickjs/build/linux-amd64/bin/qjs \
+  meta/scripts/to-bytecode.mjs \
+  dist/index.js \
+  dist/index.bin
+
 mkdir -p bin
 
 for TARGET in \
@@ -57,7 +63,13 @@ for TARGET in \
   fi
 
   mkdir -p bin/${TARGET}
-  cat meta/quickjs/build/${TARGET}/bin/qjsbootstrap${EXE} dist/index.js > bin/${TARGET}/yavascript${EXE} && chmod +x bin/${TARGET}/yavascript${EXE}
+  
+  cat \
+    meta/quickjs/build/${TARGET}/bin/qjsbootstrap-bytecode${EXE} \
+    dist/index.bin \
+  > bin/${TARGET}/yavascript${EXE}
+
+  chmod +x bin/${TARGET}/yavascript${EXE}
 done
 
 # copy stuff into npm folder

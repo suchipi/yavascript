@@ -10,7 +10,6 @@ const inputs: Array<Array<string>> = [
   ["-version"],
   ["--license"],
   ["--print-types"],
-  ["--print-src"],
   ["-e"], // invalid
   ["--eval"], // invalid
   ["--lang"], // invalid

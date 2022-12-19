@@ -439,7 +439,6 @@ test("ensureDir - file collision errors", async () => {
       "stderr": "Error: Wanted to ensure that the directory path src/api/test_fixtures/ensure_dir/collision/file existed, but src/api/test_fixtures/ensure_dir/collision/file was a file, not a directory
       at ensureDir
       at <eval>
-    To view the code inside "<yavascript binary>" as referred to in the above stack trace, run '<yavascript binary> --print-src > yavascript-source.js', then open the newly-created file 'yavascript-source.js.'
     ",
       "stdout": "",
     }

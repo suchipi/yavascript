@@ -24,6 +24,14 @@ meta/scripts/assemble-dts.sh
 # generate dist/index.js (bundles in dependencies from npm)
 npm run bundle
 
+# compile dist/index.js to bytecode
+meta/quickjs/build/bin/qjs meta/scripts/to-bytecode.mjs \
+  dist/index.js \
+  dist/index.bin
+
 # generate dist/yavascript (final binary)
-cat meta/quickjs/build/bin/qjsbootstrap dist/index.js > dist/yavascript
+cat \
+  meta/quickjs/build/bin/qjsbootstrap-bytecode \
+  dist/index.bin \
+> dist/yavascript
 chmod +x dist/yavascript

@@ -51,11 +51,6 @@ ${bold("Usage:")} ${bin("yavascript")} ${opt("[options]")} [file-to-run]
                       distributed with. This file lists all the APIs made
                       available to scripts executed with this program.
 
-  ${boldOpt(
-    "--print-src"
-  )}:        Print the JavaScript code embedded in this program that
-                      defines the YavaScript APIs and executes your code.
-
 Examples:
 
   ${dim("# Run the repl")}
@@ -87,7 +82,6 @@ Examples:
   ${bin("yavascript")} ${opt("--version")}
   ${bin("yavascript")} ${opt("--license")}
   ${bin("yavascript")} ${opt("--print-types")}
-  ${bin("yavascript")} ${opt("--print-src")}
 
 For more info, see: ${cyan(
     underline("https://github.com/suchipi/yavascript/")

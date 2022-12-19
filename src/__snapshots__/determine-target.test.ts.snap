@@ -265,18 +265,6 @@ exports[`--license 1`] = `
 }
 `;
 
-exports[`--print-src 1`] = `
-{
-  "argv": [
-    "/usr/local/bin/yavascript",
-    "--print-src",
-  ],
-  "result": {
-    "target": "print-src",
-  },
-}
-`;
-
 exports[`--print-types 1`] = `
 {
   "argv": [

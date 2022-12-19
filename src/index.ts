@@ -7,7 +7,6 @@ import evalTarget from "./targets/eval";
 import helpTarget from "./targets/help";
 import invalidTarget from "./targets/invalid";
 import licenseTarget from "./targets/license";
-import printSrcTarget from "./targets/print-src";
 import printTypesTarget from "./targets/print-types";
 import replTarget from "./targets/repl";
 import runFileTarget from "./targets/run-file";
@@ -36,10 +35,6 @@ function main(): void {
     }
     case "license": {
       licenseTarget();
-      return;
-    }
-    case "print-src": {
-      printSrcTarget();
       return;
     }
     case "print-types": {

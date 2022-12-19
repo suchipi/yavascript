@@ -7,7 +7,6 @@ export type TargetDetermination =
   | TargetInfo<"version">
   | TargetInfo<"license">
   | TargetInfo<"print-types">
-  | TargetInfo<"print-src">
   | TargetInfo<"repl", { lang: string | null }>
   | TargetInfo<"eval", { code: string; lang: string | null }>
   | TargetInfo<"run-file", { file: string; lang: string | null }>
@@ -47,9 +46,6 @@ export default function determineTarget(
       }
       case "--print-types": {
         return { target: "print-types" };
-      }
-      case "--print-src": {
-        return { target: "print-src" };
       }
 
       case "-e":
