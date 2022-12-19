@@ -42,9 +42,10 @@ in_docker node:${NODE_VERSION} meta/scripts/assemble-dts.sh
 in_docker node:${NODE_VERSION} npm run bundle
 
 # compile dist/index.js to bytecode
+cp dist/index.js yavascript-internal.js # to have clearer filename in stack traces
 in_docker node:${NODE_VERSION} meta/quickjs/build/linux-amd64/bin/qjs \
   meta/scripts/to-bytecode.mjs \
-  dist/index.js \
+  yavascript-internal.js \
   dist/index.bin
 
 mkdir -p bin

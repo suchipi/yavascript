@@ -25,8 +25,9 @@ meta/scripts/assemble-dts.sh
 npm run bundle
 
 # compile dist/index.js to bytecode
+cp dist/index.js yavascript-internal.js # to have clearer filename in stack traces
 meta/quickjs/build/bin/qjs meta/scripts/to-bytecode.mjs \
-  dist/index.js \
+  yavascript-internal.js \
   dist/index.bin
 
 # generate dist/yavascript (final binary)
