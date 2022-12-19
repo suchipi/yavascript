@@ -4,7 +4,7 @@ import { evaluate } from "../../test-helpers";
 const rootDir = path.resolve(__dirname, "..", "..", "..");
 const fileContentFixturesDir = path.join(
   rootDir,
-  "src/api/test_fixtures/file_content"
+  "src/test_fixtures/file_content"
 );
 
 test("cat - single file - prints to stdout", async () => {

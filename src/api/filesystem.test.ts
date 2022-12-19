@@ -3,13 +3,10 @@ import path from "path";
 import { evaluate, inspect, cleanResult } from "../test-helpers";
 
 const rootDir = path.resolve(__dirname, "..", "..");
-const symlinksFixturesDir = path.join(
-  rootDir,
-  "src/api/test_fixtures/symlinks"
-);
+const symlinksFixturesDir = path.join(rootDir, "src/test_fixtures/symlinks");
 const fileContentFixturesDir = path.join(
   rootDir,
-  "src/api/test_fixtures/file_content"
+  "src/test_fixtures/file_content"
 );
 
 test("readlink", async () => {
@@ -72,7 +69,7 @@ test("writeFile", async () => {
 });
 
 test("isDir - on dir", async () => {
-  const result = await evaluate(`isDir("./src/api/test_fixtures/glob/cabana")`);
+  const result = await evaluate(`isDir("./src/test_fixtures/glob/cabana")`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -85,7 +82,7 @@ test("isDir - on dir", async () => {
 });
 
 test("isDir - on file", async () => {
-  const result = await evaluate(`isDir("./src/api/test_fixtures/glob/hi.txt")`);
+  const result = await evaluate(`isDir("./src/test_fixtures/glob/hi.txt")`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -99,7 +96,7 @@ test("isDir - on file", async () => {
 
 test("isDir - on link to folder", async () => {
   const result = await evaluate(
-    `isDir("./src/api/test_fixtures/symlinks/link-to-folder")`
+    `isDir("./src/test_fixtures/symlinks/link-to-folder")`
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -114,7 +111,7 @@ test("isDir - on link to folder", async () => {
 
 test("isDir - on link to file", async () => {
   const result = await evaluate(
-    `isDir("./src/api/test_fixtures/symlinks/link-to-file")`
+    `isDir("./src/test_fixtures/symlinks/link-to-file")`
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -129,7 +126,7 @@ test("isDir - on link to file", async () => {
 
 test("isDir - on dead link", async () => {
   const result = await evaluate(
-    `isDir("./src/api/test_fixtures/symlinks/dead-link")`
+    `isDir("./src/test_fixtures/symlinks/dead-link")`
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -143,9 +140,7 @@ test("isDir - on dead link", async () => {
 });
 
 test("isLink - on dir", async () => {
-  const result = await evaluate(
-    `isLink("./src/api/test_fixtures/glob/cabana")`
-  );
+  const result = await evaluate(`isLink("./src/test_fixtures/glob/cabana")`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -158,9 +153,7 @@ test("isLink - on dir", async () => {
 });
 
 test("isLink - on file", async () => {
-  const result = await evaluate(
-    `isLink("./src/api/test_fixtures/glob/hi.txt")`
-  );
+  const result = await evaluate(`isLink("./src/test_fixtures/glob/hi.txt")`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -174,7 +167,7 @@ test("isLink - on file", async () => {
 
 test("isLink - on link to folder", async () => {
   const result = await evaluate(
-    `isLink("./src/api/test_fixtures/symlinks/link-to-folder")`
+    `isLink("./src/test_fixtures/symlinks/link-to-folder")`
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -189,7 +182,7 @@ test("isLink - on link to folder", async () => {
 
 test("isLink - on link to file", async () => {
   const result = await evaluate(
-    `isLink("./src/api/test_fixtures/symlinks/link-to-file")`
+    `isLink("./src/test_fixtures/symlinks/link-to-file")`
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -204,7 +197,7 @@ test("isLink - on link to file", async () => {
 
 test("isLink - on dead link", async () => {
   const result = await evaluate(
-    `isLink("./src/api/test_fixtures/symlinks/dead-link")`
+    `isLink("./src/test_fixtures/symlinks/dead-link")`
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -218,7 +211,7 @@ test("isLink - on dead link", async () => {
 });
 
 test("remove - on file", async () => {
-  const target = "./src/api/test_fixtures/remove/hi.txt";
+  const target = "./src/test_fixtures/remove/hi.txt";
 
   fs.writeFileSync(target, "hello there");
 
@@ -236,7 +229,7 @@ test("remove - on file", async () => {
 });
 
 test("remove - on empty dir", async () => {
-  const targetDir = "./src/api/test_fixtures/remove/empty-dir";
+  const targetDir = "./src/test_fixtures/remove/empty-dir";
 
   if (fs.existsSync(targetDir)) {
     fs.rmSync(targetDir, { recursive: true, force: true });
@@ -257,7 +250,7 @@ test("remove - on empty dir", async () => {
 });
 
 test("remove - on dir with content", async () => {
-  const targetDir = "./src/api/test_fixtures/remove/dir-with-content";
+  const targetDir = "./src/test_fixtures/remove/dir-with-content";
 
   if (fs.existsSync(targetDir)) {
     fs.rmSync(targetDir, { recursive: true, force: true });
@@ -291,7 +284,7 @@ test("remove - on dir with content", async () => {
 });
 
 test("exists - existent target file", async () => {
-  const target = "./src/api/test_fixtures/glob/hi.something.js";
+  const target = "./src/test_fixtures/glob/hi.something.js";
 
   expect(fs.existsSync(target)).toBe(true);
 
@@ -308,7 +301,7 @@ test("exists - existent target file", async () => {
 });
 
 test("exists - existent target dir", async () => {
-  const target = "./src/api/test_fixtures/glob";
+  const target = "./src/test_fixtures/glob";
 
   expect(fs.existsSync(target)).toBe(true);
 
@@ -325,7 +318,7 @@ test("exists - existent target dir", async () => {
 });
 
 test("exists - nonexistent target", async () => {
-  const target = "./src/api/test_fixtures/glob/nope_this_aint_there";
+  const target = "./src/test_fixtures/glob/nope_this_aint_there";
 
   expect(fs.existsSync(target)).toBe(false);
 
@@ -342,7 +335,7 @@ test("exists - nonexistent target", async () => {
 });
 
 test("exists - link to file", async () => {
-  const target = "./src/api/test_fixtures/symlinks/link-to-file";
+  const target = "./src/test_fixtures/symlinks/link-to-file";
 
   expect(fs.existsSync(target)).toBe(true);
 
@@ -359,7 +352,7 @@ test("exists - link to file", async () => {
 });
 
 test("exists - link to dir", async () => {
-  const target = "./src/api/test_fixtures/symlinks/link-to-folder";
+  const target = "./src/test_fixtures/symlinks/link-to-folder";
 
   expect(fs.existsSync(target)).toBe(true);
 
@@ -378,7 +371,7 @@ test("exists - link to dir", async () => {
 // weird that this says it doesn't exist, but that's consistent with os.access
 // and node behavior, so I guess it's fine
 test("exists - dead link", async () => {
-  const target = "./src/api/test_fixtures/symlinks/dead-link";
+  const target = "./src/test_fixtures/symlinks/dead-link";
 
   expect(fs.existsSync(target)).toBe(false);
 
@@ -395,7 +388,7 @@ test("exists - dead link", async () => {
 });
 
 test("ensureDir", async () => {
-  const outerTarget = "./src/api/test_fixtures/ensure_dir/some";
+  const outerTarget = "./src/test_fixtures/ensure_dir/some";
   const target = path.join(outerTarget, "very/deep/path");
 
   if (fs.existsSync(outerTarget)) {
@@ -419,7 +412,7 @@ test("ensureDir", async () => {
 });
 
 test("ensureDir - file collision errors", async () => {
-  const outerTarget = "./src/api/test_fixtures/ensure_dir/collision";
+  const outerTarget = "./src/test_fixtures/ensure_dir/collision";
   const target = path.join(outerTarget, "file");
 
   if (fs.existsSync(outerTarget)) {
@@ -436,7 +429,7 @@ test("ensureDir - file collision errors", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Wanted to ensure that the directory path src/api/test_fixtures/ensure_dir/collision/file existed, but src/api/test_fixtures/ensure_dir/collision/file was a file, not a directory
+      "stderr": "Error: Wanted to ensure that the directory path src/test_fixtures/ensure_dir/collision/file existed, but src/test_fixtures/ensure_dir/collision/file was a file, not a directory
       at ensureDir
       at <eval>
     ",
@@ -448,8 +441,8 @@ test("ensureDir - file collision errors", async () => {
 });
 
 test("copy", async () => {
-  const source = "./src/api/test_fixtures/copy/blah";
-  const target = "./src/api/test_fixtures/copy/blah_copy";
+  const source = "./src/test_fixtures/copy/blah";
+  const target = "./src/test_fixtures/copy/blah_copy";
 
   // wanna have an empty folder in this test, but empty folders
   // can't be in git

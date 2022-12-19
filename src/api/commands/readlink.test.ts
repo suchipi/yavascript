@@ -2,10 +2,7 @@ import path from "path";
 import { evaluate } from "../../test-helpers";
 
 const rootDir = path.resolve(__dirname, "..", "..", "..");
-const symlinksFixturesDir = path.join(
-  rootDir,
-  "src/api/test_fixtures/symlinks"
-);
+const symlinksFixturesDir = path.join(rootDir, "src/test_fixtures/symlinks");
 
 test("readlink", async () => {
   const result = await evaluate(

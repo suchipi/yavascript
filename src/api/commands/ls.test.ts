@@ -2,11 +2,8 @@ import path from "path";
 import { evaluate, cleanResult } from "../../test-helpers";
 
 const rootDir = path.resolve(__dirname, "..", "..", "..");
-const globFixturesDir = path.join(rootDir, "src/api/test_fixtures/glob");
-const symlinksFixturesDir = path.join(
-  rootDir,
-  "src/api/test_fixtures/symlinks"
-);
+const globFixturesDir = path.join(rootDir, "src/test_fixtures/glob");
+const symlinksFixturesDir = path.join(rootDir, "src/test_fixtures/symlinks");
 
 test("ls - no args", async () => {
   const result = await evaluate(`JSON.stringify(ls())`, {
@@ -21,12 +18,12 @@ test("ls - no args", async () => {
 
   expect(JSON.parse(cleaned.stdout).sort()).toEqual(
     [
-      "<rootDir>/src/api/test_fixtures/glob/hi.something.js",
-      "<rootDir>/src/api/test_fixtures/glob/potato",
-      "<rootDir>/src/api/test_fixtures/glob/hi.js",
-      "<rootDir>/src/api/test_fixtures/glob/hi.txt",
-      "<rootDir>/src/api/test_fixtures/glob/cabana",
-      "<rootDir>/src/api/test_fixtures/glob/hi",
+      "<rootDir>/src/test_fixtures/glob/hi.something.js",
+      "<rootDir>/src/test_fixtures/glob/potato",
+      "<rootDir>/src/test_fixtures/glob/hi.js",
+      "<rootDir>/src/test_fixtures/glob/hi.txt",
+      "<rootDir>/src/test_fixtures/glob/cabana",
+      "<rootDir>/src/test_fixtures/glob/hi",
     ].sort()
   );
 });
@@ -44,11 +41,11 @@ test("ls - no args (different process cwd)", async () => {
 
   expect(JSON.parse(cleaned.stdout).sort()).toEqual(
     [
-      "<rootDir>/src/api/test_fixtures/symlinks/some-folder",
-      "<rootDir>/src/api/test_fixtures/symlinks/link-to-file",
-      "<rootDir>/src/api/test_fixtures/symlinks/link-to-folder",
-      "<rootDir>/src/api/test_fixtures/symlinks/dead-link",
-      "<rootDir>/src/api/test_fixtures/symlinks/some-file",
+      "<rootDir>/src/test_fixtures/symlinks/some-folder",
+      "<rootDir>/src/test_fixtures/symlinks/link-to-file",
+      "<rootDir>/src/test_fixtures/symlinks/link-to-folder",
+      "<rootDir>/src/test_fixtures/symlinks/dead-link",
+      "<rootDir>/src/test_fixtures/symlinks/some-file",
     ].sort()
   );
 });
@@ -92,8 +89,8 @@ test("ls - specifying dir", async () => {
   expect(JSON.parse(cleaned.stdout).sort()).toEqual(
     [
       //
-      "<rootDir>/src/api/test_fixtures/glob/potato/banana",
-      "<rootDir>/src/api/test_fixtures/glob/potato/eggplant",
+      "<rootDir>/src/test_fixtures/glob/potato/banana",
+      "<rootDir>/src/test_fixtures/glob/potato/eggplant",
     ].sort()
   );
 });
