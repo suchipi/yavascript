@@ -1,9 +1,10 @@
-import { spawn, Options as SpawnOptions } from "first-base";
-import child_process from "child_process";
+import fs from "fs";
 import path from "path";
-import print from "@suchipi/print";
+import child_process from "child_process";
 import stripAnsi from "strip-ansi";
 import { pathMarker } from "path-less-traveled";
+import print from "@suchipi/print";
+import { spawn, Options as SpawnOptions } from "first-base";
 import * as inspectOptions from "./inspect-options";
 import * as npmLib from "../meta/npm/lib";
 
@@ -16,6 +17,11 @@ export const rootDir = pathMarker(path.resolve(__dirname, ".."));
 const npmBinDir = pathMarker(rootDir("meta/npm/bin"));
 
 function getBinaryPath(platform: string, arch: string) {
+  const buildQuickResult = rootDir("dist", "yavascript");
+  if (fs.existsSync(buildQuickResult)) {
+    return buildQuickResult;
+  }
+
   const npmBinPath = npmLib.getBinaryPath(platform + "-" + arch);
   return rootDir("bin", npmBinDir.relative(npmBinPath));
 }
