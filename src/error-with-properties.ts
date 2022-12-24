@@ -3,8 +3,16 @@ import * as inspectOptions from "./inspect-options";
 const MAX_ERROR_MESSAGE_LENGTH = 1000 - 3; // minus 3 for ellipsis
 
 export function makeErrorWithProperties<
-  Properties extends { [key: string]: any }
->(message: string, properties: Properties): Error & Properties {
+  Properties extends { [key: string]: any },
+  ErrConstructor extends { new (message: string): any }
+>(
+  message: string,
+  properties: Properties,
+  // @ts-ignore could be instantiated with different subtype
+  errorConstructor: ErrConstructor = Error
+): Properties & ErrConstructor extends { new (message: string): infer Err }
+  ? Err
+  : never {
   let errorMessage = message;
   const entries = Object.entries(properties);
   if (entries.length > 0) {
@@ -28,6 +36,6 @@ export function makeErrorWithProperties<
     errorMessage = errorMessage.slice(0, MAX_ERROR_MESSAGE_LENGTH) + "...";
   }
 
-  const err = new Error(errorMessage);
+  const err = new errorConstructor(errorMessage);
   return Object.assign(err, properties);
 }
