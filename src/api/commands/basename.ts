@@ -1,6 +1,6 @@
-import { paths } from "../paths";
+import { Path } from "../path";
 
 export function basename(path: string): string {
-  const parts = paths.split(path);
+  const parts = Path.splitToSegments(path);
   return parts[parts.length - 1];
 }

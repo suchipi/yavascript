@@ -2,7 +2,7 @@ import * as os from "os";
 import minimatch from "minimatch";
 import { exists } from "./filesystem";
 import { pwd } from "./commands/pwd";
-import { paths } from "./paths";
+import { Path } from "./path";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
 
@@ -21,9 +21,9 @@ function compile(pattern: string, startingDir: string) {
 
   const normalized =
     prefix +
-    (paths.isAbsolute(pattern)
+    (Path.isAbsolute(pattern)
       ? pattern
-      : paths.resolve("./" + pattern, startingDir));
+      : Path.resolve(startingDir, "./" + pattern));
 
   const regexp = minimatch.makeRe(normalized);
   if (!regexp) {
@@ -45,7 +45,7 @@ export function glob(
     throw new Error(`No such directory: ${dir} (from ${pwd()})`);
   }
 
-  const startingDir = paths.resolve(dir);
+  const startingDir = Path.resolve(dir);
   const allPatterns = patternsArray.map((pattern) => {
     return {
       negated: pattern.startsWith("!"),

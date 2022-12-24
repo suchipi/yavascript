@@ -33,8 +33,8 @@ const filesystemProps = makeGetterPropertyDescriptorMap({
   copy: () => require("./filesystem").copy,
 });
 
-const pathsProps = makeGetterPropertyDescriptorMap({
-  paths: () => require("./paths").paths,
+const pathProps = makeGetterPropertyDescriptorMap({
+  Path: () => require("./path").Path,
 });
 
 const globProps = makeGetterPropertyDescriptorMap({
@@ -141,7 +141,7 @@ export default function installApi(target: typeof globalThis) {
     ...envProps,
     ...execProps,
     ...filesystemProps,
-    ...pathsProps,
+    ...pathProps,
     ...globProps,
     ...isProps,
     ...assertProps,

@@ -1,5 +1,5 @@
 import * as clefParse from "clef-parse";
-import { paths } from "./paths";
+import { Path } from "./path";
 import { pwd } from "./commands/pwd";
 
 function parseScriptArgs(
@@ -13,8 +13,8 @@ function parseScriptArgs(
   const argsClone = args.slice();
 
   const { options, positionalArgs } = clefParse.parseArgv(argsClone, hints, {
-    isAbsolute: paths.isAbsolute,
-    resolvePath: paths.resolve,
+    isAbsolute: Path.isAbsolute,
+    resolvePath: Path.resolve,
     getCwd: pwd,
   });
   return {

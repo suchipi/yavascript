@@ -1,6 +1,6 @@
 import * as os from "os";
 import { pwd } from "./pwd";
-import { paths } from "../paths";
+import { Path } from "../path";
 import { isDir } from "../filesystem";
 
 export function ls(
@@ -15,7 +15,7 @@ export function ls(
     .filter((child) => child !== "." && child !== "..");
   if (!options.relativePaths) {
     const parent = os.realpath(dir);
-    children = children.map((child) => paths.join(parent, child));
+    children = children.map((child) => Path.join(parent, child));
   }
 
   return children;

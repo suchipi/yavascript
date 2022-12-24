@@ -1,7 +1,7 @@
 import * as std from "std";
 import * as os from "os";
 import { basename } from "./commands/basename";
-import { paths } from "./paths";
+import { Path } from "./Path";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
 import { ls } from "./commands/ls";
@@ -88,11 +88,11 @@ function getPathInfo(path: string) {
 }
 
 export function ensureDir(path: string) {
-  const components = paths.split(path);
+  const components = Path.splitToSegments(path);
 
   for (let i = 0; i < components.length; i++) {
     const componentsSoFar = components.slice(0, i + 1);
-    const pathSoFar = componentsSoFar.join(paths.OS_PATH_SEPARATOR);
+    const pathSoFar = componentsSoFar.join(Path.OS_SEGMENT_SEPARATOR);
     if (pathSoFar === ".") continue;
 
     const info = getPathInfo(pathSoFar);
@@ -218,7 +218,7 @@ export function copy(
     case "file -> dir": {
       // Copy file into dir
       const filename = basename(from);
-      const target = paths.join(to, filename);
+      const target = Path.join(to, filename);
       copyRaw(from, target, trace);
       return;
     }
@@ -254,7 +254,7 @@ export function copy(
       const children = ls(from);
       for (const child of children) {
         const filename = basename(child);
-        const target = paths.join(to, filename);
+        const target = Path.join(to, filename);
         copy(child, target, { whenTargetExists, trace });
       }
       return;
@@ -262,7 +262,7 @@ export function copy(
     case "dir -> dir": {
       // Create new dir within target path and copy contents into it recursively
       const dirname = basename(from);
-      const targetDir = paths.join(to, dirname);
+      const targetDir = Path.join(to, dirname);
       if (trace) {
         trace("ensuring dir", targetDir);
       }
@@ -271,7 +271,7 @@ export function copy(
       const children = ls(from);
       for (const child of children) {
         const filename = basename(child);
-        const target = paths.join(targetDir, filename);
+        const target = Path.join(targetDir, filename);
         copy(child, target, { whenTargetExists, trace });
       }
       return;

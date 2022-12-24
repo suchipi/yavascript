@@ -1,8 +1,7 @@
-import { evaluate, getBinaryPath } from "../test-helpers";
-import { spawn } from "first-base";
+import { evaluate } from "../test-helpers";
 
-test("paths.OS_PATH_SEPARATOR", async () => {
-  const result = await evaluate(`paths.OS_PATH_SEPARATOR`);
+test("Path.OS_SEGMENT_SEPARATOR", async () => {
+  const result = await evaluate(`Path.OS_SEGMENT_SEPARATOR`);
   expect(result).toMatchObject({
     code: 0,
     error: false,
@@ -16,17 +15,17 @@ test("paths.OS_PATH_SEPARATOR", async () => {
   }
 });
 
-test("paths.split", async () => {
+test("Path.splitToSegments", async () => {
   const script = `
-    echo(paths.split("/some/path/some/where"));
-    echo(paths.split("/with/trailing/slash/"));
-    echo(paths.split("./this/one's/relative"));
-    echo(paths.split(".."));
-    echo(paths.split("../yeah"));
-    echo(paths.split("hi"));
-    echo(paths.split("hello/mario"));
-    echo(paths.split("///what/"));
-    echo(paths.split("/who//tf//keeps putting/double/slashes/"));
+    echo(Path.splitToSegments("/some/path/some/where"));
+    echo(Path.splitToSegments("/with/trailing/slash/"));
+    echo(Path.splitToSegments("./this/one's/relative"));
+    echo(Path.splitToSegments(".."));
+    echo(Path.splitToSegments("../yeah"));
+    echo(Path.splitToSegments("hi"));
+    echo(Path.splitToSegments("hello/mario"));
+    echo(Path.splitToSegments("///what/"));
+    echo(Path.splitToSegments("/who//tf//keeps putting/double/slashes/"));
   `;
 
   const result = await evaluate(script);
@@ -85,17 +84,17 @@ test("paths.split", async () => {
   `);
 });
 
-test("paths.split (windows-style paths)", async () => {
+test("Path.splitToSegments (windows-style paths)", async () => {
   const script = `
-    echo(paths.split("C:\\\\some\\\\path\\\\some\\\\where"));
-    echo(paths.split("D:\\\\with\\\\trailing\\\\slash\\\\"));
-    echo(paths.split(".\\\\this\\\\one's\\\\relative"));
-    echo(paths.split(".."));
-    echo(paths.split("..\\\\yeah"));
-    echo(paths.split("hi"));
-    echo(paths.split("hello\\\\mario"));
-    echo(paths.split("E:\\\\what\\\\"));
-    echo(paths.split("Z:\\\\\\\\who\\\\\\\\tf\\\\\\\\keeps putting\\\\\\\\double\\\\\\\\slashes\\\\\\\\"));
+    echo(Path.splitToSegments("C:\\\\some\\\\path\\\\some\\\\where"));
+    echo(Path.splitToSegments("D:\\\\with\\\\trailing\\\\slash\\\\"));
+    echo(Path.splitToSegments(".\\\\this\\\\one's\\\\relative"));
+    echo(Path.splitToSegments(".."));
+    echo(Path.splitToSegments("..\\\\yeah"));
+    echo(Path.splitToSegments("hi"));
+    echo(Path.splitToSegments("hello\\\\mario"));
+    echo(Path.splitToSegments("E:\\\\what\\\\"));
+    echo(Path.splitToSegments("Z:\\\\\\\\who\\\\\\\\tf\\\\\\\\keeps putting\\\\\\\\double\\\\\\\\slashes\\\\\\\\"));
   `;
 
   const result = await evaluate(script);
@@ -154,11 +153,12 @@ test("paths.split (windows-style paths)", async () => {
   `);
 });
 
-test("paths.detectSeparator", async () => {
+test("Path.detectSeparator", async () => {
   const script = `
-    echo(paths.detectSeparator("./hi/there"));
-    echo(paths.detectSeparator(".\\\\hi\\\\there"));
-    echo(paths.detectSeparator("hi"));
+    echo(Path.detectSeparator("./hi/there"));
+    echo(Path.detectSeparator(".\\\\hi\\\\there"));
+    echo(Path.detectSeparator("hi"));
+    echo(Path.detectSeparator("hi", null));
   `;
 
   const result = await evaluate(script);
@@ -170,18 +170,19 @@ test("paths.detectSeparator", async () => {
       "stdout": "/
     \\
     /
+    null
     ",
     }
   `);
 });
 
-test("paths.join", async () => {
+test("Path.join", async () => {
   const script = `
-    echo(paths.join("one", "two"));
-    echo(paths.join("", "one", "two", "three", "four"));
-    echo(paths.join("bla/blah", "hi"));
-    echo(paths.join("./bla/blah", "hi\\\\there"));
-    echo(paths.join(".\\\\bla\\\\blah", "hi/there"));
+    echo(Path.join("one", "two"));
+    echo(Path.join("", "one", "two", "three", "four"));
+    echo(Path.join("bla/blah", "hi"));
+    echo(Path.join("./bla/blah", "hi\\\\there"));
+    echo(Path.join(".\\\\bla\\\\blah", "hi/there"));
   `;
 
   const result = await evaluate(script);
@@ -200,8 +201,8 @@ test("paths.join", async () => {
   `);
 });
 
-test("paths.resolve with already-absolute path", async () => {
-  const result = await evaluate(`paths.resolve("/hi/there/yeah")`);
+test("Path.resolve with already-absolute path", async () => {
+  const result = await evaluate(`Path.resolve("/hi/there/yeah")`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -213,8 +214,8 @@ test("paths.resolve with already-absolute path", async () => {
   `);
 });
 
-test("paths.resolve with absolute path with . and ..s in it", async () => {
-  const result = await evaluate(`paths.resolve("/hi/./there/yeah/../yup/./")`);
+test("Path.resolve with absolute path with . and ..s in it", async () => {
+  const result = await evaluate(`Path.resolve("/hi/./there/yeah/../yup/./")`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
