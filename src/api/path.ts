@@ -29,11 +29,16 @@ export class Path {
     if (Array.isArray(input)) {
       testStr = input.join("|");
     }
-    return testStr.includes("\\")
-      ? "\\"
-      : testStr.includes("/")
-      ? "/"
-      : fallback;
+
+    for (const char of testStr) {
+      if (char === "/") {
+        return "/";
+      } else if (char === "\\") {
+        return "\\";
+      }
+    }
+
+    return fallback;
   }
 
   static join(...inputs: Array<string | Path | Array<string | Path>>): string {

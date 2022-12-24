@@ -194,7 +194,7 @@ test("Path.join", async () => {
       "stdout": "one/two
     /one/two/three/four
     bla/blah/hi
-    .\\bla\\blah\\hi\\there
+    ./bla/blah/hi/there
     .\\bla\\blah\\hi\\there
     ",
     }
