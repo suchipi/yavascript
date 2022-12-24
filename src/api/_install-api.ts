@@ -116,7 +116,7 @@ const yamlProps = makeGetterPropertyDescriptorMap({
 });
 
 const traceAllProps = makeGetterPropertyDescriptorMap({
-  traceAll: () => require("./traceAll").traceAll,
+  traceAll: () => require("./traceAll").default,
 });
 
 const parseScriptArgsProps = makeGetterPropertyDescriptorMap({
