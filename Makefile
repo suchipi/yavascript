@@ -1,4 +1,4 @@
 .PHONY: all
 
 all:
-	./meta/scripts/build-all.sh
+	./meta/build.sh

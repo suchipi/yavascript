@@ -86,7 +86,11 @@ supporting the ES2020 specification.
 
 ### Binaries (all platforms)
 
-You will need docker installed, then run `meta/scripts/build.sh`.
+You will need docker installed, then run `meta/docker/build-all.sh`.
+
+### Binaries (just for your machine)
+
+You will need node.js and ninja installed, then run `meta/build.sh`.
 
 ### Docker image
 
