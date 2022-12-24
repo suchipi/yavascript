@@ -12,3 +12,4 @@ const bc = bytecode.fromFile(input);
 
 const file = std.open(output, "w");
 file.write(bc, 0, bc.byteLength);
+file.close();

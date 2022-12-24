@@ -11,6 +11,10 @@ cd $(git rev-parse --show-toplevel)
 # Use node 18
 fnm use
 
+if [[ "$SKIP_NPM_INSTALL" == "" ]]; then
+  npm install
+fi
+
 if [[ "$SKIP_QJS" == "" ]]; then
   # Build quickjs
   pushd meta/quickjs > /dev/null
