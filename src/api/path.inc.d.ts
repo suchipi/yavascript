@@ -36,6 +36,12 @@ export class Path {
   ): string;
 
   /**
+   * Concatenates the input path(s) and then resolves all non-leading `.` and
+   * `..` segments.
+   */
+  static normalize(): Path;
+
+  /**
    * Return whether the provided path string is absolute; that is, whether it
    * starts with either `/` or a drive letter (ie `C:`).
    */
@@ -71,6 +77,11 @@ export class Path {
    * If `from` is unspecified, it defaults to `pwd()`.
    */
   resolve(from?: string | Path): Path;
+
+  /**
+   * Resolve all non-leading `.` and `..` segments in this path.
+   */
+  normalize(): Path;
 
   /**
    * Create a new path by appending another path's segments after this path's

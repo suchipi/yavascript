@@ -51,6 +51,12 @@ export class Path {
     return new Path(...inputs).resolve().toString();
   }
 
+  static normalize(
+    ...inputs: Array<string | Path | Array<string | Path>>
+  ): string {
+    return new Path(...inputs).normalize().toString();
+  }
+
   static isAbsolute(path: string): boolean {
     return new Path(path).isAbsolute();
   }
@@ -80,6 +86,16 @@ export class Path {
 
   resolve(from: string | Path = os.getcwd()): Path {
     const fromPath = typeof from === "string" ? new Path(from) : from;
+    const result = fromPath.concat(this).normalize();
+    if (!result.isAbsolute()) {
+      throw new Error(
+        `Could not resolve ${this.toString()} from ${fromPath.toString()}`
+      );
+    }
+    return result;
+  }
+
+  normalize(): Path {
     // we clone this cause we're gonna mutate it
     const segments = [...this.segments];
 
@@ -89,17 +105,12 @@ export class Path {
       currentSegment = segments.shift();
       if (currentSegment === "." || currentSegment === "..") {
         if (newSegments.length === 0) {
-          newSegments.push(...fromPath.segments);
+          newSegments.push(currentSegment);
         }
 
         if (currentSegment === "..") {
           if (newSegments.length > 0) {
             newSegments.pop();
-          } else {
-            throw makeErrorWithProperties("Cannot resolve leading ..", {
-              from: fromPath.toString(),
-              path: this.toString(),
-            });
           }
         }
       } else if (currentSegment != null) {
