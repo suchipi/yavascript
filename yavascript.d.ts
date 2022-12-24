@@ -2351,6 +2351,12 @@ declare class Module {
   static compilers: {
     [extensionWithDot: string]: (filename: string, content: string) => string;
   };
+
+  /**
+   * Create a virtual built-in module whose exports consist of the own
+   * enumerable properties of `obj`.
+   */
+  static define(name: string, obj: { [key: string]: any }): void;
 }
 
 /**
