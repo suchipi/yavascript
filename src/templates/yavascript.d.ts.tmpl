@@ -1,35 +1,33 @@
-include(m4-env.inc)
-
 // ===============
 // ---------------
 // YavaScript APIs
 // ---------------
 // ===============
-include(env.inc.d.ts)
-include(parse-script-args.inc.d.ts)
-include(filesystem.inc.d.ts)
-include(paths.inc.d.ts)
-include(commands.d.ts.tmpl)
-include(exec.inc.d.ts)
-include(glob.inc.d.ts)
-include(console.inc.d.ts)
-include(strings.inc.d.ts)
-include(grep.inc.d.ts)
-include(is.inc.d.ts)
-include(assert.inc.d.ts)
-include(pipe.inc.d.ts)
-include(start-repl.inc.d.ts)
-include(repo.inc.d.ts)
-include(traceAll.inc.d.ts)
-include(jsx.inc.d.ts)
-include(yaml.inc.d.ts)
-include(csv.inc.d.ts)
-include(regexp-escape.inc.d.ts)
-include(others.inc.d.ts)
+#INCLUDE("env.inc.d.ts")
+#INCLUDE("parse-script-args.inc.d.ts")
+#INCLUDE("filesystem.inc.d.ts")
+#INCLUDE("paths.inc.d.ts")
+#INCLUDE("commands.d.ts.tmpl")
+#INCLUDE("exec.inc.d.ts")
+#INCLUDE("glob.inc.d.ts")
+#INCLUDE("console.inc.d.ts")
+#INCLUDE("strings.inc.d.ts")
+#INCLUDE("grep.inc.d.ts")
+#INCLUDE("is.inc.d.ts")
+#INCLUDE("assert.inc.d.ts")
+#INCLUDE("pipe.inc.d.ts")
+#INCLUDE("start-repl.inc.d.ts")
+#INCLUDE("repo.inc.d.ts")
+#INCLUDE("traceAll.inc.d.ts")
+#INCLUDE("jsx.inc.d.ts")
+#INCLUDE("yaml.inc.d.ts")
+#INCLUDE("csv.inc.d.ts")
+#INCLUDE("regexp-escape.inc.d.ts")
+#INCLUDE("others.inc.d.ts")
 
 // ==========================================
 // ------------------------------------------
 // QuickJS APIs, which YavaScript builds upon
 // ------------------------------------------
 // ==========================================
-include(quickjs-libc.d.ts)
+#INCLUDE("quickjs-libc.d.ts")
