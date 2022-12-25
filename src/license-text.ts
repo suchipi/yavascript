@@ -281,6 +281,14 @@ Copyright Eemeli Aro <eemeli@gmail.com>
 
 ${ISC}
 
+-------------- string-dedent --------------
+
+MIT License
+
+Copyright (c) 2020-2022 Justin Ridgewell
+
+${MIT}
+
 -------------- yavascript --------------
 
 YavaScript script interpreter
