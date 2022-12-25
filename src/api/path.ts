@@ -90,7 +90,7 @@ export class Path {
   }
 
   static tagUsingBase(dir: string | Path): typeof Path.tag {
-    return (strings, ...values) => {
+    const ret = (strings, ...values) => {
       const stringsClone = Object.assign([...strings], {
         raw: [...strings.raw],
       });
@@ -98,6 +98,11 @@ export class Path {
       stringsClone.raw[0] = Path.join(dir, strings.raw[0]);
       return Path.tag(stringsClone, ...values);
     };
+    Object.defineProperty(ret, "name", {
+      value: `tagUsingBase(${dir})`,
+      configurable: true,
+    });
+    return ret;
   }
 
   segments: Array<string>;
