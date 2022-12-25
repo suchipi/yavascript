@@ -97,6 +97,17 @@ testGlob(
 );
 
 testGlob(
+  "absolute path in glob",
+  globDir,
+  [globDir + "/**/*.txt"],
+  [
+    "<rootDir>/src/test_fixtures/glob/potato/banana/yo.txt",
+    "<rootDir>/src/test_fixtures/glob/hi.txt",
+    "<rootDir>/src/test_fixtures/glob/hi/there.txt",
+  ]
+);
+
+testGlob(
   "glob targeting specific filetypes 2",
   globDir,
   ["**/*.js"],
