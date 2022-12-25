@@ -39,7 +39,9 @@ export class Path {
    * Concatenates the input path(s) and then resolves all non-leading `.` and
    * `..` segments.
    */
-  static normalize(): Path;
+  static normalize(
+    ...inputs: Array<string | Path | Array<string | Path>>
+  ): string;
 
   /**
    * Return whether the provided path string is absolute; that is, whether it

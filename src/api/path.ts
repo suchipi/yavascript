@@ -1,6 +1,14 @@
 import * as os from "os";
 import { makeErrorWithProperties } from "../error-with-properties";
 
+function validateSegments(segments: Array<string>): Array<string> {
+  return segments.filter((part, index) => {
+    // first part can be "" to represent left side of root "/"
+    if (index === 0) return true;
+    return Boolean(part);
+  });
+}
+
 export class Path {
   static OS_SEGMENT_SEPARATOR = os.platform === "win32" ? "\\" : "/";
   static OS_ENV_VAR_SEPARATOR = os.platform === "win32" ? ";" : ":";
@@ -10,14 +18,9 @@ export class Path {
       inputParts = [inputParts];
     }
 
-    return inputParts
-      .map((part) => part.split(/(?:\/|\\)+/g))
-      .flat(1)
-      .filter((part, index) => {
-        // first part can be "" to represent left side of root "/"
-        if (index === 0) return true;
-        return Boolean(part);
-      });
+    return validateSegments(
+      inputParts.map((part) => part.split(/(?:\/|\\)+/g)).flat(1)
+    );
   }
 
   static detectSeparator<Fallback extends string | null = string>(
@@ -78,18 +81,26 @@ export class Path {
     segments: Array<string>,
     separator: string = Path.OS_SEGMENT_SEPARATOR
   ) {
-    const path = new Path("/");
-    path.segments = segments;
+    const path = new Path();
+    path.segments = validateSegments(segments);
     path.separator = separator;
     return path;
   }
 
   resolve(from: string | Path = os.getcwd()): Path {
+    if (this.isAbsolute()) {
+      return this.normalize();
+    }
+
     const fromPath = typeof from === "string" ? new Path(from) : from;
     const result = fromPath.concat(this).normalize();
     if (!result.isAbsolute()) {
-      throw new Error(
-        `Could not resolve ${this.toString()} from ${fromPath.toString()}`
+      throw makeErrorWithProperties(
+        `Could not resolve ${this.toString()} from ${fromPath.toString()}`,
+        {
+          this: this.toString(),
+          from: fromPath.toString(),
+        }
       );
     }
     return result;
@@ -103,18 +114,29 @@ export class Path {
     let currentSegment: string | undefined;
     while (segments.length > 0) {
       currentSegment = segments.shift();
-      if (currentSegment === "." || currentSegment === "..") {
-        if (newSegments.length === 0) {
-          newSegments.push(currentSegment);
-        }
 
-        if (currentSegment === "..") {
-          if (newSegments.length > 0) {
+      switch (currentSegment) {
+        case ".": {
+          if (newSegments.length === 0) {
+            newSegments.push(currentSegment);
+          }
+          break;
+        }
+        case "..": {
+          if (newSegments.length === 0) {
+            newSegments.push(currentSegment);
+          } else {
             newSegments.pop();
           }
+
+          break;
         }
-      } else if (currentSegment != null) {
-        newSegments.push(currentSegment);
+        default: {
+          if (currentSegment != null) {
+            newSegments.push(currentSegment);
+          }
+          break;
+        }
       }
     }
 
@@ -141,6 +163,11 @@ export class Path {
   }
 
   toString() {
-    return this.segments.join(this.separator);
+    const result = this.segments.join(this.separator);
+    if (result == "") {
+      return "/";
+    } else {
+      return result;
+    }
   }
 }

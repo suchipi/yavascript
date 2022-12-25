@@ -226,3 +226,133 @@ test("Path.resolve with absolute path with . and ..s in it", async () => {
     }
   `);
 });
+
+test("Path.resolve with non-absolute path with leading .", async () => {
+  const result = await evaluate(`Path.resolve("./hi/there/yeah")`, {
+    cwd: "/usr",
+  });
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "/usr/hi/there/yeah
+    ",
+    }
+  `);
+});
+
+test("Path.resolve with non-absolute path with leading ..", async () => {
+  const result = await evaluate(`Path.resolve("../hi/there/yeah")`, {
+    cwd: "/usr",
+  });
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "/hi/there/yeah
+    ",
+    }
+  `);
+});
+
+test("Path.resolve with unresolvable path (leading ..)", async () => {
+  const result = await evaluate(`Path.resolve("../hi/there/yeah")`, {
+    cwd: "/",
+  });
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": false,
+      "stderr": "Error: Could not resolve ../hi/there/yeah from / (this = "../hi/there/yeah", from = "/")
+      at makeErrorWithProperties
+      at resolve
+      at resolve
+      at <eval>
+      this: "../hi/there/yeah"
+      from: "/"
+    }
+    ",
+      "stdout": "",
+    }
+  `);
+});
+
+test("Path.normalize with absolute path with . and ..s in it", async () => {
+  const result = await evaluate(`Path.normalize("/hi/./there/yeah/../yup/./")`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "/hi/there/yup
+    ",
+    }
+  `);
+});
+
+test("Path.normalize with non-absolute path with . and ..s in it", async () => {
+  const result = await evaluate(`Path.normalize("hi/./there/yeah/../yup/./")`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "hi/there/yup
+    ",
+    }
+  `);
+});
+
+test("Path.normalize with already-absolute path", async () => {
+  const result = await evaluate(`Path.normalize("/hi/there/yeah")`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "/hi/there/yeah
+    ",
+    }
+  `);
+});
+
+test("Path.normalize with non-absolute path with no . or .. in it", async () => {
+  const result = await evaluate(`Path.normalize("hi/there/yeah")`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "hi/there/yeah
+    ",
+    }
+  `);
+});
+
+test("Path.normalize with non-absolute path with leading .", async () => {
+  const result = await evaluate(`Path.normalize("./hi/there/yeah")`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "./hi/there/yeah
+    ",
+    }
+  `);
+});
+
+test("Path.normalize with non-absolute path with leading ..", async () => {
+  const result = await evaluate(`Path.normalize("../hi/there/yeah")`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "../hi/there/yeah
+    ",
+    }
+  `);
+});
