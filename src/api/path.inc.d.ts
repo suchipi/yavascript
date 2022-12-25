@@ -1,5 +1,5 @@
 /** An object that represents a filesystem path. */
-export class Path {
+declare class Path {
   /** The character used to separate path segments on this OS. */
   static readonly OS_SEGMENT_SEPARATOR: "/" | "\\";
 
