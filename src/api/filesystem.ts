@@ -5,9 +5,17 @@ import { Path } from "./Path";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
 import { ls } from "./commands/ls";
+import { pipe } from "./pipe";
 
-export function readFile(path: string): string {
-  return std.loadFile(path);
+export function readFile(
+  path: string,
+  options: { binary?: boolean } = {}
+): string | ArrayBuffer {
+  if (options.binary) {
+    return pipe({ path }, ArrayBuffer).target;
+  } else {
+    return std.loadFile(path);
+  }
 }
 
 export function writeFile(path: string, data: string | ArrayBuffer): void {

@@ -1,7 +1,27 @@
 /**
- * Read the contents of a file from disk, as a UTF-8 string.
+ * Read the contents of a file from disk.
  */
-declare function readFile(path: string): string;
+declare const readFile: {
+  /**
+   * Read the contents of a file from disk, as a UTF-8 string.
+   */
+  (path: string): string;
+
+  /**
+   * Read the contents of a file from disk, as a UTF-8 string.
+   */
+  (path: string, options: {}): string;
+
+  /**
+   * Read the contents of a file from disk, as a UTF-8 string.
+   */
+  (path: string, options: { binary: false }): string;
+
+  /**
+   * Read the contents of a file from disk, as an ArrayBuffer.
+   */
+  (path: string, options: { binary: true }): ArrayBuffer;
+};
 
 /**
  * Write the contents of a string or ArrayBuffer to a file.

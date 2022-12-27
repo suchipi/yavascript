@@ -29,7 +29,7 @@ test("readlink", async () => {
   `);
 });
 
-test("readFile", async () => {
+test("readFile - string", async () => {
   const result = await evaluate(
     `readFile("${fileContentFixturesDir}/hello.txt")`
   );
@@ -40,6 +40,24 @@ test("readFile", async () => {
       "stderr": "",
       "stdout": "hello, world!!! :D
     あ
+    ",
+    }
+  `);
+});
+
+test("readFile - binary", async () => {
+  const result = await evaluate(
+    `readFile("${fileContentFixturesDir}/hello.txt", { binary: true })`
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "ArrayBuffer {
+      │0x00000000│ 68 65 6C 6C 6F 2C 20 77 6F 72 6C 64 21 21 21 20
+      │0x00000010│ 3A 44 0A E3 81 82
+    }
     ",
     }
   `);
