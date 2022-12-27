@@ -14,4 +14,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run tests
-        run: meta/build.sh && npm test
+        run: meta/docker/build-all.sh && npm test
