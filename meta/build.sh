@@ -9,7 +9,9 @@ set -ex
 cd $(git rev-parse --show-toplevel)
 
 # Use node 18
-fnm use
+if [[ "$SKIP_FNM_USE" == "" ]]; then
+  fnm use
+fi
 
 if [[ "$SKIP_NPM_INSTALL" == "" ]]; then
   npm install

@@ -1,4 +1,4 @@
-name: CI tests
+name: CI
 
 on:
   push:
@@ -13,5 +13,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run tests
-        run: meta/docker/build-all.sh && npm test
+      - name: Build and test
+        run: meta/scripts/ci.sh
