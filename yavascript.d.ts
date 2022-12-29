@@ -2443,6 +2443,22 @@ declare class Module {
    * enumerable properties of `obj`.
    */
   static define(name: string, obj: { [key: string]: any }): void;
+
+  /**
+   * Resolves a require/import request from `fromFile` into a canonicalized path.
+   *
+   * To change native module resolution behavior, replace this function with
+   * your own implementation.
+   */
+  static resolve(name: string, fromFile: string): string;
+
+  /**
+   * Reads the contents of the given resolved module name into a string.
+   *
+   * To change native module loading behavior, replace this function with your
+   * own implementation.
+   */
+  static read(modulePath: string): string;
 }
 
 /**
@@ -2477,7 +2493,7 @@ declare class Module {
  * will use those, too. It will search in the same order as the strings appear
  * in the `Module.searchExtensions` array.
  */
-declare var require: ((source: string) => { [key: string]: any }) & {
+declare var require: ((source: string) => any) & {
   /**
    * Resolves the normalized path to a modules, relative to the calling file.
    */
