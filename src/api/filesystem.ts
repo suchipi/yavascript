@@ -7,7 +7,14 @@ import traceAll from "./traceAll";
 import { ls } from "./commands/ls";
 import { pipe } from "./pipe";
 
-export function readFile(
+type ReadFile = {
+  (path: string): string;
+  (path: string, options: {}): string;
+  (path: string, options: { binary: false }): string;
+  (path: string, options: { binary: true }): ArrayBuffer;
+};
+
+export const readFile: ReadFile = function readFile(
   path: string,
   options: { binary?: boolean } = {}
 ): string | ArrayBuffer {
@@ -16,7 +23,7 @@ export function readFile(
   } else {
     return std.loadFile(path);
   }
-}
+} as any;
 
 export function writeFile(path: string, data: string | ArrayBuffer): void {
   const file = std.open(path, "w");
