@@ -102,6 +102,22 @@ const compilers = {
     });
     return compiled;
   },
+
+  autodetect(code: string, options?: CompilerOptions): string {
+    try {
+      return compilers.jsx(code, options);
+    } catch (err) {
+      try {
+        return compilers.tsx(code, options);
+      } catch (err2) {
+        try {
+          return compilers.coffee(code, options);
+        } catch (err3) {
+          return code;
+        }
+      }
+    }
+  },
 };
 
 export default compilers;

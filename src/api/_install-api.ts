@@ -4,7 +4,7 @@ import { makeGetterPropertyDescriptorMap } from "../lazy-load";
 
 import { grepFile, grepString, installToStringProto } from "./grep";
 import { install as installRegexpEscape } from "./regexp-escape";
-import { installNodeResolve } from "./node-resolve";
+import { installModuleHooks } from "./module-hooks";
 
 const quickjsBuiltinsProps = makeGetterPropertyDescriptorMap({
   std: () => require("std"),
@@ -178,5 +178,5 @@ export default function installApi(target: typeof globalThis) {
 
   installToStringProto(target.String.prototype);
   installRegexpEscape(target.RegExp);
-  installNodeResolve((target as any).Module);
+  installModuleHooks((target as any).Module);
 }

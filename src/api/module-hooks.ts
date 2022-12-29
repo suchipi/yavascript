@@ -1,8 +1,10 @@
+import * as std from "std";
 import * as os from "os";
 import { Path } from "./path";
 import { dirname } from "./commands/dirname";
 import { readFile } from "./filesystem";
 import { makeErrorWithProperties } from "../error-with-properties";
+import compilers from "../compilers";
 
 function isFile(path: string) {
   try {
@@ -49,7 +51,7 @@ function potentialFilesForPath(path: string) {
   return potentials;
 }
 
-export function installNodeResolve(mod: typeof Module) {
+export function installModuleHooks(mod: typeof Module) {
   const builtins = new Set(["os", "path"]);
 
   const originalDefine = mod.define;
@@ -58,12 +60,18 @@ export function installNodeResolve(mod: typeof Module) {
     builtins.add(name);
   };
 
+  const HTTP_RE = /^https?:\/\//i;
+
   mod.resolve = (name, fromFile) => {
-    if (Path.isAbsolute(name)) {
+    if (builtins.has(name)) {
       return name;
     }
 
-    if (builtins.has(name)) {
+    if (HTTP_RE.test(name)) {
+      return name;
+    }
+
+    if (Path.isAbsolute(name)) {
       return name;
     }
 
@@ -95,5 +103,15 @@ export function installNodeResolve(mod: typeof Module) {
         fromFile,
       }
     );
+  };
+
+  const originalRead = mod.read;
+  mod.read = (modulePath) => {
+    if (HTTP_RE.test(modulePath)) {
+      const content = std.urlGet(modulePath);
+      return compilers.autodetect(content, { filename: modulePath });
+    } else {
+      return originalRead(modulePath);
+    }
   };
 }
