@@ -24,7 +24,7 @@ export function installNodeCompat(global: any) {
       return scriptArgs[0];
     },
     get execPath() {
-      return os.readlink(os.execPath());
+      return os.realpath(os.execPath());
     },
   };
 }
