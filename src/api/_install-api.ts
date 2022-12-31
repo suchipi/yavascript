@@ -5,6 +5,7 @@ import { makeGetterPropertyDescriptorMap } from "../lazy-load";
 import { grepFile, grepString, installToStringProto } from "./grep";
 import { install as installRegexpEscape } from "./regexp-escape";
 import { installModuleHooks } from "./module-hooks";
+import { installNodeCompat } from "./node-compat";
 
 const quickjsBuiltinsProps = makeGetterPropertyDescriptorMap({
   std: () => require("quickjs:std"),
@@ -128,8 +129,8 @@ const startReplProps = makeGetterPropertyDescriptorMap({
   startRepl: () => require("./start-repl").startRepl,
 });
 
-const nodeCompatProps = makeGetterPropertyDescriptorMap({
-  process: () => require("./node-compat").process,
+const yavascriptProps = makeGetterPropertyDescriptorMap({
+  yavascript: () => require("./yavascript").yavascript,
 });
 
 import { get__filename, get__dirname } from "./__filename-and-__dirname";
@@ -157,7 +158,7 @@ export default function installApi(target: typeof globalThis) {
     ...traceAllProps,
     ...parseScriptArgsProps,
     ...startReplProps,
-    ...nodeCompatProps,
+    ...yavascriptProps,
 
     __filename: {
       get() {
@@ -179,4 +180,5 @@ export default function installApi(target: typeof globalThis) {
   installToStringProto(target.String.prototype);
   installRegexpEscape(target.RegExp);
   installModuleHooks((target as any).Module);
+  installNodeCompat(target);
 }

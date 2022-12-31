@@ -1,5 +1,5 @@
 import * as std from "quickjs:std";
-import version from "./VERSION_HARDCODED?evalAtBuildTime";
+import { version } from "../hardcoded";
 
 export default function versionTarget() {
   std.out.puts(version);

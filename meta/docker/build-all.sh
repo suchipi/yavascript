@@ -38,25 +38,28 @@ mkdir -p dist
 # generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
 in_docker node:${NODE_VERSION} meta/scripts/assemble-dts.sh
 
-# generate dist/index.js (bundles in dependencies from npm)
-in_docker node:${NODE_VERSION} npm run bundle
+# generate dist/index-*.js (bundles in dependencies from npm)
+in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=arm64 npm run bundle -- --output dist/index-arm64.js
+in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=x86_64 npm run bundle -- --output dist/index-x86_64.js
 
-# compile dist/index.js to bytecode
-cp dist/index.js yavascript-internal.js # to have clearer filename in stack traces
+# compile dist/index-*.js to bytecode
+cp dist/index-arm64.js yavascript-internal.js # to have clearer filename in stack traces
 in_docker node:${NODE_VERSION} meta/quickjs/build/linux-amd64/bin/qjs \
   meta/scripts/to-bytecode.mjs \
   yavascript-internal.js \
-  dist/index.bin
+  dist/index-arm64.bin
+cp dist/index-x86_64.js yavascript-internal.js # to have clearer filename in stack traces
+in_docker node:${NODE_VERSION} meta/quickjs/build/linux-amd64/bin/qjs \
+  meta/scripts/to-bytecode.mjs \
+  yavascript-internal.js \
+  dist/index-x86_64.bin
 
 mkdir -p bin
 
-for TARGET in \
-  darwin-arm64 \
-  darwin-x86_64 \
-  linux-amd64 \
-  linux-aarch64 \
-  windows-x86_64 \
-; do
+function make_program() {
+  TARGET="$1"
+  BYTECODE_FILE="$2"
+
   if [[ $TARGET = win* ]]; then
     EXE=".exe"
   else
@@ -67,10 +70,25 @@ for TARGET in \
   
   cat \
     meta/quickjs/build/${TARGET}/bin/qjsbootstrap-bytecode${EXE} \
-    dist/index.bin \
+    "${BYTECODE_FILE}" \
   > bin/${TARGET}/yavascript${EXE}
 
   chmod +x bin/${TARGET}/yavascript${EXE}
+}
+
+for TARGET in \
+  darwin-x86_64 \
+  linux-amd64 \
+  windows-x86_64 \
+; do
+  make_program "$TARGET" dist/index-x86_64.bin
+done
+
+for TARGET in \
+  darwin-arm64 \
+  linux-aarch64 \
+; do
+  make_program "$TARGET" dist/index-arm64.bin
 done
 
 # copy stuff into npm folder

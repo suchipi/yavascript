@@ -26,8 +26,7 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
-    "bundle": "npm run bundle:main && npm run bundle:primordials",
-    "bundle:main": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/index.ts --output dist/index.js",
+    "bundle": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/index.ts",
     "bundle:primordials": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/primordials.ts --output dist/primordials.js",
     "test": "jest --config=./meta/jest/config.js",
     "typecheck": "tsc --noEmit --skipLibCheck"

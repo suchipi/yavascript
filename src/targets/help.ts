@@ -1,6 +1,6 @@
 import * as std from "quickjs:std";
 import * as os from "quickjs:os";
-import version from "./VERSION_HARDCODED?evalAtBuildTime";
+import { version, arch } from "../hardcoded";
 import {
   blue,
   bold,
@@ -17,7 +17,7 @@ export default function helpTarget() {
   const boldOpt = (text: string) => bold(opt(text));
   const str = (text: string) => yellow(text);
 
-  const helpText = `yavascript ${version}
+  const helpText = `yavascript ${version} (${arch})
 
 ${bold("Usage:")} ${bin("yavascript")} ${opt("[options]")} [file-to-run]
 

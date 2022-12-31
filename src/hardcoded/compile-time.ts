@@ -38,4 +38,19 @@ function getVersion(): string {
   return "unknown";
 }
 
-module.exports = getVersion();
+function getArch(): string {
+  if (process.env.YAVASCRIPT_ARCH) {
+    return process.env.YAVASCRIPT_ARCH;
+  }
+
+  try {
+    return run("uname -m");
+  } catch (err) {
+    return "unknown";
+  }
+}
+
+module.exports = {
+  version: getVersion(),
+  arch: getArch(),
+};

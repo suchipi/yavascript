@@ -28,7 +28,7 @@ fi
 meta/scripts/assemble-dts.sh
 
 # generate dist/index.js (bundles in dependencies from npm)
-npm run bundle
+npm run bundle -- --output dist/index.js
 
 # compile dist/index.js to bytecode
 cp dist/index.js yavascript-internal.js # to have clearer filename in stack traces

@@ -1,17 +1,30 @@
 import * as os from "quickjs:os";
 import { env } from "./env";
+import { version as ysVersion, arch as ysArch } from "../hardcoded";
 
-export const process = {
-  get env() {
-    return env;
-  },
-  get argv() {
-    return scriptArgs;
-  },
-  get argv0() {
-    return scriptArgs[0];
-  },
-  get execPath() {
-    return os.readlink(os.execPath());
-  },
-};
+export function installNodeCompat(global: any) {
+  global.global = global;
+
+  global.process = {
+    // This version supports approximately the same syntax features as we do
+    version: "v16.19.0",
+    versions: {
+      node: "16.19.0",
+      yavascript: ysVersion,
+      unicode: "14.0",
+    },
+    arch: ysArch === "x86_64" ? "x64" : ysArch,
+    get env() {
+      return (require("./env") as typeof import("./env")).env;
+    },
+    get argv() {
+      return scriptArgs;
+    },
+    get argv0() {
+      return scriptArgs[0];
+    },
+    get execPath() {
+      return os.readlink(os.execPath());
+    },
+  };
+}
