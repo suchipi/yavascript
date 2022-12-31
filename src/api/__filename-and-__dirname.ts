@@ -1,5 +1,5 @@
-import * as std from "std";
-import * as os from "os";
+import * as std from "quickjs:std";
+import * as os from "quickjs:os";
 import { dirname } from "./commands/dirname";
 
 // Not public API; exported for __filename, which *is* a public API

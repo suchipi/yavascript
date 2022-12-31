@@ -7,8 +7,8 @@ import { install as installRegexpEscape } from "./regexp-escape";
 import { installModuleHooks } from "./module-hooks";
 
 const quickjsBuiltinsProps = makeGetterPropertyDescriptorMap({
-  std: () => require("std"),
-  os: () => require("os"),
+  std: () => require("quickjs:std"),
+  os: () => require("quickjs:os"),
 });
 
 import commandsProps from "./commands/_all";

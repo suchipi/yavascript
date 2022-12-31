@@ -1,6 +1,6 @@
 #!/usr/bin/env qjs
-import * as std from "std";
-import * as bytecode from "bytecode";
+import * as std from "quickjs:std";
+import * as bytecode from "quickjs:bytecode";
 
 const [_qjs, _toBytecode, input, output] = scriptArgs;
 

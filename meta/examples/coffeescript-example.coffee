@@ -3,11 +3,11 @@
 # YavaScript has builtin support for parsing and executing CoffeeScript files.
 
 # You can use import syntax...
-import * as std from 'std'
+import * as std from 'quickjs:std'
 echo typeof std
 
 # or require if you prefer
-os = require 'os'
+os = require 'quickjs:os'
 echo typeof os
 
 exec 'git status'

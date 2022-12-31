@@ -1,4 +1,4 @@
-import * as os from "os";
+import * as os from "quickjs:os";
 
 export function readlink(path: string): string {
   if (os.readlink == null) {

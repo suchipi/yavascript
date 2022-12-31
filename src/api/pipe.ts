@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "quickjs:std";
 import { TypedArray, TypedArrayConstructor } from "./typed-array";
 import { byte } from "./byte";
 import { is } from "./is";

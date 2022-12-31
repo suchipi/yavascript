@@ -1,4 +1,4 @@
-import * as os from "os";
+import * as os from "quickjs:os";
 import { env } from "./env";
 
 export const process = {

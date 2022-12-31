@@ -1,4 +1,4 @@
-import * as os from "os";
+import * as os from "quickjs:os";
 import minimatch from "minimatch";
 import { exists } from "./filesystem";
 import { pwd } from "./commands/pwd";

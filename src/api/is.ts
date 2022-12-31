@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "quickjs:std";
 import { is as baseIs } from "@suchipi/is";
 import { JSX } from "./jsx";
 

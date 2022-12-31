@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "quickjs:std";
 import * as esmToRequire from "../esm-to-require";
 import { NOTHING } from "./repl/special";
 import { langToCompiler } from "../langs";

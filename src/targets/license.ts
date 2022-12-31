@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "quickjs:std";
 import license from "../license-text";
 
 export default function licenseTarget() {

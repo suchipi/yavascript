@@ -1,5 +1,5 @@
-import * as std from "std";
-import * as os from "os";
+import * as std from "quickjs:std";
+import * as os from "quickjs:os";
 import { Path } from "./path";
 import { dirname } from "./commands/dirname";
 import { readFile } from "./filesystem";
@@ -52,7 +52,7 @@ function potentialFilesForPath(path: string) {
 }
 
 export function installModuleHooks(mod: typeof Module) {
-  const builtins = new Set(["os", "path"]);
+  const builtins = new Set(["quickjs:os", "path"]);
 
   const originalDefine = mod.define;
   mod.define = (name, obj) => {

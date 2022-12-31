@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "quickjs:std";
 
 export function cat(...paths: Array<string>): string {
   let content = "";

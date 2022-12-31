@@ -21,8 +21,8 @@ test("ignores incorrect esm syntax", async () => {
 test("transforms bare import", async () => {
   expect(transform(`import "a"`)).toBe(`require("a")`);
   expect(transform(` import    'a'`)).toBe(`require('a')`);
-  expect(transform(`import "std"`)).toBe(`require("std")`);
-  expect(transform(`import 'std'`)).toBe(`require('std')`);
+  expect(transform(`import "quickjs:std"`)).toBe(`require("quickjs:std")`);
+  expect(transform(`import 'quickjs:std'`)).toBe(`require('quickjs:std')`);
   expect(transform(` import    'a'`)).toBe(`require('a')`);
 });
 
@@ -31,8 +31,12 @@ test("transforms namespace import", async () => {
   expect(transform(`import       * \n as a   from    'a'`)).toBe(
     `a = require('a')`
   );
-  expect(transform(`import * as std from "std"`)).toBe(`std = require("std")`);
-  expect(transform(`import * as std from 'std'`)).toBe(`std = require('std')`);
+  expect(transform(`import * as std from "quickjs:std"`)).toBe(
+    `std = require("quickjs:std")`
+  );
+  expect(transform(`import * as std from 'quickjs:std'`)).toBe(
+    `std = require('quickjs:std')`
+  );
 });
 
 test("transforms default import", async () => {
@@ -40,11 +44,11 @@ test("transforms default import", async () => {
   expect(transform(`import      \n\t  a   from    'a'`)).toBe(
     `a = require('a').default`
   );
-  expect(transform(`import std from "std"`)).toBe(
-    `std = require("std").default`
+  expect(transform(`import std from "quickjs:std"`)).toBe(
+    `std = require("quickjs:std").default`
   );
-  expect(transform(`import std from 'std'`)).toBe(
-    `std = require('std').default`
+  expect(transform(`import std from 'quickjs:std'`)).toBe(
+    `std = require('quickjs:std').default`
   );
 });
 

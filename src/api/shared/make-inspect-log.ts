@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "quickjs:std";
 import * as inspectOptions from "../../inspect-options";
 
 export const makeInspectLog =

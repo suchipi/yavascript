@@ -7,9 +7,9 @@ const stubPath = path.resolve(__dirname, "kame-module-stub.js");
 
 exports.resolve = (id, fromFilePath) => {
   switch (id) {
-    case "os":
+    case "quickjs:os":
       return "external:os";
-    case "std":
+    case "quickjs:std":
       return "external:std";
 
     // intentionally unresolved; coffeescript checks for this in a try-catch,

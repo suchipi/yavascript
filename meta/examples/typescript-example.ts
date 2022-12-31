@@ -3,7 +3,7 @@
 
 // YavaScript has builtin support for parsing and executing TypeScript files.
 
-import * as std from "std";
+import * as std from "quickjs:std";
 echo(typeof std, std instanceof Module);
 
 function look(path: string) {

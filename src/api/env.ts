@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "quickjs:std";
 
 const _env = std.getenviron();
 

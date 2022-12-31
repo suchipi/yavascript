@@ -1,4 +1,4 @@
-import * as os from "os";
+import * as os from "quickjs:os";
 import { makeErrorWithProperties } from "../error-with-properties";
 
 function validateSegments(segments: Array<string>): Array<string> {

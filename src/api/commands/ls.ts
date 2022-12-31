@@ -1,4 +1,4 @@
-import * as os from "os";
+import * as os from "quickjs:os";
 import { pwd } from "./pwd";
 import { Path } from "../path";
 import { isDir } from "../filesystem";

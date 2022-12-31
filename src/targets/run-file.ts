@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "quickjs:std";
 import { langToCompiler } from "../langs";
 import { extname } from "../api/commands/extname";
 

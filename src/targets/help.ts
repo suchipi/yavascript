@@ -1,5 +1,5 @@
-import * as std from "std";
-import * as os from "os";
+import * as std from "quickjs:std";
+import * as os from "quickjs:os";
 import version from "./VERSION_HARDCODED?evalAtBuildTime";
 import {
   blue,

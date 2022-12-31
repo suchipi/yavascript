@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "quickjs:std";
 
 // @ts-ignore cannot find module
 import dtsText from "../../dist/yavascript.d.ts?contentString";

@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "quickjs:std";
 
 export default function invalidTarget(message: string) {
   std.err.puts(message + "\n");
