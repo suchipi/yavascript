@@ -1,6 +1,7 @@
 import * as std from "quickjs:std";
 import { langToCompiler } from "../langs";
 import { extname } from "../api/commands/extname";
+import { Path } from "../api/path";
 
 export default function runFileTarget(
   fileToRun: string,
@@ -22,5 +23,9 @@ export default function runFileTarget(
     };
   }
 
-  std.importModule(fileToRun, "./<cwd>");
+  const pathToImport = Path.isAbsolute(fileToRun)
+    ? fileToRun
+    : "./" + fileToRun;
+
+  std.importModule(pathToImport, "./<cwd>");
 }
