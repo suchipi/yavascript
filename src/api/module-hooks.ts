@@ -52,7 +52,7 @@ function potentialFilesForPath(path: string) {
 }
 
 export function installModuleHooks(mod: typeof Module) {
-  const builtins = new Set(["quickjs:os", "path"]);
+  const builtins = new Set(["quickjs:std", "quickjs:os"]);
 
   const originalDefine = mod.define;
   mod.define = (name, obj) => {
