@@ -1,0 +1,4 @@
+// comments are supported in json that gets imported using the import keyword
+{
+  "hello": "there"
+}
