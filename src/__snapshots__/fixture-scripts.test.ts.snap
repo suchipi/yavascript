@@ -31,21 +31,12 @@ exports[`http-import-error.js 1`] = `
   "code": 1,
   "error": false,
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "http://suchipi.com/there-is-nothing-at-this-path")
-  at makeErrorWithPropertie
-  at readModul
-  at <anonymous
-  at importModul
-  at runFileTarge
-  at mai
-  at sr
-  at runModul
-  at factor
-  at <anonymous
-  at <eval
+  at somewhere {
+
   httpStatusCode: 404
   url: "http://suchipi.com/there-is-nothing-at-this-path"
-  httpResponseHeaders: "Location: https://suchipi.com/there-is-nothing-at-this-path\\r\\nServer: Netlify\\r\\nX-Nf-Request-Id: 01GQYC22DVVJH9XRV3QG5DRBJY\\r\\nDate: Sun, 29 Jan 2023 08:59:47 GMT\\r\\nContent-Length: 64\\r\\nContent-Type: text/plain; charset=utf-8\\r\\nlocation: https://www.suchipi.com/there-is-nothing-at-this-path\\r\\nserver: Netlify\\r\\nstrict-transport-security: max-age=31536000\\r\\nx-nf-request-id: 01GQYC22PZK8C0B9GZ3B69RS0Z\\r\\ncontent-type: text/plain; charset=utf-8\\r\\ncontent-length: 68\\r\\ndate: Sun, 29 Jan 2023 08:59:47 GMT"
-  httpResponseBody: "<!DOCTYPE html>\\n<html>\\n  <head>\\n    <meta charset="utf-8">\\n    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">\\n\\n    <title>Page Not Found</title>\\n    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>\\n    <style>\\n    body {\\n      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";\\n      background: rgb(52, 56, 60);\\n      color: white;\\n      overflow: hidden;\\n      margin: 0;\\n      padding: 0;\\n    }\\n\\n    h1 {\\n      margin: 0;\\n      font-size: 22px;\\n      line-height: 24px;\\n    }\\n\\n    .main {\\n      position: relative;\\n      display: flex;\\n      flex-direction: column;\\n      align-items: center;\\n      justify-content: center;\\n      height: 100vh;\\n      width: 100vw;\\n    }\\n\\n    .card {\\n      position: relative;\\n      display: flex;\\n      flex-direction: column;\\n      width: 75%;\\n      max-width: 364px;\\n      padding: 24px;\\n      background: white;\\n      color: rgb(14, 30, 37);\\n      border-radius: 8px;\\n      box-shadow: 0 2px 4px 0 rgba(14, 30, 37, .16);\\n    }\\n\\n    a {\\n      margin: 0;\\n      font-weight: 600;\\n      line-height: 24px;\\n      color: #054861;\\n    }\\n\\n    a svg {\\n      position: relative;\\n      top: 2px;\\n    }\\n\\n    a:hover,\\n    a:focus {\\n      text-decoration: none;\\n    }\\n\\n    a:hover svg path{\\n      fill: #007067;\\n    }\\n\\n    p:last-of-type {\\n      margin-bottom: 0;\\n    }\\n\\n    </style>\\n  </head>\\n  <body>\\n    <div class="main">\\n      <div class="card">\\n        <div class="header">\\n          <h1>Page Not Found</h1>\\n        </div>\\n        <div class="body">\\n          <p>Looks like you've followed a broken link or entered a URL that doesn't exist on this site.</p>\\n          <p>\\n            <a id="back-link" href="/">\\n              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">\\n                <path fill="#007067" d="M11.9998836,4.09370803 L8.55809517,7.43294953 C8.23531459,7.74611298 8.23531459,8.25388736 8.55809517,8.56693769 L12,11.9062921 L9.84187871,14 L4.24208544,8.56693751 C3.91930485,8.25388719 3.91930485,7.74611281 4.24208544,7.43294936 L9.84199531,2 L11.9998836,4.09370803 Z"/>\\n              </svg>\\n              Back to our site\\n             </a>\\n          </p>\\n          <hr><p>If this is your site, and you weren't expecting a 404 for this path, please visit Netlify's <a href="https://answers.netlify.com/t/support-guide-i-ve-deployed-my-site-but-i-still-see-page-not-found/125?utm_source=404page&utm_campaign=community_tracking">"page not found" support guide</a> for troubleshooting tips.\\n          </p>\\n        </div>\\n      </div>\\n    </div>\\n    <script>\\n      (function() {\\n        if (document.referrer && document.location.host && document.referrer.match(new RegExp("^https?://" + document.location.host))) {\\n          document.getElementById("back-link").setAttribute("href", document.referrer);\\n        }\\n      })();\\n    </script>\\n  </body>\\n</html>\\n"
+  httpResponseHeaders: <redacted>
+  httpResponseBody: <redacted>
 }
 ",
   "stdout": "",
@@ -57,22 +48,12 @@ exports[`https-import-error.js 1`] = `
   "code": 1,
   "error": false,
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "https://suchipi.com/there-is-nothing-at-this-path")
-  at makeErrorWithPropertie
-  at readModul
-  at readModul
-  at <anonymous
-  at importModul
-  at runFileTarge
-  at mai
-  at sr
-  at runModul
-  at factor
-  at <anonymous
-  at <eval
+  at somewhere {
+
   httpStatusCode: 404
   url: "https://suchipi.com/there-is-nothing-at-this-path"
-  httpResponseHeaders: "location: https://www.suchipi.com/there-is-nothing-at-this-path\\r\\nserver: Netlify\\r\\nstrict-transport-security: max-age=31536000\\r\\nx-nf-request-id: 01GQYC23DB8TH6GXKJHMH1N6P5\\r\\ncontent-type: text/plain; charset=utf-8\\r\\ncontent-length: 68\\r\\ndate: Sun, 29 Jan 2023 08:59:48 GMT"
-  httpResponseBody: "<!DOCTYPE html>\\n<html>\\n  <head>\\n    <meta charset="utf-8">\\n    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">\\n\\n    <title>Page Not Found</title>\\n    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>\\n    <style>\\n    body {\\n      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";\\n      background: rgb(52, 56, 60);\\n      color: white;\\n      overflow: hidden;\\n      margin: 0;\\n      padding: 0;\\n    }\\n\\n    h1 {\\n      margin: 0;\\n      font-size: 22px;\\n      line-height: 24px;\\n    }\\n\\n    .main {\\n      position: relative;\\n      display: flex;\\n      flex-direction: column;\\n      align-items: center;\\n      justify-content: center;\\n      height: 100vh;\\n      width: 100vw;\\n    }\\n\\n    .card {\\n      position: relative;\\n      display: flex;\\n      flex-direction: column;\\n      width: 75%;\\n      max-width: 364px;\\n      padding: 24px;\\n      background: white;\\n      color: rgb(14, 30, 37);\\n      border-radius: 8px;\\n      box-shadow: 0 2px 4px 0 rgba(14, 30, 37, .16);\\n    }\\n\\n    a {\\n      margin: 0;\\n      font-weight: 600;\\n      line-height: 24px;\\n      color: #054861;\\n    }\\n\\n    a svg {\\n      position: relative;\\n      top: 2px;\\n    }\\n\\n    a:hover,\\n    a:focus {\\n      text-decoration: none;\\n    }\\n\\n    a:hover svg path{\\n      fill: #007067;\\n    }\\n\\n    p:last-of-type {\\n      margin-bottom: 0;\\n    }\\n\\n    </style>\\n  </head>\\n  <body>\\n    <div class="main">\\n      <div class="card">\\n        <div class="header">\\n          <h1>Page Not Found</h1>\\n        </div>\\n        <div class="body">\\n          <p>Looks like you've followed a broken link or entered a URL that doesn't exist on this site.</p>\\n          <p>\\n            <a id="back-link" href="/">\\n              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">\\n                <path fill="#007067" d="M11.9998836,4.09370803 L8.55809517,7.43294953 C8.23531459,7.74611298 8.23531459,8.25388736 8.55809517,8.56693769 L12,11.9062921 L9.84187871,14 L4.24208544,8.56693751 C3.91930485,8.25388719 3.91930485,7.74611281 4.24208544,7.43294936 L9.84199531,2 L11.9998836,4.09370803 Z"/>\\n              </svg>\\n              Back to our site\\n             </a>\\n          </p>\\n          <hr><p>If this is your site, and you weren't expecting a 404 for this path, please visit Netlify's <a href="https://answers.netlify.com/t/support-guide-i-ve-deployed-my-site-but-i-still-see-page-not-found/125?utm_source=404page&utm_campaign=community_tracking">"page not found" support guide</a> for troubleshooting tips.\\n          </p>\\n        </div>\\n      </div>\\n    </div>\\n    <script>\\n      (function() {\\n        if (document.referrer && document.location.host && document.referrer.match(new RegExp("^https?://" + document.location.host))) {\\n          document.getElementById("back-link").setAttribute("href", document.referrer);\\n        }\\n      })();\\n    </script>\\n  </body>\\n</html>\\n"
+  httpResponseHeaders: <redacted>
+  httpResponseBody: <redacted>
 }
 ",
   "stdout": "",
@@ -125,23 +106,12 @@ exports[`npm-proto-import-error.js 1`] = `
   "code": 1,
   "error": false,
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "https://cdn.skypack.dev/@suchipi/this-package-does-not-exist")
-  at makeErrorWithPropertie
-  at readModul
-  at readModul
-  at readModul
-  at <anonymous
-  at importModul
-  at runFileTarge
-  at mai
-  at sr
-  at runModul
-  at factor
-  at <anonymous
-  at <eval
+  at somewhere {
+
   httpStatusCode: 404
   url: "https://cdn.skypack.dev/@suchipi/this-package-does-not-exist"
-  httpResponseHeaders: ""
-  httpResponseBody: "Package "@suchipi/this-package-does-not-exist" not found on npm."
+  httpResponseHeaders: <redacted>
+  httpResponseBody: <redacted>
 }
 ",
   "stdout": "",

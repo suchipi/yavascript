@@ -266,10 +266,8 @@ test("Path.resolve with unresolvable path (leading ..)", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: Could not resolve ../hi/there/yeah from / (this = "../hi/there/yeah", from = "/")
-      at makeErrorWithProperties
-      at resolve
-      at resolve
-      at <eval>
+      at somewhere {
+
       this: "../hi/there/yeah"
       from: "/"
     }

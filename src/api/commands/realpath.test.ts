@@ -57,9 +57,8 @@ test("realpath against dead link throws error", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: No such file or directory (errno = 2, path = ./dead-link)
-      at realpath
-      at realpath
-      at <eval>
+      at somewhere {
+
       errno: 2
       path: "./dead-link"
     }
@@ -78,9 +77,8 @@ test("realpath against non-existent target throws error", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: No such file or directory (errno = 2, path = ./this doesn't exist, bro)
-      at realpath
-      at realpath
-      at <eval>
+      at somewhere {
+
       errno: 2
       path: "./this doesn't exist, bro"
     }

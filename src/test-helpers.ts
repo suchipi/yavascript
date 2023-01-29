@@ -53,7 +53,25 @@ export function inspect(value: any): string {
 
 export function cleanOutput(input: string): string {
   return stripAnsi(input)
-    .replace(/  at ([A-Za-z0-9\-_$<>]+)[^\n]+/g, "  at $1")
+    .split("\n")
+    .map((line) => {
+      if (/  at ([A-Za-z0-9\-_$<>]+)/g.test(line)) {
+        if (line.endsWith("{")) {
+          return "  at somewhere {";
+        } else {
+          return "  at somewhere";
+        }
+      } else if (line.startsWith("  httpResponseHeaders:")) {
+        return "  httpResponseHeaders: <redacted>";
+      } else if (line.startsWith("  httpResponseBody:")) {
+        return "  httpResponseBody: <redacted>";
+      } else {
+        return line;
+      }
+    })
+    .join("\n")
+    .replace(/(  at somewhere\n)+/g, "  at somewhere\n")
+    .replace(/  at somewhere\n  at somewhere \{/g, "  at somewhere {\n")
     .replace(new RegExp(TMP, "g"), "/tmp")
     .replace(new RegExp(binaryPath, "g"), "<yavascript binary>")
     .replace(new RegExp(rootDir(), "g"), "<rootDir>");

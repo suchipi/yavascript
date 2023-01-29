@@ -7,7 +7,7 @@ test("prints thrown errors to stderr", async () => {
       "code": 1,
       "error": false,
       "stderr": "ReferenceError: 'blahhhh' is not defined
-      at <eval>
+      at somewhere
     ",
       "stdout": "",
     }
@@ -36,7 +36,7 @@ test("prints extra error properties to stderr", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: hi
-      at <eval>
+      at somewhere {
       something: true
       somethingElse: false
     }

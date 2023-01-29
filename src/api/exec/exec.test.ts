@@ -37,9 +37,8 @@ test("exec false - string", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
-      at makeErrorWithProperties
-      at exec
-      at <eval>
+      at somewhere {
+
       status: 1
       signal: undefined
     }
@@ -56,9 +55,8 @@ test("exec false - array", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
-      at makeErrorWithProperties
-      at exec
-      at <eval>
+      at somewhere {
+
       status: 1
       signal: undefined
     }
@@ -240,10 +238,8 @@ test("$ false", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
-      at makeErrorWithProperties
-      at exec
-      at $
-      at <eval>
+      at somewhere {
+
       status: 1
       signal: undefined
     }

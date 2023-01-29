@@ -448,8 +448,7 @@ test("ensureDir - file collision errors", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: Wanted to ensure that the directory path src/test_fixtures/ensure_dir/collision/file existed, but src/test_fixtures/ensure_dir/collision/file was a file, not a directory
-      at ensureDir
-      at <eval>
+      at somewhere
     ",
       "stdout": "",
     }
