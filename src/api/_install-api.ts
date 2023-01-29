@@ -6,6 +6,7 @@ import { grepFile, grepString, installToStringProto } from "./grep";
 import { install as installRegexpEscape } from "./regexp-escape";
 import { installModuleHooks } from "./module-hooks";
 import { installNodeCompat } from "./node-compat";
+import { patchRequire } from "../cjs-interop";
 
 const quickjsBuiltinsProps = makeGetterPropertyDescriptorMap({
   std: () => require("quickjs:std"),
@@ -181,4 +182,5 @@ export default function installApi(target: typeof globalThis) {
   installRegexpEscape(target.RegExp);
   installModuleHooks((target as any).Module);
   installNodeCompat(target);
+  patchRequire(target);
 }

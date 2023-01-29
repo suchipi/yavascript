@@ -3,6 +3,7 @@
 
 import "./coffee";
 import "./empty";
+import "./js";
 import "./json";
 import "./jsx";
 import "./ts";

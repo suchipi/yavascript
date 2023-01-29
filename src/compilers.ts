@@ -1,4 +1,5 @@
 import { memoize } from "./lazy-load";
+import * as CJS from "./cjs-interop";
 
 const getSucrase: () => typeof import("sucrase") = memoize(
   () => require("sucrase") as any
@@ -62,11 +63,13 @@ function compileUsingSucrase(
 
 const compilers = {
   js(code: string, options?: CompilerOptions): string {
-    return code;
+    if (!CJS.looksLikeCommonJS(code)) return code;
+    if (options?.expression) return code;
+    return CJS.wrapCommonJSCode(code);
   },
 
   tsx(code: string, options?: CompilerOptions): string {
-    return compileUsingSucrase(stripShebangs(code), options, {
+    const compiled = compileUsingSucrase(stripShebangs(code), options, {
       transforms: ["typescript", "jsx"],
       // We read this from the global because the user is allowed to
       // change JSX.pragma to change this.
@@ -75,16 +78,18 @@ const compilers = {
       // change JSX.pragmaFrag to change this.
       jsxFragmentPragma: globalThis.JSX.pragmaFrag,
     });
+    return compilers.js(compiled, options);
   },
 
   ts(code: string, options?: CompilerOptions): string {
-    return compileUsingSucrase(stripShebangs(code), options, {
+    const compiled = compileUsingSucrase(stripShebangs(code), options, {
       transforms: ["typescript"],
     });
+    return compilers.js(compiled, options);
   },
 
   jsx(code: string, options?: CompilerOptions): string {
-    return compileUsingSucrase(stripShebangs(code), options, {
+    const compiled = compileUsingSucrase(stripShebangs(code), options, {
       transforms: ["jsx"],
       // We read this from the global because the user is allowed to
       // change JSX.pragma to change this.
@@ -93,6 +98,7 @@ const compilers = {
       // change JSX.pragmaFrag to change this.
       jsxFragmentPragma: globalThis.JSX.pragmaFrag,
     });
+    return compilers.js(compiled, options);
   },
 
   coffee(code: string, options?: CompilerOptions): string {
@@ -100,7 +106,7 @@ const compilers = {
       bare: true,
       filename: options?.filename,
     });
-    return compiled;
+    return compilers.js(compiled, options);
   },
 
   autodetect(code: string, options?: CompilerOptions): string {

@@ -1,5 +1,4 @@
 import * as os from "quickjs:os";
-import { env } from "./env";
 import { version as ysVersion, arch as ysArch } from "../hardcoded";
 
 export function installNodeCompat(global: any) {

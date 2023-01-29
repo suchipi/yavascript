@@ -38,6 +38,39 @@ declare const yavascript: {
    * Will always be in the format "ES" + a year. Is never lower than ES2020.
    */
   ecmaVersion: string;
+
+  /** The compilers yavascript uses internally to load files. */
+  compilers: {
+    js(
+      code: string,
+      options?: { filename?: string; expression?: boolean }
+    ): string;
+
+    tsx(
+      code: string,
+      options?: { filename?: string; expression?: boolean }
+    ): string;
+
+    ts(
+      code: string,
+      options?: { filename?: string; expression?: boolean }
+    ): string;
+
+    jsx(
+      code: string,
+      options?: { filename?: string; expression?: boolean }
+    ): string;
+
+    coffee(
+      code: string,
+      options?: { filename?: string; expression?: boolean }
+    ): string;
+
+    autodetect(
+      code: string,
+      options?: { filename?: string; expression?: boolean }
+    ): string;
+  };
 };
 
 /**
