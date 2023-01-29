@@ -1,6 +1,4 @@
-import * as os from "quickjs:os";
 import * as inspectOptions from "./inspect-options";
-import { blue } from "./api/strings";
 
 const normalProps = new Set(["name", "message", "stack"]);
 
