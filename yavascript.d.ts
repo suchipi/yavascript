@@ -2477,13 +2477,6 @@ declare class Module {
   static define(name: string, obj: { [key: string]: any }): void;
 
   /**
-   * Get the module namespace object for the currently-running module.
-   *
-   * If the currently-running code is not a module, an error will be thrown.
-   */
-  static getNamespace(): any;
-
-  /**
    * Resolves a require/import request from `fromFile` into a canonicalized path.
    *
    * To change native module resolution behavior, replace this function with
