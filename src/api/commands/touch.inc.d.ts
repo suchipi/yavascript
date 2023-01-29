@@ -5,4 +5,4 @@
  *
  * @param path The target path for the file.
  */
-declare function touch(path: string): void;
+declare function touch(path: string | Path): void;

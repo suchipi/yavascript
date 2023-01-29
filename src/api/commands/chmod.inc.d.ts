@@ -39,5 +39,5 @@ declare function chmod(
     | number
     | string
     | Record<ChmodPermissionsWho, ChmodPermissionsWhat>,
-  path: string
+  path: string | Path
 ): void;

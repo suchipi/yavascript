@@ -1,8 +1,20 @@
 import * as std from "quickjs:std";
+import { assert } from "../assert";
+import { is } from "../is";
+import type { Path } from "../path";
 
-export function cat(...paths: Array<string>): string {
+export function cat(...paths: Array<string | Path>): string {
   let content = "";
-  for (const path of paths) {
+  for (let path of paths) {
+    if (is.Path(path)) {
+      path = path.toString();
+    }
+
+    assert.string(
+      path,
+      "'path' argument must be either a string or a Path object"
+    );
+
     const newContent = std.loadFile(path);
     content += newContent;
     std.out.puts(newContent);

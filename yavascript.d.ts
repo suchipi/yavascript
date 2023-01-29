@@ -420,13 +420,13 @@ declare const __dirname: string;
  *
  * Provides the same functionality as the unix binary of the same name.
  */
-declare function basename(path: string): string;
+declare function basename(path: string | Path): string;
 
 /**
  * Read the contents of one of more files from disk as one UTF-8 string,
  * print that string to stdout, then return it.
  */
-declare function cat(...paths: Array<string>): string;
+declare function cat(...paths: Array<string | Path>): string;
 
 /**
  * Change the process's current working directory to the specified path. If no
@@ -434,7 +434,7 @@ declare function cat(...paths: Array<string>): string;
  *
  * Provides the same functionality as the shell builtin of the same name.
  */
-declare function cd(path?: string): void;
+declare function cd(path?: string | Path): void;
 
 /** A string representing who a permission applies to. */
 declare type ChmodPermissionsWho =
@@ -477,7 +477,7 @@ declare function chmod(
     | number
     | string
     | Record<ChmodPermissionsWho, ChmodPermissionsWhat>,
-  path: string
+  path: string | Path
 ): void;
 
 /**
@@ -485,7 +485,7 @@ declare function chmod(
  *
  * Provides the same functionality as the unix binary of the same name.
  */
-declare function dirname(path: string): string;
+declare function dirname(path: string | Path): string;
 
 /**
  * Print one or more values to stdout.
@@ -500,7 +500,7 @@ declare const echo: typeof console.log;
  * Pass `{ full: true }` to get compound extensions, eg `.d.ts` or `.test.js` instead of just `.ts`/`.js`.
  */
 declare function extname(
-  pathOrFilename: string,
+  pathOrFilename: string | Path,
   options?: { full?: boolean }
 ): string;
 
@@ -512,7 +512,7 @@ declare function extname(
  * the parent directory).
  */
 declare function ls(
-  dir?: string,
+  dir?: string | Path,
   options?: { relativePaths?: boolean }
 ): Array<string>;
 
@@ -535,7 +535,7 @@ declare function pwd(): string;
  *
  * Provides the same functionality as the unix binary of the same name.
  */
-declare function readlink(path: string): string;
+declare function readlink(path: string | Path): string;
 
 /**
  * Get the absolute path given a relative path. Symlinks are also resolved.
@@ -544,7 +544,7 @@ declare function readlink(path: string): string;
  *
  * Provides the same functionality as the unix binary of the same name.
  */
-declare function realpath(path: string): string;
+declare function realpath(path: string | Path): string;
 
 /**
  * If the file at `path` exists, update its creation/modification timestamps.
@@ -553,7 +553,7 @@ declare function realpath(path: string): string;
  *
  * @param path The target path for the file.
  */
-declare function touch(path: string): void;
+declare function touch(path: string | Path): void;
 
 declare type BaseExecOptions = {
   /** Sets the current working directory for the child process. */
@@ -1077,6 +1077,8 @@ declare const is: {
   AsyncGeneratorFunction(value: any): value is AsyncGeneratorFunction;
 
   FILE(value: any): value is FILE;
+  Module(value: any): value is { [key: string]: any };
+  Path(value: any): value is Path;
 
   JSX: {
     /** Returns whether `value` is a JSX Element object as created via JSX syntax. */

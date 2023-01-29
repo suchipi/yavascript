@@ -6,6 +6,6 @@
  * Pass `{ full: true }` to get compound extensions, eg `.d.ts` or `.test.js` instead of just `.ts`/`.js`.
  */
 declare function extname(
-  pathOrFilename: string,
+  pathOrFilename: string | Path,
   options?: { full?: boolean }
 ): string;

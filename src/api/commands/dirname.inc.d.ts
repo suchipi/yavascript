@@ -3,4 +3,4 @@
  *
  * Provides the same functionality as the unix binary of the same name.
  */
-declare function dirname(path: string): string;
+declare function dirname(path: string | Path): string;

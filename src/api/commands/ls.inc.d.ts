@@ -6,6 +6,6 @@
  * the parent directory).
  */
 declare function ls(
-  dir?: string,
+  dir?: string | Path,
   options?: { relativePaths?: boolean }
 ): Array<string>;

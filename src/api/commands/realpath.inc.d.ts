@@ -5,4 +5,4 @@
  *
  * Provides the same functionality as the unix binary of the same name.
  */
-declare function realpath(path: string): string;
+declare function realpath(path: string | Path): string;

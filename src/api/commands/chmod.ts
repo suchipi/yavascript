@@ -1,4 +1,8 @@
 import * as os from "quickjs:os";
+import { is } from "../is";
+import { assert } from "../assert";
+import { makeErrorWithProperties } from "../../error-with-properties";
+import type { Path } from "../path";
 
 type ChmodPermissionsWho =
   | "user"
@@ -122,28 +126,39 @@ export function chmod(
     | number
     | string
     | Record<ChmodPermissionsWho, ChmodPermissionsWhat>,
-  path: string
+  path: string | Path
 ) {
-  const permNum = (function parseInputPermissions() {
-    if (typeof permissions === "number") {
-      return permissions;
-    } else if (typeof permissions === "string") {
-      const asNum = parseInt(permissions, 8);
-      if (Number.isNaN(asNum)) {
-        throw new Error(
-          `Invalid permissions string: ${permissions}. It should be an octal-representation number, like "750".`
-        );
-      } else {
-        return asNum;
-      }
-    } else if (typeof permissions === "object" && permissions != null) {
-      return permsFor(...(Object.entries(permissions) as any));
-    }
+  if (is.Path(path)) {
+    path = path.toString();
+  }
 
-    throw new Error(
-      `Invalid 'permissions' argument: ${permissions}. It should be a number, string, or object.`
+  assert.string(
+    path,
+    "'path' argument must be either a string or a Path object"
+  );
+
+  let permNum: number;
+
+  if (is.number(permissions)) {
+    permNum = permissions;
+  } else if (is.string(permissions)) {
+    const asNum = parseInt(permissions, 8);
+    if (Number.isNaN(asNum)) {
+      throw new Error(
+        `Invalid permissions string: ${permissions}. It should be an octal-representation number, like "750".`
+      );
+    } else {
+      permNum = asNum;
+    }
+  } else if (is.object(permissions)) {
+    permNum = permsFor(...(Object.entries(permissions) as any));
+  } else {
+    throw makeErrorWithProperties(
+      "'permissions' argument must be a number, string, or object",
+      { actual: permissions },
+      TypeError
     );
-  })();
+  }
 
   os.chmod(path, permNum);
 }

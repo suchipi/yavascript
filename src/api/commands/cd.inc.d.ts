@@ -4,4 +4,4 @@
  *
  * Provides the same functionality as the shell builtin of the same name.
  */
-declare function cd(path?: string): void;
+declare function cd(path?: string | Path): void;
