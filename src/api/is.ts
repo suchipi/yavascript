@@ -1,6 +1,7 @@
 import * as std from "quickjs:std";
 import { is as baseIs } from "@suchipi/is";
 import { JSX } from "./jsx";
+import { Path } from "./path";
 
 export const is = {
   ...baseIs,
@@ -9,6 +10,9 @@ export const is = {
   },
   Module(value: any) {
     return value instanceof Module;
+  },
+  Path(value: any) {
+    return value instanceof Path;
   },
   JSX: {
     Element(value: any) {

@@ -91,6 +91,8 @@ declare const is: {
   AsyncGeneratorFunction(value: any): value is AsyncGeneratorFunction;
 
   FILE(value: any): value is FILE;
+  Module(value: any): value is { [key: string]: any };
+  Path(value: any): value is Path;
 
   JSX: {
     /** Returns whether `value` is a JSX Element object as created via JSX syntax. */
