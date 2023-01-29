@@ -28,132 +28,86 @@ exports[`__filename-and-__dirname-2.js 1`] = `
 
 exports[`importing-json.js 1`] = `
 {
-  "code": 1,
+  "code": 0,
   "error": false,
-  "stderr": "SyntaxError: expecting ';'
-  at <rootDir>
-  at importModul
-  at runFileTarge
-  at mai
-  at sr
-  at runModul
-  at factor
-  at <anonymous
-  at <eval
-  fileName: "<rootDir>/src/test_fixtures/scripts/some-json.json"
-  lineNumber: 3
+  "stderr": "",
+  "stdout": "{
+  hello: "there"
 }
 ",
-  "stdout": "",
 }
 `;
 
 exports[`some-coffeescript.coffee 1`] = `
 {
-  "code": 1,
+  "code": 0,
   "error": false,
-  "stderr": "SyntaxError: expecting ';'
-  at <rootDir>
-  at importModul
-  at runFileTarge
-  at mai
-  at sr
-  at runModul
-  at factor
-  at <anonymous
-  at <eval
-  fileName: "<rootDir>/src/test_fixtures/scripts/some-coffeescript.coffee"
-  lineNumber: 4
-}
+  "stderr": "",
+  "stdout": "object
+object
+false
 ",
-  "stdout": "",
 }
 `;
 
 exports[`some-json.json 1`] = `
 {
-  "code": 1,
+  "code": 0,
   "error": false,
-  "stderr": "SyntaxError: expecting ';'
-  at <rootDir>
-  at importModul
-  at runFileTarge
-  at mai
-  at sr
-  at runModul
-  at factor
-  at <anonymous
-  at <eval
-  fileName: "<rootDir>/src/test_fixtures/scripts/some-json.json"
-  lineNumber: 3
-}
-",
+  "stderr": "",
   "stdout": "",
 }
 `;
 
 exports[`some-jsx.jsx 1`] = `
 {
-  "code": 1,
+  "code": 0,
   "error": false,
-  "stderr": "SyntaxError: unexpected token in expression: '<'
-  at <rootDir>
-  at importModul
-  at runFileTarge
-  at mai
-  at sr
-  at runModul
-  at factor
-  at <anonymous
-  at <eval
-  fileName: "<rootDir>/src/test_fixtures/scripts/some-jsx.jsx"
-  lineNumber: 11
+  "stderr": "",
+  "stdout": "{
+  $$typeof: Symbol(JSX.Element)
+  type: "a"
+  props: null
+  key: null
 }
+true
+false
+true
+false
+false
 ",
-  "stdout": "",
 }
 `;
 
 exports[`some-tsx.tsx 1`] = `
 {
-  "code": 1,
+  "code": 0,
   "error": false,
-  "stderr": "SyntaxError: unexpected token in expression: '<'
-  at <rootDir>
-  at importModul
-  at runFileTarge
-  at mai
-  at sr
-  at runModul
-  at factor
-  at <anonymous
-  at <eval
-  fileName: "<rootDir>/src/test_fixtures/scripts/some-tsx.tsx"
-  lineNumber: 12
+  "stderr": "",
+  "stdout": "{
+  $$typeof: Symbol(JSX.Element)
+  type: "a"
+  props: null
+  key: null
 }
+true
+false
+true
+false
+false
 ",
-  "stdout": "",
 }
 `;
 
 exports[`some-typescript.ts 1`] = `
 {
-  "code": 1,
+  "code": 0,
   "error": false,
-  "stderr": "SyntaxError: expecting ';'
-  at <rootDir>
-  at importModul
-  at runFileTarge
-  at mai
-  at sr
-  at runModul
-  at factor
-  at <anonymous
-  at <eval
-  fileName: "<rootDir>/src/test_fixtures/scripts/some-typescript.ts"
-  lineNumber: 4
-}
+  "stderr": "",
+  "stdout": "undefined
+object true
+path: <rootDir>/src/test_fixtures/scripts
+<rootDir>/src/test_fixtures/scripts
 ",
-  "stdout": "",
 }
 `;
