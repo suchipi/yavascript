@@ -1,4 +1,4 @@
-import * as std from "quickjs:std";
+import * as https from "./https";
 
 const NPM_PROTO_RE = /^npm:/i;
 const SKYPACK_URL = "https://cdn.skypack.dev";
@@ -27,5 +27,5 @@ export function normalizeModulePath(modulePath: string) {
 }
 
 export function readModule(modulePath: string) {
-  return std.urlGet(modulePath);
+  return https.readModule(modulePath);
 }

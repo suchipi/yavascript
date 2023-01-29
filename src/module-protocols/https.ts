@@ -1,5 +1,4 @@
-import * as std from "quickjs:std";
-import compilers from "../compilers";
+import * as http from "./http";
 
 const HTTPS_RE = /^https:\/\//i;
 
@@ -12,6 +11,5 @@ export function normalizeModulePath(modulePath: string) {
 }
 
 export function readModule(modulePath: string) {
-  const content = std.urlGet(modulePath);
-  return compilers.autodetect(content, { filename: modulePath });
+  return http.readModule(modulePath);
 }

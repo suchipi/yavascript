@@ -1,5 +1,6 @@
 import * as std from "quickjs:std";
 import compilers from "../compilers";
+import { makeErrorWithProperties } from "../error-with-properties";
 
 const HTTP_RE = /^http:\/\//i;
 
@@ -12,6 +13,18 @@ export function normalizeModulePath(modulePath: string) {
 }
 
 export function readModule(modulePath: string) {
-  const content = std.urlGet(modulePath);
-  return compilers.autodetect(content, { filename: modulePath });
+  const { status, response, responseHeaders } = std.urlGet(modulePath, {
+    full: true,
+  });
+  if (status < 200 || status > 299) {
+    const err = makeErrorWithProperties(`Failed to load module`, {
+      httpStatusCode: status,
+      url: modulePath,
+    });
+    err.httpResponseHeaders = responseHeaders;
+    err.httpResponseBody = response;
+    throw err;
+  }
+
+  return compilers.autodetect(response, { filename: modulePath });
 }
