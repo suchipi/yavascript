@@ -22,7 +22,8 @@ export function patchRequire(theGlobal: typeof globalThis) {
     if (
       HasOwnProperty.call(mod, "__isCjsModule") &&
       mod.__isCjsModule === true &&
-      HasOwnProperty.call(mod, "__cjsExports")
+      HasOwnProperty.call(mod, "__cjsExports") &&
+      Object.keys(mod).length == 2 // if they mixed ESM and CJS, treat it as ESM
     ) {
       return mod.__cjsExports;
     } else {

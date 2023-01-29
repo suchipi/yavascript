@@ -4,7 +4,7 @@ import { makeGetterPropertyDescriptorMap } from "../lazy-load";
 
 import { grepFile, grepString, installToStringProto } from "./grep";
 import { install as installRegexpEscape } from "./regexp-escape";
-import { installModuleHooks } from "./module-hooks";
+import { installModuleHooks } from "../module-hooks";
 import { installNodeCompat } from "./node-compat";
 import { patchRequire } from "../cjs-interop";
 

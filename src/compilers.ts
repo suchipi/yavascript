@@ -1,5 +1,6 @@
 import { memoize } from "./lazy-load";
 import * as CJS from "./cjs-interop";
+import * as npmProto from "./module-protocols/npm";
 
 const getSucrase: () => typeof import("sucrase") = memoize(
   () => require("sucrase") as any
@@ -63,8 +64,14 @@ function compileUsingSucrase(
 
 const compilers = {
   js(code: string, options?: CompilerOptions): string {
-    if (!CJS.looksLikeCommonJS(code)) return code;
-    if (options?.expression) return code;
+    if (
+      options?.expression ||
+      (options?.filename && npmProto.handlesModulePath(options.filename)) ||
+      !CJS.looksLikeCommonJS(code)
+    ) {
+      return code;
+    }
+
     return CJS.wrapCommonJSCode(code);
   },
 

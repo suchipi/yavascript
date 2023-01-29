@@ -1,10 +1,9 @@
-import * as std from "quickjs:std";
 import * as os from "quickjs:os";
-import { Path } from "./path";
-import { dirname } from "./commands/dirname";
-import { readFile } from "./filesystem";
-import { makeErrorWithProperties } from "../error-with-properties";
-import compilers from "../compilers";
+import { Path } from "./api/path";
+import { dirname } from "./api/commands/dirname";
+import { readFile } from "./api/filesystem";
+import { makeErrorWithProperties } from "./error-with-properties";
+import * as protos from "./module-protocols/_all";
 
 function isFile(path: string) {
   try {
@@ -60,15 +59,24 @@ export function installModuleHooks(mod: typeof Module) {
     builtins.add(name);
   };
 
-  const HTTP_RE = /^https?:\/\//i;
-
   mod.resolve = (name, fromFile) => {
     if (builtins.has(name)) {
       return name;
     }
 
-    if (HTTP_RE.test(name)) {
-      return name;
+    // need to check npm first, because http(s) URLs that point to the CDN that
+    // the npm: proto is backed by (skypack) should be handled by its handler
+    // code, not the generic http(s) handler code
+    if (protos.npm.handlesModulePath(name)) {
+      return protos.npm.normalizeModulePath(name);
+    }
+
+    if (protos.https.handlesModulePath(name)) {
+      return protos.https.normalizeModulePath(name);
+    }
+
+    if (protos.http.handlesModulePath(name)) {
+      return protos.http.normalizeModulePath(name);
     }
 
     if (Path.isAbsolute(name)) {
@@ -107,11 +115,18 @@ export function installModuleHooks(mod: typeof Module) {
 
   const originalRead = mod.read;
   mod.read = (modulePath) => {
-    if (HTTP_RE.test(modulePath)) {
-      const content = std.urlGet(modulePath);
-      return compilers.autodetect(content, { filename: modulePath });
-    } else {
-      return originalRead(modulePath);
+    if (protos.npm.handlesModulePath(modulePath)) {
+      return protos.npm.readModule(modulePath);
     }
+
+    if (protos.https.handlesModulePath(modulePath)) {
+      return protos.https.readModule(modulePath);
+    }
+
+    if (protos.http.handlesModulePath(modulePath)) {
+      return protos.http.readModule(modulePath);
+    }
+
+    return originalRead(modulePath);
   };
 }

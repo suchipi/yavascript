@@ -26,6 +26,35 @@ exports[`__filename-and-__dirname-2.js 1`] = `
 }
 `;
 
+exports[`importing-from-npm-protocol.js 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  Null prototype
+  Sealed
+  
+  Component: Function {}
+  Fragment: Function {}
+  cloneElement: Function {}
+  createContext: Function {}
+  createElement: Function {}
+  createRef: Function {}
+  default: null
+  h: -> {root}.createElement
+  hydrate: Function {}
+  isValidElement: Function {}
+  options: {
+    __e: Function {}
+  }
+  render: Function {}
+  toChildArray: Function {}
+}
+",
+}
+`;
+
 exports[`importing-json.js 1`] = `
 {
   "code": 0,
