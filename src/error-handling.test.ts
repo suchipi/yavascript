@@ -36,7 +36,8 @@ test("prints extra error properties to stderr", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: hi
-      at somewhere {
+      at somewhere
+    {
       something: true
       somethingElse: false
     }

@@ -38,7 +38,7 @@ export default function printError(error: any, file: FILE) {
       for (const key of extraProps) {
         propsObj[key] = error[key];
       }
-      file.puts(" ");
+      file.puts("\n");
       file.puts(inspect(propsObj, inspectOptions.forPrint));
     }
 

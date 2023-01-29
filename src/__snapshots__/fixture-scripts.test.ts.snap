@@ -31,8 +31,8 @@ exports[`http-import-error.js 1`] = `
   "code": 1,
   "error": false,
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "http://suchipi.com/there-is-nothing-at-this-path")
-  at somewhere {
-
+  at somewhere
+{
   httpStatusCode: 404
   url: "http://suchipi.com/there-is-nothing-at-this-path"
   httpResponseHeaders: <redacted>
@@ -48,8 +48,8 @@ exports[`https-import-error.js 1`] = `
   "code": 1,
   "error": false,
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "https://suchipi.com/there-is-nothing-at-this-path")
-  at somewhere {
-
+  at somewhere
+{
   httpStatusCode: 404
   url: "https://suchipi.com/there-is-nothing-at-this-path"
   httpResponseHeaders: <redacted>
@@ -106,8 +106,8 @@ exports[`npm-proto-import-error.js 1`] = `
   "code": 1,
   "error": false,
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "https://cdn.skypack.dev/@suchipi/this-package-does-not-exist")
-  at somewhere {
-
+  at somewhere
+{
   httpStatusCode: 404
   url: "https://cdn.skypack.dev/@suchipi/this-package-does-not-exist"
   httpResponseHeaders: <redacted>
