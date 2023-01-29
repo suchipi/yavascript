@@ -1,4 +1,5 @@
 import * as std from "quickjs:std";
+import { makeErrorWithProperties } from "./error-with-properties";
 
 const HasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -7,7 +8,15 @@ export function patchRequire(theGlobal: typeof globalThis) {
 
   const newRequire = (path: string) => {
     const callerFile = std.getFileNameFromStack(1);
-    const resolved = std.resolveModule(path, callerFile);
+    let resolved: string;
+    try {
+      resolved = std.resolveModule(path, callerFile);
+    } catch (err) {
+      throw makeErrorWithProperties(`Cannot find module`, {
+        request: path,
+        fromFile: callerFile,
+      });
+    }
 
     const mod = nativeRequire(resolved);
     if (
@@ -20,7 +29,13 @@ export function patchRequire(theGlobal: typeof globalThis) {
       return mod;
     }
   };
+
   theGlobal.require = Object.assign(newRequire, nativeRequire);
+
+  Object.defineProperty(newRequire, "name", {
+    value: "require",
+    configurable: true,
+  });
 }
 
 const CJS_RE = /exports\.\w|module\.exports/;
