@@ -155,7 +155,7 @@ export function chmod(
   } else {
     throw makeErrorWithProperties(
       "'permissions' argument must be a number, string, or object",
-      { actual: permissions },
+      { received: permissions },
       TypeError
     );
   }

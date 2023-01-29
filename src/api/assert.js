@@ -20,13 +20,13 @@ for (const [key, value] of Object.entries(is)) {
       ) => {
         const result = value(input, tag);
         if (result) return;
-        throw makeErrorWithProperties(message, { actual: input }, TypeError);
+        throw makeErrorWithProperties(message, { received: input }, TypeError);
       };
     } else {
       assertProps[key] = (input, message = `Expected ${key}`) => {
         const result = value(input);
         if (result) return;
-        throw makeErrorWithProperties(message, { actual: input }, TypeError);
+        throw makeErrorWithProperties(message, { received: input }, TypeError);
       };
     }
   }
@@ -36,12 +36,12 @@ assertProps.JSX = {
   Element: (input, message = "Expected JSX.Element") => {
     const result = is.JSX.Element(input);
     if (result) return;
-    throw makeErrorWithProperties(message, { actual: input }, TypeError);
+    throw makeErrorWithProperties(message, { received: input }, TypeError);
   },
   Fragment: (input, message = "Expected JSX.Fragment") => {
     const result = is.JSX.Fragment(input);
     if (result) return;
-    throw makeErrorWithProperties(message, { actual: input }, TypeError);
+    throw makeErrorWithProperties(message, { received: input }, TypeError);
   },
 };
 

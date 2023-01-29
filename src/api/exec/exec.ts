@@ -41,9 +41,7 @@ class ChildProcess {
         if (!is.string(item)) {
           throw makeErrorWithProperties(
             "'args' argument must be an array of strings",
-            {
-              actual: args,
-            },
+            { received: args },
             TypeError
           );
         }
@@ -52,9 +50,7 @@ class ChildProcess {
     } else {
       throw makeErrorWithProperties(
         "'args' argument must be either a string or an array of strings",
-        {
-          actual: args,
-        }
+        { received: args }
       );
     }
 
@@ -68,9 +64,7 @@ class ChildProcess {
     } else {
       throw makeErrorWithProperties(
         "when present, 'cwd' option must be either a string or a Path object",
-        {
-          actual: cwd,
-        },
+        { received: cwd },
         TypeError
       );
     }
