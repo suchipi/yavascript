@@ -5,9 +5,12 @@ import { pwd } from "../commands/pwd";
 import { env } from "../env";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import traceAll from "../traceAll";
+import { is } from "../is";
+import { assert } from "../assert";
+import type { Path } from "../path";
 
 export type ChildProcessOptions = {
-  cwd?: string;
+  cwd?: string | Path;
   env?: { [key: string | number]: string | number | boolean };
   stdio?: {
     in?: FILE;
@@ -17,7 +20,7 @@ export type ChildProcessOptions = {
   trace?: (...args: Array<any>) => void;
 };
 
-export class ChildProcess {
+class ChildProcess {
   args: Array<string>;
   cwd: string;
   env: { [key: string]: string };
@@ -31,10 +34,50 @@ export class ChildProcess {
   pid: number | null = null;
 
   constructor(args: string | Array<string>, options: ChildProcessOptions = {}) {
-    this.args = typeof args === "string" ? parseArgString(args) : args;
-    this.cwd = options.cwd || pwd();
+    if (is.string(args)) {
+      this.args = parseArgString(args);
+    } else if (is.Array(args)) {
+      for (const item of args) {
+        if (!is.string(item)) {
+          throw makeErrorWithProperties(
+            "'args' argument must be an array of strings",
+            {
+              actual: args,
+            },
+            TypeError
+          );
+        }
+      }
+      this.args = args;
+    } else {
+      throw makeErrorWithProperties(
+        "'args' argument must be either a string or an array of strings",
+        {
+          actual: args,
+        }
+      );
+    }
+
+    const cwd = options.cwd;
+    if (cwd == null) {
+      this.cwd = pwd();
+    } else if (is.Path(cwd)) {
+      this.cwd = cwd.toString();
+    } else if (is.string(cwd)) {
+      this.cwd = cwd;
+    } else {
+      throw makeErrorWithProperties(
+        "when present, 'cwd' option must be either a string or a Path object",
+        {
+          actual: cwd,
+        },
+        TypeError
+      );
+    }
 
     const baseEnv = options.env || env;
+
+    assert.object(baseEnv, "when present, 'env' option must be an object");
 
     this.env = {};
     for (const [key, value] of Object.entries(baseEnv)) {
@@ -49,7 +92,27 @@ export class ChildProcess {
       err: options?.stdio?.err ?? std.err,
     };
 
+    assert.FILE(
+      this.stdio.in,
+      "when present, 'stdio.in' option must be a FILE object"
+    );
+    assert.FILE(
+      this.stdio.out,
+      "when present, 'stdio.out' option must be a FILE object"
+    );
+    assert.FILE(
+      this.stdio.err,
+      "when present, 'stdio.err' option must be a FILE object"
+    );
+
     this.trace = options.trace ?? traceAll.getDefaultTrace();
+
+    if (this.trace != null) {
+      assert.function(
+        this.trace,
+        "when present, 'options.trace' must be a function"
+      );
+    }
   }
 
   /** returns pid */
@@ -110,6 +173,12 @@ const exec = (
     trace?: (...args: Array<any>) => void;
   } = {}
 ): any => {
+  // 'args' type gets checked in ChildProcess constructor
+  assert.object(
+    options,
+    "'options' argument must be either an object or undefined"
+  );
+
   const {
     failOnNonZeroStatus = true,
     captureOutput = false,
@@ -117,6 +186,19 @@ const exec = (
     env,
     trace = traceAll.getDefaultTrace(),
   } = options;
+
+  assert.boolean(
+    failOnNonZeroStatus,
+    "when present, 'failOnNonZeroStatus' option must be a boolean"
+  );
+  assert.boolean(
+    captureOutput,
+    "when present, 'captureOutput' option must be a boolean"
+  );
+
+  if (trace != null) {
+    assert.function(trace, "when present, 'options.trace' must be a function");
+  }
 
   if (typeof args === "string") {
     args = parseArgString(args);
