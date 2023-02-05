@@ -26,6 +26,7 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
+    "build": "meta/scripts/clone-quickjs.sh && meta/build.sh",
     "bundle": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/index.ts",
     "bundle:primordials": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/primordials.ts --output dist/primordials.js",
     "test": "jest --config=./meta/jest/config.js",
@@ -37,7 +38,7 @@
     "kleur": "^4.1.5",
     "minimatch": "^5.1.0",
     "papaparse": "^5.3.2",
-    "pheno": "^0.6.1",
+    "pheno": "^0.7.0",
     "strip-ansi": "^6.0.1",
     "sucrase": "^3.28.0",
     "yaml": "^2.1.3"
