@@ -4,12 +4,13 @@ import { assert } from "../assert";
 import type { Path } from "../path";
 
 export function readlink(path: string | Path): string {
-  if (is.Path(path)) {
+  if (is(path, types.Path)) {
     path = path.toString();
   }
 
-  assert.string(
+  assert.type(
     path,
+    String,
     "'path' argument must be either a string or a Path object"
   );
 

@@ -6,12 +6,13 @@ import type { Path } from "../path";
 
 // cause everytime we touch, I get this feeling
 export function touch(path: string | Path) {
-  if (is.Path(path)) {
+  if (is(path, types.Path)) {
     path = path.toString();
   }
 
-  assert.string(
+  assert.type(
     path,
+    String,
     "'path' argument must be either a string or a Path object"
   );
 

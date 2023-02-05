@@ -1,5 +1,5 @@
 import * as std from "quickjs:std";
-import { TypedArray, TypedArrayConstructor } from "./typed-array";
+import { TypedArray, TypedArrayConstructor } from "./others";
 import { byte } from "./byte";
 import { is } from "./is";
 import { makeErrorWithProperties } from "../error-with-properties";
@@ -39,18 +39,18 @@ function getReadable(from: PipeSource): Readable {
 
   let shouldCloseFile = false;
 
-  if (is.string(from)) {
+  if (is(from, String)) {
     throw new Error(
       "It is ambiguous whether you want to read from the string's contents or from the file at the path contained within the string. Pass an object with a 'data' or 'path' property, instead."
     );
   }
 
-  if (is.object(from)) {
-    if (is.number(from.maxLength)) {
+  if (is(from, Object)) {
+    if (is(from.maxLength, Number)) {
       maxLength = from.maxLength;
     }
 
-    if (is.string(from.until)) {
+    if (is(from.until, String)) {
       if (from.until.length !== 1) {
         const received = from.until;
         throw makeErrorWithProperties(
@@ -62,7 +62,7 @@ function getReadable(from: PipeSource): Readable {
       until = from.until.charCodeAt(0) as byte;
     }
 
-    if (is.number(from.until)) {
+    if (is(from.until, Number)) {
       const isInteger = from.until % 1 === 0;
       if (from.until < 0 || !isInteger || from.until > 255) {
         const received = from.until;
@@ -93,14 +93,14 @@ function getReadable(from: PipeSource): Readable {
   }
 
   if (
-    is.TypedArray(source) ||
-    is.ArrayBuffer(source) ||
-    is.SharedArrayBuffer(source) ||
-    is.DataView(source)
+    is(source, types.TypedArray) ||
+    is(source, ArrayBuffer) ||
+    is(source, SharedArrayBuffer) ||
+    is(source, DataView)
   ) {
-    const view = is.DataView(source)
+    const view = is(source, DataView)
       ? source
-      : is.TypedArray(source)
+      : is(source, types.TypedArray)
       ? new DataView(source.buffer)
       : new DataView(source);
 
@@ -128,7 +128,7 @@ function getReadable(from: PipeSource): Readable {
         return byte as byte;
       },
     };
-  } else if (is.FILE(source)) {
+  } else if (is(source, types.FILE)) {
     const file = source as FILE;
 
     let offset = 0;
@@ -171,7 +171,7 @@ function getReadable(from: PipeSource): Readable {
 
         const byte = str.charCodeAt(offset);
         offset++;
-        if (is.NaN(byte)) {
+        if (is(byte, NaN)) {
           return null;
         }
 
@@ -205,7 +205,7 @@ function resizeBuffer<BufferType extends ArrayBuffer | SharedArrayBuffer>(
   inputBuffer: BufferType,
   newSize: number
 ): BufferType {
-  const newBuffer = is.ArrayBuffer(inputBuffer)
+  const newBuffer = is(inputBuffer, ArrayBuffer)
     ? new ArrayBuffer(newSize)
     : new SharedArrayBuffer(newSize);
   const oldView = new DataView(inputBuffer);
@@ -226,7 +226,7 @@ type Writable = {
 };
 
 function getWritable(to: PipeDestination): Writable {
-  if (!(is.object(to) || is.function(to))) {
+  if (!(is(to, Object) || is(to, Function))) {
     throw makeErrorWithProperties(
       "'to' must be a function or object, but received something else",
       { to }
@@ -238,34 +238,34 @@ function getWritable(to: PipeDestination): Writable {
   try {
     let target: any;
 
-    if (is.string((to as any).path)) {
+    if (is((to as any).path, string)) {
       const file = std.open((to as any).path, "w");
       filesToClose.push(file);
       target = file;
-    } else if (is.number((to as any).fd)) {
+    } else if (is((to as any).fd, number)) {
       const file = std.fdopen((to as any).fd, "w");
       filesToClose.push(file);
       target = file;
     } else if (
-      is.ArrayBuffer(to) ||
-      is.SharedArrayBuffer(to) ||
-      is.DataView(to) ||
-      is.TypedArray(to) ||
-      is.FILE(to)
+      is(to, ArrayBuffer) ||
+      is(to, SharedArrayBuffer) ||
+      is(to, DataView) ||
+      is(to, types.TypedArray) ||
+      is(to, types.FILE)
     ) {
       target = to;
       if (
-        is.ArrayBuffer(target) ||
-        is.SharedArrayBuffer(target) ||
-        is.DataView(target) ||
-        is.TypedArray(target)
+        is(target, ArrayBuffer) ||
+        is(target, SharedArrayBuffer) ||
+        is(target, DataView) ||
+        is(target, types.TypedArray)
       ) {
         let offset = 0;
         let limit = target.byteLength;
 
-        const view = is.DataView(target)
+        const view = is(target, DataView)
           ? target
-          : is.TypedArray(target)
+          : is(target, types.TypedArray)
           ? new DataView(target.buffer)
           : new DataView(target);
 
@@ -282,7 +282,7 @@ function getWritable(to: PipeDestination): Writable {
             return target;
           },
         };
-      } else if (is.FILE(target)) {
+      } else if (is(target, types.FILE)) {
         return {
           write(byte: byte): boolean {
             try {
@@ -304,7 +304,7 @@ function getWritable(to: PipeDestination): Writable {
           },
         };
       }
-    } else if (is.function(to)) {
+    } else if (is(to, Function)) {
       const targetConstructor: any = to;
       switch (targetConstructor) {
         case String: {

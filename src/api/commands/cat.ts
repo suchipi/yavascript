@@ -6,12 +6,13 @@ import type { Path } from "../path";
 export function cat(...paths: Array<string | Path>): string {
   let content = "";
   for (let path of paths) {
-    if (is.Path(path)) {
+    if (is(path, types.Path)) {
       path = path.toString();
     }
 
-    assert.string(
+    assert.type(
       path,
+      String,
       "'path' argument must be either a string or a Path object"
     );
 

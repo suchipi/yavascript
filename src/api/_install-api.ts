@@ -16,6 +16,14 @@ const quickjsBuiltinsProps = makeGetterPropertyDescriptorMap({
 import commandsProps from "./commands/_all";
 import stubsProps from "./commands/_stubs";
 
+const FILEstubProps = makeGetterPropertyDescriptorMap({
+  FILE() {
+    throw new Error(
+      "'FILE', as a global constructor, is not defined. To create a FILE, use functions from the 'quickjs:std' module. To check if a value is a FILE, use `is(something, types.FILE)`."
+    );
+  },
+});
+
 const envProps = makeGetterPropertyDescriptorMap({
   env: () => require("./env").env,
 });
@@ -42,6 +50,10 @@ const pathProps = makeGetterPropertyDescriptorMap({
 
 const globProps = makeGetterPropertyDescriptorMap({
   glob: () => require("./glob").glob,
+});
+
+const typesProps = makeGetterPropertyDescriptorMap({
+  types: () => require("./types").types,
 });
 
 const isProps = makeGetterPropertyDescriptorMap({
@@ -141,11 +153,13 @@ export default function installApi(target: typeof globalThis) {
     ...quickjsBuiltinsProps,
     ...commandsProps,
     ...stubsProps,
+    ...FILEstubProps,
     ...envProps,
     ...execProps,
     ...filesystemProps,
     ...pathProps,
     ...globProps,
+    ...typesProps,
     ...isProps,
     ...assertProps,
     ...repoProps,

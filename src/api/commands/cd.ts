@@ -14,12 +14,13 @@ export function cd(path?: string | Path): void {
     );
   }
 
-  if (is.Path(path)) {
+  if (is(path, types.Path)) {
     path = path.toString();
   }
 
-  assert.string(
+  assert.type(
     path,
+    String,
     "'path' argument must be either a string or a Path object"
   );
 

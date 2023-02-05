@@ -9,14 +9,19 @@ export function ls(
   dir: string | Path = pwd(),
   options: { relativePaths?: boolean } = { relativePaths: false }
 ): Array<string> {
-  if (is.Path(dir)) {
+  if (is(dir, types.Path)) {
     dir = dir.toString();
   }
 
-  assert.string(dir, "'dir' argument must be either a string or a Path object");
+  assert.type(
+    dir,
+    String,
+    "'dir' argument must be either a string or a Path object"
+  );
 
-  assert.object(
+  assert.type(
     options,
+    Object,
     "'options' argument must be either an object or undefined"
   );
 

@@ -7,12 +7,13 @@ export function extname(
   pathOrFilename: string | Path,
   options: { full?: boolean } = {}
 ): string {
-  if (is.Path(pathOrFilename)) {
+  if (is(pathOrFilename, types.Path)) {
     pathOrFilename = pathOrFilename.toString();
   }
 
-  assert.string(
+  assert.type(
     pathOrFilename,
+    String,
     "'pathOrFilename' argument must be either a string or a Path object"
   );
 
@@ -23,8 +24,9 @@ export function extname(
     return "";
   }
 
-  assert.object(
+  assert.type(
     options,
+    Object,
     "'options' argument must be either an object or undefined"
   );
 

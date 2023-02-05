@@ -34,18 +34,9 @@ class ChildProcess {
   pid: number | null = null;
 
   constructor(args: string | Array<string>, options: ChildProcessOptions = {}) {
-    if (is.string(args)) {
+    if (is(args, types.string)) {
       this.args = parseArgString(args);
-    } else if (is.Array(args)) {
-      for (const item of args) {
-        if (!is.string(item)) {
-          throw makeErrorWithProperties(
-            "'args' argument must be an array of strings",
-            { received: args },
-            TypeError
-          );
-        }
-      }
+    } else if (is(args, types.arrayOf(types.string))) {
       this.args = args;
     } else {
       throw makeErrorWithProperties(
@@ -57,9 +48,9 @@ class ChildProcess {
     const cwd = options.cwd;
     if (cwd == null) {
       this.cwd = pwd();
-    } else if (is.Path(cwd)) {
+    } else if (is(cwd, types.Path)) {
       this.cwd = cwd.toString();
-    } else if (is.string(cwd)) {
+    } else if (is(cwd, types.string)) {
       this.cwd = cwd;
     } else {
       throw makeErrorWithProperties(
@@ -71,7 +62,11 @@ class ChildProcess {
 
     const baseEnv = options.env || env;
 
-    assert.object(baseEnv, "when present, 'env' option must be an object");
+    assert.type(
+      baseEnv,
+      types.object,
+      "when present, 'env' option must be an object"
+    );
 
     this.env = {};
     for (const [key, value] of Object.entries(baseEnv)) {
@@ -86,24 +81,28 @@ class ChildProcess {
       err: options?.stdio?.err ?? std.err,
     };
 
-    assert.FILE(
+    assert.type(
       this.stdio.in,
+      types.FILE,
       "when present, 'stdio.in' option must be a FILE object"
     );
-    assert.FILE(
+    assert.type(
       this.stdio.out,
+      types.FILE,
       "when present, 'stdio.out' option must be a FILE object"
     );
-    assert.FILE(
+    assert.type(
       this.stdio.err,
+      types.FILE,
       "when present, 'stdio.err' option must be a FILE object"
     );
 
     this.trace = options.trace ?? traceAll.getDefaultTrace();
 
     if (this.trace != null) {
-      assert.function(
+      assert.type(
         this.trace,
+        types.Function,
         "when present, 'options.trace' must be a function"
       );
     }
@@ -168,8 +167,9 @@ const exec = (
   } = {}
 ): any => {
   // 'args' type gets checked in ChildProcess constructor
-  assert.object(
+  assert.type(
     options,
+    types.object,
     "'options' argument must be either an object or undefined"
   );
 
@@ -181,17 +181,23 @@ const exec = (
     trace = traceAll.getDefaultTrace(),
   } = options;
 
-  assert.boolean(
+  assert.type(
     failOnNonZeroStatus,
+    types.boolean,
     "when present, 'failOnNonZeroStatus' option must be a boolean"
   );
-  assert.boolean(
+  assert.type(
     captureOutput,
+    types.boolean,
     "when present, 'captureOutput' option must be a boolean"
   );
 
   if (trace != null) {
-    assert.function(trace, "when present, 'options.trace' must be a function");
+    assert.type(
+      trace,
+      types.Function,
+      "when present, 'options.trace' must be a function"
+    );
   }
 
   if (typeof args === "string") {

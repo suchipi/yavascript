@@ -3,12 +3,13 @@ import { is } from "../is";
 import { assert } from "../assert";
 
 export function dirname(path: string | Path) {
-  if (is.Path(path)) {
+  if (is(path, types.Path)) {
     path = path.toString();
   }
 
-  assert.string(
+  assert.type(
     path,
+    String,
     "'path' argument must be either a string or a Path object"
   );
 

@@ -128,20 +128,21 @@ export function chmod(
     | Record<ChmodPermissionsWho, ChmodPermissionsWhat>,
   path: string | Path
 ) {
-  if (is.Path(path)) {
+  if (is(path, types.Path)) {
     path = path.toString();
   }
 
-  assert.string(
+  assert.type(
     path,
+    String,
     "'path' argument must be either a string or a Path object"
   );
 
   let permNum: number;
 
-  if (is.number(permissions)) {
+  if (is(permissions, Number)) {
     permNum = permissions;
-  } else if (is.string(permissions)) {
+  } else if (is(permissions, String)) {
     const asNum = parseInt(permissions, 8);
     if (Number.isNaN(asNum)) {
       throw new Error(
@@ -150,7 +151,7 @@ export function chmod(
     } else {
       permNum = asNum;
     }
-  } else if (is.object(permissions)) {
+  } else if (is(permissions, Object)) {
     permNum = permsFor(...(Object.entries(permissions) as any));
   } else {
     throw makeErrorWithProperties(

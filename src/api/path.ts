@@ -9,7 +9,7 @@ function validateSegments(segments: Array<string>): Array<string> {
   });
 }
 
-export class Path {
+class Path {
   static OS_SEGMENT_SEPARATOR = os.platform === "win32" ? "\\" : "/";
   static OS_ENV_VAR_SEPARATOR = os.platform === "win32" ? ";" : ":";
 
@@ -212,3 +212,9 @@ export class Path {
     }
   }
 }
+
+Object.defineProperty(Path, "toString", {
+  value: () => "class Path {\n    [native code]\n}",
+});
+
+export { Path };
