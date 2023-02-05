@@ -34,6 +34,7 @@ Additionally, you can do other things that are either not present in bash or are
 - Pretty-print complex structures
 - Call low-level POSIX C APIs like fputs, sprintf, isatty
 - Perform work in threads
+- Import packages from npm (via "npm:" imports) or local node_modules
 
 You'll also find analogues to familiar CLI tools, like:
 
