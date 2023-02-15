@@ -9,10 +9,10 @@ declare namespace JSX {
    * expression.
    *
    * Note that if you change this, you need to verify that the following
-   * expression always evaluates to `true` (by changing {@link is.JSX.Element}
-   * and {@link is.JSX.Fragment}):
+   * expression always evaluates to `true` (by changing {@link types.JSX.Element}
+   * and {@link types.JSX.Fragment}):
    * ```jsx
-   * is.JSX.Element(<a />) && is.JSX.Fragment(<></>)
+   * types.JSX.Element(<a />) && types.JSX.Fragment(<></>)
    * ```
    *
    * Failure to uphold this guarantee indicates a bug.
@@ -29,10 +29,10 @@ declare namespace JSX {
    * expression.
    *
    * Note that if you change this, you need to verify that the following
-   * expression always evaluates to `true` (by changing {@link is.JSX.Element}
-   * and {@link is.JSX.Fragment}):
+   * expression always evaluates to `true` (by changing {@link types.JSX.Element}
+   * and {@link types.JSX.Fragment}):
    * ```jsx
-   * is.JSX.Element(<a />) && is.JSX.Fragment(<></>)
+   * types.JSX.Element(<a />) && types.JSX.Fragment(<></>)
    * ```
    *
    * Failure to uphold this guarantee indicates a bug.
