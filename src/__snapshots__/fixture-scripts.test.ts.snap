@@ -191,3 +191,35 @@ path: <rootDir>/src/test_fixtures/scripts
 ",
 }
 `;
+
+exports[`type-coercion-via-assert.ts 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "no error message from hi String
+Expected value of type string, but received null
+Expected value of type string, but received 24
+no error message from hi hi
+Expected value of type exactString("hi"), but received "yes"
+Expected value of type number, but received "something"
+no error message from 42 Number
+",
+}
+`;
+
+exports[`type-coercion-via-is.ts 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "true
+false
+false
+true
+false
+false
+true
+",
+}
+`;
