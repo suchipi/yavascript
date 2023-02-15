@@ -39,8 +39,8 @@ mkdir -p dist
 in_docker node:${NODE_VERSION} meta/scripts/assemble-dts.sh
 
 # generate dist/index-*.js (bundles in dependencies from npm)
-in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=arm64 npm run bundle -- --output dist/index-arm64.js
-in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=x86_64 npm run bundle -- --output dist/index-x86_64.js
+in_docker node:${NODE_VERSION} env YAVASCRIPT_VERSION="0.0.8" YAVASCRIPT_ARCH=arm64 npm run bundle -- --output dist/index-arm64.js
+in_docker node:${NODE_VERSION} env YAVASCRIPT_VERSION="0.0.8" YAVASCRIPT_ARCH=x86_64 npm run bundle -- --output dist/index-x86_64.js
 
 # compile dist/index-*.js to bytecode
 cp dist/index-arm64.js yavascript-internal.js # to have clearer filename in stack traces
