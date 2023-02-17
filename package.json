@@ -23,7 +23,8 @@
     "kame": "^0.9.1",
     "path-less-traveled": "^2.0.0",
     "prettier": "^2.7.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "typescript-assert-utils": "^1.0.0"
   },
   "scripts": {
     "build": "meta/scripts/clone-quickjs.sh && meta/build.sh",
