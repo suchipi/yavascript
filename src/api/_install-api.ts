@@ -48,6 +48,10 @@ const pathProps = makeGetterPropertyDescriptorMap({
   Path: () => require("./path").Path,
 });
 
+const gitProps = makeGetterPropertyDescriptorMap({
+  Git: () => require("./git").Git,
+});
+
 const globProps = makeGetterPropertyDescriptorMap({
   glob: () => require("./glob").glob,
 });
@@ -62,11 +66,6 @@ const isProps = makeGetterPropertyDescriptorMap({
 
 const assertProps = makeGetterPropertyDescriptorMap({
   assert: () => require("./assert").assert,
-});
-
-const repoProps = makeGetterPropertyDescriptorMap({
-  isGitignored: () => require("./repo").isGitignored,
-  repoRoot: () => require("./repo").repoRoot,
 });
 
 const stringsProps = makeGetterPropertyDescriptorMap({
@@ -162,7 +161,7 @@ export default function installApi(target: typeof globalThis) {
     ...typesProps,
     ...isProps,
     ...assertProps,
-    ...repoProps,
+    ...gitProps,
     ...stringsProps,
     ...consoleProps,
     ...pipeProps,

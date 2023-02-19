@@ -25,4 +25,4 @@ branchName = $ 'git rev-parse --abbrev-ref HEAD'
 
 echo { branchName }
 
-echo repoRoot()
+echo Git.repoRoot()

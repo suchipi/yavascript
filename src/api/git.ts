@@ -6,8 +6,14 @@ import { is } from "./is";
 import { types } from "./types";
 import type { Path } from "./path";
 import { assert } from "./assert";
+import { makeErrorWithProperties } from "../error-with-properties";
 
-export function repoRoot(relativeTo: string | Path = pwd()): string {
+export const Git = {
+  repoRoot,
+  isIgnored,
+};
+
+function repoRoot(relativeTo: string | Path = pwd()): string {
   if (is(relativeTo, types.Path)) {
     relativeTo = relativeTo.toString();
   }
@@ -22,34 +28,25 @@ export function repoRoot(relativeTo: string | Path = pwd()): string {
     relativeTo = dirname(relativeTo);
   }
 
-  try {
-    const gitRootRun = exec(["git", "rev-parse", "--show-toplevel"], {
-      captureOutput: true,
-      failOnNonZeroStatus: false,
+  const result = exec(["git", "rev-parse", "--show-toplevel"], {
+    failOnNonZeroStatus: false,
+    captureOutput: true,
+    cwd: relativeTo,
+  });
+  if (result.status !== 0) {
+    throw makeErrorWithProperties("'git rev-parse --show-toplevel' failed", {
+      status: result.status,
+      stderr: result.stderr,
+      stdout: result.stdout,
       cwd: relativeTo,
+      signal: result.signal,
     });
-    if (gitRootRun.status === 0) {
-      return gitRootRun.stdout.trim();
-    }
-  } catch (err) {}
+  }
 
-  try {
-    const hgRootRun = exec(["hg", "root"], {
-      captureOutput: true,
-      failOnNonZeroStatus: false,
-      cwd: relativeTo,
-    });
-    if (hgRootRun.status === 0) {
-      return hgRootRun.stdout.trim();
-    }
-  } catch (err) {}
-
-  throw new Error(
-    `Fatal: ${relativeTo} is not within a git or hg repo, or git/hg were not found in PATH`
-  );
+  return result.stdout.trim();
 }
 
-export function isGitignored(path: string | Path): boolean {
+function isIgnored(path: string | Path): boolean {
   if (is(path, types.Path)) {
     path = path.toString();
   }
@@ -65,7 +62,13 @@ export function isGitignored(path: string | Path): boolean {
     captureOutput: true,
   });
   if (result.status !== 0 && result.status !== 1) {
-    throw new Error("git check-ignore failed: " + result.stderr.trim());
+    throw makeErrorWithProperties(`'git check-ignore ${path}' failed`, {
+      status: result.status,
+      stderr: result.stderr,
+      stdout: result.stdout,
+      path,
+      signal: result.signal,
+    });
   }
   return result.status === 0;
 }

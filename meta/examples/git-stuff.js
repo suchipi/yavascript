@@ -7,6 +7,8 @@ let branchName = $(["git", "rev-parse", "--abbrev-ref", "HEAD"]).stdout.trim();
 
 echo({ branchName });
 
-echo(repoRoot());
-echo(repoRoot(__dirname));
-echo(repoRoot("../quickjs"));
+echo(Git.repoRoot());
+echo(Git.repoRoot(__dirname));
+echo(Git.repoRoot("../quickjs"));
+cd(__dirname);
+echo(Git.repoRoot("../quickjs"));

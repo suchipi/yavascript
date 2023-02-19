@@ -2,7 +2,7 @@
 /// <reference path="../../yavascript.d.ts" />
 
 function main(newVersion) {
-  cd(repoRoot());
+  cd(Git.repoRoot());
 
   const currentVersion = readJson("./package.json").version;
   console.log(`current version: ${currentVersion}`);

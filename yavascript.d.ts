@@ -2490,19 +2490,24 @@ declare function startRepl(
 ): void;
 
 /**
- * Returns the absolute path to the root folder of the git/hg repo.
- *
- * This is done by running `git rev-parse --show-toplevel` and `hg root`.
- *
- * If `relativeTo` is provided, the git and hg commands will be executed in
- * that folder instead of in `pwd()`.
+ * Utility functions for working with git repositories.
  */
-declare function repoRoot(relativeTo?: string): string;
+declare var Git: {
+  /**
+   * Returns the absolute path to the root folder of the git repo.
+   *
+   * This is done by running `git rev-parse --show-toplevel`.
+   *
+   * If `relativeTo` is provided, the git command will be executed in that
+   * folder instead of in `pwd()`.
+   */
+  repoRoot(relativeTo?: string | Path): string;
 
-/**
- * Returns whether the provided path is ignored by git.
- */
-declare function isGitignored(path: string): boolean;
+  /**
+   * Returns whether the provided path is ignored by git.
+   */
+  isIgnored(path: string | Path): boolean;
+};
 
 /**
  * Configures the default value of `trace` in functions which receive `trace`
