@@ -6,9 +6,9 @@
  * If `relativeTo` is provided, the git and hg commands will be executed in
  * that folder instead of in `pwd()`.
  */
-declare function repoRoot(relativeTo?: string): string;
+declare function repoRoot(relativeTo?: string | Path): string;
 
 /**
  * Returns whether the provided path is ignored by git.
  */
-declare function isGitignored(path: string): boolean;
+declare function isGitignored(path: string | Path): boolean;
