@@ -11,7 +11,7 @@ const replacerType = types.or(
 );
 const indentType = types.or(types.undefined, types.number);
 
-export const YAML = {
+export const YAML = Object.assign(Object.create(null), {
   parse(
     input: string,
     reviver?: (this: any, key: string, value: any) => any
@@ -46,4 +46,4 @@ export const YAML = {
 
     return stringify(input, replacer, indent);
   },
-};
+});
