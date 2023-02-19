@@ -1,6 +1,5 @@
 import * as std from "quickjs:std";
-import { TypedArray, TypedArrayConstructor } from "./others";
-import { byte } from "./byte";
+import { TypedArray, TypedArrayConstructor, byte } from "./others";
 import { is } from "./is";
 import { makeErrorWithProperties } from "../error-with-properties";
 
