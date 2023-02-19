@@ -95,7 +95,7 @@ You will need node.js and ninja installed, then run `meta/build.sh`.
 
 ### Docker image
 
-You will need docker installed, then run `docker build -t yourusername/yavascript .`.
+You will need docker installed. After building binaries for all platforms, run `docker build -t yourusername/yavascript .`.
 
 ---
 
