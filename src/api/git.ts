@@ -8,25 +8,102 @@ import type { Path } from "./path";
 import { assert } from "./assert";
 import { makeErrorWithProperties } from "../error-with-properties";
 
-export const Git = {
+export const Git = Object.assign(Object.create(null), {
+  commitSHA,
+  branchName,
+  isWorkingTreeDirty,
   repoRoot,
   isIgnored,
-};
+});
 
-function repoRoot(relativeTo: string | Path = pwd()): string {
-  if (is(relativeTo, types.Path)) {
-    relativeTo = relativeTo.toString();
+function _resolveRelativeTo(input: string | Path): string {
+  if (is(input, types.Path)) {
+    input = input.toString();
   }
 
   assert.type(
-    relativeTo,
+    input,
     types.string,
-    "when present, 'relativeTo' argument must be either a string or a Path object"
+    "when present, 'input' argument must be either a string or a Path object"
   );
 
-  if (exists(relativeTo) && !isDir(relativeTo)) {
-    relativeTo = dirname(relativeTo);
+  if (exists(input) && !isDir(input)) {
+    input = dirname(input);
   }
+
+  return input;
+}
+
+function commitSHA(relativeTo: string | Path = pwd()): string {
+  relativeTo = _resolveRelativeTo(relativeTo);
+
+  const result = exec(["git", "rev-parse", "HEAD"], {
+    failOnNonZeroStatus: false,
+    captureOutput: true,
+    cwd: relativeTo,
+  });
+  if (result.status !== 0) {
+    throw makeErrorWithProperties("'git rev-parse HEAD' failed", {
+      status: result.status,
+      stderr: result.stderr,
+      stdout: result.stdout,
+      cwd: relativeTo,
+      signal: result.signal,
+    });
+  }
+
+  return result.stdout.trim();
+}
+
+function branchName(relativeTo: string | Path = pwd()): string | null {
+  relativeTo = _resolveRelativeTo(relativeTo);
+
+  const result = exec(["git", "rev-parse", "--abbrev-ref", "HEAD"], {
+    failOnNonZeroStatus: false,
+    captureOutput: true,
+    cwd: relativeTo,
+  });
+  if (result.status !== 0) {
+    throw makeErrorWithProperties("'git rev-parse --abbrev-ref HEAD' failed", {
+      status: result.status,
+      stderr: result.stderr,
+      stdout: result.stdout,
+      cwd: relativeTo,
+      signal: result.signal,
+    });
+  }
+
+  const name = result.stdout.trim();
+  if (name === "HEAD") {
+    return null;
+  } else {
+    return name;
+  }
+}
+
+function isWorkingTreeDirty(relativeTo: string | Path = pwd()): boolean {
+  relativeTo = _resolveRelativeTo(relativeTo);
+
+  const result = exec(["git", "diff", "--quiet"], {
+    failOnNonZeroStatus: false,
+    captureOutput: true,
+    cwd: relativeTo,
+  });
+  if (result.status !== 0 && result.status !== 1) {
+    throw makeErrorWithProperties("'git diff --quiet' failed", {
+      status: result.status,
+      stderr: result.stderr,
+      stdout: result.stdout,
+      cwd: relativeTo,
+      signal: result.signal,
+    });
+  }
+
+  return result.status === 1;
+}
+
+function repoRoot(relativeTo: string | Path = pwd()): string {
+  relativeTo = _resolveRelativeTo(relativeTo);
 
   const result = exec(["git", "rev-parse", "--show-toplevel"], {
     failOnNonZeroStatus: false,
