@@ -109,6 +109,7 @@ export function ensureDir(path: string) {
     const componentsSoFar = components.slice(0, i + 1);
     const pathSoFar = componentsSoFar.join(Path.OS_SEGMENT_SEPARATOR);
     if (pathSoFar === ".") continue;
+    if (pathSoFar === "") continue;
 
     const info = getPathInfo(pathSoFar);
     switch (info) {

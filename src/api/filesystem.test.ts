@@ -405,8 +405,35 @@ test("exists - dead link", async () => {
   `);
 });
 
-test("ensureDir", async () => {
+test("ensureDir - relative path", async () => {
   const outerTarget = "./src/test_fixtures/ensure_dir/some";
+  const target = path.join(outerTarget, "very/deep/path");
+
+  if (fs.existsSync(outerTarget)) {
+    fs.rmSync(outerTarget, { recursive: true, force: true });
+  }
+
+  expect(fs.existsSync(outerTarget)).toBe(false);
+
+  const result = await evaluate(`ensureDir(${JSON.stringify(target)})`);
+  expect(cleanResult(result)).toEqual({
+    code: 0,
+    error: false,
+    stderr: "",
+    stdout: "",
+  });
+
+  expect(fs.existsSync(outerTarget)).toBe(true);
+  expect(fs.existsSync(target)).toBe(true);
+
+  fs.rmSync(outerTarget, { recursive: true, force: true });
+});
+
+test("ensureDir - absolute path", async () => {
+  const outerTarget = path.resolve(
+    process.cwd(),
+    "./src/test_fixtures/ensure_dir/some"
+  );
   const target = path.join(outerTarget, "very/deep/path");
 
   if (fs.existsSync(outerTarget)) {
