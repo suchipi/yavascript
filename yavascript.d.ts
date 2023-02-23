@@ -396,6 +396,11 @@ declare class Path {
   isAbsolute(): boolean;
 
   /**
+   * Make a second Path object containing the same information as this one.
+   */
+  clone(): this;
+
+  /**
    * Turn this path into a string by joining its segments using its separator.
    */
   toString(): string;

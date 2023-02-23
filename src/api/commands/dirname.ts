@@ -1,18 +1,20 @@
 import { Path } from "../path";
 import { is } from "../is";
-import { assert } from "../assert";
 
 export function dirname(path: string | Path) {
+  let pathObj: Path;
+
   if (is(path, types.Path)) {
-    path = path.toString();
+    pathObj = path.clone();
+  } else if (is(path, types.string)) {
+    pathObj = new Path(path);
+  } else {
+    throw new TypeError(
+      "'path' argument must be either a string or a Path object"
+    );
   }
 
-  assert.type(
-    path,
-    String,
-    "'path' argument must be either a string or a Path object"
-  );
+  pathObj.segments.pop();
 
-  const separator = Path.detectSeparator(path);
-  return Path.splitToSegments(path).slice(0, -1).join(separator);
+  return pathObj.toString();
 }

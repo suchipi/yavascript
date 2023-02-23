@@ -203,6 +203,13 @@ class Path {
     return false;
   }
 
+  clone() {
+    return (this.constructor as typeof Path).from(
+      this.segments,
+      this.separator
+    );
+  }
+
   toString() {
     const result = this.segments.join(this.separator);
     if (result == "") {
