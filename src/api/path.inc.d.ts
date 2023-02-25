@@ -44,10 +44,10 @@ declare class Path {
   ): string;
 
   /**
-   * Return whether the provided path string is absolute; that is, whether it
+   * Return whether the provided path is absolute; that is, whether it
    * starts with either `/` or a drive letter (ie `C:`).
    */
-  static isAbsolute(path: string): boolean;
+  static isAbsolute(path: string | Path): boolean;
 
   /** A tagged template literal function that creates a `Path` object. */
   static tag(

@@ -1,4 +1,6 @@
 import * as os from "quickjs:os";
+import { assert } from "./assert";
+import { types } from "./types";
 import { makeErrorWithProperties } from "../error-with-properties";
 
 function validateSegments(segments: Array<string>): Array<string> {
@@ -14,6 +16,11 @@ class Path {
   static OS_ENV_VAR_SEPARATOR = os.platform === "win32" ? ";" : ":";
 
   static splitToSegments(inputParts: Array<string> | string): Array<string> {
+    assert.type(
+      inputParts,
+      types.or(types.string, types.arrayOf(types.string))
+    );
+
     if (!Array.isArray(inputParts)) {
       inputParts = [inputParts];
     }
@@ -28,6 +35,9 @@ class Path {
     // @ts-ignore might be instantiated with a different subtype
     fallback: Fallback = Path.OS_SEGMENT_SEPARATOR
   ): string | Fallback {
+    assert.type(input, types.or(types.string, types.arrayOf(types.string)));
+    assert.type(fallback, types.or(types.string, types.null));
+
     let testStr = input;
     if (Array.isArray(input)) {
       testStr = input.join("|");
@@ -45,29 +55,82 @@ class Path {
   }
 
   static join(...inputs: Array<string | Path | Array<string | Path>>): string {
+    assert.type(
+      inputs,
+      types.arrayOf(
+        types.or(
+          types.string,
+          types.Path,
+          types.arrayOf(types.or(types.string, types.Path))
+        )
+      )
+    );
+
     return new Path(...inputs).toString();
   }
 
   static resolve(
     ...inputs: Array<string | Path | Array<string | Path>>
   ): string {
+    assert.type(
+      inputs,
+      types.arrayOf(
+        types.or(
+          types.string,
+          types.Path,
+          types.arrayOf(types.or(types.string, types.Path))
+        )
+      )
+    );
+
     return new Path(...inputs).resolve().toString();
   }
 
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
   ): string {
+    assert.type(
+      inputs,
+      types.arrayOf(
+        types.or(
+          types.string,
+          types.Path,
+          types.arrayOf(types.or(types.string, types.Path))
+        )
+      )
+    );
+
     return new Path(...inputs).normalize().toString();
   }
 
-  static isAbsolute(path: string): boolean {
-    return new Path(path).isAbsolute();
+  static isAbsolute(path: string | Path): boolean {
+    assert.type(path, types.or(types.string, types.Path));
+
+    if (is(path, types.Path)) {
+      return path.isAbsolute();
+    } else {
+      return new Path(path).isAbsolute();
+    }
   }
 
   static tag(
     _strings: TemplateStringsArray,
     ..._values: ReadonlyArray<string | Path | Array<string | Path>>
   ) {
+    assert.type(_strings, types.arrayOf(types.string));
+    assert.type(
+      _values,
+      types.arrayOf(
+        types.or(
+          types.string,
+          types.Path,
+          types.arrayOf(types.or(types.string, types.Path))
+        )
+      )
+    );
+
+    // clone both arrays so we can `.shift()` from them without worry of
+    // mutating the original inputs
     const strings = [..._strings];
     const values = [..._values];
 
@@ -90,6 +153,8 @@ class Path {
   }
 
   static tagUsingBase(dir: string | Path): typeof Path.tag {
+    assert.type(dir, types.or(types.string, types.Path));
+
     const ret = (strings, ...values) => {
       const stringsClone = Object.assign([...strings], {
         raw: [...strings.raw],
@@ -109,6 +174,17 @@ class Path {
   separator: string;
 
   constructor(...inputs: Array<string | Path | Array<string | Path>>) {
+    assert.type(
+      inputs,
+      types.arrayOf(
+        types.or(
+          types.string,
+          types.Path,
+          types.arrayOf(types.or(types.string, types.Path))
+        )
+      )
+    );
+
     const parts = inputs
       .flat(1)
       .map((part) => (typeof part === "string" ? part : part.segments))
@@ -122,6 +198,9 @@ class Path {
     segments: Array<string>,
     separator: string = Path.OS_SEGMENT_SEPARATOR
   ) {
+    assert.type(segments, types.arrayOf(types.string));
+    assert.type(separator, types.string);
+
     const path = new Path();
     path.segments = validateSegments(segments);
     path.separator = separator;
@@ -129,6 +208,8 @@ class Path {
   }
 
   resolve(from: string | Path = os.getcwd()): Path {
+    assert.type(from, types.or(types.string, types.Path));
+
     if (this.isAbsolute()) {
       return this.normalize();
     }
@@ -185,6 +266,15 @@ class Path {
   }
 
   concat(other: string | Path | Array<string | Path>): Path {
+    assert.type(
+      other,
+      types.or(
+        types.string,
+        types.Path,
+        types.arrayOf(types.or(types.string, types.Path))
+      )
+    );
+
     const otherSegments = new Path(other).segments;
     return Path.from(this.segments.concat(otherSegments), this.separator);
   }
@@ -210,6 +300,8 @@ class Path {
     );
   }
 
+  // TODO: relative(other: Path | string): Path {}
+
   toString() {
     const result = this.segments.join(this.separator);
     if (result == "") {
@@ -220,6 +312,19 @@ class Path {
   }
 }
 
+// .toString() needs to return a value starting with "class" for pheno.coerce
+// to see this function as a class, and therefore coerce it into the type
+// "instanceOf(Path)" when it appears in a function that accepts a type
+// validator (ie. `is` or `assert.type`).
+//
+// Normally, `Path.toString()` would already start with "class", because we
+// defined it using class syntax. But, as part of compiling yavascript, the
+// source code is converted to QuickJS bytecode, and that bytecode
+// representation does not preserve Function bodies, so `Path.toString()`
+// changes. It instead returns "function Path() {\n    [native code]\n}".
+//
+// Explicitly overriding it like this ensures that it has the correct value
+// even after bytecode conversion.
 Object.defineProperty(Path, "toString", {
   value: () => "class Path {\n    [native code]\n}",
 });
