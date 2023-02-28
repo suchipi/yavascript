@@ -4,148 +4,169 @@ import { dirname } from "./commands/dirname";
 import { exists, isDir } from "./filesystem";
 import { is } from "./is";
 import { types } from "./types";
-import type { Path } from "./path";
+import { Path } from "./path";
 import { assert } from "./assert";
 import { makeErrorWithProperties } from "../error-with-properties";
 
-export const Git = Object.assign(Object.create(null), {
-  commitSHA,
-  branchName,
-  isWorkingTreeDirty,
-  repoRoot,
-  isIgnored,
-});
+export class Git {
+  repoDir: Path;
 
-function _resolveRelativeTo(input: string | Path): string {
-  if (is(input, types.Path)) {
-    input = input.toString();
-  }
+  static repoRoot(fromPath: string | Path): string {
+    if (is(fromPath, types.Path)) {
+      fromPath = fromPath.toString();
+    }
 
-  assert.type(
-    input,
-    types.string,
-    "when present, 'input' argument must be either a string or a Path object"
-  );
+    assert.type(
+      fromPath,
+      types.string,
+      "when present, 'fromPath' argument must be either a string or a Path object"
+    );
 
-  if (exists(input) && !isDir(input)) {
-    input = dirname(input);
-  }
+    if (exists(fromPath) && !isDir(fromPath)) {
+      fromPath = dirname(fromPath);
+    }
 
-  return input;
-}
-
-function commitSHA(relativeTo: string | Path = pwd()): string {
-  relativeTo = _resolveRelativeTo(relativeTo);
-
-  const result = exec(["git", "rev-parse", "HEAD"], {
-    failOnNonZeroStatus: false,
-    captureOutput: true,
-    cwd: relativeTo,
-  });
-  if (result.status !== 0) {
-    throw makeErrorWithProperties("'git rev-parse HEAD' failed", {
-      status: result.status,
-      stderr: result.stderr,
-      stdout: result.stdout,
-      cwd: relativeTo,
-      signal: result.signal,
+    const result = exec(["git", "rev-parse", "--show-toplevel"], {
+      failOnNonZeroStatus: false,
+      captureOutput: true,
+      cwd: fromPath,
     });
+    if (result.status !== 0) {
+      throw makeErrorWithProperties("'git rev-parse --show-toplevel' failed", {
+        status: result.status,
+        stderr: result.stderr,
+        stdout: result.stdout,
+        cwd: fromPath,
+        signal: result.signal,
+      });
+    }
+
+    return result.stdout.trim();
   }
 
-  return result.stdout.trim();
-}
+  constructor(repoDir: string | Path) {
+    assert.type(
+      repoDir,
+      types.or(types.Path, types.string),
+      "'repoDir' argument must be either a string or a Path object"
+    );
 
-function branchName(relativeTo: string | Path = pwd()): string | null {
-  relativeTo = _resolveRelativeTo(relativeTo);
+    if (typeof repoDir === "string") {
+      this.repoDir = new Path(repoDir);
+    } else {
+      this.repoDir = repoDir.clone();
+    }
+  }
 
-  const result = exec(["git", "rev-parse", "--abbrev-ref", "HEAD"], {
-    failOnNonZeroStatus: false,
-    captureOutput: true,
-    cwd: relativeTo,
-  });
-  if (result.status !== 0) {
-    throw makeErrorWithProperties("'git rev-parse --abbrev-ref HEAD' failed", {
-      status: result.status,
-      stderr: result.stderr,
-      stdout: result.stdout,
-      cwd: relativeTo,
-      signal: result.signal,
+  commitSHA(): string {
+    const repoDir = this.repoDir.toString();
+
+    const result = exec(["git", "rev-parse", "HEAD"], {
+      failOnNonZeroStatus: false,
+      captureOutput: true,
+      cwd: repoDir,
     });
+    if (result.status !== 0) {
+      throw makeErrorWithProperties("'git rev-parse HEAD' failed", {
+        status: result.status,
+        stderr: result.stderr,
+        stdout: result.stdout,
+        cwd: repoDir,
+        signal: result.signal,
+      });
+    }
+
+    return result.stdout.trim();
   }
 
-  const name = result.stdout.trim();
-  if (name === "HEAD") {
-    return null;
-  } else {
-    return name;
-  }
-}
+  branchName(): string | null {
+    const repoDir = this.repoDir.toString();
 
-function isWorkingTreeDirty(relativeTo: string | Path = pwd()): boolean {
-  relativeTo = _resolveRelativeTo(relativeTo);
-
-  const result = exec(["git", "diff", "--quiet"], {
-    failOnNonZeroStatus: false,
-    captureOutput: true,
-    cwd: relativeTo,
-  });
-  if (result.status !== 0 && result.status !== 1) {
-    throw makeErrorWithProperties("'git diff --quiet' failed", {
-      status: result.status,
-      stderr: result.stderr,
-      stdout: result.stdout,
-      cwd: relativeTo,
-      signal: result.signal,
+    const result = exec(["git", "rev-parse", "--abbrev-ref", "HEAD"], {
+      failOnNonZeroStatus: false,
+      captureOutput: true,
+      cwd: repoDir,
     });
+    if (result.status !== 0) {
+      throw makeErrorWithProperties(
+        "'git rev-parse --abbrev-ref HEAD' failed",
+        {
+          status: result.status,
+          stderr: result.stderr,
+          stdout: result.stdout,
+          cwd: repoDir,
+          signal: result.signal,
+        }
+      );
+    }
+
+    const name = result.stdout.trim();
+    if (name === "HEAD") {
+      return null;
+    } else {
+      return name;
+    }
   }
 
-  return result.status === 1;
-}
+  isWorkingTreeDirty(): boolean {
+    const repoDir = this.repoDir.toString();
 
-function repoRoot(relativeTo: string | Path = pwd()): string {
-  relativeTo = _resolveRelativeTo(relativeTo);
-
-  const result = exec(["git", "rev-parse", "--show-toplevel"], {
-    failOnNonZeroStatus: false,
-    captureOutput: true,
-    cwd: relativeTo,
-  });
-  if (result.status !== 0) {
-    throw makeErrorWithProperties("'git rev-parse --show-toplevel' failed", {
-      status: result.status,
-      stderr: result.stderr,
-      stdout: result.stdout,
-      cwd: relativeTo,
-      signal: result.signal,
+    const result = exec(["git", "diff", "--quiet"], {
+      failOnNonZeroStatus: false,
+      captureOutput: true,
+      cwd: repoDir,
     });
+    if (result.status !== 0 && result.status !== 1) {
+      throw makeErrorWithProperties("'git diff --quiet' failed", {
+        status: result.status,
+        stderr: result.stderr,
+        stdout: result.stdout,
+        cwd: repoDir,
+        signal: result.signal,
+      });
+    }
+
+    return result.status === 1;
   }
 
-  return result.stdout.trim();
-}
-
-function isIgnored(path: string | Path): boolean {
-  if (is(path, types.Path)) {
-    path = path.toString();
-  }
-
-  assert.type(
-    path,
-    types.string,
-    "'path' argument must be either a string or a Path object"
-  );
-
-  const result = exec(["git", "check-ignore", path], {
-    failOnNonZeroStatus: false,
-    captureOutput: true,
-  });
-  if (result.status !== 0 && result.status !== 1) {
-    throw makeErrorWithProperties(`'git check-ignore ${path}' failed`, {
-      status: result.status,
-      stderr: result.stderr,
-      stdout: result.stdout,
+  isIgnored(path: string | Path): boolean {
+    assert.type(
       path,
-      signal: result.signal,
+      types.or(types.string, types.Path),
+      "'path' argument must be either a string or a Path object"
+    );
+
+    const resolvedPath = Path.resolve(pwd(), path);
+    const repoDir = this.repoDir.toString();
+
+    if (!resolvedPath.startsWith(repoDir)) {
+      throw makeErrorWithProperties(
+        "Path passed to Git.isIgnored is outside of the Git object's repoDir. When passing a relative path, it will be resolved relative to the current `pwd()`.",
+        {
+          path: path.toString(),
+          resolvedPath,
+          pwd: pwd(),
+          repoDir,
+        }
+      );
+    }
+
+    const result = exec(["git", "check-ignore", resolvedPath], {
+      failOnNonZeroStatus: false,
+      captureOutput: true,
     });
+    if (result.status !== 0 && result.status !== 1) {
+      throw makeErrorWithProperties(
+        `'git check-ignore '${resolvedPath}' failed`,
+        {
+          status: result.status,
+          stderr: result.stderr,
+          stdout: result.stdout,
+          path: resolvedPath,
+          signal: result.signal,
+        }
+      );
+    }
+    return result.status === 0;
   }
-  return result.status === 0;
 }
