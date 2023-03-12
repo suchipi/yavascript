@@ -3,7 +3,7 @@ set -ex
 
 mkdir -p dist
 
-MACARONI="npx @suchipi/macaroni --include-paths src,src/api,src/api/commands,src/api/exec,src/templates,meta/quickjs/src/quickjs-libc"
+MACARONI="npx @suchipi/macaroni --include-paths src,src/api,src/api/commands,src/api/exec,src/templates,meta/quickjs/src/quickjs,meta/quickjs/src/quickjs-libc,meta/quickjs/src/quickjs-libbytecode,meta/quickjs/src/quickjs-libcontext"
 
 $MACARONI src/templates/yavascript.d.ts.tmpl > dist/yavascript.d.ts
 npx prettier --write dist/yavascript.d.ts
