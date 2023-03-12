@@ -138,6 +138,8 @@ function copyRaw(
 ): void {
   let filesToCloseLater: Record<string, FILE> = {};
 
+  let fromStats: null | os.Stats = null;
+
   try {
     if (trace) {
       trace("opening", from, "(mode: rb)");
@@ -154,13 +156,13 @@ function copyRaw(
     const chunkSize = 256 * 1024; // 256KB
     const buffer = new ArrayBuffer(chunkSize);
 
-    const fromSize = os.stat(from).size;
+    fromStats = os.stat(from);
 
     if (trace) {
       trace("copying data", { from, to, chunkSize });
     }
     while (!fromFile.eof()) {
-      const amountRemaining = fromSize - fromFile.tell();
+      const amountRemaining = fromStats.size - fromFile.tell();
       if (trace) {
         trace(`${amountRemaining} bytes remaining`);
       }
@@ -199,6 +201,22 @@ function copyRaw(
         trace("copyRaw failed to close a file:", { from, to, err });
       }
       // ignored
+    }
+
+    if (fromStats) {
+      try {
+        const fromPerms =
+          fromStats.mode & (os.S_IRWXU | os.S_IRWXG | os.S_IRWXO);
+        os.chmod(to, fromPerms);
+      } catch (err) {
+        if (trace) {
+          trace(
+            "copyRaw failed to set access mode of 'to' to match that of 'from':",
+            { from, to, err }
+          );
+        }
+        throw err;
+      }
     }
   }
 }
