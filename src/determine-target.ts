@@ -1,15 +1,21 @@
 import { LANGS } from "./langs";
 
-type TargetInfo<Name extends String, Rest = {}> = { target: Name } & Rest;
+type TargetInfo<Name extends string, Rest = {}> = { target: Name } & Rest;
 
 export type TargetDetermination =
   | TargetInfo<"help">
   | TargetInfo<"version">
   | TargetInfo<"license">
   | TargetInfo<"print-types">
-  | TargetInfo<"repl", { lang: string | null }>
-  | TargetInfo<"eval", { code: string; lang: string | null }>
-  | TargetInfo<"run-file", { file: string; lang: string | null }>
+  | TargetInfo<"repl", { lang: string | null; filesToLoadFirst: Array<string> }>
+  | TargetInfo<
+      "eval",
+      { code: string; lang: string | null; filesToLoadFirst: Array<string> }
+    >
+  | TargetInfo<
+      "run-file",
+      { file: string; lang: string | null; filesToLoadFirst: Array<string> }
+    >
   | TargetInfo<"invalid", { message: string }>;
 
 export default function determineTarget(
@@ -19,19 +25,19 @@ export default function determineTarget(
 
   if (rest.length === 0) {
     // They ran the program with no args
-    return { target: "repl", lang: null };
+    return { target: "repl", lang: null, filesToLoadFirst: [] };
   }
 
   const arg1 = rest[0];
   if (rest.length === 1) {
-    // Note that these flags *only* function when there are no other arguments.
-    // This is done to minimize collisions between flags for user programs and
-    // flags for yavascript itself. Namely, if a user wants to implement custom
-    // behavior in their own CLI tool for '-h' or '-v', they should be able to
-    // do so. In order to guarantee that, we must *NOT* run *our* behavior for
-    // those flags unless we are certain we aren't about to execute a user
-    // program.
     switch (arg1) {
+      // Note that these flags *only* function when there are no other arguments.
+      // This is done to minimize collisions between flags for user programs and
+      // flags for yavascript itself. Namely, if a user wants to implement custom
+      // behavior in their own CLI tool for '-h' or '-v', they should be able to
+      // do so. In order to guarantee that, we must *NOT* run *our* behavior for
+      // those flags unless we are certain we aren't about to execute a user
+      // program.
       case "-h":
       case "--help": {
         return { target: "help" };
@@ -63,13 +69,26 @@ export default function determineTarget(
         };
       }
 
+      case "-r":
+      case "--require": {
+        return {
+          target: "invalid",
+          message: `${arg1} requires an argument: The file to preload.`,
+        };
+      }
+
       case "--": {
         // Act as if they ran the program with no args
-        return { target: "repl", lang: null };
+        return { target: "repl", lang: null, filesToLoadFirst: [] };
       }
 
       default: {
-        return { target: "run-file", file: arg1, lang: null };
+        return {
+          target: "run-file",
+          file: arg1,
+          lang: null,
+          filesToLoadFirst: [],
+        };
       }
     }
   }
@@ -78,7 +97,10 @@ export default function determineTarget(
     file: null as string | null,
     eval: null as string | null,
     lang: null as string | null,
+    preloadFiles: [] as Array<string>,
   };
+
+  let hasFoundFileFromArgs = false;
 
   for (let i = 0; i < rest.length; i++) {
     const arg = rest[i];
@@ -96,6 +118,16 @@ export default function determineTarget(
         };
       }
       info.eval = nextArg;
+      i++;
+    } else if (!hasFoundFileFromArgs && (arg === "-r" || arg === "--require")) {
+      if (nextArg == null) {
+        return {
+          target: "invalid",
+          message: `${arg} requires an argument: The file to load.`,
+        };
+      }
+
+      info.preloadFiles.push(nextArg);
       i++;
     } else if (arg === "--lang") {
       if (nextArg == null) {
@@ -121,14 +153,29 @@ export default function determineTarget(
       i++;
     } else if (info.eval == null && info.file == null) {
       info.file = arg;
+      hasFoundFileFromArgs = true;
     }
   }
 
   if (info.eval != null) {
-    return { target: "eval", code: info.eval, lang: info.lang };
+    return {
+      target: "eval",
+      code: info.eval,
+      lang: info.lang,
+      filesToLoadFirst: info.preloadFiles,
+    };
   } else if (info.file != null) {
-    return { target: "run-file", file: info.file, lang: info.lang };
+    return {
+      target: "run-file",
+      file: info.file,
+      lang: info.lang,
+      filesToLoadFirst: info.preloadFiles,
+    };
   } else {
-    return { target: "repl", lang: info.lang };
+    return {
+      target: "repl",
+      lang: info.lang,
+      filesToLoadFirst: info.preloadFiles,
+    };
   }
 }

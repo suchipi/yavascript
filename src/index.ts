@@ -10,6 +10,15 @@ function main(): void {
 
   switch (targetInfo.target) {
     case "eval": {
+      if (targetInfo.filesToLoadFirst.length > 0) {
+        const runFileTarget: typeof import("./targets/run-file").default =
+          require("./targets/run-file").default;
+
+        for (const file of targetInfo.filesToLoadFirst) {
+          runFileTarget(file, null);
+        }
+      }
+
       const evalTarget: typeof import("./targets/eval").default =
         require("./targets/eval").default;
 
@@ -48,6 +57,15 @@ function main(): void {
       return;
     }
     case "repl": {
+      if (targetInfo.filesToLoadFirst.length > 0) {
+        const runFileTarget: typeof import("./targets/run-file").default =
+          require("./targets/run-file").default;
+
+        for (const file of targetInfo.filesToLoadFirst) {
+          runFileTarget(file, null);
+        }
+      }
+
       const replTarget: typeof import("./targets/repl").default =
         require("./targets/repl").default;
 
@@ -58,6 +76,10 @@ function main(): void {
     case "run-file": {
       const runFileTarget: typeof import("./targets/run-file").default =
         require("./targets/run-file").default;
+
+      for (const file of targetInfo.filesToLoadFirst) {
+        runFileTarget(file, null);
+      }
 
       const { file, lang } = targetInfo;
       runFileTarget(file, lang);

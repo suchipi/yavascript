@@ -39,6 +39,14 @@ ${bold("Usage:")} ${bin("yavascript")} ${opt("[options]")} [file-to-run]
                       extension, the language will be inferred from its
                       contents.
 
+  ${boldOpt("-r")} ${str("<file>")} /
+  ${boldOpt("--require")} ${str(
+    "<file>"
+  )}:   File to preload; this file will be loaded prior to
+                      performing other actions, such as the repl, eval, or
+                      loading a file normally. This flag can be specified more
+                      than once to specify more than one file to preload.
+
   ${boldOpt("-h")} / ${boldOpt("--help")}:        Show this text
 
   ${boldOpt("-v")} / ${boldOpt("--version")}:     Print the version
@@ -76,6 +84,16 @@ Examples:
   ${bin("yavascript")} ${opt("--eval")} ${str("'Math.floor 2.5'")} ${opt(
     "--lang"
   )} ${str("'coffee'")}
+
+  ${dim("# Run one file, then run another")}
+  ${bin("yavascript")} ${opt("-r")} first.ts second.js
+  ${bin("yavascript")} ${opt("--require")} first.ts second.js
+
+  ${dim("# Run three files")}
+  ${bin("yavascript")} ${opt("-r")} first.ts ${opt("-r")} second.js third.coffee
+  ${bin("yavascript")} ${opt("--require")} first.ts ${opt(
+    "--require"
+  )} second.js third.coffee
 
   ${dim("# Print various information")}
   ${bin("yavascript")} ${opt("-v")}

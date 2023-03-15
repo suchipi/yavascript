@@ -6,6 +6,7 @@ exports[`(empty) 1`] = `
     "/usr/local/bin/yavascript",
   ],
   "result": {
+    "filesToLoadFirst": [],
     "lang": null,
     "target": "repl",
   },
@@ -53,8 +54,39 @@ exports[`/tmp/something -v --help 1`] = `
   ],
   "result": {
     "file": "/tmp/something",
+    "filesToLoadFirst": [],
     "lang": null,
     "target": "run-file",
+  },
+}
+`;
+
+exports[`-- --require 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--",
+    "--require",
+  ],
+  "result": {
+    "filesToLoadFirst": [],
+    "lang": null,
+    "target": "repl",
+  },
+}
+`;
+
+exports[`-- -r 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--",
+    "-r",
+  ],
+  "result": {
+    "filesToLoadFirst": [],
+    "lang": null,
+    "target": "repl",
   },
 }
 `;
@@ -67,6 +99,7 @@ exports[`-- -v 1`] = `
     "-v",
   ],
   "result": {
+    "filesToLoadFirst": [],
     "lang": null,
     "target": "repl",
   },
@@ -80,8 +113,45 @@ exports[`-- 1`] = `
     "--",
   ],
   "result": {
+    "filesToLoadFirst": [],
     "lang": null,
     "target": "repl",
+  },
+}
+`;
+
+exports[`--eval "2 + 2" -- --require 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--eval",
+    "2 + 2",
+    "--",
+    "--require",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "filesToLoadFirst": [],
+    "lang": null,
+    "target": "eval",
+  },
+}
+`;
+
+exports[`--eval "2 + 2" -- -r 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--eval",
+    "2 + 2",
+    "--",
+    "-r",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "filesToLoadFirst": [],
+    "lang": null,
+    "target": "eval",
   },
 }
 `;
@@ -112,6 +182,7 @@ exports[`--eval "2 + 2" --lang coffee 1`] = `
   ],
   "result": {
     "code": "2 + 2",
+    "filesToLoadFirst": [],
     "lang": "coffee",
     "target": "eval",
   },
@@ -127,6 +198,7 @@ exports[`--eval "2 + 2" 1`] = `
   ],
   "result": {
     "code": "2 + 2",
+    "filesToLoadFirst": [],
     "lang": null,
     "target": "eval",
   },
@@ -143,6 +215,7 @@ exports[`--eval --lang js 1`] = `
   ],
   "result": {
     "code": "--lang",
+    "filesToLoadFirst": [],
     "lang": null,
     "target": "eval",
   },
@@ -213,6 +286,7 @@ exports[`--lang jsx ../something.js 1`] = `
   ],
   "result": {
     "file": "../something.js",
+    "filesToLoadFirst": [],
     "lang": "jsx",
     "target": "run-file",
   },
@@ -230,6 +304,7 @@ exports[`--lang tsx --eval "2 + 2" 1`] = `
   ],
   "result": {
     "code": "2 + 2",
+    "filesToLoadFirst": [],
     "lang": "tsx",
     "target": "eval",
   },
@@ -247,6 +322,7 @@ exports[`--lang tsx -e "2 + 2" 1`] = `
   ],
   "result": {
     "code": "2 + 2",
+    "filesToLoadFirst": [],
     "lang": "tsx",
     "target": "eval",
   },
@@ -277,6 +353,137 @@ exports[`--print-types 1`] = `
 }
 `;
 
+exports[`--require 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--require",
+  ],
+  "result": {
+    "message": "--require requires an argument: The file to preload.",
+    "target": "invalid",
+  },
+}
+`;
+
+exports[`--require some-file --eval "2 + 2" 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--require",
+    "some-file",
+    "--eval",
+    "2 + 2",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "filesToLoadFirst": [
+      "some-file",
+    ],
+    "lang": null,
+    "target": "eval",
+  },
+}
+`;
+
+exports[`--require some-file --require another-file 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--require",
+    "some-file",
+    "--require",
+    "another-file",
+  ],
+  "result": {
+    "filesToLoadFirst": [
+      "some-file",
+      "another-file",
+    ],
+    "lang": null,
+    "target": "repl",
+  },
+}
+`;
+
+exports[`--require some-file --require another-file main-file 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--require",
+    "some-file",
+    "--require",
+    "another-file",
+    "main-file",
+  ],
+  "result": {
+    "file": "main-file",
+    "filesToLoadFirst": [
+      "some-file",
+      "another-file",
+    ],
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;
+
+exports[`--require some-file -e "2 + 2" 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--require",
+    "some-file",
+    "-e",
+    "2 + 2",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "filesToLoadFirst": [
+      "some-file",
+    ],
+    "lang": null,
+    "target": "eval",
+  },
+}
+`;
+
+exports[`--require some-file 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--require",
+    "some-file",
+  ],
+  "result": {
+    "filesToLoadFirst": [
+      "some-file",
+    ],
+    "lang": null,
+    "target": "repl",
+  },
+}
+`;
+
+exports[`--require some-file main-file 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "--require",
+    "some-file",
+    "main-file",
+  ],
+  "result": {
+    "file": "main-file",
+    "filesToLoadFirst": [
+      "some-file",
+    ],
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;
+
 exports[`--version 1`] = `
 {
   "argv": [
@@ -300,6 +507,7 @@ exports[`-e "2 + 2" --lang coffee 1`] = `
   ],
   "result": {
     "code": "2 + 2",
+    "filesToLoadFirst": [],
     "lang": "coffee",
     "target": "eval",
   },
@@ -315,6 +523,7 @@ exports[`-e "2 + 2" 1`] = `
   ],
   "result": {
     "code": "2 + 2",
+    "filesToLoadFirst": [],
     "lang": null,
     "target": "eval",
   },
@@ -346,6 +555,137 @@ exports[`-h 1`] = `
 }
 `;
 
+exports[`-r 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-r",
+  ],
+  "result": {
+    "message": "-r requires an argument: The file to preload.",
+    "target": "invalid",
+  },
+}
+`;
+
+exports[`-r some-file --eval "2 + 2" 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-r",
+    "some-file",
+    "--eval",
+    "2 + 2",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "filesToLoadFirst": [
+      "some-file",
+    ],
+    "lang": null,
+    "target": "eval",
+  },
+}
+`;
+
+exports[`-r some-file -e "2 + 2" 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-r",
+    "some-file",
+    "-e",
+    "2 + 2",
+  ],
+  "result": {
+    "code": "2 + 2",
+    "filesToLoadFirst": [
+      "some-file",
+    ],
+    "lang": null,
+    "target": "eval",
+  },
+}
+`;
+
+exports[`-r some-file -r another-file 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-r",
+    "some-file",
+    "-r",
+    "another-file",
+  ],
+  "result": {
+    "filesToLoadFirst": [
+      "some-file",
+      "another-file",
+    ],
+    "lang": null,
+    "target": "repl",
+  },
+}
+`;
+
+exports[`-r some-file -r another-file main-file 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-r",
+    "some-file",
+    "-r",
+    "another-file",
+    "main-file",
+  ],
+  "result": {
+    "file": "main-file",
+    "filesToLoadFirst": [
+      "some-file",
+      "another-file",
+    ],
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;
+
+exports[`-r some-file 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-r",
+    "some-file",
+  ],
+  "result": {
+    "filesToLoadFirst": [
+      "some-file",
+    ],
+    "lang": null,
+    "target": "repl",
+  },
+}
+`;
+
+exports[`-r some-file main-file 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "-r",
+    "some-file",
+    "main-file",
+  ],
+  "result": {
+    "file": "main-file",
+    "filesToLoadFirst": [
+      "some-file",
+    ],
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;
+
 exports[`-v 1`] = `
 {
   "argv": [
@@ -370,6 +710,72 @@ exports[`-version 1`] = `
 }
 `;
 
+exports[`my-file --require 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "my-file",
+    "--require",
+  ],
+  "result": {
+    "file": "my-file",
+    "filesToLoadFirst": [],
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;
+
+exports[`my-file --require some-file 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "my-file",
+    "--require",
+    "some-file",
+  ],
+  "result": {
+    "file": "my-file",
+    "filesToLoadFirst": [],
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;
+
+exports[`my-file -r 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "my-file",
+    "-r",
+  ],
+  "result": {
+    "file": "my-file",
+    "filesToLoadFirst": [],
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;
+
+exports[`my-file -r some-file 1`] = `
+{
+  "argv": [
+    "/usr/local/bin/yavascript",
+    "my-file",
+    "-r",
+    "some-file",
+  ],
+  "result": {
+    "file": "my-file",
+    "filesToLoadFirst": [],
+    "lang": null,
+    "target": "run-file",
+  },
+}
+`;
+
 exports[`some-file -- --hi 1`] = `
 {
   "argv": [
@@ -380,6 +786,7 @@ exports[`some-file -- --hi 1`] = `
   ],
   "result": {
     "file": "some-file",
+    "filesToLoadFirst": [],
     "lang": null,
     "target": "run-file",
   },
@@ -396,6 +803,7 @@ exports[`something.js --lang coffee 1`] = `
   ],
   "result": {
     "file": "something.js",
+    "filesToLoadFirst": [],
     "lang": "coffee",
     "target": "run-file",
   },
@@ -410,6 +818,7 @@ exports[`something.js 1`] = `
   ],
   "result": {
     "file": "something.js",
+    "filesToLoadFirst": [],
     "lang": null,
     "target": "run-file",
   },
