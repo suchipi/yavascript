@@ -4400,9 +4400,6 @@ declare module "quickjs:os" {
   export var SIGQUIT: number | undefined;
 
   /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGQUIT: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
   export var SIGPIPE: number | undefined;
 
   /** POSIX signal number. NOTE: this signal is not present on windows. */
