@@ -42,14 +42,21 @@ in_docker node:${NODE_VERSION} meta/scripts/assemble-dts.sh
 in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=arm64 npm run bundle -- --output dist/index-arm64.js
 in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=x86_64 npm run bundle -- --output dist/index-x86_64.js
 
+if [[ "$(uname -m)" == "x86_64" ]]; then
+  HOST_QJS_BINARY="meta/quickjs/build/x86_64-unknown-linux-static/bin/qjs"
+else
+  HOST_QJS_BINARY="meta/quickjs/build/aarch64-unknown-linux-static/bin/qjs"
+fi
+
 # compile dist/index-*.js to bytecode
 cp dist/index-arm64.js yavascript-internal.js # to have clearer filename in stack traces
-in_docker node:${NODE_VERSION} meta/quickjs/build/linux-amd64/bin/qjs \
+in_docker node:${NODE_VERSION} "$HOST_QJS_BINARY" \
   meta/scripts/to-bytecode.mjs \
   yavascript-internal.js \
   dist/index-arm64.bin
+
 cp dist/index-x86_64.js yavascript-internal.js # to have clearer filename in stack traces
-in_docker node:${NODE_VERSION} meta/quickjs/build/linux-amd64/bin/qjs \
+in_docker node:${NODE_VERSION} "$HOST_QJS_BINARY" \
   meta/scripts/to-bytecode.mjs \
   yavascript-internal.js \
   dist/index-x86_64.bin
@@ -60,7 +67,7 @@ function make_program() {
   TARGET="$1"
   BYTECODE_FILE="$2"
 
-  if [[ $TARGET = win* ]]; then
+  if [[ $TARGET = *windows* ]]; then
     EXE=".exe"
   else
     EXE=""
@@ -77,16 +84,20 @@ function make_program() {
 }
 
 for TARGET in \
-  darwin-x86_64 \
-  linux-amd64 \
-  windows-x86_64 \
+  x86_64-apple-darwin \
+  x86_64-unknown-linux-gnu \
+  x86_64-unknown-linux-musl \
+  x86_64-unknown-linux-static \
+  x86_64-pc-windows-static \
 ; do
   make_program "$TARGET" dist/index-x86_64.bin
 done
 
 for TARGET in \
-  darwin-arm64 \
-  linux-aarch64 \
+  aarch64-apple-darwin \
+  aarch64-unknown-linux-gnu \
+  aarch64-unknown-linux-musl \
+  aarch64-unknown-linux-static \
 ; do
   make_program "$TARGET" dist/index-arm64.bin
 done
