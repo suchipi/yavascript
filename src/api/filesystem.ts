@@ -137,8 +137,7 @@ function copyRaw(
     | ((...args: Array<any>) => void) = traceAll.getDefaultTrace()
 ): void {
   let filesToCloseLater: Record<string, FILE> = {};
-
-  let fromStats: null | os.Stats = null;
+  let fdsToCloseLater: Record<string, number> = {};
 
   try {
     if (trace) {
@@ -147,16 +146,23 @@ function copyRaw(
     const fromFile = std.open(from, "rb");
     filesToCloseLater[from] = fromFile;
 
+    const fromStats = os.stat(from);
+    const fromPerms = fromStats.mode & (os.S_IRWXU | os.S_IRWXG | os.S_IRWXO);
+
     if (trace) {
-      trace("opening", to, "(mode: w)");
+      trace(
+        "opening",
+        to,
+        `(flags: O_WRONLY | O_CREAT, mode: 0o${fromPerms.toString(8)})`
+      );
     }
-    const toFile = std.open(to, "w");
+    const toFd = os.open(to, os.O_WRONLY | os.O_CREAT, fromPerms);
+    fdsToCloseLater[to] = toFd;
+    const toFile = std.fdopen(toFd, "w");
     filesToCloseLater[to] = toFile;
 
     const chunkSize = 256 * 1024; // 256KB
     const buffer = new ArrayBuffer(chunkSize);
-
-    fromStats = os.stat(from);
 
     if (trace) {
       trace("copying data", { from, to, chunkSize });
@@ -203,20 +209,19 @@ function copyRaw(
       // ignored
     }
 
-    if (fromStats) {
-      try {
-        const fromPerms =
-          fromStats.mode & (os.S_IRWXU | os.S_IRWXG | os.S_IRWXO);
-        os.chmod(to, fromPerms);
-      } catch (err) {
+    try {
+      for (const [fileName, fd] of Object.entries(fdsToCloseLater)) {
         if (trace) {
-          trace(
-            "copyRaw failed to set access mode of 'to' to match that of 'from':",
-            { from, to, err }
-          );
+          trace("closing fd", fd, `(${fileName})`);
         }
-        throw err;
+        os.close(fd);
       }
+      fdsToCloseLater = {};
+    } catch (err) {
+      if (trace) {
+        trace("copyRaw failed to close an fd:", { from, to, err });
+      }
+      // ignored
     }
   }
 }
