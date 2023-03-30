@@ -762,7 +762,7 @@ declare type GlobOptions = {
   /**
    * Directory to interpret glob patterns relative to. Defaults to `pwd()`.
    */
-  dir?: string;
+  dir?: string | Path;
 };
 
 /**

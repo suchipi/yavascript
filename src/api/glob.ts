@@ -5,6 +5,7 @@ import { pwd } from "./commands/pwd";
 import { Path } from "./path";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
+import { is } from "./is";
 import { assert } from "./assert";
 import { types } from "./types";
 
@@ -30,7 +31,7 @@ function compile(pattern: string, startingDir: string) {
 }
 
 export type GlobOptions = {
-  dir?: string;
+  dir?: string | Path;
   followSymlinks?: boolean;
   trace?: (...args: Array<any>) => void;
 };
@@ -53,7 +54,7 @@ export function glob(
 
   assert.type(
     options.dir,
-    types.or(types.string, types.undefined),
+    types.or(types.string, types.Path, types.undefined),
     "when present, 'dir' option must be a string"
   );
 
@@ -63,9 +64,13 @@ export function glob(
     "when present, 'trace' option must be a function"
   );
 
-  const dir = options.dir ?? pwd();
+  let dir = options.dir ?? pwd();
   const trace = options.trace ?? traceAll.getDefaultTrace();
   const patternsArray = Array.isArray(patterns) ? patterns : [patterns];
+
+  if (is(dir, types.Path)) {
+    dir = dir.toString();
+  }
 
   if (!exists(dir)) {
     throw new Error(`No such directory: ${dir} (from ${pwd()})`);
