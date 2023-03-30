@@ -6,18 +6,31 @@ import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
 import { ls } from "./commands/ls";
 import { pipe } from "./pipe";
+import { is } from "./is";
+import { types } from "./types";
+import { assert } from "./assert";
 
 type ReadFile = {
-  (path: string): string;
-  (path: string, options: {}): string;
-  (path: string, options: { binary: false }): string;
-  (path: string, options: { binary: true }): ArrayBuffer;
+  (path: string | Path): string;
+  (path: string | Path, options: {}): string;
+  (path: string | Path, options: { binary: false }): string;
+  (path: string | Path, options: { binary: true }): ArrayBuffer;
 };
 
 export const readFile: ReadFile = function readFile(
-  path: string,
+  path: string | Path,
   options: { binary?: boolean } = {}
 ): string | ArrayBuffer {
+  assert.type(
+    path,
+    types.or(types.string, types.Path),
+    "'path' argument must be either a string or a Path object"
+  );
+
+  if (is(path, types.Path)) {
+    path = path.toString();
+  }
+
   if (options.binary) {
     return pipe({ path }, ArrayBuffer).target;
   } else {
@@ -25,7 +38,20 @@ export const readFile: ReadFile = function readFile(
   }
 } as any;
 
-export function writeFile(path: string, data: string | ArrayBuffer): void {
+export function writeFile(
+  path: string | Path,
+  data: string | ArrayBuffer
+): void {
+  assert.type(
+    path,
+    types.or(types.string, types.Path),
+    "'path' argument must be either a string or a Path object"
+  );
+
+  if (is(path, types.Path)) {
+    path = path.toString();
+  }
+
   const file = std.open(path, "w");
   try {
     if (typeof data === "string") {
@@ -38,7 +64,17 @@ export function writeFile(path: string, data: string | ArrayBuffer): void {
   }
 }
 
-export function isDir(path: string): boolean {
+export function isDir(path: string | Path): boolean {
+  assert.type(
+    path,
+    types.or(types.string, types.Path),
+    "'path' argument must be either a string or a Path object"
+  );
+
+  if (is(path, types.Path)) {
+    path = path.toString();
+  }
+
   try {
     const stats = os.lstat(path);
 
@@ -52,7 +88,17 @@ export function isDir(path: string): boolean {
   }
 }
 
-export function isLink(path: string): boolean {
+export function isLink(path: string | Path): boolean {
+  assert.type(
+    path,
+    types.or(types.string, types.Path),
+    "'path' argument must be either a string or a Path object"
+  );
+
+  if (is(path, types.Path)) {
+    path = path.toString();
+  }
+
   try {
     const stats = os.lstat(path);
     return Boolean((os.S_IFMT & stats.mode) === os.S_IFLNK);
@@ -61,7 +107,17 @@ export function isLink(path: string): boolean {
   }
 }
 
-export function remove(path: string): void {
+export function remove(path: string | Path): void {
+  assert.type(
+    path,
+    types.or(types.string, types.Path),
+    "'path' argument must be either a string or a Path object"
+  );
+
+  if (is(path, types.Path)) {
+    path = path.toString();
+  }
+
   if (isDir(path)) {
     const children = os
       .readdir(path)
@@ -76,7 +132,17 @@ export function remove(path: string): void {
   os.remove(path);
 }
 
-export function exists(path: string): boolean {
+export function exists(path: string | Path): boolean {
+  assert.type(
+    path,
+    types.or(types.string, types.Path),
+    "'path' argument must be either a string or a Path object"
+  );
+
+  if (is(path, types.Path)) {
+    path = path.toString();
+  }
+
   try {
     os.access(path, os.F_OK);
     return true;
@@ -102,7 +168,17 @@ function getPathInfo(path: string) {
   return "file";
 }
 
-export function ensureDir(path: string) {
+export function ensureDir(path: string | Path) {
+  assert.type(
+    path,
+    types.or(types.string, types.Path),
+    "'path' argument must be either a string or a Path object"
+  );
+
+  if (is(path, types.Path)) {
+    path = path.toString();
+  }
+
   const components = Path.splitToSegments(path);
 
   for (let i = 0; i < components.length; i++) {
@@ -232,10 +308,30 @@ export type CopyOptions = {
 };
 
 export function copy(
-  from: string,
-  to: string,
+  from: string | Path,
+  to: string | Path,
   { whenTargetExists = "error", trace }: CopyOptions = {}
 ): void {
+  assert.type(
+    from,
+    types.or(types.string, types.Path),
+    "'from' argument must be either a string or a Path object"
+  );
+
+  assert.type(
+    to,
+    types.or(types.string, types.Path),
+    "'to' argument must be either a string or a Path object"
+  );
+
+  if (is(to, types.Path)) {
+    to = to.toString();
+  }
+
+  if (is(from, types.Path)) {
+    from = from.toString();
+  }
+
   if (!exists(from)) {
     throw new Error(`Source path does not exist: ${from}`);
   }

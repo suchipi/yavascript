@@ -170,22 +170,22 @@ declare const readFile: {
   /**
    * Read the contents of a file from disk, as a UTF-8 string.
    */
-  (path: string): string;
+  (path: string | Path): string;
 
   /**
    * Read the contents of a file from disk, as a UTF-8 string.
    */
-  (path: string, options: {}): string;
+  (path: string | Path, options: {}): string;
 
   /**
    * Read the contents of a file from disk, as a UTF-8 string.
    */
-  (path: string, options: { binary: false }): string;
+  (path: string | Path, options: { binary: false }): string;
 
   /**
    * Read the contents of a file from disk, as an ArrayBuffer.
    */
-  (path: string, options: { binary: true }): ArrayBuffer;
+  (path: string | Path, options: { binary: true }): ArrayBuffer;
 };
 
 /**
@@ -193,7 +193,10 @@ declare const readFile: {
  *
  * Strings are written using the UTF-8 encoding.
  */
-declare function writeFile(path: string, data: string | ArrayBuffer): void;
+declare function writeFile(
+  path: string | Path,
+  data: string | ArrayBuffer
+): void;
 
 /**
  * Function which returns true if the path points to a directory, or if the
@@ -205,7 +208,7 @@ interface IsDir {
    * Returns true if the path points to a directory, or if the path points to
    * a symlink which points to a directory. Otherwise, returns false.
    */
-  (path: string): boolean;
+  (path: string | Path): boolean;
 
   /**
    * Maximum number of symlinks to follow before erroring. Defaults to 100.
@@ -223,7 +226,7 @@ declare const isDir: IsDir;
 /**
  * Returns true if the path points to a symlink.
  */
-declare function isLink(path: string): boolean;
+declare function isLink(path: string | Path): boolean;
 
 /**
  * Delete the file or directory at the specified path.
@@ -232,14 +235,14 @@ declare function isLink(path: string): boolean;
  *
  * Provides the same functionality as the command `rm -rf`.
  */
-declare function remove(path: string): void;
+declare function remove(path: string | Path): void;
 
 /**
  * Returns true if a file or directory exists at the specified path.
  *
  * Provides the same functionality as the command `test -e`.
  */
-declare function exists(path: string): boolean;
+declare function exists(path: string | Path): boolean;
 
 /**
  * Create directories for each of the provided path components,
@@ -247,7 +250,7 @@ declare function exists(path: string): boolean;
  *
  * Provides the same functionality as the command `mkdir -p`.
  */
-declare function ensureDir(path: string): string;
+declare function ensureDir(path: string | Path): string;
 
 /**
  * Options for {@link copy}.
@@ -280,7 +283,11 @@ declare type CopyOptions = {
  *
  * Provides the same functionality as the command `cp -R`.
  */
-declare function copy(from: string, to: string, options?: CopyOptions): void;
+declare function copy(
+  from: string | Path,
+  to: string | Path,
+  options?: CopyOptions
+): void;
 
 /** An object that represents a filesystem path. */
 declare class Path {
