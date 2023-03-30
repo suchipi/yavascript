@@ -5,12 +5,8 @@ import { pwd } from "./commands/pwd";
 import { Path } from "./path";
 import { makeErrorWithProperties } from "../error-with-properties";
 import traceAll from "./traceAll";
-
-export type GlobOptions = {
-  dir?: string;
-  followSymlinks?: boolean;
-  trace?: (...args: Array<any>) => void;
-};
+import { assert } from "./assert";
+import { types } from "./types";
 
 function compile(pattern: string, startingDir: string) {
   let prefix = "";
@@ -33,10 +29,40 @@ function compile(pattern: string, startingDir: string) {
   return regexp;
 }
 
+export type GlobOptions = {
+  dir?: string;
+  followSymlinks?: boolean;
+  trace?: (...args: Array<any>) => void;
+};
+
 export function glob(
   patterns: string | Array<string>,
   options: GlobOptions = {}
 ): Array<string> {
+  assert.type(
+    patterns,
+    types.or(types.string, types.arrayOf(types.string)),
+    "'patterns' argument must be either a string or an Array of strings"
+  );
+
+  assert.type(
+    options,
+    types.or(types.undefined, types.anyObject),
+    "when present, 'options' argument must be an object"
+  );
+
+  assert.type(
+    options.dir,
+    types.or(types.string, types.undefined),
+    "when present, 'dir' option must be a string"
+  );
+
+  assert.type(
+    options.trace,
+    types.or(types.undefined, types.anyFunction),
+    "when present, 'trace' option must be a function"
+  );
+
   const dir = options.dir ?? pwd();
   const trace = options.trace ?? traceAll.getDefaultTrace();
   const patternsArray = Array.isArray(patterns) ? patterns : [patterns];
