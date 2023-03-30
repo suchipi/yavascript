@@ -27,6 +27,18 @@ export const readFile: ReadFile = function readFile(
     "'path' argument must be either a string or a Path object"
   );
 
+  assert.type(
+    options,
+    types.or(types.undefined, types.anyObject),
+    "when present, 'options' argument must be an object"
+  );
+
+  assert.type(
+    options.binary,
+    types.or(types.undefined, types.boolean),
+    "when present, 'binary' options must be a boolean"
+  );
+
   if (is(path, types.Path)) {
     path = path.toString();
   }
@@ -46,6 +58,12 @@ export function writeFile(
     path,
     types.or(types.string, types.Path),
     "'path' argument must be either a string or a Path object"
+  );
+
+  assert.type(
+    data,
+    types.or(types.string, types.ArrayBuffer),
+    "'data' argument must be either a string or an ArrayBuffer"
   );
 
   if (is(path, types.Path)) {
@@ -310,7 +328,7 @@ export type CopyOptions = {
 export function copy(
   from: string | Path,
   to: string | Path,
-  { whenTargetExists = "error", trace }: CopyOptions = {}
+  options: CopyOptions = {}
 ): void {
   assert.type(
     from,
@@ -322,6 +340,30 @@ export function copy(
     to,
     types.or(types.string, types.Path),
     "'to' argument must be either a string or a Path object"
+  );
+
+  assert.type(
+    options,
+    types.or(types.undefined, types.anyObject),
+    "when present, 'options' argument must be an object"
+  );
+
+  const { whenTargetExists = "error", trace } = options;
+
+  assert.type(
+    whenTargetExists,
+    types.or(
+      types.exactString("overwrite"),
+      types.exactString("skip"),
+      types.exactString("error")
+    ),
+    'when present, \'whenTargetExists\' option must be either "overwrite", "skip", or "error".'
+  );
+
+  assert.type(
+    trace,
+    types.or(types.undefined, types.anyFunction),
+    "when present, 'trace' option must be a function."
   );
 
   if (is(to, types.Path)) {

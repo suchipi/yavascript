@@ -1,7 +1,11 @@
 import Papa from "papaparse";
+import { assert } from "./assert";
+import { types } from "./types";
 
 export const CSV = {
   parse(input: string): Array<Array<string>> {
+    assert.type(input, types.string, "'input' argument must be a string");
+
     const { data, errors } = Papa.parse(input, { header: false });
     if (errors.length > 0) {
       const messageParts = [
@@ -27,6 +31,12 @@ export const CSV = {
     return data as any;
   },
   stringify(input: Array<Array<string>>): string {
+    assert.type(
+      input,
+      types.arrayOf(types.arrayOf(types.string)),
+      "'input' argument must be an array of arrays of strings"
+    );
+
     return Papa.unparse(input);
   },
 };
