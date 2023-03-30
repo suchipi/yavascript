@@ -1,5 +1,8 @@
 import * as std from "quickjs:std";
 import { escape } from "./regexp-escape";
+import { is } from "./is";
+import { types } from "./types";
+import { assert } from "./assert";
 
 export function grepString(
   str: string,
@@ -44,10 +47,20 @@ export function grepString(
 }
 
 export function grepFile(
-  path: string,
+  path: string | Path,
   pattern: string | RegExp,
   options?: { inverse?: boolean; details?: boolean }
 ) {
+  assert.type(
+    path,
+    types.or(types.string, types.Path),
+    "'path' argument must be either a string or a Path object"
+  );
+
+  if (is(path, types.Path)) {
+    path = path.toString();
+  }
+
   const content = std.loadFile(path);
   return grepString(content, pattern, options);
 }

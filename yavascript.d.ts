@@ -917,45 +917,49 @@ declare const grepString: {
 /** Read the content at `path`, split it on newline, and then return lines matching `pattern`. */
 declare const grepFile: {
   /** Read the content at `path`, split it on newline,  and then return lines matching `pattern`. */
-  (path: string, pattern: string | RegExp): Array<string>;
+  (path: string | Path, pattern: string | RegExp): Array<string>;
 
   /** Read the content at `path`, split it on newline,  and then return lines matching `pattern`. */
   (
-    path: string,
+    path: string | Path,
     pattern: string | RegExp,
     options: { inverse: false }
   ): Array<string>;
 
   /** Read the content at `path`, split it on newline,  and then return lines NOT matching `pattern`. */
   (
-    path: string,
+    path: string | Path,
     pattern: string | RegExp,
     options: { inverse: true }
   ): Array<string>;
 
   /** Read the content at `path`, split it on newline,  and then return lines matching `pattern`. */
   (
-    path: string,
+    path: string | Path,
     pattern: string | RegExp,
     options: { details: false }
   ): Array<string>;
 
   /** Read the content at `path`, split it on newline,  and then return lines matching `pattern`. */
   (
-    path: string,
+    path: string | Path,
     pattern: string | RegExp,
     options: { inverse: false; details: false }
   ): Array<string>;
 
   /** Read the content at `path`, split it on newline,  and then return lines NOT matching `pattern`. */
   (
-    path: string,
+    path: string | Path,
     pattern: string | RegExp,
     options: { inverse: true; details: false }
   ): Array<string>;
 
   /** Read the content at `path`, split it on newline,  and then return info about lines matching `pattern`. */
-  (path: string, pattern: string | RegExp, options: { details: true }): Array<{
+  (
+    path: string | Path,
+    pattern: string | RegExp,
+    options: { details: true }
+  ): Array<{
     lineNumber: number;
     lineContent: string;
     matches: RegExpMatchArray;
@@ -963,14 +967,14 @@ declare const grepFile: {
 
   /** Read the content at `path`, split it on newline,  and then return info about lines matching `pattern`. */
   (
-    path: string,
+    path: string | Path,
     pattern: string | RegExp,
     options: { inverse: false; details: true }
   ): Array<string>;
 
   /** Read the content at `path`, split it on newline,  and then return info about lines NOT matching `pattern`. */
   (
-    path: string,
+    path: string | Path,
     pattern: string | RegExp,
     options: { inverse: true; details: true }
   ): Array<string>;
