@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-cd $(dirname "$BASH_SOURCE")
+HERE=$(dirname "$BASH_SOURCE")
 
 KERNEL=$(uname -s)
 ARCH=$(uname -m)
@@ -24,9 +24,9 @@ if [[ "$KERNEL" == "Linux" ]]; then
     ABI="static"
   fi
 
-  "./$ARCH-unknown-linux-$ABI/yavascript" "$@"
+  "$HERE/$ARCH-unknown-linux-$ABI/yavascript" "$@"
 elif [[ "$KERNEL" == "Darwin" ]]; then
-  "./$ARCH-apple-darwin/yavascript" "$@"
+  "$HERE/$ARCH-apple-darwin/yavascript" "$@"
 else
   echo "Unsupported platform: $KERNEL"
   exit 1
