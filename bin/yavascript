@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd $(dirname "$BASH_SOURCE")
+
+KERNEL=$(uname -s)
+ARCH=$(uname -m)
+
+if [[ "$ARCH" == "arm64" ]]; then
+  # Darwin says arm64; normalize it to what Linux says
+  ARCH="aarch64"
+fi
+
+if [[ "$KERNEL" == "Linux" ]]; then
+  LDD_INFO=$(ldd --version 2>&1 || true)
+  
+  if [[ "$LDD_INFO" == *"musl"* ]]; then
+    ABI="musl"
+  elif [[ "$LDD_INFO" == *"GLIBC"* ]] || [[ "$LDD_INFO" == *"GNU"* ]]; then
+    ABI="gnu"
+  else
+    # idk, yolo
+    ABI="static"
+  fi
+
+  "./$ARCH-unknown-linux-$ABI/yavascript" "$@"
+elif [[ "$KERNEL" == "Darwin" ]]; then
+  "./$ARCH-apple-darwin/yavascript" "$@"
+else
+  echo "Unsupported platform: $KERNEL"
+  exit 1
+fi
