@@ -36,6 +36,8 @@ export type GlobOptions = {
   trace?: (...args: Array<any>) => void;
 };
 
+const HAS_GLOB_METACHARS_RE = /[*{}]|\+\(|^!/;
+
 export function glob(
   patterns: string | Array<string>,
   options: GlobOptions = {}
@@ -64,12 +66,84 @@ export function glob(
     "when present, 'trace' option must be a function"
   );
 
-  let dir = options.dir ?? pwd();
+  let dir = options.dir ?? null;
   const trace = options.trace ?? traceAll.getDefaultTrace();
   const patternsArray = Array.isArray(patterns) ? patterns : [patterns];
 
   if (is(dir, types.Path)) {
     dir = dir.toString();
+  }
+
+  const absolutePatterns = patternsArray.filter((pattern) =>
+    Path.isAbsolute(pattern)
+  );
+
+  if (dir == null && absolutePatterns.length > 0) {
+    // If one or more patterns start with an absolute path, and the user didn't
+    // request a specific dir, we should use the highest common parent path of
+    // those patterns which start with an absolute path
+    const dirsFromPatterns = absolutePatterns.map((absolutePattern) => {
+      // The leading parts of the pattern which don't contain glob metachars
+      const leadingParts: Array<string> = [];
+      for (const part of Path.splitToSegments(absolutePattern)) {
+        if (HAS_GLOB_METACHARS_RE.test(part)) {
+          break;
+        }
+        leadingParts.push(part);
+      }
+
+      const result = Path.from(
+        leadingParts,
+        Path.detectSeparator(absolutePattern, "/")
+      ).normalize();
+
+      if (trace) {
+        trace(
+          `using absolute pattern to infer starting dir: ${JSON.stringify(
+            absolutePattern
+          )} -> ${JSON.stringify(result.toString())}`
+        );
+      }
+
+      return result;
+    });
+
+    const commonParentDirParts: Array<string> = [];
+    for (const patternDir of dirsFromPatterns) {
+      if (commonParentDirParts.length === 0) {
+        commonParentDirParts.push(...patternDir.segments);
+      } else {
+        for (let i = 0; i < patternDir.segments.length; i++) {
+          const segment = patternDir.segments[i];
+          if (commonParentDirParts[i] !== segment) {
+            // truncate the array
+            commonParentDirParts.length = i;
+          }
+        }
+      }
+    }
+
+    if (commonParentDirParts.length === 0) {
+      throw new Error(
+        "No initial dir for the glob search was specified, and one or more patterns specify an absolute path, but the specified absolute paths have no common parent path. Not sure where to start the glob search. Please specify a starting path with option 'dir'."
+      );
+    } else {
+      dir = Path.from(commonParentDirParts).normalize();
+
+      if (trace) {
+        trace(
+          `inferred starting dir from absolute pattern(s): ${dir.toString()}`
+        );
+
+        if (dir.segments.length === 1) {
+          trace("--- WARNING: inferred starting dir to root dir! ---");
+        }
+      }
+    }
+  }
+
+  if (dir == null) {
+    dir = pwd();
   }
 
   if (!exists(dir)) {

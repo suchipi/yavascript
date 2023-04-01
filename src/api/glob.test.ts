@@ -15,7 +15,7 @@ function compareResult(result: EvaluateResult, expected: Array<string>) {
 
 function testGlob(
   name: string,
-  dir: string,
+  dir: string | undefined,
   patterns: Array<string> | string,
   expected: Array<string>,
   testFn?: (descr: string, body: () => any) => any
@@ -24,7 +24,10 @@ function testGlob(
   if (!testFn) testFn = test;
 
   testFn(name, async () => {
-    const args: Array<any> = [patterns, { dir }];
+    const args: Array<any> = [patterns];
+    if (dir) {
+      args.push({ dir });
+    }
 
     const result = await evaluate(
       `JSON.stringify(glob(${args
@@ -99,6 +102,17 @@ testGlob(
 testGlob(
   "absolute path in glob",
   globDir,
+  [globDir + "/**/*.txt"],
+  [
+    "<rootDir>/src/test_fixtures/glob/potato/banana/yo.txt",
+    "<rootDir>/src/test_fixtures/glob/hi.txt",
+    "<rootDir>/src/test_fixtures/glob/hi/there.txt",
+  ]
+);
+
+testGlob(
+  "absolute path in glob (dir inferred)",
+  undefined,
   [globDir + "/**/*.txt"],
   [
     "<rootDir>/src/test_fixtures/glob/potato/banana/yo.txt",
