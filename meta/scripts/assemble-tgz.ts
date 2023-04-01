@@ -1,6 +1,8 @@
 #!/usr/bin/env yavascript
 /// <reference path="../../yavascript.d.ts" />
 
+cd(Git.repoRoot(__dirname));
+
 const ROOT = pwd();
 
 const VERSION = $([
