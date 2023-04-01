@@ -36,7 +36,7 @@ rm -rf dist
 mkdir -p dist
 
 # generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
-in_docker node:${NODE_VERSION} meta/scripts/assemble-dts.sh
+in_docker node:${NODE_VERSION} bin/yavascript meta/scripts/assemble-dts.ts
 
 # generate dist/index-*.js (bundles in dependencies from npm)
 in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=arm64 npm run bundle -- --output dist/index-arm64.js

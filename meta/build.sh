@@ -25,7 +25,7 @@ if [[ "$SKIP_QJS" == "" ]]; then
 fi
 
 # generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
-meta/scripts/assemble-dts.sh
+bin/yavascript meta/scripts/assemble-dts.ts
 
 # generate dist/index.js (bundles in dependencies from npm)
 npm run bundle -- --output dist/index.js
