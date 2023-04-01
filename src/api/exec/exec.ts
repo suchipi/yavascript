@@ -220,11 +220,29 @@ const exec = (
     child.start();
     result = child.waitUntilComplete();
 
+    let stdout: string | null = null;
+    let stderr: string | null = null;
+
+    if (tmpOut != null && tmpErr != null) {
+      // need to seek to beginning to read the data that was written
+      tmpOut.seek(0, std.SEEK_SET);
+      tmpErr.seek(0, std.SEEK_SET);
+      stdout = tmpOut.readAsString();
+      stderr = tmpErr.readAsString();
+    }
+
     if (failOnNonZeroStatus && result.status !== 0) {
-      throw makeErrorWithProperties(
+      const err = makeErrorWithProperties(
         `Command failed: ${JSON.stringify(args)}`,
         result
       );
+      if (stdout != null) {
+        err.stdout = stdout;
+      }
+      if (stderr != null) {
+        err.stderr = stderr;
+      }
+      throw err;
     }
 
     if (!captureOutput) {
@@ -235,13 +253,7 @@ const exec = (
       }
     }
 
-    if (tmpOut != null && tmpErr != null) {
-      // need to seek to beginning to read the data that was written
-      tmpOut.seek(0, std.SEEK_SET);
-      tmpErr.seek(0, std.SEEK_SET);
-      const stdout = tmpOut.readAsString();
-      const stderr = tmpErr.readAsString();
-
+    if (stdout != null && stderr != null) {
       return { stdout, stderr, ...result };
     } else {
       throw new Error(
