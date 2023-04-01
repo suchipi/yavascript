@@ -242,6 +242,8 @@ test("$ false", async () => {
     {
       status: 1
       signal: undefined
+      stdout: ""
+      stderr: ""
     }
     ",
       "stdout": "",
