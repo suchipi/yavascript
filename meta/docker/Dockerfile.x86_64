@@ -1,0 +1,6 @@
+FROM --platform=linux/amd64 scratch
+COPY --from=tarampampam/curl:7.78.0 /bin/curl /bin/curl
+COPY ./yavascript-x86_64 /bin/yavascript
+COPY ./empty /tmp
+
+ENTRYPOINT ["/bin/yavascript"]
