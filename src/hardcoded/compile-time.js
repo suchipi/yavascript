@@ -1,10 +1,10 @@
-import child_process from "child_process";
+const child_process = require("child_process");
 
-function run(cmd: string) {
+function run(cmd) {
   return child_process.execSync(cmd, { encoding: "utf-8" }).trim();
 }
 
-function getVersion(): string {
+function getVersion() {
   if (process.env.YAVASCRIPT_VERSION) {
     return process.env.YAVASCRIPT_VERSION;
   }
@@ -38,7 +38,7 @@ function getVersion(): string {
   return "unknown";
 }
 
-function getArch(): string {
+function getArch() {
   if (process.env.YAVASCRIPT_ARCH) {
     return process.env.YAVASCRIPT_ARCH;
   }
