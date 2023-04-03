@@ -1,7 +1,7 @@
 #!/usr/bin/env yavascript
 /// <reference path="../../yavascript.d.ts" />
 
-cd(Git.repoRoot(__dirname));
+cd(GitRepo.findRoot(__dirname));
 cd("meta");
 
 if (!exists("quickjs")) {
