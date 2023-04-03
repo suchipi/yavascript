@@ -2462,29 +2462,44 @@ declare function startRepl(
 ): void;
 
 /**
- * Utility functions for working with git repositories.
+ * An object that points to a git repository on disk and provides utility
+ * methods for getting information from that repo.
  */
-declare var Git: {
+declare class GitRepo {
+  /**
+   * Given a path to a file or folder on disk, finds the parent git repo
+   * containing that path, and returns the absolute path to the repo root (the
+   * folder that contains the '.git' folder).
+   *
+   * This is done by running `git rev-parse --show-toplevel`.
+   */
+  static findRoot(fromPath: string | Path): string;
+
+  /**
+   * Creates a new `Git` object for the given repo on disk.
+   */
+  constructor(repoDir: string | Path);
+
+  /**
+   * The root folder of the git repo that this `Git` object represents (the
+   * folder that contains the '.git' folder).
+   */
+  repoDir: Path;
+
   /**
    * Returns the commit SHA the git repo is currently pointed at.
    *
    * This is done by running `git rev-parse HEAD`.
-   *
-   * If `relativeTo` is provided, the git command will be executed in that
-   * folder instead of in `pwd()`.
    */
-  commitSHA(relativeTo?: string | Path): string;
+  commitSHA(): string;
 
   /**
    * If the commit SHA the git repo is currently pointed at is the tip of a
    * named branch, returns the branch name. Otherwise, returns `null`.
    *
    * This is done by running `git rev-parse --abbrev-ref HEAD`.
-   *
-   * If `relativeTo` is provided, the git command will be executed in that
-   * folder instead of in `pwd()`.
    */
-  branchName(relativeTo?: string | Path): string | null;
+  branchName(): string | null;
 
   /**
    * Returns a boolean indicating whether there are uncommited changes in the
@@ -2492,27 +2507,17 @@ declare var Git: {
    * changes (ie. the repo is clean).
    *
    * This is done by running `git status --quiet`.
-   *
-   * If `relativeTo` is provided, the git command will be executed in that
-   * folder instead of in `pwd()`.
    */
-  isWorkingTreeDirty(relativeTo?: string | Path): boolean;
-
-  /**
-   * Returns the absolute path to the root folder of the git repo.
-   *
-   * This is done by running `git rev-parse --show-toplevel`.
-   *
-   * If `relativeTo` is provided, the git command will be executed in that
-   * folder instead of in `pwd()`.
-   */
-  repoRoot(relativeTo?: string | Path): string;
+  isWorkingTreeDirty(): boolean;
 
   /**
    * Returns whether the provided path is ignored by git.
+   *
+   * If `path` is an absolute path, it must be a child directory of this Git
+   * object's `repoDir`, or else an error will be thrown.
    */
   isIgnored(path: string | Path): boolean;
-};
+}
 
 /**
  * Configures the default value of `trace` in functions which receive `trace`

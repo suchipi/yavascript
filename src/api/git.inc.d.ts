@@ -2,7 +2,7 @@
  * An object that points to a git repository on disk and provides utility
  * methods for getting information from that repo.
  */
-declare class Git {
+declare class GitRepo {
   /**
    * Given a path to a file or folder on disk, finds the parent git repo
    * containing that path, and returns the absolute path to the repo root (the
@@ -10,7 +10,7 @@ declare class Git {
    *
    * This is done by running `git rev-parse --show-toplevel`.
    */
-  static repoRoot(fromPath: string | Path): string;
+  static findRoot(fromPath: string | Path): string;
 
   /**
    * Creates a new `Git` object for the given repo on disk.

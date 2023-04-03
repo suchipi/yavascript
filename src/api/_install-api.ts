@@ -49,7 +49,7 @@ const pathProps = makeGetterPropertyDescriptorMap({
 });
 
 const gitProps = makeGetterPropertyDescriptorMap({
-  Git: () => require("./git").Git,
+  GitRepo: () => require("./git").GitRepo,
 });
 
 const globProps = makeGetterPropertyDescriptorMap({

@@ -8,10 +8,10 @@ import { Path } from "./path";
 import { assert } from "./assert";
 import { makeErrorWithProperties } from "../error-with-properties";
 
-export class Git {
+export class GitRepo {
   repoDir: Path;
 
-  static repoRoot(fromPath: string | Path): string {
+  static findRoot(fromPath: string | Path): string {
     if (is(fromPath, types.Path)) {
       fromPath = fromPath.toString();
     }
@@ -55,6 +55,19 @@ export class Git {
       this.repoDir = new Path(repoDir);
     } else {
       this.repoDir = repoDir.clone();
+    }
+
+    const dotGitDir = Path.join(this.repoDir, ".git");
+    if (!exists(dotGitDir)) {
+      throw makeErrorWithProperties(
+        `The 'repoPath' provided to the Git constructor doesn't appear to refer to a git repository; namely, ${JSON.stringify(
+          dotGitDir
+        )} doesn't exist.`,
+        {
+          repoDir: this.repoDir.toString(),
+          dotGitDir,
+        }
+      );
     }
   }
 

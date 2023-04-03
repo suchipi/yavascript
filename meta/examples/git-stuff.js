@@ -7,8 +7,12 @@ let branchName = $(["git", "rev-parse", "--abbrev-ref", "HEAD"]).stdout.trim();
 
 echo({ branchName });
 
-echo(Git.repoRoot());
-echo(Git.repoRoot(__dirname));
-echo(Git.repoRoot("../quickjs"));
+const repoRoot = GitRepo.findRoot(__dirname);
+echo(repoRoot);
+
+const yavascriptRepo = new GitRepo(repoRoot);
+
+// relative paths are resolved relative to pwd
+echo(GitRepo.findRoot("../quickjs"));
 cd(__dirname);
-echo(Git.repoRoot("../quickjs"));
+echo(GitRepo.findRoot("../quickjs"));
