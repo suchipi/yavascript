@@ -48,8 +48,8 @@ const pathProps = makeGetterPropertyDescriptorMap({
   Path: () => require("./path").Path,
 });
 
-const gitProps = makeGetterPropertyDescriptorMap({
-  GitRepo: () => require("./git").GitRepo,
+const gitRepoProps = makeGetterPropertyDescriptorMap({
+  GitRepo: () => require("./git-repo").GitRepo,
 });
 
 const globProps = makeGetterPropertyDescriptorMap({
@@ -161,7 +161,7 @@ export default function installApi(target: typeof globalThis) {
     ...typesProps,
     ...isProps,
     ...assertProps,
-    ...gitProps,
+    ...gitRepoProps,
     ...stringsProps,
     ...consoleProps,
     ...pipeProps,
