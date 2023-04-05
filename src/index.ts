@@ -5,7 +5,7 @@ import "./primordials";
 
 import determineTarget from "./determine-target";
 
-function main(): void {
+async function main(): Promise<void> {
   const targetInfo = determineTarget(scriptArgs);
 
   switch (targetInfo.target) {
@@ -15,7 +15,7 @@ function main(): void {
           require("./targets/run-file").default;
 
         for (const file of targetInfo.filesToLoadFirst) {
-          runFileTarget(file, null);
+          await runFileTarget(file, null);
         }
       }
 
@@ -62,7 +62,7 @@ function main(): void {
           require("./targets/run-file").default;
 
         for (const file of targetInfo.filesToLoadFirst) {
-          runFileTarget(file, null);
+          await runFileTarget(file, null);
         }
       }
 
@@ -78,11 +78,11 @@ function main(): void {
         require("./targets/run-file").default;
 
       for (const file of targetInfo.filesToLoadFirst) {
-        runFileTarget(file, null);
+        await runFileTarget(file, null);
       }
 
       const { file, lang } = targetInfo;
-      runFileTarget(file, lang);
+      await runFileTarget(file, lang);
       return;
     }
     case "version": {
@@ -100,7 +100,13 @@ function main(): void {
 }
 
 try {
-  main();
+  main().then(
+    () => {},
+    (err) => {
+      printError(err, std.err);
+      std.exit(1);
+    }
+  );
 } catch (err) {
   printError(err, std.err);
   std.exit(1);

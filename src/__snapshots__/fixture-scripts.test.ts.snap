@@ -192,6 +192,67 @@ path: <rootDir>/src/test_fixtures/scripts
 }
 `;
 
+exports[`toplevel-await.coffee 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "4 Function {}
+",
+}
+`;
+
+exports[`toplevel-await.js 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "4 Function {}
+",
+}
+`;
+
+exports[`toplevel-await.ts 1`] = `
+{
+  "code": 1,
+  "error": false,
+  "stderr": "Error: nope!
+  at somewhere
+",
+  "stdout": "",
+}
+`;
+
+exports[`toplevel-await.tsx 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  $$typeof: Symbol(JSX.Element)
+  type: "a"
+  props: null
+  key: null
+}
+Function {}
+",
+}
+`;
+
+exports[`toplevel-await-and-export-together.js 1`] = `
+{
+  "code": 1,
+  "error": false,
+  "stderr": "Error: You cannot use toplevel await and export in the same file. Either remove the toplevel await (by wrapping stuff with an immediately-invoked async function) or remove the exports.
+  at somewhere
+{
+  filename: "<rootDir>/src/test_fixtures/scripts/toplevel-await-and-export-together.js"
+}
+",
+  "stdout": "",
+}
+`;
+
 exports[`type-coercion-via-assert.ts 1`] = `
 {
   "code": 0,

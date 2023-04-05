@@ -131,6 +131,14 @@ const compilers = {
       }
     }
   },
+
+  esmToCjs(code: string, options?: CompilerOptions): string {
+    const compiled = compileUsingSucrase(stripShebangs(code), options, {
+      transforms: ["imports"],
+      preserveDynamicImport: true,
+    });
+    return compilers.js(compiled, options);
+  },
 };
 
 export default compilers;
