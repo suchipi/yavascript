@@ -781,6 +781,7 @@ export function startRepl(lang) {
     "\x12": alert /* ^R - reverse-search */,
     "\x13": alert /* ^S - search */,
     "\x14": transpose_chars /* ^T - transpose */,
+    "\x17": backward_kill_word /* ^W - delete word backwards */,
     "\x18": reset /* ^X - cancel */,
     "\x19": yank /* ^Y - yank */,
     "\x1bOA": previous_history /* ^[OA - up */,
