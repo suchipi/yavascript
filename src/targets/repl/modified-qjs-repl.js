@@ -23,6 +23,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+///<reference path="../../../yavascript.d.ts" />
+
 import * as std from "quickjs:std";
 import * as os from "quickjs:os";
 import printError from "../../print-error";
@@ -410,7 +413,7 @@ export function startRepl(lang) {
 
   function previous_history() {
     if (history_index > 0) {
-      if (history_index == history.length) {
+      if (history_index == history.length && cmd !== "") {
         history.push(cmd);
       }
       history_index--;
@@ -423,6 +426,9 @@ export function startRepl(lang) {
     if (history_index < history.length - 1) {
       history_index++;
       cmd = history[history_index];
+      cursor_pos = cmd.length;
+    } else {
+      cmd = "";
       cursor_pos = cmd.length;
     }
   }
