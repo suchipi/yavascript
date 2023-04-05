@@ -33,6 +33,7 @@ import * as inspectOptions from "../../inspect-options";
 import { NOTHING } from "./special";
 import * as esmToRequire from "../../esm-to-require";
 import { langToCompiler } from "../../langs";
+import { HistoryFile } from "./history-file";
 
 export function startRepl(lang) {
   const compiler = langToCompiler(lang);
@@ -84,7 +85,9 @@ export function startRepl(lang) {
     error_msg: "bright_red",
   };
 
-  var history = [];
+  const historyFile = new HistoryFile();
+
+  var history = historyFile.load();
   var clip_board = "";
 
   var pstate = "";
@@ -407,6 +410,7 @@ export function startRepl(lang) {
   function history_add(str) {
     if (str) {
       history.push(str);
+      historyFile.append(str);
     }
     history_index = history.length;
   }
