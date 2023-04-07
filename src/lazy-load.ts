@@ -14,7 +14,10 @@ export function memoize<T>(fn: () => T): () => T {
 
 export function makeGetterPropertyDescriptorMap<
   Input extends { [key: string]: () => any }
->(input: Input): { [k in keyof Input]: PropertyDescriptor } {
+>(
+  input: Input,
+  enumerable: boolean = true
+): { [k in keyof Input]: PropertyDescriptor } {
   const entries: Array<[string, PropertyDescriptor]> = [];
 
   for (const [key, getterFn] of Object.entries(input)) {
@@ -23,7 +26,7 @@ export function makeGetterPropertyDescriptorMap<
       {
         get: memoize(getterFn),
         configurable: true,
-        enumerable: true,
+        enumerable: enumerable,
       },
     ]);
   }

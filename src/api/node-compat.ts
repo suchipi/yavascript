@@ -2,9 +2,14 @@ import * as os from "quickjs:os";
 import { version as ysVersion, arch as ysArch } from "../hardcoded";
 
 export function installNodeCompat(global: any) {
-  global.global = global;
+  Object.defineProperty(global, "global", {
+    configurable: true,
+    writable: true,
+    enumerable: false,
+    value: global,
+  });
 
-  global.process = {
+  const process = {
     // This version supports approximately the same syntax features as we do
     version: "v16.19.0",
     versions: {
@@ -26,4 +31,11 @@ export function installNodeCompat(global: any) {
       return os.realpath(os.execPath());
     },
   };
+
+  Object.defineProperty(global, "process", {
+    configurable: true,
+    writable: true,
+    enumerable: false,
+    value: process,
+  });
 }
