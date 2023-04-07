@@ -1,6 +1,7 @@
 import { Path } from "../path";
 import { assert } from "../assert";
 import { is } from "../is";
+import { registerHelp } from "../help";
 
 export function basename(path: string | Path): string {
   if (is(path, types.Path)) {
@@ -16,3 +17,15 @@ export function basename(path: string | Path): string {
   const parts = Path.splitToSegments(path);
   return parts[parts.length - 1];
 }
+
+registerHelp(
+  basename,
+  String.dedent`
+    dim「Defined in yavascript/src/api/commands/basename.ts」
+    bold「basename」 - Return the last component of a path string.
+
+    Provides the same functionality as the unix binary of the same name.
+
+    red「declare」 blue.italic「function」 green.bold「basename」yellow「(」white「path」red「:」 blue「string」 red「|」 white「Path」yellow「)」red「:」 blue「string」;
+  `
+);
