@@ -233,6 +233,8 @@ function copyRaw(
   let filesToCloseLater: Record<string, FILE> = {};
   let fdsToCloseLater: Record<string, number> = {};
 
+  let fromStats: os.Stats | null = null;
+
   try {
     if (trace) {
       trace("opening", from, "(mode: rb)");
@@ -240,7 +242,7 @@ function copyRaw(
     const fromFile = std.open(from, "rb");
     filesToCloseLater[from] = fromFile;
 
-    const fromStats = os.stat(from);
+    fromStats = os.stat(from);
     const fromPerms = fromStats.mode & (os.S_IRWXU | os.S_IRWXG | os.S_IRWXO);
 
     if (trace) {
@@ -316,6 +318,22 @@ function copyRaw(
         trace("copyRaw failed to close an fd:", { from, to, err });
       }
       // ignored
+    }
+
+    if (fromStats != null) {
+      try {
+        // TODO: birth time, too. need crtime bindings from quickjs to do that
+        os.utimes(to, fromStats.atime, fromStats.mtime);
+      } catch (err) {
+        if (trace) {
+          trace("copyRaw failed to set access and modification times:", {
+            from,
+            to,
+            err,
+          });
+        }
+        throw err;
+      }
     }
   }
 }
