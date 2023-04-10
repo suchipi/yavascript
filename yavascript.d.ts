@@ -3733,11 +3733,12 @@ declare module "quickjs:std" {
    * @param code - The code to evaluate.
    * @param options - An optional object containing the following optional properties:
    * @property backtraceBarrier - Boolean (default = false). If true, error backtraces do not list the stack frames below the evalScript.
+   * @property filename - String (default = "<evalScript>"). The filename to associate with the code being executed.
    * @returns The result of the evaluation.
    */
   export function evalScript(
     code: string,
-    options?: { backtraceBarrier?: boolean }
+    options?: { backtraceBarrier?: boolean; filename?: string }
   ): any;
 
   /**
