@@ -2,6 +2,7 @@ import * as std from "quickjs:std";
 import { assert } from "../assert";
 import { is } from "../is";
 import type { Path } from "../path";
+import { registerHelp } from "../help";
 
 export function cat(...paths: Array<string | Path>): string {
   let content = "";
@@ -22,3 +23,15 @@ export function cat(...paths: Array<string | Path>): string {
   }
   return content;
 }
+
+registerHelp(
+  cat,
+  String.dedent`
+    heading«cat» - Read the contents of one of more files from disk as one UTF-8 string, print
+    that string to stdout, then return it.
+  
+    dim«// Defined in yavascript/src/api/commands/cat.ts»
+    
+    red«declare» cyan«italic«function»» green«bold«cat»»(red«...»italic«paths»red«:» Arrayred«<»cyan«italic«string»» red«|» Pathred«>»)red«:» cyan«italic«string»»;
+  `
+);

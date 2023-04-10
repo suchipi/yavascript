@@ -33,16 +33,6 @@ const template = new Template("«", "»", {
   // doc sections
   heading: (str: string) => bold(magenta(str)),
 
-  // js/ts syntax highlighting
-  comment: (str: string) => dim(str),
-  keyword: (str: string) => red(str),
-  type: (str: string) => cyan(italic(str)),
-  func: (str: string) => green(str),
-  param: (str: string) => italic(str),
-  string: (str: string) => yellow(str),
-  num: (str: string) => magenta(str),
-  op: (str: string) => red(str),
-
   bgBlack,
   bgBlue,
   bgCyan,

@@ -25,7 +25,7 @@ registerHelp(
   
     Provides the same functionality as the unix binary of the same name.
   
-    comment«// Defined in yavascript/src/api/commands/basename.ts»
-    keyword«declare» type«function» func«basename»(param«path»op«:» type«string» op«|» Path)op«:» type«string»;
+    dim«// Defined in yavascript/src/api/commands/basename.ts»
+    red«declare» cyan«italic«function»» green«bold«basename»»(italic«path»red«:» cyan«italic«string»» red«|» Path)red«:» cyan«italic«string»»;
   `
 );
