@@ -999,6 +999,9 @@ export function startRepl(lang) {
     std.puts("\\q          exit\n");
   }
 
+  const eval_filename =
+    os.getcwd() + (os.platform === "win32" ? "\\" : "/") + "<evalScript>";
+
   function eval_and_print(expr) {
     var result;
 
@@ -1013,7 +1016,10 @@ export function startRepl(lang) {
       }
       var now = new Date().getTime();
       /* eval as a script */
-      result = std.evalScript(expr, { backtraceBarrier: true });
+      result = std.evalScript(expr, {
+        backtraceBarrier: true,
+        filename: eval_filename,
+      });
       eval_time = new Date().getTime() - now;
       std.puts(colors.none);
       if (result !== NOTHING) {
