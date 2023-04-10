@@ -21,11 +21,11 @@ export function basename(path: string | Path): string {
 registerHelp(
   basename,
   String.dedent`
-    dim「Defined in yavascript/src/api/commands/basename.ts」
-    bold「basename」 - Return the last component of a path string.
-
+    heading«basename» - Return the last component of a path string.
+  
     Provides the same functionality as the unix binary of the same name.
-
-    red「declare」 blue.italic「function」 green.bold「basename」yellow「(」white「path」red「:」 blue「string」 red「|」 white「Path」yellow「)」red「:」 blue「string」;
+  
+    comment«// Defined in yavascript/src/api/commands/basename.ts»
+    keyword«declare» type«function» func«basename»(param«path»op«:» type«string» op«|» Path)op«:» type«string»;
   `
 );

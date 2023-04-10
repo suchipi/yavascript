@@ -151,10 +151,6 @@ const yavascriptProps = makeGetterPropertyDescriptorMap({
   yavascript: () => require("./yavascript").yavascript,
 });
 
-const styleProps = makeGetterPropertyDescriptorMap({
-  style: () => require("./style").style,
-});
-
 const helpProps = makeGetterPropertyDescriptorMap({
   help: () => require("./help").help,
 });
@@ -187,7 +183,6 @@ export default function installApi(target: typeof globalThis) {
     ...parseScriptArgsProps,
     ...startReplProps,
     ...yavascriptProps,
-    ...styleProps,
     ...helpProps,
 
     __filename: {

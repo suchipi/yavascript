@@ -1,8 +1,9 @@
 import * as std from "quickjs:std";
 import * as os from "quickjs:os";
 import { makeErrorWithProperties } from "../error-with-properties";
-import { style } from "./style";
 import { NOTHING } from "../targets/repl/special";
+
+let style: typeof import("../lib/style").style | null = null;
 
 const registeredHelp = new Map<any, { text: string; skipStyle: boolean }>();
 
@@ -32,7 +33,10 @@ export function help(key?: any): typeof NOTHING {
       if (registered.skipStyle) {
         formatted = registered.text;
       } else {
-        formatted = style(registered.text);
+        if (style == null) {
+          style = require("../lib/style").style;
+        }
+        formatted = style!(registered.text);
       }
 
       formatted = "\n" + formatted + "\n";
