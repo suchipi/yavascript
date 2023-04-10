@@ -2,7 +2,7 @@ import { Path } from "../path";
 import { assert } from "../assert";
 import { is } from "../is";
 import { registerHelp } from "../help";
-import basenameHelp from "../../../meta/docs/compiled/basename.glow.txt?contentString";
+import basenameHelp from "../../../meta/docs/compiled/basename.glow.txt";
 
 export function basename(path: string | Path): string {
   if (is(path, types.Path)) {

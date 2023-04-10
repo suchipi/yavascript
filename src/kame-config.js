@@ -67,7 +67,7 @@ exports.resolve = (id, fromFilePath) => {
 const runtimeForBuildtimeEval = new Runtime();
 
 exports.load = (filename) => {
-  if (filename.endsWith(".md")) {
+  if (filename.endsWith(".md") || filename.endsWith(".txt")) {
     const content = fs.readFileSync(filename, "utf-8");
     return `module.exports = ${JSON.stringify(content)};`;
   } else if (filename.endsWith(".json")) {
