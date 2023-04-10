@@ -3,17 +3,11 @@ import * as os from "quickjs:os";
 import { makeErrorWithProperties } from "../error-with-properties";
 import { NOTHING } from "../targets/repl/special";
 
-let style: typeof import("../lib/style").style | null = null;
-
-const registeredHelp = new Map<any, { text: string; skipStyle: boolean }>();
+const registeredHelp = new Map<any, string>();
 
 // TODO create a user-facing "help provider" registry thing so third-party stuff can be documented.
-export function registerHelp(
-  key: any,
-  text: string,
-  skipStyle: boolean = false
-) {
-  registeredHelp.set(key, { text, skipStyle });
+export function registerHelp(key: any, text: string) {
+  registeredHelp.set(key, text);
 }
 
 export function help(key?: any): typeof NOTHING {
@@ -29,23 +23,15 @@ export function help(key?: any): typeof NOTHING {
         { value: key }
       );
     } else {
-      let formatted: string;
-      if (registered.skipStyle) {
-        formatted = registered.text;
-      } else {
-        if (style == null) {
-          style = require("../lib/style").style;
-        }
-        formatted = style!(registered.text);
-      }
+      let output = registered.trimEnd();
 
-      formatted = "\n" + formatted + "\n";
-
+      // TODO: factor in env.CLICOLOR and env.CLICOLOR_FORCE. See https://bixense.com/clicolors/
+      // We should do that in the 'help' target, too.
       if (os.isatty(std.out.fileno())) {
-        console.log(formatted);
+        console.log(output);
       } else {
         const { stripAnsi } = require("./strings");
-        console.log(stripAnsi(formatted));
+        console.log(stripAnsi(output));
       }
     }
   }

@@ -24,6 +24,10 @@ if [[ "$SKIP_QJS" == "" ]]; then
   popd > /dev/null
 fi
 
+if [[ "$SKIP_GLOW" == "" ]]; then
+  bin/yavascript meta/scripts/assemble-docs.ts
+fi
+
 # generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
 bin/yavascript meta/scripts/assemble-dts.ts
 

@@ -91,7 +91,7 @@ You will need docker installed, then run `meta/docker/build-all.sh`.
 
 ### Binaries (just for your machine)
 
-You will need node.js and ninja installed, then run `meta/build.sh`.
+You will need [node.js](https://nodejs.org/en), [ninja](https://ninja-build.org/), and [glow](https://github.com/charmbracelet/glow) installed, then run `meta/build.sh`.
 
 ### Docker image
 

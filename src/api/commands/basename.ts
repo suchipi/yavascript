@@ -2,6 +2,7 @@ import { Path } from "../path";
 import { assert } from "../assert";
 import { is } from "../is";
 import { registerHelp } from "../help";
+import basenameHelp from "../../../meta/docs/compiled/basename.glow.txt?contentString";
 
 export function basename(path: string | Path): string {
   if (is(path, types.Path)) {
@@ -18,14 +19,4 @@ export function basename(path: string | Path): string {
   return parts[parts.length - 1];
 }
 
-registerHelp(
-  basename,
-  String.dedent`
-    heading«basename» - Return the last component of a path string.
-  
-    Provides the same functionality as the unix binary of the same name.
-  
-    dim«// Defined in yavascript/src/api/commands/basename.ts»
-    red«declare» cyan«italic«function»» green«bold«basename»»(italic«path»red«:» cyan«italic«string»» red«|» Path)red«:» cyan«italic«string»»;
-  `
-);
+registerHelp(basename, basenameHelp);

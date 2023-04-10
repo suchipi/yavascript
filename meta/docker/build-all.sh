@@ -13,6 +13,11 @@ if [[ "$SKIP_QJS" == "" ]]; then
   popd > /dev/null
 fi
 
+# compile markdown docs to ANSI-escape-sequence-containing txt files using Glow (https://github.com/charmbracelet/glow)
+if [[ "$SKIP_GLOW" == "" ]]; then
+  env YS_GLOW_METHOD=docker bin/yavascript meta/scripts/assemble-docs.ts
+fi
+
 if [[ "$(uname)" == "Darwin" ]]; then
 # Don't do uid/gid remapping in macOS, as Docker Desktop does its own
 # uid/gid mapping from root to the normal user
