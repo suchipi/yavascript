@@ -2,7 +2,7 @@ import * as std from "quickjs:std";
 import { assert } from "../assert";
 import { is } from "../is";
 import type { Path } from "../path";
-import { registerHelp } from "../help";
+import { registerHelpForValue } from "../help";
 import catHelp from "../../../meta/docs/compiled/cat.glow.txt";
 
 export function cat(...paths: Array<string | Path>): string {
@@ -25,4 +25,4 @@ export function cat(...paths: Array<string | Path>): string {
   return content;
 }
 
-registerHelp(cat, catHelp);
+registerHelpForValue(cat, catHelp);

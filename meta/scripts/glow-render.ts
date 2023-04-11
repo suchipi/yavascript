@@ -29,9 +29,9 @@ if (env.YS_GLOW_METHOD === "docker") {
   cmd = `glow`;
 }
 
-// Need to manually specify a style ('dracula' in this case) to force color
+// Need to manually specify a style ('dark' in this case) to force color
 // output when the output isn't a tty.
-const result = $(`${cmd} -s dracula ${quote(inputPath)}`);
+const result = $(`${cmd} -s dark ${quote(inputPath)}`);
 writeFile(outputPath, result.stdout);
 
 echo(outputPath);

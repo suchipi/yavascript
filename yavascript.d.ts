@@ -377,16 +377,16 @@ declare class Path {
 /**
  * The absolute path to the current file (whether script or module).
  *
- * Behaves the same as in Node.js, except that it's present within ES modules.
+ * Behaves the same as in Node.js, except that it's also present within ES modules.
  */
-declare const __filename: string;
+declare var __filename: string;
 
 /**
  * The absolute path to the directory the current file is inside of.
  *
- * Behaves the same as in Node.js, except that it's present within ES modules.
+ * Behaves the same as in Node.js, except that it's also present within ES modules.
  */
-declare const __dirname: string;
+declare var __dirname: string;
 
 /**
  * Return the last component of a path string.

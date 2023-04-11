@@ -121,17 +121,3 @@ declare class Path {
    */
   toString(): string;
 }
-
-/**
- * The absolute path to the current file (whether script or module).
- *
- * Behaves the same as in Node.js, except that it's present within ES modules.
- */
-declare const __filename: string;
-
-/**
- * The absolute path to the directory the current file is inside of.
- *
- * Behaves the same as in Node.js, except that it's present within ES modules.
- */
-declare const __dirname: string;

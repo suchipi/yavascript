@@ -1,7 +1,7 @@
 #!/usr/bin/env yavascript
 /// <reference path="../../yavascript.d.ts" />
 
-cd(Path.join(__dirname, "..", ".."));
+cd(GitRepo.findRoot(__dirname));
 
 for (const helpDoc of glob("meta/docs/*.md")) {
   const inputFile = helpDoc;

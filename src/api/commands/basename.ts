@@ -1,7 +1,7 @@
 import { Path } from "../path";
 import { assert } from "../assert";
 import { is } from "../is";
-import { registerHelp } from "../help";
+import { registerHelpForValue } from "../help";
 import basenameHelp from "../../../meta/docs/compiled/basename.glow.txt";
 
 export function basename(path: string | Path): string {
@@ -19,4 +19,4 @@ export function basename(path: string | Path): string {
   return parts[parts.length - 1];
 }
 
-registerHelp(basename, basenameHelp);
+registerHelpForValue(basename, basenameHelp);
