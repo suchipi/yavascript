@@ -13,7 +13,7 @@ if (!exists("quickjs")) {
   exec(`git clone ${remote}`);
 }
 
-const REF = "8f0015f5f6a414fc4c3c6049db74f301de042493";
+const REF = "3df71eaaa59906c725a645a9609fada1edf98dac";
 
 exec("git fetch origin", { cwd: "quickjs" });
 exec(`git checkout ${REF}`, { cwd: "quickjs" });

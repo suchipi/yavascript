@@ -41,6 +41,15 @@ exports.resolve = (id, fromFilePath) => {
     }
 
     default: {
+      if (id.endsWith(".help.md")) {
+        // Repoint this to a txt file that gets compiled via meta/scripts/assemble-docs.ts
+        return path.resolve(
+          __dirname,
+          "../dist/docs",
+          path.basename(id).replace(/\.help\.md$/, ".glow.txt")
+        );
+      }
+
       if (id.endsWith("?contentString")) {
         return (
           defaultResolver.resolve(

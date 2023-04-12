@@ -32,6 +32,7 @@ if (env.YS_GLOW_METHOD === "docker") {
 // Need to manually specify a style ('dark' in this case) to force color
 // output when the output isn't a tty.
 const result = $(`${cmd} -s dark ${quote(inputPath)}`);
+ensureDir(dirname(outputPath));
 writeFile(outputPath, result.stdout);
 
 echo(outputPath);

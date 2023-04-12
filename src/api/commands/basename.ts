@@ -1,8 +1,8 @@
 import { Path } from "../path";
 import { assert } from "../assert";
 import { is } from "../is";
-import { registerHelpForValue } from "../help";
-import basenameHelp from "../../../meta/docs/compiled/basename.glow.txt";
+import { setHelpText } from "../help";
+import basenameHelp from "./basename.help.md";
 
 export function basename(path: string | Path): string {
   if (is(path, types.Path)) {
@@ -19,4 +19,4 @@ export function basename(path: string | Path): string {
   return parts[parts.length - 1];
 }
 
-registerHelpForValue(basename, basenameHelp);
+setHelpText(basename, basenameHelp);

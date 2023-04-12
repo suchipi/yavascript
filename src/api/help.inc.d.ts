@@ -7,9 +7,11 @@ declare var help: {
    */
   (value?: any): void;
 
-  // TODO doc comment
-  registerHelpForValue(value: any, text: string): void;
-
-  // TODO doc comment
-  registerHelpProvider(provider: (value: unknown) => string | null): void;
+  /**
+   * Set the help text for the provided value to the provided string.
+   *
+   * If the value is later passed into the `help` function, the provided text
+   * will be printed.
+   */
+  setHelpText(value: object, text: string): void;
 };

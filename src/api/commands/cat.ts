@@ -2,8 +2,8 @@ import * as std from "quickjs:std";
 import { assert } from "../assert";
 import { is } from "../is";
 import type { Path } from "../path";
-import { registerHelpForValue } from "../help";
-import catHelp from "../../../meta/docs/compiled/cat.glow.txt";
+import { setHelpText } from "../help";
+import catHelp from "./cat.help.md";
 
 export function cat(...paths: Array<string | Path>): string {
   let content = "";
@@ -25,4 +25,4 @@ export function cat(...paths: Array<string | Path>): string {
   return content;
 }
 
-registerHelpForValue(cat, catHelp);
+setHelpText(cat, catHelp);

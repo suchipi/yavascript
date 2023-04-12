@@ -1,52 +1,48 @@
 import { makeErrorWithProperties } from "../error-with-properties";
 import { NOTHING } from "../targets/repl/special";
 import { hasColors } from "../has-colors";
+import helpHelpText from "./help.help.md";
 
-const helpProviders = new Set<(value: unknown) => string | null>();
-const helpForValueMap = new Map<any, string>();
+const HELP_TEXT = Symbol("HELP_TEXT");
 
-export function registerHelpForValue(value: any, text: string) {
-  helpForValueMap.set(value, text);
-}
+export function setHelpText(value: any, text: string) {
+  if (typeof text !== "string" && !((text as any) instanceof String)) {
+    throw makeErrorWithProperties(
+      "'text' argument must be a string",
+      { actual: text },
+      TypeError
+    );
+  }
 
-export function registerHelpProvider(
-  provider: (value: unknown) => string | null
-) {
-  helpProviders.add(provider);
+  if (Object.isPrimitive(value)) {
+    throw makeErrorWithProperties(
+      `Cannot register help text for the value '${value}'. Help text is stored as a property on the value, and '${value}' cannot have properties written onto it.`,
+      { value },
+      TypeError
+    );
+  }
+
+  value[HELP_TEXT] = text;
+  if (value[HELP_TEXT] !== text) {
+    throw makeErrorWithProperties(
+      `Failed to register help text; after writing to a symbol property, reading that property didn't result in the same value that was written. If you are using a proxy, getter, or setter, ensure it handles unknown symbol properties correctly. Primitive values cannot have help text set on them.`,
+      { value },
+      TypeError
+    );
+  }
 }
 
 function helpInternal(value?: any): string {
   if (value == null) {
-    // Print help for `help` function
-    // TODO: make this nicer
-    return String.dedent`
-      The 'help' function prints help text about its argument.
-
-      Usage: help(anything);
-
-      Example: help(basename);
-    `;
+    return helpHelpText;
   } else {
-    let registered = helpForValueMap.get(value);
-    if (registered == null) {
-      for (const provider of helpProviders) {
-        try {
-          const result = provider(value);
-          if (result != null) {
-            registered = result;
-            break;
-          }
-        } catch (err) {
-          console.warn(`Warning: help provider errored:`, err);
-        }
-      }
+    const registered = value[HELP_TEXT];
 
-      if (registered == null) {
-        throw makeErrorWithProperties(
-          `No help text is available for that value.`,
-          { value }
-        );
-      }
+    if (registered == null) {
+      throw makeErrorWithProperties(
+        `No help text is available for that value.`,
+        { value }
+      );
     }
 
     const output = registered.trimEnd();
@@ -68,8 +64,7 @@ function help(value?: any): typeof NOTHING {
 }
 
 const help_ = Object.assign(help, {
-  registerHelpForValue,
-  registerHelpProvider,
+  setHelpText,
 });
 
 export { help_ as help };

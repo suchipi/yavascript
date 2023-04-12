@@ -17,11 +17,13 @@ declare var help: {
    */
   (value?: any): void;
 
-  // TODO doc comment
-  registerHelpForValue(value: any, text: string): void;
-
-  // TODO doc comment
-  registerHelpProvider(provider: (value: unknown) => string | null): void;
+  /**
+   * Set the help text for the provided value to the provided string.
+   *
+   * If the value is later passed into the `help` function, the provided text
+   * will be printed.
+   */
+  setHelpText(value: object, text: string): void;
 };
 
 /** Info about the currently-running yavascript binary */
@@ -2767,6 +2769,11 @@ interface ObjectConstructor {
     input: any,
     hint: "string" | "number" | "default"
   ): string | number | bigint | boolean | undefined | symbol | null;
+
+  /**
+   * Returns a boolean indicating whether the specified value is a primitive value.
+   */
+  isPrimitive(input: any): boolean;
 }
 
 interface SymbolConstructor {
