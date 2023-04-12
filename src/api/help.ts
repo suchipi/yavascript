@@ -1,7 +1,6 @@
-import * as std from "quickjs:std";
-import * as os from "quickjs:os";
 import { makeErrorWithProperties } from "../error-with-properties";
 import { NOTHING } from "../targets/repl/special";
+import { hasColors } from "../has-colors";
 
 const helpProviders = new Set<(value: unknown) => string | null>();
 const helpForValueMap = new Map<any, string>();
@@ -58,9 +57,7 @@ function helpInternal(value?: any): string {
 function help(value?: any): typeof NOTHING {
   const output = helpInternal(value);
 
-  // TODO: factor in env.CLICOLOR and env.CLICOLOR_FORCE. See https://bixense.com/clicolors/
-  // We should do that in the 'help' target, too.
-  if (os.isatty(std.out.fileno())) {
+  if (hasColors()) {
     console.log(output);
   } else {
     const { stripAnsi } = require("./strings");

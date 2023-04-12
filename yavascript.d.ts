@@ -11,7 +11,18 @@
 /**
  * Prints help and usage text about the provided value, if any is available.
  */
-declare function help(value?: any): void;
+declare var help: {
+  /**
+   * Prints help and usage text about the provided value, if any is available.
+   */
+  (value?: any): void;
+
+  // TODO doc comment
+  registerHelpForValue(value: any, text: string): void;
+
+  // TODO doc comment
+  registerHelpProvider(provider: (value: unknown) => string | null): void;
+};
 
 /** Info about the currently-running yavascript binary */
 declare const yavascript: {

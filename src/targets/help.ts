@@ -10,6 +10,7 @@ import {
   underline,
   yellow,
 } from "../api/strings";
+import { hasColors } from "../has-colors";
 
 export default function helpTarget() {
   const bin = (text: string) => bold(blue(text));
@@ -106,7 +107,7 @@ For more info, see: ${cyan(
   )}.
 `;
 
-  if (os.isatty(std.out.fileno())) {
+  if (hasColors()) {
     std.out.puts(helpText);
   } else {
     std.out.puts(stripAnsi(helpText));
