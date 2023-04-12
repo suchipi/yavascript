@@ -15,7 +15,7 @@ export const makeInspectLog =
         str = arg;
       } else {
         try {
-          str = inspect(arg, inspectOptions.forPrint);
+          str = inspect(arg, inspectOptions.forPrint());
         } catch (err) {
           try {
             std.err.puts((err as any).message + "\n");

@@ -34,6 +34,7 @@ import { NOTHING } from "./special";
 import * as esmToRequire from "../../esm-to-require";
 import { langToCompiler } from "../../langs";
 import { HistoryFile } from "./history-file";
+import { hasColors } from "../../has-colors";
 
 export function startRepl(lang) {
   const compiler = langToCompiler(lang);
@@ -97,7 +98,7 @@ export function startRepl(lang) {
   var ps2 = "  ... ";
   var utf8 = true;
   var show_time = false;
-  var show_colors = true;
+  var show_colors = hasColors();
   var eval_time = 0;
 
   var mexpr = "";
@@ -1023,7 +1024,7 @@ export function startRepl(lang) {
       eval_time = new Date().getTime() - now;
       std.puts(colors.none);
       if (result !== NOTHING) {
-        std.puts(inspect(result, inspectOptions.forPrint));
+        std.puts(inspect(result, inspectOptions.forPrint()));
         std.puts(colors.none);
         std.puts("\n");
       }

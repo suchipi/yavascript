@@ -48,7 +48,7 @@ export async function evaluate(
 
 export function inspect(value: any): string {
   // options to inspect here match what is given to console.log
-  return print(value, inspectOptions.forPrint);
+  return print(value, inspectOptions.forPrint());
 }
 
 export function cleanOutput(input: string): string {

@@ -37,13 +37,13 @@ export default function printError(error: any, file: FILE) {
         propsObj[key] = error[key];
       }
       file.puts("\n");
-      file.puts(inspect(propsObj, inspectOptions.forPrint));
+      file.puts(inspect(propsObj, inspectOptions.forPrint()));
     }
 
     file.puts("\n");
   } else {
     file.puts("Non-error value was thrown: ");
-    file.puts(inspect(error, inspectOptions.forPrint));
+    file.puts(inspect(error, inspectOptions.forPrint()));
     file.puts("\n");
   }
 }
