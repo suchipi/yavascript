@@ -53,3 +53,7 @@ help.setHelpText(
 `
 );
 ```
+
+Don't worry about the styling functions printing ANSI characters in terminals that don't support styling; the `help` function removes the styles when printing to a non-tty or when the environment variable `CLICOLOR` has the value "0".
+
+> NOTE: `help.setHelpText` does not work on 'primitive' values, like numbers or strings. Only values which are passed-by-reference, like objects and functions, can have help text set.

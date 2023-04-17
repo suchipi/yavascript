@@ -3,7 +3,7 @@ import { NOTHING } from "../targets/repl/special";
 import { hasColors } from "../has-colors";
 import helpHelpText from "./help.help.md";
 
-const HELP_TEXT = Symbol("HELP_TEXT");
+const helpTextMap = new WeakMap<any, string>();
 
 export function setHelpText(value: any, text: string) {
   if (typeof text !== "string" && !((text as any) instanceof String)) {
@@ -16,33 +16,30 @@ export function setHelpText(value: any, text: string) {
 
   if (Object.isPrimitive(value)) {
     throw makeErrorWithProperties(
-      `Cannot register help text for the value '${value}'. Help text is stored as a property on the value, and '${value}' cannot have properties written onto it.`,
+      `Cannot register help text for the value '${value}'. Help text is stored using a WeakMap, and '${value}' cannot be used as a WeakMap key, because its type is what's known as a 'primitive' type. Strings, numbers, and other values which are passed-by-value instead of passed-by-reference are all 'primitive' types.`,
       { value },
       TypeError
     );
   }
 
-  value[HELP_TEXT] = text;
-  if (value[HELP_TEXT] !== text) {
-    throw makeErrorWithProperties(
-      `Failed to register help text; after writing to a symbol property, reading that property didn't result in the same value that was written. If you are using a proxy, getter, or setter, ensure it handles unknown symbol properties correctly. Primitive values cannot have help text set on them.`,
-      { value },
-      TypeError
-    );
-  }
+  helpTextMap.set(value, text);
 }
 
 function helpInternal(value?: any): string {
   if (value == null) {
     return helpHelpText;
   } else {
-    const registered = value[HELP_TEXT];
+    const registered = helpTextMap.get(value);
 
     if (registered == null) {
-      throw makeErrorWithProperties(
-        `No help text is available for that value.`,
-        { value }
-      );
+      // not using makeErrorWithProperties here as `value` will often be a
+      // function, and makeErrorWithProperties stringifies the function, which
+      // results in a really long and noisy error message.
+      //
+      // the `value` property we set on `err` will still get printed.
+      const err: any = new Error(`No help text is available for that value.`);
+      err.value = value;
+      throw err;
     }
 
     const output = registered.trimEnd();
@@ -66,5 +63,7 @@ function help(value?: any): typeof NOTHING {
 const help_ = Object.assign(help, {
   setHelpText,
 });
+
+setHelpText(help_, helpHelpText);
 
 export { help_ as help };

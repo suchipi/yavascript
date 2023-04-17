@@ -3,6 +3,8 @@ import { env } from "../env";
 import { assert } from "../assert";
 import { is } from "../is";
 import type { Path } from "../path";
+import { setHelpText } from "../help";
+import cdHelpText from "./cd.help.md";
 
 export function cd(path?: string | Path): void {
   if (path == null) {
@@ -26,3 +28,5 @@ export function cd(path?: string | Path): void {
 
   os.chdir(path);
 }
+
+setHelpText(cd, cdHelpText);

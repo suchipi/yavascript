@@ -3,6 +3,8 @@ import { is } from "../is";
 import { assert } from "../assert";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import type { Path } from "../path";
+import { setHelpText } from "../help";
+import chmodHelp from "./chmod.help.md";
 
 type ChmodPermissionsWho =
   | "user"
@@ -35,6 +37,14 @@ type ChmodPermissionsWhat =
 function permsFor(
   ...instructions: Array<[ChmodPermissionsWho, ChmodPermissionsWhat]>
 ): number {
+  // TODO: the chmod API needs "set"/"add"/"remove" semantics like the cli
+  // command. once those are here:
+  //
+  // - when "add": perms starts as file perms, instructions get logically ORed
+  // - when "remove": perms start as file perms, instructions get logically XORed
+  // - when "set": perms start as 0, instructions get logically ORed
+  //
+  // The current behavior is the "set" case.
   let perms = 0;
 
   for (const [who, what] of instructions) {
@@ -163,3 +173,5 @@ export function chmod(
 
   os.chmod(path, permNum);
 }
+
+setHelpText(chmod, chmodHelp);
