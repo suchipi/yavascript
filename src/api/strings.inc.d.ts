@@ -8,11 +8,6 @@ declare function stripAnsi(input: string): string;
  */
 declare function quote(input: string): string;
 
-/**
- * Clear the contents and scrollback buffer of the tty by printing special characters into stdout.
- */
-declare function clear(): void;
-
 // Colors
 
 /** Wrap a string with the ANSI control characters that will make it print as black text. */

@@ -733,6 +733,16 @@ declare function glob(
 ): Array<string>;
 
 /**
+ * Clear the contents and scrollback buffer of the tty by printing special characters into stdout.
+ */
+declare function clear(): void;
+
+interface Console {
+  /** Same as {@link clear}(). */
+  clear: typeof clear;
+}
+
+/**
  * Remove ANSI control characters from a string.
  */
 declare function stripAnsi(input: string): string;
@@ -741,11 +751,6 @@ declare function stripAnsi(input: string): string;
  * Wrap a string in double quotes, and escape any double-quotes inside using `\"`.
  */
 declare function quote(input: string): string;
-
-/**
- * Clear the contents and scrollback buffer of the tty by printing special characters into stdout.
- */
-declare function clear(): void;
 
 // Colors
 
@@ -2751,6 +2756,11 @@ interface ObjectConstructor {
     input: any,
     hint: "string" | "number" | "default"
   ): string | number | bigint | boolean | undefined | symbol | null;
+
+  /**
+   * Returns a boolean indicating whether the specified value is a primitive value.
+   */
+  isPrimitive(input: any): boolean;
 }
 
 interface SymbolConstructor {
@@ -3610,7 +3620,7 @@ declare var print: (...args: Array<any>) => void;
 /**
  * Object that provides functions for logging information.
  */
-declare var console: {
+interface Console {
   /** Same as {@link print}(). */
   log: typeof print;
 
@@ -3622,7 +3632,9 @@ declare var console: {
 
   /** Same as {@link print}(). */
   info: typeof print;
-};
+}
+
+declare var console: Console;
 
 /** An object representing a file handle. */
 declare interface FILE {
@@ -4696,29 +4708,19 @@ declare interface InspectFunction {
 declare var inspect: InspectFunction;
 
 /**
- * A class which represents a module namespace object. Note, however, that
- * instances of this class cannot be constructed manually, and must instead be
- * obtained from `import * as`, `import()`, `std.importModule`, or `require`.
+ * A global which lets you configure the module loader (import/export/require).
+ * You can use these properties to add support for importing new filetypes.
  *
- * The static properties on `Module` let you configure the module loader
- * (import/export/require). You can use these properties to add support for
- * importing new filetypes.
+ * This global can also be used to identify whether an object is a module
+ * namespace record.
  */
-declare class Module {
-  /** A module namespace object has arbitrary exports. */
-  [key: string | number | symbol]: any;
-
-  /**
-   * Module objects are not constructable.
-   *
-   * You must instead obtain them using import or require.
-   */
-  private constructor();
-
+interface ModuleGlobal {
   /**
    * Returns true if `target` is a module namespace object.
    */
-  static [Symbol.hasInstance](target: any): target is Module;
+  [Symbol.hasInstance](target: any): target is {
+    [key: string | number | symbol]: any;
+  };
 
   /**
    * A list of filetype extensions that may be omitted from an import specifier
@@ -4733,7 +4735,7 @@ declare class Module {
    * NOTE: If you add a new extension to this array, you will likely also want
    * to add to {@link Module.compilers}.
    */
-  static searchExtensions: Array<string>;
+  searchExtensions: Array<string>;
 
   /**
    * User-defined functions which will handle getting the JavaScript code
@@ -4774,7 +4776,7 @@ declare class Module {
    * NOTE: When adding to this object, you may also wish to add to
    * {@link Module.searchExtensions}.
    */
-  static compilers: {
+  compilers: {
     [extensionWithDot: string]: (filename: string, content: string) => string;
   };
 
@@ -4782,63 +4784,71 @@ declare class Module {
    * Create a virtual built-in module whose exports consist of the own
    * enumerable properties of `obj`.
    */
-  static define(name: string, obj: { [key: string]: any }): void;
+  define(name: string, obj: { [key: string]: any }): void;
 
   /**
    * Resolves a require/import request from `fromFile` into a canonicalized path.
    *
    * To change native module resolution behavior, replace this function with
-   * your own implementation.
+   * your own implementation. Note that you must handle
+   * `Module.searchExtensions` yourself in your replacement implementation.
    */
-  static resolve(name: string, fromFile: string): string;
+  resolve(name: string, fromFile: string): string;
 
   /**
    * Reads the contents of the given resolved module name into a string.
    *
    * To change native module loading behavior, replace this function with your
-   * own implementation.
+   * own implementation. Note that you must handle `Module.compilers` yourself
+   * in your replacement implementation.
    */
-  static read(modulePath: string): string;
+  read(modulePath: string): string;
 }
 
-/**
- * Synchronously import a module.
- *
- * `source` will be resolved relative to the calling file.
- *
- * If `source` does not have a file extension, and a file without an extension
- * cannot be found, the engine will check for files with the extensions in
- * {@link Module.searchExtensions}, and use one of those if present. This
- * behavior also happens when using normal `import` statements.
- *
- * For example, if you write:
- *
- * ```js
- * import something from "./somewhere";
- * ```
- *
- * but there's no file named `somewhere` in the same directory as the file
- * where that import appears, and `Module.searchExtensions` is the default
- * value:
- *
- * ```js
- * [".js"]
- * ```
- *
- * then the engine will look for `somewhere.js`. If that doesn't exist, the
- * engine will look for `somewhere/index.js`. If *that* doesn't exist, an error
- * will be thrown.
- *
- * If you add more extensions to `Module.searchExtensions`, then the engine
- * will use those, too. It will search in the same order as the strings appear
- * in the `Module.searchExtensions` array.
- */
-declare var require: ((source: string) => any) & {
+declare var Module: ModuleGlobal;
+
+interface RequireFunction {
+  /**
+   * Synchronously import a module.
+   *
+   * `source` will be resolved relative to the calling file.
+   *
+   * If `source` does not have a file extension, and a file without an extension
+   * cannot be found, the engine will check for files with the extensions in
+   * {@link Module.searchExtensions}, and use one of those if present. This
+   * behavior also happens when using normal `import` statements.
+   *
+   * For example, if you write:
+   *
+   * ```js
+   * import something from "./somewhere";
+   * ```
+   *
+   * but there's no file named `somewhere` in the same directory as the file
+   * where that import appears, and `Module.searchExtensions` is the default
+   * value:
+   *
+   * ```js
+   * [".js"]
+   * ```
+   *
+   * then the engine will look for `somewhere.js`. If that doesn't exist, the
+   * engine will look for `somewhere/index.js`. If *that* doesn't exist, an error
+   * will be thrown.
+   *
+   * If you add more extensions to `Module.searchExtensions`, then the engine
+   * will use those, too. It will search in the same order as the strings appear
+   * in the `Module.searchExtensions` array.
+   */
+  (source: string): any;
+
   /**
    * Resolves the normalized path to a modules, relative to the calling file.
    */
   resolve: (source: string) => string;
-};
+}
+
+declare var require: RequireFunction;
 
 declare var setTimeout: typeof import("quickjs:os").setTimeout;
 declare var clearTimeout: typeof import("quickjs:os").clearTimeout;
