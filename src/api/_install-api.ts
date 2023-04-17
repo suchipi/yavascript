@@ -73,7 +73,6 @@ const assertProps = makeGetterPropertyDescriptorMap({
 
 const stringsProps = makeGetterPropertyDescriptorMap({
   quote: () => require("./strings").quote,
-  clear: () => require("./strings").clear,
   stripAnsi: () => require("./strings").stripAnsi,
   bgBlack: () => require("./strings").bgBlack,
   bgBlue: () => require("./strings").bgBlue,
@@ -106,6 +105,7 @@ const stringsProps = makeGetterPropertyDescriptorMap({
 const consoleProps = makeGetterPropertyDescriptorMap({
   console: () => require("./console").console,
   print: () => require("./console").print,
+  clear: () => require("./console").clear,
 });
 
 const pipeProps = makeGetterPropertyDescriptorMap({
