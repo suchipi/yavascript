@@ -137,6 +137,11 @@ declare class Path {
    * Turn this path into a string by joining its segments using its separator.
    */
   toString(): string;
+
+  /**
+   * Alias for `toString`; causes Path objects to be serialized as strings.
+   */
+  toJSON(): string;
 }
 
 /**

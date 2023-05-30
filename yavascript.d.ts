@@ -384,6 +384,11 @@ declare class Path {
    * Turn this path into a string by joining its segments using its separator.
    */
   toString(): string;
+
+  /**
+   * Alias for `toString`; causes Path objects to be serialized as strings.
+   */
+  toJSON(): string;
 }
 
 /**
@@ -747,7 +752,7 @@ declare type GlobOptions = {
 declare function glob(
   patterns: string | Array<string>,
   options?: GlobOptions
-): Array<string>;
+): Array<Path>;
 
 /**
  * Clear the contents and scrollback buffer of the tty by printing special characters into stdout.

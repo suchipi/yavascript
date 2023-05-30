@@ -523,3 +523,24 @@ test("Path.relativeTo", async () => {
     }
   `);
 });
+
+test("Path.toJSON", async () => {
+  const result = await evaluate(`
+    const path = new Path("/tmp/something/somewhere");
+    const path2 = new Path("C:\\\\Users\\\\user");
+
+    JSON.stringify({path, path2}, null, 2);
+  `);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      "path": "/tmp/something/somewhere",
+      "path2": "C:\\\\Users\\\\user"
+    }
+    ",
+    }
+  `);
+});

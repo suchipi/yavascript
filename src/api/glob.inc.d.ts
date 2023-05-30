@@ -37,4 +37,4 @@ declare type GlobOptions = {
 declare function glob(
   patterns: string | Array<string>,
   options?: GlobOptions
-): Array<string>;
+): Array<Path>;

@@ -337,6 +337,10 @@ class Path {
       return result;
     }
   }
+
+  toJSON() {
+    return this.toString();
+  }
 }
 
 // .toString() needs to return a value starting with "class" for pheno.coerce
