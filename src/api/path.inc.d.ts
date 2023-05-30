@@ -117,6 +117,23 @@ declare class Path {
   clone(): this;
 
   /**
+   * Express this path relative to `dir`.
+   *
+   * @param dir - The directory to create a new path relative to.
+   * @param options - Options that affect the resulting path.
+   */
+  relativeTo(
+    dir: Path | string,
+    options?: {
+      /**
+       * Defaults to false. When true, a leading `./` will be omitted from the
+       * path, if present. Note that a leading `../` will never be omitted.
+       */
+      noLeadingDot?: boolean;
+    }
+  ): Path;
+
+  /**
    * Turn this path into a string by joining its segments using its separator.
    */
   toString(): string;

@@ -1,6 +1,7 @@
 import * as os from "quickjs:os";
 import { assert } from "./assert";
 import { types } from "./types";
+import { is } from "./is";
 import { makeErrorWithProperties } from "../error-with-properties";
 
 function validateSegments(segments: Array<string>): Array<string> {
@@ -300,7 +301,33 @@ class Path {
     );
   }
 
-  // TODO: relative(other: Path | string): Path {}
+  relativeTo(
+    dir: Path | string,
+    options: { noLeadingDot?: boolean } = {}
+  ): Path {
+    if (!is(dir, types.Path)) {
+      dir = new Path(dir);
+    }
+
+    const ownSegments = [...this.segments];
+    const dirSegments = [...dir.segments];
+
+    while (ownSegments[0] === dirSegments[0]) {
+      ownSegments.shift();
+      dirSegments.shift();
+    }
+
+    if (dirSegments.length === 0) {
+      if (options.noLeadingDot) {
+        return Path.from(ownSegments, this.separator);
+      } else {
+        return Path.from([".", ...ownSegments], this.separator);
+      }
+    } else {
+      const dotDots = dirSegments.map((_) => "..");
+      return Path.from([...dotDots, ...ownSegments]);
+    }
+  }
 
   toString() {
     const result = this.segments.join(this.separator);

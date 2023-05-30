@@ -488,3 +488,38 @@ test("Path.tagUsingBase", async () => {
     }
   `);
 });
+
+test("Path.relativeTo", async () => {
+  const result = await evaluate(`
+    [
+      new Path("/tmp/a/b/c").relativeTo("/tmp").toString(),
+      new Path("/tmp/a/b/c").relativeTo("/").toString(),
+      new Path("/tmp/a/b/c").relativeTo("/tmp/a/b/c/d/e").toString(),
+      new Path("/tmp/a/b/c").relativeTo("/tmp/a/b/f/g/h").toString(),
+
+      new Path("/home/suchipi/Code/something/src/index.ts").relativeTo("/home/suchipi/Code/something").toString(),
+      new Path("/home/suchipi/Code/something/src/index.ts").relativeTo("/home/suchipi/Code/something", { noLeadingDot: true }).toString(),
+
+      new Path("/home/suchipi/Code/something/src/index.ts").relativeTo("/home/suchipi/Code/something-else").toString(),
+      new Path("/home/suchipi/Code/something/src/index.ts").relativeTo("/home/suchipi/Code/something-else", { noLeadingDot: true }).toString(),
+    ]
+  `);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "[
+      "./a/b/c"
+      "./tmp/a/b/c"
+      "../.."
+      "../../../c"
+      "./src/index.ts"
+      "src/index.ts"
+      "../something/src/index.ts"
+      "../something/src/index.ts"
+    ]
+    ",
+    }
+  `);
+});
