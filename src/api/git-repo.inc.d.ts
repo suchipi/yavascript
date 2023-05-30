@@ -10,7 +10,7 @@ declare class GitRepo {
    *
    * This is done by running `git rev-parse --show-toplevel`.
    */
-  static findRoot(fromPath: string | Path): string;
+  static findRoot(fromPath: string | Path): Path;
 
   /**
    * Creates a new `Git` object for the given repo on disk.

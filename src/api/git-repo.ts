@@ -11,7 +11,7 @@ import { makeErrorWithProperties } from "../error-with-properties";
 export class GitRepo {
   repoDir: Path;
 
-  static findRoot(fromPath: string | Path): string {
+  static findRoot(fromPath: string | Path): Path {
     if (is(fromPath, types.Path)) {
       fromPath = fromPath.toString();
     }
@@ -41,7 +41,7 @@ export class GitRepo {
       });
     }
 
-    return result.stdout.trim();
+    return new Path(result.stdout.trim());
   }
 
   constructor(repoDir: string | Path) {
