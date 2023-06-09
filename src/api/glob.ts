@@ -41,7 +41,7 @@ const HAS_GLOB_METACHARS_RE = /[*{}]|\+\(|^!/;
 export function glob(
   patterns: string | Array<string>,
   options: GlobOptions = {}
-): Array<string> {
+): Array<Path> {
   assert.type(
     patterns,
     types.or(types.string, types.arrayOf(types.string)),
@@ -57,7 +57,7 @@ export function glob(
   assert.type(
     options.dir,
     types.or(types.string, types.Path, types.undefined),
-    "when present, 'dir' option must be a string"
+    "when present, 'dir' option must be a string or Path"
   );
 
   assert.type(
@@ -261,5 +261,5 @@ export function glob(
 
   find(startingDir);
 
-  return matches;
+  return matches.map((str) => new Path(str));
 }

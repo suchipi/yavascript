@@ -382,9 +382,31 @@ declare class Path {
   clone(): this;
 
   /**
+   * Express this path relative to `dir`.
+   *
+   * @param dir - The directory to create a new path relative to.
+   * @param options - Options that affect the resulting path.
+   */
+  relativeTo(
+    dir: Path | string,
+    options?: {
+      /**
+       * Defaults to false. When true, a leading `./` will be omitted from the
+       * path, if present. Note that a leading `../` will never be omitted.
+       */
+      noLeadingDot?: boolean;
+    }
+  ): Path;
+
+  /**
    * Turn this path into a string by joining its segments using its separator.
    */
   toString(): string;
+
+  /**
+   * Alias for `toString`; causes Path objects to be serialized as strings.
+   */
+  toJSON(): string;
 }
 
 /**
@@ -748,7 +770,7 @@ declare type GlobOptions = {
 declare function glob(
   patterns: string | Array<string>,
   options?: GlobOptions
-): Array<string>;
+): Array<Path>;
 
 /**
  * Clear the contents and scrollback buffer of the tty by printing special characters into stdout.
@@ -2496,7 +2518,7 @@ declare class GitRepo {
    *
    * This is done by running `git rev-parse --show-toplevel`.
    */
-  static findRoot(fromPath: string | Path): string;
+  static findRoot(fromPath: string | Path): Path;
 
   /**
    * Creates a new `Git` object for the given repo on disk.

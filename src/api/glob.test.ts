@@ -30,9 +30,11 @@ function testGlob(
     }
 
     const result = await evaluate(
-      `JSON.stringify(glob(${args
-        .map((arg) => JSON.stringify(arg))
-        .join(", ")}))`
+      `
+        const args = ${JSON.stringify(args)};
+        const paths = glob(...args);
+        JSON.stringify(paths.map(path => path.toString()))
+      `
     );
 
     expect(result).toMatchObject({
