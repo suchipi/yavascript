@@ -4,6 +4,8 @@ import { Path } from "../path";
 import { isDir } from "../filesystem";
 import { is } from "../is";
 import { assert } from "../assert";
+import { setHelpText } from "../help";
+import lsHelpText from "./ls.help.md";
 
 export function ls(
   dir: string | Path = pwd(),
@@ -38,3 +40,5 @@ export function ls(
 
   return children;
 }
+
+setHelpText(ls, lsHelpText);

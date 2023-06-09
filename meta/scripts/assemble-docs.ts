@@ -9,5 +9,5 @@ for (const helpDoc of glob("src/**/*.help.md")) {
     "dist/docs",
     basename(helpDoc).replace(/\.help.md$/, ".glow.txt")
   );
-  exec(["meta/scripts/glow-render.ts", inputFile, outputFile]);
+  exec(["meta/scripts/glow-render.ts", inputFile.toString(), outputFile]);
 }
