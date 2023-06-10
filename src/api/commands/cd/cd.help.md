@@ -5,6 +5,6 @@ Changes the process's current working directory to the specified path. If no pat
 Provides the same functionality as the shell builtin of the same name.
 
 ```ts
-// Defined in yavascript/src/api/commands/cd.ts
+// Defined in yavascript/src/api/commands/cd
 declare function cd(path?: string | Path): void;
 ```

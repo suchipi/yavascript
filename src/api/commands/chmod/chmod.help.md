@@ -11,7 +11,7 @@ The `permissions` argument can be either:
 - or an object (see info below).
 
 ```ts
-// Defined in yavascript/src/api/commands/chmod.ts
+// Defined in yavascript/src/api/commands/chmod
 declare function chmod(
   permissions:
     | number

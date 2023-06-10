@@ -5,6 +5,6 @@ Read the contents of one of more files from disk as one UTF-8 string, print that
 Provides the same functionality as the unix binary of the same name.
 
 ```ts
-// Defined in yavascript/src/api/commands/cat.ts
+// Defined in yavascript/src/api/commands/cat
 declare function cat(...paths: Array<string | Path>): string;
 ```

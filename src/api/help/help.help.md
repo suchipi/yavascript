@@ -5,14 +5,14 @@ Prints help and usage text about the provided value, if any is available.
 When called without an argument, prints the help text for the `help` function itself.
 
 ```ts
-// Defined in yavascript/src/api/help.ts
+// Defined in yavascript/src/api/help
 declare function help(value?: any): void;
 ```
 
 To register help text for a provided value, use `help.setHelpText`:
 
 ```ts
-// Defined in yavascript/src/api/help.ts
+// Defined in yavascript/src/api/help
 declare function help.setHelpText(value: object, text: string): void;
 ```
 

@@ -1,0 +1,1 @@
+test is in src/api/commands/cd/cd-and-pwd.test.ts
