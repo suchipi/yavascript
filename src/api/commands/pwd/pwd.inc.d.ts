@@ -1,5 +1,5 @@
 /**
- * Return the process's current working directory.
+ * Returns the process's current working directory.
  *
  * Provides the same functionality as the shell builtin of the same name.
  */

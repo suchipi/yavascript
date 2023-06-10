@@ -1,5 +1,5 @@
 /**
- * Read a symlink.
+ * Reads a symlink.
  *
  * Returns the target of the symlink, which may be absolute or relative.
  *

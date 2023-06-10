@@ -2,6 +2,8 @@ import * as os from "quickjs:os";
 import { is } from "../../is";
 import { assert } from "../../assert";
 import type { Path } from "../../path";
+import { setHelpText } from "../../help";
+import realpathHelpText from "./realpath.help.md";
 
 export function realpath(path: string | Path): string {
   if (is(path, types.Path)) {
@@ -16,3 +18,5 @@ export function realpath(path: string | Path): string {
 
   return os.realpath(path);
 }
+
+setHelpText(realpath, realpathHelpText);
