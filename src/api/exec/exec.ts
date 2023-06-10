@@ -4,7 +4,7 @@ import { parseArgString } from "./parse-arg-string";
 import { pwd } from "../commands/pwd";
 import { env } from "../env";
 import { makeErrorWithProperties } from "../../error-with-properties";
-import traceAll from "../traceAll";
+import { traceAll } from "../trace-all";
 import { is } from "../is";
 import { assert } from "../assert";
 import type { Path } from "../path";

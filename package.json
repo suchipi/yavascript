@@ -27,7 +27,7 @@
     "typescript-assert-utils": "^1.0.0"
   },
   "scripts": {
-    "build": "meta/scripts/clone-quickjs.sh && meta/build.sh",
+    "build": "meta/scripts/clone-quickjs.ts && meta/build.sh",
     "bundle": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/index.ts",
     "bundle:primordials": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/primordials.ts --output dist/primordials.js",
     "test": "jest --config=./meta/jest/config.js",

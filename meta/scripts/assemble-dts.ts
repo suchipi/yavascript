@@ -5,11 +5,13 @@ cd(GitRepo.findRoot(__dirname));
 
 ensureDir("dist");
 
+const dtsFolderPaths = new Set<string>();
+glob("./src/**/*.inc.d.ts").forEach((path) => {
+  dtsFolderPaths.add(dirname(path));
+});
+
 const includePaths = [
-  "src",
-  "src/api",
-  "src/api/commands",
-  "src/api/exec",
+  ...dtsFolderPaths,
   "src/templates",
   "meta/quickjs/src/quickjs",
   "meta/quickjs/src/quickjs-libc",

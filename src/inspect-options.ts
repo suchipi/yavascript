@@ -1,4 +1,10 @@
-import { hasColors } from "./has-colors";
+let hasColors: () => boolean;
+if (typeof yavascript !== "undefined") {
+  hasColors = (require("./has-colors") as typeof import("./has-colors"))
+    .hasColors;
+} else {
+  hasColors = () => require("kleur").enabled;
+}
 
 export const forPrint: () => InspectOptions = () => ({
   maxDepth: 8,

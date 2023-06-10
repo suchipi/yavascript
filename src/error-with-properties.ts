@@ -21,7 +21,7 @@ export function makeErrorWithProperties<
       const [key, value] = entries[i];
       errorMessage += key;
       errorMessage += " = ";
-      errorMessage += inspect(value, inspectOptions.forError).replace(
+      errorMessage += inspect(value, inspectOptions.forError()).replace(
         /\n+/g,
         " "
       );

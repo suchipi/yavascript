@@ -5,7 +5,7 @@ import { makeGetterPropertyDescriptorMap } from "../lazy-load";
 import { grepFile, grepString, installToStringProto } from "./grep";
 import { install as installRegexpEscape } from "./regexp-escape";
 import { installModuleHooks } from "../module-hooks";
-import { installNodeCompat } from "./node-compat";
+import { installNodeCompat } from "./node-compat/node-compat";
 import { patchRequire } from "../cjs-interop";
 
 const quickjsBuiltinsProps = makeGetterPropertyDescriptorMap({
@@ -136,7 +136,7 @@ const yamlProps = makeGetterPropertyDescriptorMap({
 });
 
 const traceAllProps = makeGetterPropertyDescriptorMap({
-  traceAll: () => require("./traceAll").default,
+  traceAll: () => require("./trace-all").default,
 });
 
 const parseScriptArgsProps = makeGetterPropertyDescriptorMap({
