@@ -42,15 +42,15 @@ If you want, you can use `String.dedent` on tagged template literals to format m
 help.setHelpText(
   myFunction,
   String.dedent`
-  ${bold(red("myFunction"))}: returns the sum of two numbers
+    ${bold(red("myFunction"))}: returns the sum of two numbers
 
-  Examples:
-    ${dim("Adding one and two")}
-    myFunction(1, 2);
+    Examples:
+      ${dim("Adding one and two")}
+      myFunction(1, 2);
 
-    ${dim("Storing the result")}
-    const five = myFunction(2, 3);
-`
+      ${dim("Storing the result")}
+      const five = myFunction(2, 3);
+  `
 );
 ```
 
