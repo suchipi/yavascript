@@ -2,6 +2,8 @@ import { makeErrorWithProperties } from "../../error-with-properties";
 import { NOTHING } from "../../targets/repl/special";
 import { hasColors } from "../../has-colors";
 import helpHelpText from "./help.help.md";
+import getHelpTextHelpText from "./help.getHelpText.help.md";
+import setHelpTextHelpText from "./help.setHelpText.help.md";
 
 const helpTextMap = new WeakMap<any, string>();
 
@@ -25,9 +27,13 @@ export function setHelpText(value: any, text: string) {
   helpTextMap.set(value, text);
 }
 
+export function getHelpText(value: any): string | null {
+  return helpTextMap.get(value) || null;
+}
+
 function helpInternal(value?: any): string {
-  if (value == null) {
-    return helpHelpText;
+  if (arguments.length === 0) {
+    return helpHelpText.trimEnd();
   } else {
     const registered = helpTextMap.get(value);
 
@@ -48,7 +54,7 @@ function helpInternal(value?: any): string {
 }
 
 function help(value?: any): typeof NOTHING {
-  const output = helpInternal(value);
+  const output = helpInternal.apply(null, arguments as any);
 
   if (hasColors()) {
     console.log(output);
@@ -62,9 +68,11 @@ function help(value?: any): typeof NOTHING {
 
 const help_ = Object.assign(help, {
   setHelpText,
+  getHelpText,
 });
 
 setHelpText(help_, helpHelpText);
-setHelpText(setHelpText, helpHelpText);
+setHelpText(setHelpText, setHelpTextHelpText);
+setHelpText(getHelpText, getHelpTextHelpText);
 
 export { help_ as help };
