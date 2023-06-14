@@ -15,4 +15,4 @@ declare function type(
 ): void;
 ```
 
-See `types` for a list of `TypeValidator`s.
+See `help(types)` for a list of `TypeValidator`s.
