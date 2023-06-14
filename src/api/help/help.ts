@@ -65,5 +65,6 @@ const help_ = Object.assign(help, {
 });
 
 setHelpText(help_, helpHelpText);
+setHelpText(setHelpText, helpHelpText);
 
 export { help_ as help };

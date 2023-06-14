@@ -22,6 +22,11 @@ export default makeGetterPropertyDescriptorMap(
         "'grep', as a global function, is not part of the yavascript API. Use 'grepFile', 'grepString', or String.prototype.grep instead"
       );
     },
+    man() {
+      throw new Error(
+        "'man' is not part of the yavascript API. Use 'help' instead"
+      );
+    },
   },
   false
 );
