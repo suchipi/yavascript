@@ -534,14 +534,14 @@ declare function ls(
 declare function printf(format: string, ...args: Array<any>): void;
 
 /**
- * Return the process's current working directory.
+ * Returns the process's current working directory.
  *
  * Provides the same functionality as the shell builtin of the same name.
  */
 declare function pwd(): string;
 
 /**
- * Read a symlink.
+ * Reads a symlink.
  *
  * Returns the target of the symlink, which may be absolute or relative.
  *

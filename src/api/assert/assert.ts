@@ -6,6 +6,9 @@ import {
   UnwrapTypeFromCoerceableOrValidator,
   types,
 } from "../types";
+import { setHelpText } from "../help";
+import assertHelpText from "./assert.help.md";
+import assertTypeHelpText from "./assert.type.help.md";
 
 function assert<ValueType>(
   value: ValueType,
@@ -33,6 +36,9 @@ const assertType = <T extends TypeValidator<any> | CoerceableToTypeValidator>(
     phenoAssertType(value, validator);
   }
 };
+
+setHelpText(assert, assertHelpText);
+setHelpText(assertType, assertTypeHelpText);
 
 const assert_: typeof assert & { type: typeof assertType } = Object.assign(
   assert,
