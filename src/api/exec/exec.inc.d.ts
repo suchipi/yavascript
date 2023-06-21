@@ -157,7 +157,7 @@ declare interface Exec {
     | { stdout: string; stderr: string; status: undefined; signal: number };
 }
 
-/** Run a child process using the provided arguments. The first value in the arguments array is the program to run. */
+/** Runs a child process using the provided arguments. The first value in the arguments array is the program to run. */
 declare const exec: Exec;
 
 /** Alias for `exec(args, { captureOutput: true })` */
