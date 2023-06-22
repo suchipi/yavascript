@@ -15,14 +15,26 @@ declare type BaseExecOptions = {
    * ```
    */
   trace?: (...args: Array<any>) => void;
+
+  /**
+   * Whether an Error should be thrown when the process exits with a nonzero
+   * status code.
+   *
+   * Defaults to true.
+   */
+  failOnNonZeroStatus?: boolean;
+
+  /**
+   * If true, stdout and stderr will be collected into strings and returned
+   * instead of being printed to the screen.
+   *
+   * Defaults to false.
+   */
+  captureOutput?: boolean;
 };
 
 declare interface Exec {
-  (args: Array<string> | string): void;
-
-  (args: Array<string> | string, options: Record<string, never>): void;
-
-  (args: Array<string> | string, options: BaseExecOptions): void;
+  (args: Array<string> | string, options?: BaseExecOptions): void;
 
   (
     args: Array<string> | string,

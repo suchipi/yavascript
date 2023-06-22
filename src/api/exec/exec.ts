@@ -8,7 +8,11 @@ import { traceAll } from "../trace-all";
 import { is } from "../is";
 import { assert } from "../assert";
 import type { Path } from "../path";
+import { setHelpText } from "../help";
+import execHelpText from "./exec.help.md";
+import dollarHelpText from "./$.help.md";
 
+// TODO: 'raw' option for stdout/stderr
 export type ChildProcessOptions = {
   cwd?: string | Path;
   env?: { [key: string | number]: string | number | boolean };
@@ -271,11 +275,18 @@ const exec = (
   }
 };
 
+setHelpText(exec, execHelpText);
+
 export { exec };
 
 export function $(args: Array<string> | string): {
   stdout: string;
   stderr: string;
 } {
-  return exec(args as any, { captureOutput: true });
+  return exec(args as any, {
+    captureOutput: true,
+    failOnNonZeroStatus: true,
+  });
 }
+
+setHelpText($, dollarHelpText);
