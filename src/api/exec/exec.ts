@@ -10,7 +10,7 @@ import { assert } from "../assert";
 import type { Path } from "../path";
 import { setHelpText } from "../help";
 import execHelpText from "./exec.help.md";
-import dollarHelpText from "./$.help.md";
+import dollarHelpText from "./_dollar.help.md";
 
 // TODO: 'raw' option for stdout/stderr
 export type ChildProcessOptions = {

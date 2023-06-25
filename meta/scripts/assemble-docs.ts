@@ -1,13 +1,26 @@
 #!/usr/bin/env yavascript
 /// <reference path="../../yavascript.d.ts" />
 
-cd(GitRepo.findRoot(__dirname));
+const rootDir = GitRepo.findRoot(__dirname);
+cd(rootDir);
 
-for (const helpDoc of glob("src/**/*.help.md")) {
-  const inputFile = helpDoc;
-  const outputFile = Path.join(
-    "dist/docs",
-    basename(helpDoc).replace(/\.help.md$/, ".glow.txt")
-  );
-  exec(["meta/scripts/glow-render.ts", inputFile.toString(), outputFile]);
+const docsBuildNinjaPath = rootDir.concat("dist/docs/build.ninja");
+if (!exists(docsBuildNinjaPath)) {
+  ensureDir(dirname(docsBuildNinjaPath));
+  writeFile(docsBuildNinjaPath, "");
 }
+
+const existingBuildNinjaContent = readFile(docsBuildNinjaPath);
+
+const newBuildNinjaContent = $([
+  "node_modules/.bin/shinobi",
+  Path.join(__dirname, "assemble-docs.ninja.js"),
+]).stdout;
+
+if (newBuildNinjaContent !== existingBuildNinjaContent) {
+  writeFile(docsBuildNinjaPath, newBuildNinjaContent);
+}
+
+exec(["ninja", "-f", docsBuildNinjaPath.toString()], {
+  cwd: rootDir.toString(),
+});

@@ -12,6 +12,7 @@
     "@babel/runtime": "^7.20.6",
     "@suchipi/macaroni": "^0.1.0",
     "@suchipi/print": "^2.2.0",
+    "@suchipi/shinobi": "^0.2.0",
     "@types/coffeescript": "^2.5.2",
     "@types/jest": "^29.2.4",
     "@types/minimatch": "^5.1.2",
