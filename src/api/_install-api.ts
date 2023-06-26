@@ -136,11 +136,11 @@ const yamlProps = makeGetterPropertyDescriptorMap({
 });
 
 const traceAllProps = makeGetterPropertyDescriptorMap({
-  traceAll: () => require("./trace-all").default,
+  traceAll: () => require("./trace-all").traceAll,
 });
 
 const parseScriptArgsProps = makeGetterPropertyDescriptorMap({
-  parseScriptArgs: () => require("./parse-script-args").default,
+  parseScriptArgs: () => require("./parse-script-args").parseScriptArgs,
 });
 
 const startReplProps = makeGetterPropertyDescriptorMap({

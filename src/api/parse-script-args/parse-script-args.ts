@@ -7,7 +7,7 @@ import { makeErrorWithProperties } from "../../error-with-properties";
 
 type Hint = typeof String | typeof Boolean | typeof Number | typeof Path;
 
-export default function parseScriptArgs(
+export function parseScriptArgs(
   hints: { [key: string]: Hint } = {},
   args: Array<string> = scriptArgs.slice(2)
 ): {
