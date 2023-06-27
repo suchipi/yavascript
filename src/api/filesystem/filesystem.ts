@@ -9,6 +9,12 @@ import { pipe } from "../pipe";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
+import { setHelpText } from "../help";
+import readFileHelpText from "./readFile.help.md";
+import writeFileHelpText from "./writeFile.help.md";
+import isDirHelpText from "./isDir.help.md";
+import isLinkHelpText from "./isLink.help.md";
+import removeHelpText from "./remove.help.md";
 
 type ReadFile = {
   (path: string | Path): string;
@@ -50,6 +56,8 @@ export const readFile: ReadFile = function readFile(
   }
 } as any;
 
+setHelpText(readFile, readFileHelpText);
+
 export function writeFile(
   path: string | Path,
   data: string | ArrayBuffer
@@ -82,6 +90,8 @@ export function writeFile(
   }
 }
 
+setHelpText(writeFile, writeFileHelpText);
+
 export function isDir(path: string | Path): boolean {
   assert.type(
     path,
@@ -106,6 +116,8 @@ export function isDir(path: string | Path): boolean {
   }
 }
 
+setHelpText(isDir, isDirHelpText);
+
 export function isLink(path: string | Path): boolean {
   assert.type(
     path,
@@ -124,6 +136,8 @@ export function isLink(path: string | Path): boolean {
     return false;
   }
 }
+
+setHelpText(isLink, isLinkHelpText);
 
 export function remove(path: string | Path): void {
   assert.type(
@@ -149,6 +163,8 @@ export function remove(path: string | Path): void {
 
   os.remove(path);
 }
+
+setHelpText(remove, removeHelpText);
 
 export function exists(path: string | Path): boolean {
   assert.type(

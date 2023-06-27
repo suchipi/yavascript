@@ -1,6 +1,6 @@
 `exec` - Run system commands via child processes
 
-The `exec` function runs a child process. You can call it with either a string or an array of strings.
+The `exec` function runs a child process and blocks until it exits. You can call it with either a string or an array of strings.
 
 When calling `exec` with an array of strings, the first string in the array is the program to run, and the rest of the strings in the array are arguments to the program, eg:
 
