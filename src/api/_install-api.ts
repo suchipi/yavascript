@@ -144,8 +144,9 @@ const parseScriptArgsProps = makeGetterPropertyDescriptorMap({
   parseScriptArgs: () => require("./parse-script-args").parseScriptArgs,
 });
 
-const startReplProps = makeGetterPropertyDescriptorMap({
-  startRepl: () => require("./start-repl").startRepl,
+const replProps = makeGetterPropertyDescriptorMap({
+  startRepl: () => require("./repl").startRepl,
+  InteractivePrompt: () => require("./repl").InteractivePrompt,
 });
 
 const yavascriptProps = makeGetterPropertyDescriptorMap({
@@ -182,7 +183,7 @@ export default function installApi(target: typeof globalThis) {
     ...yamlProps,
     ...traceAllProps,
     ...parseScriptArgsProps,
-    ...startReplProps,
+    ...replProps,
     ...yavascriptProps,
     ...helpProps,
 

@@ -1,5 +1,5 @@
 import { makeErrorWithProperties } from "../../error-with-properties";
-import { NOTHING } from "../../targets/repl/special";
+import { NOTHING } from "../repl/special";
 import { hasColors } from "../../has-colors";
 import helpHelpText from "./help.help.md";
 import getHelpTextHelpText from "./help.getHelpText.help.md";

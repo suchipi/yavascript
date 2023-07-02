@@ -1,7 +1,7 @@
 import * as std from "quickjs:std";
 import * as os from "quickjs:os";
 import * as esmToRequire from "../esm-to-require";
-import { NOTHING } from "./repl/special";
+import { NOTHING } from "../api/repl/special";
 import { langToCompiler } from "../langs";
 
 export default function evalTarget(inputCode: string, lang: string) {

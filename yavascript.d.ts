@@ -2503,24 +2503,74 @@ declare function pipe<Dest extends PipeDestination>(
     : never;
 };
 
+interface InteractivePrompt {
+  prompt?: () => string;
+  printInput?: (input: string) => void;
+  historyFileName?: string;
+  getCompletions?: (
+    line: string,
+    pos: number
+  ) => {
+    // TODO refactor these to have better key names
+    tab: Array<string>;
+    pos: number;
+    ctx: { [key: string | number | symbol]: any };
+  };
+
+  handleInput: (input: string) => void;
+  start(): void;
+}
+
+interface InteractivePromptConstructor {
+  new (
+    handleInput: (input: string) => void,
+    options?: {
+      prompt?: () => string;
+      printInput?: (input: string) => void;
+      historyFileName?: string;
+      getCompletions?: (
+        line: string,
+        pos: number
+      ) => {
+        // TODO refactor these to have better key names
+        tab: Array<string>;
+        pos: number;
+        ctx: { [key: string | number | symbol]: any };
+      };
+    }
+  ): InteractivePrompt;
+
+  prototype: InteractivePrompt;
+}
+
+declare var InteractivePrompt: InteractivePromptConstructor;
+
 /**
  * Launch the Yavascript REPL (read-eval-print-loop).
  *
  * @param context Variables to make available as globals within the repl.
  * @param lang The langauge to use in the repl. Defaults to "javascript".
  */
-declare function startRepl(
-  context?: { [key: string]: any },
-  lang?:
-    | "js"
-    | "javascript"
-    | "ts"
-    | "typescript"
-    | "jsx"
-    | "tsx"
-    | "coffee"
-    | "coffeescript"
-): void;
+declare const startRepl: {
+  (
+    context?: { [key: string]: any },
+    lang?:
+      | "js"
+      | "javascript"
+      | "ts"
+      | "typescript"
+      | "jsx"
+      | "tsx"
+      | "coffee"
+      | "coffeescript"
+  ): void;
+
+  /**
+   * A special value; when expressions result in this value, the repl will
+   * print nothing instead of printing this value.
+   */
+  NOTHING: symbol;
+};
 
 /**
  * An object that points to a git repository on disk and provides utility

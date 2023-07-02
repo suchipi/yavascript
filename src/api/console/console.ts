@@ -1,6 +1,6 @@
 import * as std from "quickjs:std";
 import { makeInspectLog } from "../shared/make-inspect-log";
-import { NOTHING } from "../../targets/repl/special";
+import { NOTHING } from "../repl/special";
 import { setHelpText } from "../help";
 import consoleHelpText from "./console.help.md";
 import consoleLogHelpText from "./console.log.help.md";

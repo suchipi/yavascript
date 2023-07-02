@@ -7,7 +7,7 @@ import { touch } from "../../api/commands/touch";
 export class HistoryFile {
   path: Path | null;
 
-  constructor() {
+  constructor(filename: string) {
     const configDir = getConfigDir();
     if (!configDir) {
       this.path = null;
@@ -16,7 +16,7 @@ export class HistoryFile {
 
     ensureDir(configDir);
 
-    const path = new Path(configDir, "repl_history.txt");
+    const path = new Path(configDir, filename);
     // create it if it doesn't  exist
     touch(path);
 

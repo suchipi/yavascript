@@ -36,6 +36,7 @@ import { langToCompiler } from "../../langs";
 import { HistoryFile } from "./history-file";
 import { hasColors } from "../../has-colors";
 
+// TODO: change this to share code with the generic repl
 export function startRepl(lang) {
   const compiler = langToCompiler(lang);
   const compileExpression = (expr) => {
@@ -86,7 +87,7 @@ export function startRepl(lang) {
     error_msg: "bright_red",
   };
 
-  const historyFile = new HistoryFile();
+  const historyFile = new HistoryFile("yavascript_repl_history.txt");
 
   var history = historyFile.load();
   var clip_board = "";

@@ -1,9 +1,11 @@
 import replTarget from "../../targets/repl";
 import { LANGS } from "../../langs";
+import { NOTHING } from "./special";
 
 const validLangs = Array.from(LANGS);
 
-export function startRepl(
+// TODO merge with InteractivePrompt in a sensible way
+function startRepl(
   context: { [key: string]: any } = {},
   lang: string = "javascript"
 ) {
@@ -15,6 +17,11 @@ export function startRepl(
     );
   }
 
+  // TODO create actual QuickJS context and run stuff inside it
   Object.assign(globalThis, context);
   replTarget(lang);
 }
+
+Object.assign(startRepl, { NOTHING });
+
+export { startRepl };
