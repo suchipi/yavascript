@@ -2,6 +2,8 @@
 // the top of the list in the text editor's sidebar
 import { makeGetterPropertyDescriptorMap } from "../lazy-load";
 
+// TODO: query cpu count, max memory, free memory?
+
 import { grepFile, grepString, installToStringProto } from "./grep";
 import { install as installRegexpEscape } from "./regexp-escape";
 import { installModuleHooks } from "../module-hooks";
