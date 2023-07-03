@@ -273,7 +273,7 @@ function copyRaw(
     const toFile = std.fdopen(toFd, "w");
     filesToCloseLater[to] = toFile;
 
-    const chunkSize = 256 * 1024; // 256KB
+    const chunkSize = 16 * 1024 * 1024; // 16MB
     const buffer = new ArrayBuffer(chunkSize);
 
     if (trace) {
