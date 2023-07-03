@@ -185,6 +185,8 @@ export function exists(path: string | Path): boolean {
   }
 }
 
+// TODO: isReadable, isWritable, isExecutable
+
 function getPathInfo(path: string) {
   if (isLink(path)) {
     try {
@@ -358,6 +360,8 @@ export type CopyOptions = {
   whenTargetExists?: "overwrite" | "skip" | "error";
   trace?: (...args: Array<any>) => void;
 };
+
+// TODO: mv (move file without copy)
 
 export function copy(
   from: string | Path,
