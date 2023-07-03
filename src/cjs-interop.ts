@@ -1,7 +1,7 @@
 import * as std from "quickjs:std";
 import { makeErrorWithProperties } from "./error-with-properties";
 
-const HasOwnProperty = Object.prototype.hasOwnProperty;
+const hasOwn = Object.hasOwn;
 
 export function patchRequire(theGlobal: typeof globalThis) {
   const nativeRequire = theGlobal.require;
@@ -20,15 +20,26 @@ export function patchRequire(theGlobal: typeof globalThis) {
 
     const mod = nativeRequire(resolved);
     if (
-      HasOwnProperty.call(mod, "__isCjsModule") &&
+      hasOwn(mod, "__isCjsModule") &&
       mod.__isCjsModule === true &&
-      HasOwnProperty.call(mod, "__cjsExports") &&
-      Object.keys(mod).length == 2 // if they mixed ESM and CJS, treat it as ESM
+      hasOwn(mod, "__cjsExports")
     ) {
-      return mod.__cjsExports;
-    } else {
-      return mod;
+      const exportedNames = Object.keys(mod);
+      if (
+        // if the only exports are the previously-checked __isCjsModule and __cjsExports...
+        exportedNames.length === 2 ||
+        // or those two plus 'default'
+        (exportedNames.length === 3 && hasOwn(mod, "default"))
+      ) {
+        // respect its cjs exports
+        return mod.__cjsExports;
+      }
+
+      // if they mixed ESM and CJS for anything other than 'default',
+      // treat it like ESM.
     }
+
+    return mod;
   };
 
   theGlobal.require = Object.assign(newRequire, nativeRequire);
