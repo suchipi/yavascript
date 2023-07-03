@@ -38,4 +38,5 @@ interface InteractivePromptConstructor {
   prototype: InteractivePrompt;
 }
 
+/** wip experimental use at your own risk */
 declare var InteractivePrompt: InteractivePromptConstructor;
