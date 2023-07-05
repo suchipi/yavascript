@@ -69,21 +69,21 @@ exports[`importing-from-npm-protocol.js 1`] = `
   Null prototype
   Sealed
   
-  Component: Function {}
-  Fragment: Function {}
-  cloneElement: Function {}
-  createContext: Function {}
-  createElement: Function {}
-  createRef: Function {}
+  Component: Function "b" {}
+  Fragment: Function "k" {}
+  cloneElement: Function "F" {}
+  createContext: Function "G" {}
+  createElement: Function "y" {}
+  createRef: Function "_" {}
   default: null
   h: -> {root}.createElement
-  hydrate: Function {}
-  isValidElement: Function {}
+  hydrate: Function "E" {}
+  isValidElement: Function "i" {}
   options: {
-    __e: Function {}
+    __e: Function "__e" {}
   }
-  render: Function {}
-  toChildArray: Function {}
+  render: Function "D" {}
+  toChildArray: Function "S" {}
 }
 ",
 }
@@ -197,7 +197,7 @@ exports[`toplevel-await.coffee 1`] = `
   "code": 0,
   "error": false,
   "stderr": "",
-  "stdout": "4 Function {}
+  "stdout": "4 Function "open" {}
 ",
 }
 `;
@@ -207,7 +207,7 @@ exports[`toplevel-await.js 1`] = `
   "code": 0,
   "error": false,
   "stderr": "",
-  "stdout": "4 Function {}
+  "stdout": "4 Function "open" {}
 ",
 }
 `;
@@ -234,7 +234,7 @@ exports[`toplevel-await.tsx 1`] = `
   props: null
   key: null
 }
-Function {}
+Function "open" {}
 ",
 }
 `;

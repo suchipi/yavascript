@@ -115,6 +115,7 @@ test("globals", async () => {
     env object
     exec function
     $ function
+    ChildProcess function
     exists function
     isDir function
     isLink function
@@ -170,6 +171,7 @@ test("globals", async () => {
     traceAll function
     parseScriptArgs function
     startRepl function
+    InteractivePrompt function
     yavascript object
     help function
     __filename string
