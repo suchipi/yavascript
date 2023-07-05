@@ -569,7 +569,7 @@ declare function touch(path: string | Path): void;
 
 declare type BaseExecOptions = {
   /** Sets the current working directory for the child process. */
-  cwd?: string;
+  cwd?: string | Path;
 
   /** Sets environment variables within the process. */
   env?: { [key: string | number]: string | number | boolean };
