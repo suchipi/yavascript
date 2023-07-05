@@ -108,6 +108,8 @@ test("globals", async () => {
     touch function
     mkdir throws error
     cp throws error
+    mv throws error
+    ren throws error
     rm throws error
     grep throws error
     man throws error
@@ -124,6 +126,7 @@ test("globals", async () => {
     writeFile function
     ensureDir function
     copy function
+    rename function
     Path function
     glob function
     types object
