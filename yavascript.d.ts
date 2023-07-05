@@ -245,6 +245,13 @@ declare function copy(
   options?: CopyOptions
 ): void;
 
+/**
+ * Rename the file or directory at the specified path.
+ *
+ * Provides the same functionality as the command `mv`.
+ */
+declare function rename(from: string | Path, to: string | Path): void;
+
 /** An object that represents a filesystem path. */
 declare class Path {
   /** The character used to separate path segments on this OS. */

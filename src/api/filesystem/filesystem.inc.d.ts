@@ -105,3 +105,10 @@ declare function copy(
   to: string | Path,
   options?: CopyOptions
 ): void;
+
+/**
+ * Rename the file or directory at the specified path.
+ *
+ * Provides the same functionality as the command `mv`.
+ */
+declare function rename(from: string | Path, to: string | Path): void;

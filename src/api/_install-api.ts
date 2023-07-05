@@ -49,6 +49,7 @@ const filesystemProps = makeGetterPropertyDescriptorMap({
   writeFile: () => require("./filesystem").writeFile,
   ensureDir: () => require("./filesystem").ensureDir,
   copy: () => require("./filesystem").copy,
+  rename: () => require("./filesystem").rename,
 });
 
 const pathProps = makeGetterPropertyDescriptorMap({

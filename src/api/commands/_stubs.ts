@@ -12,6 +12,16 @@ export default makeGetterPropertyDescriptorMap(
         "'cp' is not part of the yavascript API. Use 'copy' instead"
       );
     },
+    mv() {
+      throw new Error(
+        "'mv' is not part of the yavascript API. Use 'rename' instead"
+      );
+    },
+    ren() {
+      throw new Error(
+        "'ren' is not part of the yavascript API. Use 'rename' instead"
+      );
+    },
     rm() {
       throw new Error(
         "'rm' is not part of the yavascript API. Use 'remove' instead"
