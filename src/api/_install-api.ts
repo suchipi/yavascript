@@ -37,6 +37,7 @@ const envProps = makeGetterPropertyDescriptorMap({
 const execProps = makeGetterPropertyDescriptorMap({
   exec: () => require("./exec").exec,
   $: () => require("./exec").$,
+  ChildProcess: () => require("./exec").ChildProcess,
 });
 
 const filesystemProps = makeGetterPropertyDescriptorMap({
