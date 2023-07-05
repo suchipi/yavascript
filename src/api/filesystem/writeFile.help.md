@@ -5,7 +5,7 @@
 Strings are written using the UTF-8 encoding.
 
 ```ts
-// Defined in yavascript/src/api/filesystem
+// Defined in yavascript/src/api/filesystem/writeFile.ts
 declare function writeFile(
   path: string | Path,
   data: string | ArrayBuffer

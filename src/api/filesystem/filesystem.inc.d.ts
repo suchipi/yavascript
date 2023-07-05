@@ -38,25 +38,7 @@ declare function writeFile(
  * path points to a symlink which points to a directory. Otherwise, it returns
  * false.
  */
-interface IsDir {
-  /**
-   * Returns true if the path points to a directory, or if the path points to
-   * a symlink which points to a directory. Otherwise, returns false.
-   */
-  (path: string | Path): boolean;
-
-  /**
-   * Maximum number of symlinks to follow before erroring. Defaults to 100.
-   */
-  symlinkLimit: number;
-}
-
-/**
- * Function which returns true if the path points to a directory, or if the
- * path points to a symlink which points to a directory. Otherwise, it returns
- * false.
- */
-declare const isDir: IsDir;
+declare function isDir(path: string | Path): boolean;
 
 /**
  * Returns true if the path points to a symlink.

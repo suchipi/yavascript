@@ -22,7 +22,7 @@ console.log(contents);
 ```
 
 ```ts
-// Defined in yavascript/src/api/filesystem
+// Defined in yavascript/src/api/filesystem/readFile.ts
 declare function readFile(
   path: string | Path,
   options: { binary?: boolean }
