@@ -2525,7 +2525,7 @@ declare const assert: {
  * - Use `maxLength` to limit how much data to read.
  * - Use `until` to stop reading once a certain byte or character has been
  *   read.
- * - Use `path` or `fd` to open a file.
+ * - Use `path` or `fd` to open a file (or pass a FILE or Path object).
  */
 declare type PipeSource =
   | { data: string; maxLength?: number; until?: string | byte }
@@ -2538,12 +2538,9 @@ declare type PipeSource =
   | DataView
   | { data: DataView; maxLength?: number; until?: string | byte }
   | FILE
-  | {
-      data: FILE;
-      maxLength?: number;
-      until?: string | byte;
-    }
-  | { path: string; maxLength?: number; until?: string | byte }
+  | { data: FILE; maxLength?: number; until?: string | byte }
+  | Path
+  | { path: Path | string; maxLength?: number; until?: string | byte }
   | { fd: number; maxLength?: number; until?: string | byte };
 
 /**
@@ -2559,6 +2556,7 @@ declare type PipeDestination =
   | SharedArrayBuffer
   | DataView
   | TypedArray
+  | Path
   | FILE
   | ArrayBufferConstructor
   | SharedArrayBufferConstructor

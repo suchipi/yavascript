@@ -1,7 +1,9 @@
 import * as std from "quickjs:std";
 import { TypedArray, TypedArrayConstructor, byte } from "../others";
 import { is } from "../is";
+import { types } from "../types";
 import { makeErrorWithProperties } from "../../error-with-properties";
+import type { Path } from "../path";
 
 export type PipeSource =
   | { data: string; maxLength?: number; until?: string | byte }
@@ -15,7 +17,8 @@ export type PipeSource =
   | { data: DataView; maxLength?: number; until?: string | byte }
   | FILE
   | { data: FILE; maxLength?: number; until?: string | byte }
-  | { path: string; maxLength?: number; until?: string | byte }
+  | Path
+  | { path: Path | string; maxLength?: number; until?: string | byte }
   | { fd: number; maxLength?: number; until?: string | byte };
 
 type Readable = {
@@ -38,7 +41,7 @@ function getReadable(from: PipeSource): Readable {
 
   let shouldCloseFile = false;
 
-  if (is(from, String)) {
+  if (is(from, types.string)) {
     throw new Error(
       "It is ambiguous whether you want to read from the string's contents or from the file at the path contained within the string. Pass an object with a 'data' or 'path' property, instead."
     );
@@ -76,11 +79,25 @@ function getReadable(from: PipeSource): Readable {
 
     if ((from as any).data != null) {
       source = (from as any).data;
-    } else if (typeof (from as any).path === "string") {
-      source = std.open((from as any).path, "rb");
-      shouldCloseFile = true;
+    } else if ((from as any).path != null) {
+      const path = (from as any).path;
+      if (is(path, types.string)) {
+        source = std.open(path, "rb");
+        shouldCloseFile = true;
+      } else if (is(path, types.Path)) {
+        source = std.open(path.toString(), "rb");
+        shouldCloseFile = true;
+      } else {
+        throw makeErrorWithProperties(
+          "'path' property on PipeSource must be either a string or Path",
+          { path }
+        );
+      }
     } else if (typeof (from as any).fd === "number") {
       source = std.fdopen((from as any).fd, "rb");
+      shouldCloseFile = true;
+    } else if (is(from, types.Path)) {
+      source = std.open(from.toString(), "rb");
       shouldCloseFile = true;
     } else {
       source = from as any;
@@ -191,6 +208,7 @@ export type PipeDestination =
   | SharedArrayBuffer
   | DataView
   | TypedArray
+  | Path
   | FILE
   | ArrayBufferConstructor
   | SharedArrayBufferConstructor
@@ -217,6 +235,7 @@ function resizeBuffer<BufferType extends ArrayBuffer | SharedArrayBuffer>(
   return newBuffer as any;
 }
 
+// TODO: support write of more than one byte at a time, to make things way faster
 type Writable = {
   // Returns whether the byte was written; if it wasn't, it means some sort of
   // limit was hit (max length, etc).
@@ -237,7 +256,11 @@ function getWritable(to: PipeDestination): Writable {
   try {
     let target: any;
 
-    if (is((to as any).path, string)) {
+    if (is(to, types.Path)) {
+      const file = std.open(to.toString(), "w");
+      filesToClose.push(file);
+      target = file;
+    } else if (is((to as any).path, string)) {
       const file = std.open((to as any).path, "w");
       filesToClose.push(file);
       target = file;
@@ -245,64 +268,59 @@ function getWritable(to: PipeDestination): Writable {
       const file = std.fdopen((to as any).fd, "w");
       filesToClose.push(file);
       target = file;
-    } else if (
-      is(to, ArrayBuffer) ||
-      is(to, SharedArrayBuffer) ||
-      is(to, DataView) ||
-      is(to, types.TypedArray) ||
-      is(to, types.FILE)
-    ) {
+    } else {
       target = to;
-      if (
-        is(target, ArrayBuffer) ||
-        is(target, SharedArrayBuffer) ||
-        is(target, DataView) ||
-        is(target, types.TypedArray)
-      ) {
-        let offset = 0;
-        let limit = target.byteLength;
+    }
 
-        const view = is(target, DataView)
-          ? target
-          : is(target, types.TypedArray)
-          ? new DataView(target.buffer)
-          : new DataView(target);
+    if (
+      is(target, ArrayBuffer) ||
+      is(target, SharedArrayBuffer) ||
+      is(target, DataView) ||
+      is(target, types.TypedArray)
+    ) {
+      let offset = 0;
+      let limit = target.byteLength;
 
-        return {
-          write(byte: byte): boolean {
-            if (offset === limit) {
-              return false;
-            }
-            view.setUint8(offset, byte);
-            offset++;
+      const view = is(target, DataView)
+        ? target
+        : is(target, types.TypedArray)
+        ? new DataView(target.buffer)
+        : new DataView(target);
+
+      return {
+        write(byte: byte): boolean {
+          if (offset === limit) {
+            return false;
+          }
+          view.setUint8(offset, byte);
+          offset++;
+          return true;
+        },
+        result() {
+          return target;
+        },
+      };
+    } else if (is(target, types.FILE)) {
+      return {
+        write(byte: byte): boolean {
+          try {
+            target.putByte(byte);
             return true;
-          },
-          result() {
+          } catch {
+            return false;
+          }
+        },
+        result() {
+          for (const file of filesToClose) {
+            file.close();
+          }
+          if (filesToClose.length > 0) {
+            return to;
+          } else {
             return target;
-          },
-        };
-      } else if (is(target, types.FILE)) {
-        return {
-          write(byte: byte): boolean {
-            try {
-              target.putByte(byte);
-              return true;
-            } catch {
-              return false;
-            }
-          },
-          result() {
-            for (const file of filesToClose) {
-              file.close();
-            }
-            if (filesToClose.length > 0) {
-              return to;
-            } else {
-              return target;
-            }
-          },
-        };
-      }
+          }
+        },
+      };
     } else if (is(to, Function)) {
       const targetConstructor: any = to;
       switch (targetConstructor) {

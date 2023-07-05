@@ -1,4 +1,5 @@
-import { evaluate } from "../../test-helpers";
+import path from "node:path";
+import { evaluate, rootDir } from "../../test-helpers";
 
 test("string -> new Uint8Array", async () => {
   const input = { data: "Hello, world!" };
@@ -125,6 +126,49 @@ test("can handle NUL byte in content", async () => {
       bytesTransferred: 16
       target: Uint8Array [
         │0x00000000│ 4E 45 53 1A 02 02 11 00 00 00 00 00 00 00 00 00
+      ]
+    }
+    ",
+    }
+  `);
+});
+
+test("Path -> string", async () => {
+  const result = await evaluate(
+    `pipe(new Path(${JSON.stringify(
+      rootDir("src/test_fixtures/logging/log-three.coffee")
+    )}), String)`
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      bytesTransferred: 20
+      target: "console.log "three"\\n"
+    }
+    ",
+    }
+  `);
+});
+
+test("Path -> new Uint8Array", async () => {
+  const result = await evaluate(
+    `pipe(new Path(${JSON.stringify(
+      rootDir("src/test_fixtures/logging/log-three.coffee")
+    )}), Uint8Array)`
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      bytesTransferred: 20
+      target: Uint8Array [
+        │0x00000000│ 63 6F 6E 73 6F 6C 65 2E 6C 6F 67 20 22 74 68 72
+        │0x00000010│ 65 65 22 0A
       ]
     }
     ",
