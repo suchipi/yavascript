@@ -46,6 +46,8 @@ in_docker node:${NODE_VERSION} bin/yavascript meta/scripts/assemble-dts.ts
 # generate dist/index-*.js (bundles in dependencies from npm)
 in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=arm64 npm run bundle -- --output dist/index-arm64.js
 in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=x86_64 npm run bundle -- --output dist/index-x86_64.js
+in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=arm64 npm run bundle:primordials -- --output dist/primordials-arm64.js
+in_docker node:${NODE_VERSION} env YAVASCRIPT_ARCH=x86_64 npm run bundle:primordials -- --output dist/primordials-x86_64.js
 
 if [[ "$(uname -m)" == "x86_64" ]]; then
   HOST_QJS_BINARY="meta/quickjs/build/x86_64-unknown-linux-static/bin/qjs"

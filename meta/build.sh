@@ -33,6 +33,9 @@ bin/yavascript meta/scripts/assemble-dts.ts
 
 # generate dist/index.js (bundles in dependencies from npm)
 npm run bundle -- --output dist/index.js
+if [[ "$WITH_PRIMORDIALS" == "1" ]]; then
+  npm run bundle:primordials -- --output dist/primordials.js
+fi
 
 # compile dist/index.js to bytecode
 cp dist/index.js yavascript-internal.js # to have clearer filename in stack traces

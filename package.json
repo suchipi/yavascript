@@ -30,7 +30,7 @@
   "scripts": {
     "build": "meta/scripts/clone-quickjs.ts && meta/build.sh",
     "bundle": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/index.ts",
-    "bundle:primordials": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/primordials.ts --output dist/primordials.js",
+    "bundle:primordials": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/primordials.ts",
     "test": "jest --config=./meta/jest/config.js",
     "typecheck": "tsc --noEmit --skipLibCheck"
   },
