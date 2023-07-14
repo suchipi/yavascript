@@ -78,7 +78,7 @@ exports[`importing-from-npm-protocol.js 1`] = `
   default: null
   h: -> {root}.createElement
   hydrate: Function "E" {}
-  isValidElement: Function "i" {}
+  isValidElement: Function "t" {}
   options: {
     __e: Function "__e" {}
   }
