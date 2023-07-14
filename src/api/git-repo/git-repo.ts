@@ -154,7 +154,7 @@ export class GitRepo {
 
     if (!resolvedPath.startsWith(repoDir)) {
       throw makeErrorWithProperties(
-        "Path passed to GitRepo.isIgnored is outside of the Git object's repoDir. When passing a relative path, it will be resolved relative to the current `pwd()`.",
+        "Path passed to GitRepo.isIgnored is outside of the GitRepo object's repoDir. When passing a relative path, it will be resolved relative to the current `pwd()`.",
         {
           path: path.toString(),
           resolvedPath,
