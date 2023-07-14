@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+# install ninja
 sudo apt install ninja-build
+
+# install glow
+wget https://github.com/charmbracelet/glow/releases/download/v1.5.0/glow_1.5.0_linux_amd64.deb
+sudo dpkg -i glow_1.5.0_linux_amd64.deb
 
 # ugh, the gh actions image claims to have nvm, but they don't do this for you
 export NVM_DIR="$HOME/.nvm"
