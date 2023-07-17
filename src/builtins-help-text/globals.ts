@@ -1,18 +1,7 @@
+import { _mkText } from "./_mkText";
 import { setHelpText } from "../api/help/help";
-import { bgBlue, white, bold, cyan, underline } from "../api/strings";
 
-function mkText(name: string, link: string) {
-  return (
-    "\n  " +
-    bold(bgBlue(white(" " + name + " "))) +
-    "\n\n" +
-    "  See " +
-    cyan(underline(link)) +
-    ".\n"
-  );
-}
-
-export function installMdnLinkHelpTexts(global: typeof globalThis) {
+export function installGlobalHelpTexts(global: typeof globalThis) {
   for (const [value, name, link] of [
     [
       global.AggregateError,
@@ -294,6 +283,6 @@ export function installMdnLinkHelpTexts(global: typeof globalThis) {
       `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet`,
     ],
   ] as const) {
-    setHelpText(value, mkText(name, link));
+    setHelpText(value, _mkText(name, link));
   }
 }
