@@ -23,7 +23,27 @@ declare var help: {
    * If the value is later passed into the `help` function, the provided text
    * will be printed.
    */
-  setHelpText(value: object, text: string): void;
+  setHelpText: {
+    /**
+     * Set the help text for the provided value to the provided string.
+     *
+     * If the value is later passed into the `help` function, the provided text
+     * will be printed.
+     */
+    (value: object, text: string): void;
+
+    /**
+     * Lazily sets the help text for the provided value using the provided
+     * string-returning function.
+     *
+     * The first time help text is requested for the value, the string-returning
+     * function will be called, and its result will be registered as the help
+     * text for the value. Afterwards, the function will not be called again;
+     * instead, it will re-use the text returned from the first time the
+     * function was called.
+     */
+    lazy(value: object, getText: () => string): void;
+  };
 };
 
 /** Info about the currently-running yavascript binary */

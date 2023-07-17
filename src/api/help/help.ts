@@ -4,8 +4,10 @@ import { hasColors } from "../../has-colors";
 import helpHelpText from "./help.help.md";
 import getHelpTextHelpText from "./help.getHelpText.help.md";
 import setHelpTextHelpText from "./help.setHelpText.help.md";
+import setHelpTextLazyHelpText from "./help.setHelpText.lazy.help.md";
 
 const helpTextMap = new WeakMap<any, string>();
+const lazyHelpTextMap = new WeakMap<any, () => string>();
 
 export function setHelpText(value: any, text: string) {
   if (typeof text !== "string" && !((text as any) instanceof String)) {
@@ -27,15 +29,50 @@ export function setHelpText(value: any, text: string) {
   helpTextMap.set(value, text);
 }
 
+function setLazyHelpText(value: any, getText: () => string) {
+  if (typeof getText !== "function") {
+    throw makeErrorWithProperties(
+      "'getText' argument must be a function",
+      { actual: getText },
+      TypeError
+    );
+  }
+
+  if (Object.isPrimitive(value)) {
+    throw makeErrorWithProperties(
+      `Cannot register help text for the value '${value}'. Help text is stored using a WeakMap, and '${value}' cannot be used as a WeakMap key, because its type is what's known as a 'primitive' type. Strings, numbers, and other values which are passed-by-value instead of passed-by-reference are all 'primitive' types.`,
+      { value },
+      TypeError
+    );
+  }
+
+  lazyHelpTextMap.set(value, getText);
+}
+
+setHelpText.lazy = setLazyHelpText;
+
 export function getHelpText(value: any): string | null {
-  return helpTextMap.get(value) || null;
+  const resultFromHelpTextMap = helpTextMap.get(value);
+  if (resultFromHelpTextMap != null) {
+    return resultFromHelpTextMap;
+  }
+
+  const resultFromLazyHelpTextMap = lazyHelpTextMap.get(value);
+  if (resultFromLazyHelpTextMap != null) {
+    const text = resultFromLazyHelpTextMap();
+    setHelpText(value, text);
+    lazyHelpTextMap.delete(value);
+    return text;
+  }
+
+  return null;
 }
 
 function helpInternal(value?: any): string {
   if (arguments.length === 0) {
     return helpHelpText.trimEnd();
   } else {
-    const registered = helpTextMap.get(value);
+    const registered = getHelpText(value);
 
     if (registered == null) {
       // not using makeErrorWithProperties here as `value` will often be a
@@ -74,5 +111,6 @@ const help_ = Object.assign(help, {
 setHelpText(help_, helpHelpText);
 setHelpText(setHelpText, setHelpTextHelpText);
 setHelpText(getHelpText, getHelpTextHelpText);
+setHelpText(setLazyHelpText, setHelpTextLazyHelpText);
 
 export { help_ as help };

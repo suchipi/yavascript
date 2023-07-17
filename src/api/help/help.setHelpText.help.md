@@ -49,4 +49,4 @@ Don't worry about the styling functions printing ANSI characters in terminals th
 
 > NOTE: `help.setHelpText` does not work on 'primitive' values, like numbers or strings. Only values which are passed-by-reference, like objects and functions, can have help text set.
 
-See also `help(help)`.
+See also `help(help)` and `help(help.setHelpText.lazy)`.
