@@ -18,7 +18,7 @@ fi
 
 # compile markdown docs to ANSI-escape-sequence-containing txt files using Glow (https://github.com/charmbracelet/glow)
 if [[ "$SKIP_GLOW" == "" ]]; then
-  bin/yavascript meta/scripts/assemble-docs.ts
+  meta/scripts/assemble-docs.sh
 fi
 
 # generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts

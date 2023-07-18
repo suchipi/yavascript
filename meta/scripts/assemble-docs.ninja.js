@@ -5,7 +5,7 @@ const path = require("path");
 overrideDeclaration("builddir", "dist/docs");
 
 const glowRender = rule("glow-render", {
-  command: `meta/scripts/glow-render.ts $in $out`,
+  command: `meta/scripts/glow-render.sh $in $out`,
 });
 
 for (const helpDoc of glob("src/**/*.help.md")) {
