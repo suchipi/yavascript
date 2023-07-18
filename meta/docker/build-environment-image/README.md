@@ -1,0 +1,1 @@
+this isn't used in CI or local dev (unless you wanna use it in local dev). it's mainly present just to document what a working build configuration for the project is, so that as things change in the future, there is a "known-good environment" to fall back to.

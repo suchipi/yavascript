@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@suchipi/babel-highlight": "^7.22.6",
-    "@suchipi/quickjs": "^0.1.0",
+    "@suchipi/quickjs": "^0.1.1",
     "clef-parse": "^0.3.0",
     "coffeescript": "^2.7.0",
     "kleur": "^4.1.5",
