@@ -22,7 +22,7 @@ if [[ "$SKIP_GLOW" == "" ]]; then
 fi
 
 # generate dist/yavascript.d.ts, yavascript.d.ts, and npm/yavascript.d.ts
-bin/yavascript meta/scripts/assemble-dts.ts
+meta/scripts/assemble-dts.js
 
 # generate dist/index.js (bundles in dependencies from npm)
 npm run bundle -- --output dist/index.js

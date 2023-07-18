@@ -11,7 +11,7 @@ function getVersion() {
 
   let dirty = "";
   try {
-    run("git diff --quiet . ':!bin'");
+    run("git diff --quiet .");
   } catch (err) {
     dirty = "-dirty";
   }
