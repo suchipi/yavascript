@@ -4,6 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 cd "$SCRIPT_DIR/../.." # go to root
+ROOTDIR="$PWD"
 
 VERSION=`node -e 'console.log(require("./src/hardcoded/compile-time.js").version)'`
 
@@ -27,8 +28,8 @@ TARGETS=(
 for TARGET in "${TARGETS[@]}"; do
   mkdir -p "./$TARGET/yavascript-$VERSION"
 
-  cp ./bin/"$TARGET"/* "./$TARGET/yavascript-$VERSION"
-  cp ./dist/yavascript.d.ts "./$TARGET/yavascript-$VERSION/"
+  cp "$ROOTDIR"/bin/"$TARGET"/* "./$TARGET/yavascript-$VERSION"
+  cp "$ROOTDIR"/dist/yavascript.d.ts "./$TARGET/yavascript-$VERSION/"
 
   pushd "$TARGET" > /dev/null
     tar -czvf "../yavascript-$VERSION-$TARGET.tar.gz" "yavascript-$VERSION/"
