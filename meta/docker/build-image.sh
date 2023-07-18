@@ -25,8 +25,8 @@ docker build -f Dockerfile.aarch64 -t "${IMAGE_NAME}:${TAG}-aarch64" .
 docker push "${IMAGE_NAME}:${TAG}-x86_64"
 docker push "${IMAGE_NAME}:${TAG}-aarch64"
 
-docker manifest create "${IMAGE_NAME}:${TAG}"
-  --amend "${IMAGE_NAME}:${TAG}-x86_64"
+docker manifest create "${IMAGE_NAME}:${TAG}" \
+  --amend "${IMAGE_NAME}:${TAG}-x86_64" \
   --amend "${IMAGE_NAME}:${TAG}-aarch64"
 
 docker manifest annotate --arch amd64 "${IMAGE_NAME}:${TAG}" "${IMAGE_NAME}:${TAG}-x86_64"

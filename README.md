@@ -91,11 +91,11 @@ You'll need to install these prerequisites:
 - [ninja](https://ninja-build.org/)
 - [glow](https://github.com/charmbracelet/glow)
 
-Then run `meta/build.sh` to build binaries for the current platform, or `meta/build-all.sh` to build binaries for all platforms.
+Then run `meta/build.sh` to build binaries for the current platform (will be output in `dist`), or `meta/build-all.sh` to build binaries for all platforms (will be output in `bin`).
 
 ### Building the Docker image
 
-You will need docker installed. After building binaries for all platforms, ensure yavascript is in your PATH, then run `meta/docker/build-image.js`.
+You will need docker installed. After building binaries for all platforms, ensure yavascript is in your PATH, then run `meta/docker/build-image.sh`.
 
 ---
 
