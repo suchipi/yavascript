@@ -28,7 +28,7 @@
     "typescript-assert-utils": "^1.0.0"
   },
   "scripts": {
-    "build": "meta/scripts/clone-quickjs.ts && meta/build.sh",
+    "build": "meta/build.sh",
     "bundle": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/index.ts",
     "bundle:primordials": "kame bundle --resolver ./src/kame-config.js --loader ./src/kame-config.js --input src/primordials.ts",
     "test": "jest --config=./meta/jest/config.js",
@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@suchipi/babel-highlight": "^7.22.6",
+    "@suchipi/quickjs": "^0.1.0",
     "clef-parse": "^0.3.0",
     "coffeescript": "^2.7.0",
     "kleur": "^4.1.5",

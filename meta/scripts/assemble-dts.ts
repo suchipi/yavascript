@@ -13,10 +13,8 @@ glob("./src/**/*.inc.d.ts").forEach((path) => {
 const includePaths = [
   ...dtsFolderPaths,
   "src/templates",
-  "meta/quickjs/src/quickjs",
-  "meta/quickjs/src/quickjs-libc",
-  "meta/quickjs/src/quickjs-libbytecode",
-  "meta/quickjs/src/quickjs-libcontext",
+  // NOTE: architecture doesn't actually matter here, as the dts files are always the same
+  "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts",
 ];
 
 function macaroni(inputPath: string, outputPath: string) {

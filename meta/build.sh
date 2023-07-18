@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-# faster (but less guaranteed to work) build script, for quick iteration.
-# only works on linux/darwin, and you need all the stuff from the docker
-# containers installed on the host machine (notably: node, gcc, ninja).
+# build yavascript for the running platform only. for development
 
 # Move to repo root
 cd $(git rev-parse --show-toplevel)
@@ -13,17 +11,12 @@ if [[ "$SKIP_FNM_USE" == "" ]]; then
   fnm use
 fi
 
+# grab JS dependencies from npm
 if [[ "$SKIP_NPM_INSTALL" == "" ]]; then
   npm install
 fi
 
-if [[ "$SKIP_QJS" == "" ]]; then
-  # Build quickjs
-  pushd meta/quickjs > /dev/null
-  meta/build.sh
-  popd > /dev/null
-fi
-
+# compile markdown docs to ANSI-escape-sequence-containing txt files using Glow (https://github.com/charmbracelet/glow)
 if [[ "$SKIP_GLOW" == "" ]]; then
   bin/yavascript meta/scripts/assemble-docs.ts
 fi
@@ -39,13 +32,15 @@ fi
 
 # compile dist/index.js to bytecode
 cp dist/index.js yavascript-internal.js # to have clearer filename in stack traces
-meta/quickjs/build/bin/qjs meta/scripts/to-bytecode.mjs \
+npx --no-install qjs meta/scripts/to-bytecode.mjs \
   yavascript-internal.js \
   dist/index.bin
 
+PLATFORM=$(node -e 'console.log(require("@suchipi/quickjs").identifyCurrentPlatform())')
+
 # generate dist/yavascript (final binary)
 cat \
-  meta/quickjs/build/bin/qjsbootstrap-bytecode \
+  "node_modules/@suchipi/quickjs/build/$PLATFORM/bin/qjsbootstrap-bytecode" \
   dist/index.bin \
 > dist/yavascript
 chmod +x dist/yavascript

@@ -85,15 +85,15 @@ supporting the ES2020 specification.
 
 ## Compiling
 
-### Binaries (all platforms)
+You'll need to install these prerequisites:
 
-You will need docker installed, then run `meta/docker/build-all.sh`.
+- [node.js](https://nodejs.org/en)
+- [ninja](https://ninja-build.org/)
+- [glow](https://github.com/charmbracelet/glow)
 
-### Binaries (just for your machine)
+Then run `meta/build.sh` to build binaries for the current platform, or `meta/build-all.sh` to build binaries for all platforms.
 
-You will need [node.js](https://nodejs.org/en), [ninja](https://ninja-build.org/), and [glow](https://github.com/charmbracelet/glow) installed, then run `meta/build.sh`.
-
-### Docker image
+### Building the Docker image
 
 You will need docker installed. After building binaries for all platforms, ensure yavascript is in your PATH, then run `meta/docker/build-image.js`.
 

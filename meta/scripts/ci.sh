@@ -17,6 +17,5 @@ nvm use
 
 set -x
 
-bin/yavascript meta/scripts/clone-quickjs.ts
 env SKIP_FNM_USE=1 meta/build.sh
 npm test
