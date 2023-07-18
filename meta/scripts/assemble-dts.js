@@ -4,41 +4,47 @@ const path = require("path");
 const child_process = require("child_process");
 const globby = require("globby");
 const macaroni = require("@suchipi/macaroni");
-const prettier = require("prettier");
 
 // go to root dir
-cd(path.resolve(__dirname, "..", ".."));
+process.chdir(path.resolve(__dirname, "..", ".."));
 
 fs.mkdirSync("dist", { recursive: true });
 
 const dtsFolderPaths = new Set();
-globby.sync("./src/**/*.inc.d.ts").forEach((path) => {
-  dtsFolderPaths.add(path.dirname(path));
+globby.sync("./src/**/*.inc.d.ts").forEach((match) => {
+  dtsFolderPaths.add(path.dirname(path.resolve(process.cwd(), match)));
 });
 
 const includePaths = [
   ...dtsFolderPaths,
-  "src/templates",
-  // NOTE: architecture doesn't actually matter here, as the dts files are always the same
-  "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts",
+  path.resolve(process.cwd(), "src/templates"),
+  path.resolve(
+    process.cwd(),
+    // NOTE: architecture doesn't actually matter here, as the dts files are always the same
+    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts"
+  ),
 ];
 
 const includeRule = macaroni.makeIncludeRule(includePaths);
 
-function macaroni(inputPath, outputPath) {
-  const result = macaroni.process(inputPath, { rules: [includeRule] });
+function doMacaroni(inputPath, outputPath) {
+  const absoluteInputPath = path.isAbsolute(inputPath)
+    ? inputPath
+    : path.resolve(process.cwd(), inputPath);
+
+  const result = macaroni.process(absoluteInputPath, { rules: [includeRule] });
   fs.writeFileSync(outputPath, result);
 }
 
-function prettier(targetPath) {
-  child_process.execSync(`npx prettier --write ${quote(targetPath)}`);
+function doPrettier(targetPath) {
+  child_process.execSync(`npx prettier --write ${JSON.stringify(targetPath)}`);
 }
 
-macaroni("src/templates/yavascript.d.ts.tmpl", "dist/yavascript.d.ts");
-prettier("dist/yavascript.d.ts");
+doMacaroni("src/templates/yavascript.d.ts.tmpl", "dist/yavascript.d.ts");
+doPrettier("dist/yavascript.d.ts");
 
-macaroni("src/templates/yavascript-git.d.ts.tmpl", "yavascript.d.ts");
-prettier("yavascript.d.ts");
+doMacaroni("src/templates/yavascript-git.d.ts.tmpl", "yavascript.d.ts");
+doPrettier("yavascript.d.ts");
 
 // copy into npm folder
 fs.copyFileSync("dist/yavascript.d.ts", "meta/npm/yavascript.d.ts");
