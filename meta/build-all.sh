@@ -48,7 +48,7 @@ npx --no-install qjs \
 
 mkdir -p bin
 
-function make_program() {
+function make_bytecode_program() {
   TARGET="$1"
   BYTECODE_FILE="$2"
 
@@ -68,24 +68,43 @@ function make_program() {
   chmod +x bin/${TARGET}/yavascript${EXE}
 }
 
-for TARGET in \
-  x86_64-apple-darwin \
-  x86_64-unknown-linux-gnu \
-  x86_64-unknown-linux-musl \
-  x86_64-unknown-linux-static \
-  x86_64-pc-windows-static \
-; do
-  make_program "$TARGET" dist/index-x86_64.bin
-done
+function make_string_program() {
+  TARGET="$1"
+  SCRIPT_FILE="$2"
 
-for TARGET in \
-  aarch64-apple-darwin \
-  aarch64-unknown-linux-gnu \
-  aarch64-unknown-linux-musl \
-  aarch64-unknown-linux-static \
-; do
-  make_program "$TARGET" dist/index-arm64.bin
-done
+  if [[ $TARGET = *windows* ]]; then
+    EXE=".exe"
+  else
+    EXE=""
+  fi
+
+  mkdir -p bin/${TARGET}
+  
+  cat \
+    node_modules/@suchipi/quickjs/build/${TARGET}/bin/qjsbootstrap${EXE} \
+    "${SCRIPT_FILE}" \
+  > bin/${TARGET}/yavascript${EXE}
+
+  chmod +x bin/${TARGET}/yavascript${EXE}
+}
+
+# --- x86_64 binaries --
+
+make_bytecode_program x86_64-apple-darwin dist/index-x86_64.bin
+make_bytecode_program x86_64-unknown-linux-gnu dist/index-x86_64.bin
+make_bytecode_program x86_64-unknown-linux-musl dist/index-x86_64.bin
+make_bytecode_program x86_64-unknown-linux-static dist/index-x86_64.bin
+
+# bytecode stuff wasn't working properly on windows; endianness?
+cp dist/index-x86_64.js yavascript-internal.js # to have clearer filename in stack traces
+make_string_program x86_64-pc-windows-static yavascript-internal.js
+
+# --- aarch64 binaries --
+
+make_bytecode_program aarch64-apple-darwin dist/index-arm64.bin
+make_bytecode_program aarch64-unknown-linux-gnu dist/index-arm64.bin
+make_bytecode_program aarch64-unknown-linux-musl dist/index-arm64.bin
+make_bytecode_program aarch64-unknown-linux-static dist/index-arm64.bin
 
 # copy stuff into npm folder
 cp -R bin meta/npm
