@@ -3,6 +3,7 @@ import { assert } from "../assert";
 import { types } from "../types";
 import { is } from "../is";
 import { makeErrorWithProperties } from "../../error-with-properties";
+import { appendSlashIfWindowsDriveLetter } from "./_win32Helpers";
 
 function validateSegments(segments: Array<string>): Array<string> {
   return segments.filter((part, index) => {
@@ -330,10 +331,11 @@ class Path {
   }
 
   toString() {
-    const result = this.segments.join(this.separator);
+    let result = this.segments.join(this.separator);
     if (result == "") {
       return "/";
     } else {
+      result = appendSlashIfWindowsDriveLetter(result);
       return result;
     }
   }

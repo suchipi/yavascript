@@ -5,6 +5,7 @@ import { types } from "../types";
 import { assert } from "../assert";
 import { setHelpText } from "../help";
 import removeHelpText from "./remove.help.md";
+import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 export function remove(path: string | Path): void {
   assert.type(
@@ -16,6 +17,8 @@ export function remove(path: string | Path): void {
   if (is(path, types.Path)) {
     path = path.toString();
   }
+
+  path = appendSlashIfWindowsDriveLetter(path);
 
   if (isDir(path)) {
     const children = os

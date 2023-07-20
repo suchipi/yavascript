@@ -5,6 +5,7 @@ import { types } from "../types";
 import { assert } from "../assert";
 import { setHelpText } from "../help";
 import renameHelpText from "./rename.help.md";
+import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 export function rename(from: string | Path, to: string | Path): void {
   assert.type(
@@ -29,6 +30,9 @@ export function rename(from: string | Path, to: string | Path): void {
 
   from = Path.resolve(from);
   to = Path.resolve(to);
+
+  from = appendSlashIfWindowsDriveLetter(from);
+  to = appendSlashIfWindowsDriveLetter(to);
 
   try {
     os.rename(from, to);

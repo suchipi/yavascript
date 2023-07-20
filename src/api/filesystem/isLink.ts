@@ -5,6 +5,7 @@ import { types } from "../types";
 import { assert } from "../assert";
 import { setHelpText } from "../help";
 import isLinkHelpText from "./isLink.help.md";
+import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 export function isLink(path: string | Path): boolean {
   assert.type(
@@ -17,8 +18,17 @@ export function isLink(path: string | Path): boolean {
     path = path.toString();
   }
 
+  path = appendSlashIfWindowsDriveLetter(path);
+
   try {
-    const stats = os.lstat(path);
+    let stats: os.Stats;
+    if (os.platform === "win32") {
+      // no lstat on windows
+      stats = os.stat(path);
+    } else {
+      stats = os.lstat(path);
+    }
+
     return Boolean((os.S_IFMT & stats.mode) === os.S_IFLNK);
   } catch {
     return false;

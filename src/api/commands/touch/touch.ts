@@ -5,6 +5,7 @@ import { assert } from "../../assert";
 import type { Path } from "../../path";
 import { setHelpText } from "../../help";
 import touchHelpText from "./touch.help.md";
+import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
 // cause everytime we touch, I get this feeling
 export function touch(path: string | Path) {
@@ -17,6 +18,8 @@ export function touch(path: string | Path) {
     String,
     "'path' argument must be either a string or a Path object"
   );
+
+  path = appendSlashIfWindowsDriveLetter(path);
 
   let exists = false;
   try {

@@ -4,8 +4,12 @@ import { dirname } from "./api/commands/dirname";
 import { readFile } from "./api/filesystem";
 import { makeErrorWithProperties } from "./error-with-properties";
 import * as protos from "./module-protocols/_all";
+import { appendSlashIfWindowsDriveLetter } from "./api/path/_win32Helpers";
 
+// TODO: should probably be an exposed API
 function isFile(path: string) {
+  path = appendSlashIfWindowsDriveLetter(path);
+
   try {
     const stats = os.stat(path);
     return (stats.mode & os.S_IFMT) == os.S_IFREG;

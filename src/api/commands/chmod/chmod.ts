@@ -5,6 +5,7 @@ import { makeErrorWithProperties } from "../../../error-with-properties";
 import type { Path } from "../../path";
 import { setHelpText } from "../../help";
 import chmodHelp from "./chmod.help.md";
+import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
 type ChmodPermissionsWho =
   | "user"
@@ -147,6 +148,8 @@ export function chmod(
     String,
     "'path' argument must be either a string or a Path object"
   );
+
+  path = appendSlashIfWindowsDriveLetter(path);
 
   let permNum: number;
 

@@ -8,6 +8,7 @@ import { traceAll } from "../trace-all";
 import { is } from "../is";
 import { assert } from "../assert";
 import { types } from "../types";
+import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 function compile(pattern: string, startingDir: string) {
   let prefix = "";
@@ -167,6 +168,9 @@ export function glob(
     if (trace) {
       trace(`reading children of ${searchDir}`);
     }
+
+    searchDir = appendSlashIfWindowsDriveLetter(searchDir);
+
     const children = os.readdir(searchDir);
 
     if (trace) {
@@ -188,7 +192,12 @@ export function glob(
         if (options.followSymlinks) {
           stat = os.stat(fullName);
         } else {
-          stat = os.lstat(fullName);
+          if (os.platform === "win32") {
+            // no lstat on windows
+            stat = os.stat(fullName);
+          } else {
+            stat = os.lstat(fullName);
+          }
         }
 
         if (

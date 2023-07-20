@@ -5,6 +5,7 @@ import { is } from "../../is";
 import type { Path } from "../../path";
 import { setHelpText } from "../../help";
 import cdHelpText from "./cd.help.md";
+import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
 export function cd(path?: string | Path): void {
   if (path == null) {
@@ -25,6 +26,8 @@ export function cd(path?: string | Path): void {
     String,
     "'path' argument must be either a string or a Path object"
   );
+
+  path = appendSlashIfWindowsDriveLetter(path);
 
   os.chdir(path);
 }

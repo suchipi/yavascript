@@ -4,6 +4,7 @@ import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
 import { _getPathInfo } from "./_getPathInfo";
+import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 export function ensureDir(path: string | Path) {
   assert.type(
@@ -20,9 +21,11 @@ export function ensureDir(path: string | Path) {
 
   for (let i = 0; i < components.length; i++) {
     const componentsSoFar = components.slice(0, i + 1);
-    const pathSoFar = componentsSoFar.join(Path.OS_SEGMENT_SEPARATOR);
+    let pathSoFar = componentsSoFar.join(Path.OS_SEGMENT_SEPARATOR);
     if (pathSoFar === ".") continue;
     if (pathSoFar === "") continue;
+
+    pathSoFar = appendSlashIfWindowsDriveLetter(pathSoFar);
 
     const info = _getPathInfo(pathSoFar);
     switch (info) {

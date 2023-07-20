@@ -6,6 +6,7 @@ import { is } from "../../is";
 import { assert } from "../../assert";
 import { setHelpText } from "../../help";
 import lsHelpText from "./ls.help.md";
+import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
 export function ls(
   dir: string | Path = pwd(),
@@ -20,6 +21,8 @@ export function ls(
     String,
     "'dir' argument must be either a string or a Path object"
   );
+
+  dir = appendSlashIfWindowsDriveLetter(dir);
 
   assert.type(
     options,

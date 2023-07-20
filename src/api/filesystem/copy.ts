@@ -10,6 +10,7 @@ import { types } from "../types";
 import { assert } from "../assert";
 import { _getPathInfo } from "./_getPathInfo";
 import { ensureDir } from "./ensureDir";
+import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 function copyRaw(
   from: string,
@@ -18,6 +19,9 @@ function copyRaw(
     | undefined
     | ((...args: Array<any>) => void) = traceAll.getDefaultTrace()
 ): void {
+  from = appendSlashIfWindowsDriveLetter(from);
+  to = appendSlashIfWindowsDriveLetter(to);
+
   let filesToCloseLater: Record<string, FILE> = {};
   let fdsToCloseLater: Record<string, number> = {};
 
