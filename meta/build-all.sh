@@ -96,8 +96,7 @@ make_bytecode_program x86_64-unknown-linux-musl dist/index-x86_64.bin
 make_bytecode_program x86_64-unknown-linux-static dist/index-x86_64.bin
 
 # bytecode stuff wasn't working properly on windows; endianness?
-cp dist/index-x86_64.js yavascript-internal.js # to have clearer filename in stack traces
-make_string_program x86_64-pc-windows-static yavascript-internal.js
+make_string_program x86_64-pc-windows-static dist/index-x86_64.js
 
 # --- aarch64 binaries --
 

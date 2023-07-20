@@ -8,7 +8,8 @@ import { appendSlashIfWindowsDriveLetter } from "./_win32Helpers";
 function validateSegments(segments: Array<string>): Array<string> {
   return segments.filter((part, index) => {
     // first part can be "" to represent left side of root "/"
-    if (index === 0) return true;
+    // second part can be "" to support windows UNC paths
+    if (index === 0 || index === 1) return true;
     return Boolean(part);
   });
 }
@@ -28,7 +29,7 @@ class Path {
     }
 
     return validateSegments(
-      inputParts.map((part) => part.split(/(?:\/|\\)+/g)).flat(1)
+      inputParts.map((part) => part.split(/(?:\/|\\)/g)).flat(1)
     );
   }
 
@@ -284,13 +285,12 @@ class Path {
   isAbsolute(): boolean {
     const firstPart = this.segments[0];
 
-    // empty first component indicates that path starts with leading slash
+    // empty first component indicates that path starts with leading slash.
+    // could be unix fs root, or windows unc path
     if (firstPart === "") return true;
 
     // windows drive
     if (/^[A-Za-z]:/.test(firstPart)) return true;
-
-    // TODO: windows UNC paths (not supported very well by these path APIs at all, yet)
 
     return false;
   }
