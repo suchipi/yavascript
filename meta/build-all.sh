@@ -48,9 +48,11 @@ npx --no-install qjs \
 
 mkdir -p bin
 
-function make_bytecode_program() {
-  TARGET="$1"
-  BYTECODE_FILE="$2"
+function make_program() {
+  PROGRAM_NAME="$1"
+  TARGET="$2"
+  BASE="$3"
+  FILE_TO_APPEND="$4"
 
   if [[ $TARGET = *windows* ]]; then
     EXE=".exe"
@@ -61,49 +63,40 @@ function make_bytecode_program() {
   mkdir -p bin/${TARGET}
   
   cat \
-    node_modules/@suchipi/quickjs/build/${TARGET}/bin/qjsbootstrap-bytecode${EXE} \
-    "${BYTECODE_FILE}" \
-  > bin/${TARGET}/yavascript${EXE}
+    node_modules/@suchipi/quickjs/build/${TARGET}/bin/${BASE}${EXE} \
+    "${FILE_TO_APPEND}" \
+  > bin/${TARGET}/${PROGRAM_NAME}${EXE}
 
-  chmod +x bin/${TARGET}/yavascript${EXE}
+  chmod +x bin/${TARGET}/${PROGRAM_NAME}${EXE}
 }
 
-function make_string_program() {
-  TARGET="$1"
-  SCRIPT_FILE="$2"
+# --- x86_64 binaries ---
 
-  if [[ $TARGET = *windows* ]]; then
-    EXE=".exe"
-  else
-    EXE=""
-  fi
-
-  mkdir -p bin/${TARGET}
-  
-  cat \
-    node_modules/@suchipi/quickjs/build/${TARGET}/bin/qjsbootstrap${EXE} \
-    "${SCRIPT_FILE}" \
-  > bin/${TARGET}/yavascript${EXE}
-
-  chmod +x bin/${TARGET}/yavascript${EXE}
-}
-
-# --- x86_64 binaries --
-
-make_bytecode_program x86_64-apple-darwin dist/index-x86_64.bin
-make_bytecode_program x86_64-unknown-linux-gnu dist/index-x86_64.bin
-make_bytecode_program x86_64-unknown-linux-musl dist/index-x86_64.bin
-make_bytecode_program x86_64-unknown-linux-static dist/index-x86_64.bin
+make_program yavascript x86_64-apple-darwin qjsbootstrap-bytecode dist/index-x86_64.bin
+make_program yavascript x86_64-unknown-linux-gnu qjsbootstrap-bytecode dist/index-x86_64.bin
+make_program yavascript x86_64-unknown-linux-musl qjsbootstrap-bytecode dist/index-x86_64.bin
+make_program yavascript x86_64-unknown-linux-static qjsbootstrap-bytecode dist/index-x86_64.bin
 
 # bytecode stuff wasn't working properly on windows; endianness?
-make_string_program x86_64-pc-windows-static dist/index-x86_64.js
+make_program yavascript x86_64-pc-windows-static qjsbootstrap dist/index-x86_64.js
 
-# --- aarch64 binaries --
+# --- aarch64 binaries ---
 
-make_bytecode_program aarch64-apple-darwin dist/index-arm64.bin
-make_bytecode_program aarch64-unknown-linux-gnu dist/index-arm64.bin
-make_bytecode_program aarch64-unknown-linux-musl dist/index-arm64.bin
-make_bytecode_program aarch64-unknown-linux-static dist/index-arm64.bin
+make_program yavascript aarch64-apple-darwin qjsbootstrap-bytecode dist/index-arm64.bin
+make_program yavascript aarch64-unknown-linux-gnu qjsbootstrap-bytecode dist/index-arm64.bin
+make_program yavascript aarch64-unknown-linux-musl qjsbootstrap-bytecode dist/index-arm64.bin
+make_program yavascript aarch64-unknown-linux-static qjsbootstrap-bytecode dist/index-arm64.bin
+
+# --- yavascript-bootstrap ---
+make_program yavascript-bootstrap x86_64-apple-darwin qjsbootstrap dist/primordials-x86_64.js
+make_program yavascript-bootstrap x86_64-unknown-linux-gnu qjsbootstrap dist/primordials-x86_64.js
+make_program yavascript-bootstrap x86_64-unknown-linux-musl qjsbootstrap dist/primordials-x86_64.js
+make_program yavascript-bootstrap x86_64-unknown-linux-static qjsbootstrap dist/primordials-x86_64.js
+make_program yavascript-bootstrap x86_64-pc-windows-static qjsbootstrap dist/primordials-x86_64.js
+make_program yavascript-bootstrap aarch64-apple-darwin qjsbootstrap dist/primordials-arm64.js
+make_program yavascript-bootstrap aarch64-unknown-linux-gnu qjsbootstrap dist/primordials-arm64.js
+make_program yavascript-bootstrap aarch64-unknown-linux-musl qjsbootstrap dist/primordials-arm64.js
+make_program yavascript-bootstrap aarch64-unknown-linux-static qjsbootstrap dist/primordials-arm64.js
 
 # copy stuff into npm folder
 cp -R bin meta/npm
