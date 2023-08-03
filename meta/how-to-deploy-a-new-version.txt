@@ -1,8 +1,7 @@
 - build everything with env var `YAVASCRIPT_VERSION` set to whatever (eg 0.0.8)
-  - looks like you have to edit meta/docker/build-all.sh to get that env var into the container where stuff is built
   - this will update the files in bin/
 - run meta/scripts/set-package-version.js to set the package.json version to the same version string
-- run npm publish in the npm dir
+- run npm publish in the meta/npm dir
 - commit the changes and push to github
 - make a release on github and create a tag from the latest commit with the version name as the tag name
 - run meta/scripts/assemble-tgz.sh to make all the archives for each version in the meta/tgz-release folder and then upload all those as release artifacts on github
