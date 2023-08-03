@@ -62,7 +62,7 @@ declare function remove(path: string | Path): void;
 declare function exists(path: string | Path): boolean;
 
 /**
- * Create directories for each of the provided path components,
+ * Creates directories for each of the provided path components,
  * if they don't already exist.
  *
  * Provides the same functionality as the command `mkdir -p`.

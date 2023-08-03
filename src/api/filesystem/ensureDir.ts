@@ -5,6 +5,8 @@ import { types } from "../types";
 import { assert } from "../assert";
 import { _getPathInfo } from "./_getPathInfo";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
+import { setHelpText } from "../help";
+import ensureDirHelpText from "./ensureDir.help.md";
 
 export function ensureDir(path: string | Path) {
   assert.type(
@@ -44,3 +46,5 @@ export function ensureDir(path: string | Path) {
     }
   }
 }
+
+setHelpText(ensureDir, ensureDirHelpText);
