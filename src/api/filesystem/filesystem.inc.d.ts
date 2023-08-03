@@ -95,7 +95,7 @@ declare type CopyOptions = {
 };
 
 /**
- * Copy a file or folder from one location to another.
+ * Copies a file or folder from one location to another.
  * Folders are copied recursively.
  *
  * Provides the same functionality as the command `cp -R`.
