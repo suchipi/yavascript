@@ -7,5 +7,6 @@ export { remove } from "./remove";
 export { writeFile } from "./writeFile";
 export { copy, CopyOptions } from "./copy";
 export { rename } from "./rename";
-
-// TODO: isReadable, isWritable, isExecutable
+export { isExecutable } from "./isExecutable";
+export { isReadable } from "./isReadable";
+export { isWritable } from "./isWritable";
