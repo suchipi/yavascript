@@ -205,6 +205,28 @@ declare function isDir(path: string | Path): boolean;
 declare function isLink(path: string | Path): boolean;
 
 /**
+ * Returns true if the resource at the provided path can be executed by the
+ * current user.
+ *
+ * If nothing exists at that path, an error will be thrown.
+ */
+declare function isExecutable(path: string | Path): boolean;
+
+/**
+ * Returns true if the resource at the provided path can be read by the current
+ * user.
+ *
+ * If nothing exists at that path, an error will be thrown.
+ */
+declare function isReadable(path: string | Path): boolean;
+
+/**
+ * Returns true if a resource at the provided path could be written to by the
+ * current user.
+ */
+declare function isWritable(path: string | Path): boolean;
+
+/**
  * Delete the file or directory at the specified path.
  *
  * If the directory isn't empty, its contents will be deleted, too.

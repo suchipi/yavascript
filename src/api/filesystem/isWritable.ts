@@ -1,6 +1,8 @@
 import * as os from "quickjs:os";
 import { assert } from "../assert";
 import { types } from "../types";
+import { setHelpText } from "../help";
+import isWritableHelpText from "./isWritable.help.md";
 
 export function isWritable(path: Path | string) {
   assert.type(
@@ -11,9 +13,6 @@ export function isWritable(path: Path | string) {
 
   path = path.toString();
 
-  // Throws error if doesn't exist
-  os.access(path, os.F_OK);
-
   try {
     os.access(path, os.W_OK);
   } catch (err) {
@@ -22,3 +21,5 @@ export function isWritable(path: Path | string) {
 
   return true;
 }
+
+setHelpText(isWritable, isWritableHelpText);
