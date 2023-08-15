@@ -2702,11 +2702,10 @@ declare const startRepl: {
  */
 declare class GitRepo {
   /**
-   * Given a path to a file or folder on disk, finds the parent git repo
-   * containing that path, and returns the absolute path to the repo root (the
-   * folder that contains the '.git' folder).
-   *
-   * This is done by running `git rev-parse --show-toplevel`.
+   * Given a path to a file or folder on disk, searches upwards through the
+   * directory ancestry to find a `.git` folder, then returns the Path that
+   * contains that `.git` folder. If no `.git` folder is found, an error will be
+   * thrown.
    */
   static findRoot(fromPath: string | Path): Path;
 

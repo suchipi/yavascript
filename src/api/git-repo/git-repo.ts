@@ -1,8 +1,6 @@
 import { exec } from "../exec";
 import { pwd } from "../commands/pwd";
-import { dirname } from "../commands/dirname";
 import { exists, isDir } from "../filesystem";
-import { is } from "../is";
 import { types } from "../types";
 import { Path } from "../path";
 import { assert } from "../assert";
@@ -12,36 +10,32 @@ export class GitRepo {
   repoDir: Path;
 
   static findRoot(fromPath: string | Path): Path {
-    if (is(fromPath, types.Path)) {
-      fromPath = fromPath.toString();
-    }
-
     assert.type(
       fromPath,
-      types.string,
-      "when present, 'fromPath' argument must be either a string or a Path object"
+      types.or(types.Path, types.string),
+      "'fromPath' argument must be either a string or a Path object"
     );
 
-    if (exists(fromPath) && !isDir(fromPath)) {
-      fromPath = dirname(fromPath);
+    const absFromPath = new Path(fromPath).resolve();
+    const currentPath = absFromPath.clone();
+
+    if (exists(currentPath) && !isDir(currentPath)) {
+      currentPath.segments.pop();
     }
 
-    const result = exec(["git", "rev-parse", "--show-toplevel"], {
-      failOnNonZeroStatus: false,
-      captureOutput: true,
-      cwd: fromPath,
-    });
-    if (result.status !== 0) {
-      throw makeErrorWithProperties("'git rev-parse --show-toplevel' failed", {
-        status: result.status,
-        stderr: result.stderr,
-        stdout: result.stdout,
-        cwd: fromPath,
-        signal: result.signal,
-      });
+    while (currentPath.segments.length > 0) {
+      const potentialPath = currentPath.concat(".git");
+      if (exists(potentialPath) && isDir(potentialPath)) {
+        return currentPath;
+      }
+
+      currentPath.segments.pop();
     }
 
-    return new Path(result.stdout.trim());
+    throw makeErrorWithProperties(
+      `Could not find git repo root (inputPath = ${fromPath}, resolvedPath = ${absFromPath})`,
+      { inputPath: fromPath, resolvedPath: absFromPath }
+    );
   }
 
   constructor(repoDir: string | Path) {
@@ -60,7 +54,7 @@ export class GitRepo {
     const dotGitDir = Path.join(this.repoDir, ".git");
     if (!exists(dotGitDir)) {
       throw makeErrorWithProperties(
-        `The 'repoPath' provided to the Git constructor doesn't appear to refer to a git repository; namely, ${JSON.stringify(
+        `The 'repoPath' provided to the GitRepo constructor doesn't appear to refer to a git repository; namely, ${JSON.stringify(
           dotGitDir
         )} doesn't exist.`,
         {
