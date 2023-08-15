@@ -11,3 +11,5 @@ declare var CSV: {
   stringify(input: Array<Array<string>>): string;
 };
 ```
+
+See `help(CSV.parse)` or `help(CSV.stringify)` for more info.
