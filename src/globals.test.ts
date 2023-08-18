@@ -127,6 +127,9 @@ test("globals", async () => {
     ensureDir function
     copy function
     rename function
+    isExecutable function
+    isReadable function
+    isWritable function
     Path function
     glob function
     types object
