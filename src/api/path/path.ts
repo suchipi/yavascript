@@ -14,6 +14,24 @@ function validateSegments(segments: Array<string>): Array<string> {
   });
 }
 
+function getBase(input: string): string | null {
+  const driveLetterMatches = input.match(/^([A-Za-z]:)[/\\]?/);
+  if (driveLetterMatches) {
+    const letterAndColon = driveLetterMatches[1].toUpperCase();
+    return letterAndColon;
+  }
+
+  if (input.startsWith("\\\\")) {
+    return "\\\\";
+  }
+
+  if (input.startsWith("/")) {
+    return "/";
+  }
+
+  return null;
+}
+
 class Path {
   static OS_SEGMENT_SEPARATOR = os.platform === "win32" ? "\\" : "/";
   static OS_ENV_VAR_SEPARATOR = os.platform === "win32" ? ";" : ":";
@@ -173,6 +191,7 @@ class Path {
     return ret;
   }
 
+  base: string | null;
   segments: Array<string>;
   separator: string;
 
@@ -195,18 +214,33 @@ class Path {
 
     this.segments = Path.splitToSegments(parts);
     this.separator = Path.detectSeparator(parts);
+
+    this.base = getBase(this.segments.join(this.separator));
+    if (this.base === "\\\\") {
+      this.segments.shift();
+      this.segments.shift();
+    } else if (this.base === "/") {
+      this.segments.shift();
+    }
   }
 
   static from(
     segments: Array<string>,
-    separator: string = Path.OS_SEGMENT_SEPARATOR
+    separator: string = Path.OS_SEGMENT_SEPARATOR,
+    base?: string | null
   ) {
     assert.type(segments, types.arrayOf(types.string));
     assert.type(separator, types.string);
+    assert.type(base, types.or(types.string, types.null, types.undefined));
 
     const path = new Path();
     path.segments = validateSegments(segments);
     path.separator = separator;
+    if (typeof base === "undefined") {
+      path.base = getBase(path.segments.join(separator));
+    } else {
+      path.base = base;
+    }
     return path;
   }
 
@@ -283,22 +317,14 @@ class Path {
   }
 
   isAbsolute(): boolean {
-    const firstPart = this.segments[0];
-
-    // empty first component indicates that path starts with leading slash.
-    // could be unix fs root, or windows unc path
-    if (firstPart === "") return true;
-
-    // windows drive
-    if (/^[A-Za-z]:/.test(firstPart)) return true;
-
-    return false;
+    return this.base != null;
   }
 
   clone() {
     return (this.constructor as typeof Path).from(
       this.segments,
-      this.separator
+      this.separator,
+      this.base
     );
   }
 
