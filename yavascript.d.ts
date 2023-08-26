@@ -590,6 +590,40 @@ declare function readlink(path: string | Path): string;
 declare function realpath(path: string | Path): string;
 
 /**
+ * Blocks the current thread for at least the specified number of milliseconds,
+ * or maybe a tiny bit longer.
+ *
+ * alias for `sleep.sync`.
+ */
+declare var sleep: {
+  /**
+   * Blocks the current thread for at least the specified number of milliseconds,
+   * or maybe a tiny bit longer.
+   *
+   * alias for `sleep.sync`.
+   *
+   * @param milliseconds - The number of milliseconds to block for.
+   */
+  (milliseconds: number): void;
+
+  /**
+   * Blocks the current thread for at least the specified number of milliseconds,
+   * or maybe a tiny bit longer.
+   *
+   * @param milliseconds - The number of milliseconds to block for.
+   */
+  sync(milliseconds: number): void;
+
+  /**
+   * Returns a Promise which resolves in at least the specified number of
+   * milliseconds, maybe a little longer.
+   *
+   * @param milliseconds - The number of milliseconds to wait before the returned Promise should be resolved.
+   */
+  async(milliseconds: number): Promise<void>;
+};
+
+/**
  * If the file at `path` exists, update its creation/modification timestamps.
  *
  * Otherwise, create an empty file at that path.
@@ -4126,6 +4160,38 @@ declare module "quickjs:std" {
   /** Return an object containing the environment variables as key-value pairs. */
   export function getenviron(): { [key: string]: string | undefined };
 
+  /**
+   * Return the real user ID of the calling process.
+   *
+   * This function throws an error on windows, because windows doesn't support
+   * the same uid/gid paradigm as Unix-like operating systems.
+   */
+  export function getuid(): number;
+
+  /**
+   * Return the effective user ID of the calling process.
+   *
+   * This function throws an error on windows, because windows doesn't support
+   * the same uid/gid paradigm as Unix-like operating systems.
+   */
+  export function geteuid(): number;
+
+  /**
+   * Return the real group ID of the calling process.
+   *
+   * This function throws an error on windows, because windows doesn't support
+   * the same uid/gid paradigm as Unix-like operating systems.
+   */
+  export function getgid(): number;
+
+  /**
+   * Return the effective group ID of the calling process.
+   *
+   * This function throws an error on windows, because windows doesn't support
+   * the same uid/gid paradigm as Unix-like operating systems.
+   */
+  export function getegid(): number;
+
   interface UrlGet {
     /**
      * Download `url` using the `curl` command line utility. Returns string
@@ -4243,6 +4309,20 @@ declare module "quickjs:std" {
    * - octal (0o prefix) and hexadecimal (0x prefix) numbers
    */
   export function parseExtJSON(str: string): any;
+
+  /**
+   * A wrapper around the standard C [strftime](https://en.cppreference.com/w/c/chrono/strftime).
+   * Formats a time/date into a format as specified by the user.
+   *
+   * @param maxBytes - The number of bytes to allocate for the string that will be returned
+   * @param format - Format string, using `%`-prefixed sequences as found in [this table](https://en.cppreference.com/w/c/chrono/strftime#Format_string).
+   * @param time - The Date object (or unix timestamp, in ms) to render.
+   */
+  export function strftime(
+    maxBytes: number,
+    format: string,
+    time: Date | number
+  ): string;
 }
 
 declare module "quickjs:os" {

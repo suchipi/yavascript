@@ -20,5 +20,6 @@ export default makeGetterPropertyDescriptorMap({
     (require("./readlink") as typeof import("./readlink")).readlink,
   realpath: () =>
     (require("./realpath") as typeof import("./realpath")).realpath,
+  sleep: () => (require("./sleep") as typeof import("./sleep")).sleep,
   touch: () => (require("./touch") as typeof import("./touch")).touch,
 });
