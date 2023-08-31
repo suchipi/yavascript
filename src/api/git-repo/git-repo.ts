@@ -5,6 +5,9 @@ import { types } from "../types";
 import { Path } from "../path";
 import { assert } from "../assert";
 import { makeErrorWithProperties } from "../../error-with-properties";
+import { setHelpText } from "../help";
+import gitRepoHelpText from "./git-repo.help.md";
+import todoHelpText from "../../TODO.help.md";
 
 export class GitRepo {
   repoDir: Path;
@@ -177,3 +180,12 @@ export class GitRepo {
     return result.status === 0;
   }
 }
+
+setHelpText(GitRepo, gitRepoHelpText);
+
+// TODO
+setHelpText(GitRepo.findRoot, todoHelpText);
+setHelpText(GitRepo.prototype.branchName, todoHelpText);
+setHelpText(GitRepo.prototype.commitSHA, todoHelpText);
+setHelpText(GitRepo.prototype.isIgnored, todoHelpText);
+setHelpText(GitRepo.prototype.isWorkingTreeDirty, todoHelpText);

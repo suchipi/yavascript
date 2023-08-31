@@ -2744,12 +2744,12 @@ declare class GitRepo {
   static findRoot(fromPath: string | Path): Path;
 
   /**
-   * Creates a new `Git` object for the given repo on disk.
+   * Creates a new `GitRepo` object for the given repo on disk.
    */
   constructor(repoDir: string | Path);
 
   /**
-   * The root folder of the git repo that this `Git` object represents (the
+   * The root folder of the git repo that this `GitRepo` object represents (the
    * folder that contains the '.git' folder).
    */
   repoDir: Path;
@@ -2781,7 +2781,7 @@ declare class GitRepo {
   /**
    * Returns whether the provided path is ignored by git.
    *
-   * If `path` is an absolute path, it must be a child directory of this Git
+   * If `path` is an absolute path, it must be a child directory of this GitRepo
    * object's `repoDir`, or else an error will be thrown.
    */
   isIgnored(path: string | Path): boolean;
