@@ -74,19 +74,16 @@ exports.resolve = (id, fromFilePath) => {
 
 const runtimeForBuildtimeEval = new Runtime();
 
+function loadAsString(filename) {
+  const content = fs.readFileSync(filename, "utf-8");
+  return `module.exports = ${JSON.stringify(content)};`;
+}
+
 exports.load = (filename) => {
   if (filename.endsWith(".md") || filename.endsWith(".txt")) {
-    const content = fs.readFileSync(filename, "utf-8");
-    return `module.exports = ${JSON.stringify(content)};`;
-  } else if (filename.endsWith(".json")) {
-    const content = fs.readFileSync(filename, "utf-8");
-    return `module.exports = ${content};`;
+    return loadAsString(filename);
   } else if (filename.endsWith("?contentString")) {
-    const content = fs.readFileSync(
-      filename.replace(/\?contentString$/, ""),
-      "utf-8"
-    );
-    return `module.exports = ${JSON.stringify(content)};`;
+    return loadAsString(filename.replace(/\?contentString$/, ""));
   } else if (filename.endsWith("?evalAtBuildTime")) {
     const modulePath = filename.replace(/\?evalAtBuildTime$/, "");
 
