@@ -105,6 +105,7 @@ test("globals", async () => {
     pwd function
     readlink function
     realpath function
+    sleep function
     touch function
     mkdir throws error
     cp throws error

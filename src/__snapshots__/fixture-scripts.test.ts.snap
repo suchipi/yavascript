@@ -83,7 +83,7 @@ exports[`importing-from-npm-protocol.js 1`] = `
     __e: Function "__e" {}
   }
   render: Function "D" {}
-  toChildArray: Function "S" {}
+  toChildArray: Function "C" {}
 }
 ",
 }
