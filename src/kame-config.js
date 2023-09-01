@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { defaultResolver, Runtime } = require("kame");
-const babel = require("@babel/core");
+const { defaultResolver, Runtime, defaultLoader } = require("kame");
 
 const stubPath = path.resolve(__dirname, "kame-module-stub.js");
 
@@ -95,21 +94,6 @@ exports.load = (filename) => {
 
     return `module.exports = ${JSON.stringify(result)};`;
   } else {
-    return babel.transformFileSync(filename, {
-      babelrc: false,
-      presets: [
-        "@babel/preset-typescript",
-        [
-          "@babel/preset-env",
-          {
-            // we tell @babel/preset-env to target node 14 because that version
-            // supports approximately the same syntax features as our QuickJS;
-            // namely, ES2020 syntax
-            targets: { node: "14.21.1" },
-          },
-        ],
-      ],
-      plugins: ["@babel/plugin-transform-runtime"],
-    });
+    return defaultLoader.load(filename, { target: "es2020" });
   }
 };
