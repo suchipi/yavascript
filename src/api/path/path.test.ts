@@ -95,6 +95,7 @@ test("Path.splitToSegments (windows-style paths)", async () => {
     echo(Path.splitToSegments("hello\\\\mario"));
     echo(Path.splitToSegments("E:\\\\what\\\\"));
     echo(Path.splitToSegments("Z:\\\\\\\\who\\\\\\\\tf\\\\\\\\keeps putting\\\\\\\\double\\\\\\\\slashes\\\\\\\\"));
+    echo(Path.splitToSegments("\\\\\\\\SERVERNAME\\\\ShareName$\\\\file.txt"));
   `;
 
   const result = await evaluate(script);
@@ -147,6 +148,13 @@ test("Path.splitToSegments (windows-style paths)", async () => {
       "keeps putting"
       "double"
       "slashes"
+    ]
+    [
+      ""
+      ""
+      "SERVERNAME"
+      "ShareName$"
+      "file.txt"
     ]
     ",
     }
@@ -539,6 +547,73 @@ test("Path.toJSON", async () => {
       "stdout": "{
       "path": "/tmp/something/somewhere",
       "path2": "C:\\\\Users\\\\user"
+    }
+    ",
+    }
+  `);
+});
+
+test("Path constructor with fs root strings", async () => {
+  const result = await evaluate(`
+    const path = new Path("/");
+    const path2 = new Path("\\\\\\\\");
+
+    ({ path, path2 });
+  `);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      path: Path {
+        segments: [
+          ""
+        ]
+        separator: "/"
+      }
+      path2: Path {
+        segments: [
+          ""
+          ""
+        ]
+        separator: "\\\\"
+      }
+    }
+    ",
+    }
+  `);
+});
+
+test("Path constructor with absolute paths", async () => {
+  const result = await evaluate(`
+    const path = new Path("/tmp");
+    const path2 = new Path("\\\\\\\\SERVERNAME\\\\ShareName");
+
+    ({ path, path2 });
+  `);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      path: Path {
+        segments: [
+          ""
+          "tmp"
+        ]
+        separator: "/"
+      }
+      path2: Path {
+        segments: [
+          ""
+          ""
+          "SERVERNAME"
+          "ShareName"
+        ]
+        separator: "\\\\"
+      }
     }
     ",
     }

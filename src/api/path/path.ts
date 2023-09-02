@@ -5,11 +5,24 @@ import { is } from "../is";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import { appendSlashIfWindowsDriveLetter } from "./_win32Helpers";
 
-function validateSegments(segments: Array<string>): Array<string> {
+function validateSegments(
+  segments: Array<string>,
+  separator: string
+): Array<string> {
   return segments.filter((part, index) => {
     // first part can be "" to represent left side of root "/"
     // second part can be "" to support windows UNC paths
-    if (index === 0 || index === 1) return true;
+    if (part === "" && index === 0) {
+      return true;
+    } else if (
+      part === "" &&
+      index === 1 &&
+      separator === "\\" &&
+      segments[0] === ""
+    ) {
+      return true;
+    }
+
     return Boolean(part);
   });
 }
@@ -28,8 +41,11 @@ class Path {
       inputParts = [inputParts];
     }
 
+    const separator = Path.detectSeparator(inputParts);
+
     return validateSegments(
-      inputParts.map((part) => part.split(/(?:\/|\\)/g)).flat(1)
+      inputParts.map((part) => part.split(/(?:\/|\\)/g)).flat(1),
+      separator
     );
   }
 
@@ -205,7 +221,7 @@ class Path {
     assert.type(separator, types.string);
 
     const path = new Path();
-    path.segments = validateSegments(segments);
+    path.segments = validateSegments(segments, separator);
     path.separator = separator;
     return path;
   }
