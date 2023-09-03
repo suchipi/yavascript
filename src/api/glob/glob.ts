@@ -9,6 +9,8 @@ import { is } from "../is";
 import { assert } from "../assert";
 import { types } from "../types";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
+import { setHelpText } from "../help";
+import globHelpText from "./glob.help.md";
 
 function compile(pattern: string, startingDir: string) {
   let prefix = "";
@@ -272,3 +274,5 @@ export function glob(
 
   return matches.map((str) => new Path(str));
 }
+
+setHelpText(glob, globHelpText);
