@@ -7,7 +7,11 @@ import { assert } from "../assert";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import { setHelpText } from "../help";
 import gitRepoHelpText from "./git-repo.help.md";
-import todoHelpText from "../../TODO.help.md";
+import findRootHelpText from "./git-repo_findRoot.help.md";
+import commitSHAHelpText from "./git-repo_commitSHA.help.md";
+import branchNameHelpText from "./git-repo_branchName.help.md";
+import isIgnoredHelpText from "./git-repo_isIgnored.help.md";
+import isWorkingTreeDirtyHelpText from "./git-repo_isWorkingTreeDirty.help.md";
 
 export class GitRepo {
   repoDir: Path;
@@ -182,10 +186,8 @@ export class GitRepo {
 }
 
 setHelpText(GitRepo, gitRepoHelpText);
-
-// TODO
-setHelpText(GitRepo.findRoot, todoHelpText);
-setHelpText(GitRepo.prototype.branchName, todoHelpText);
-setHelpText(GitRepo.prototype.commitSHA, todoHelpText);
-setHelpText(GitRepo.prototype.isIgnored, todoHelpText);
-setHelpText(GitRepo.prototype.isWorkingTreeDirty, todoHelpText);
+setHelpText(GitRepo.findRoot, findRootHelpText);
+setHelpText(GitRepo.prototype.commitSHA, commitSHAHelpText);
+setHelpText(GitRepo.prototype.branchName, branchNameHelpText);
+setHelpText(GitRepo.prototype.isIgnored, isIgnoredHelpText);
+setHelpText(GitRepo.prototype.isWorkingTreeDirty, isWorkingTreeDirtyHelpText);
