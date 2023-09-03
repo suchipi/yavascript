@@ -11,6 +11,6 @@ if [[ "$INPUT_PATH" == "" ]] || [[ "$OUTPUT_PATH" == "" ]]; then
 fi
 
 mkdir -p `dirname "$OUTPUT_PATH"`;
-glow -s dark "$INPUT_PATH" > "$OUTPUT_PATH"
+glow -w 100 -s dark "$INPUT_PATH" > "$OUTPUT_PATH"
 
 echo "$OUTPUT_PATH"

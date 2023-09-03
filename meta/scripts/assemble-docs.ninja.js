@@ -18,6 +18,7 @@ for (const helpDoc of glob("src/**/*.help.md")) {
   build({
     output: outputFile,
     inputs: [inputFile],
+    implicitInputs: ["meta/scripts/glow-render.sh"],
     rule: glowRender,
   });
 }
