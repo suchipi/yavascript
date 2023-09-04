@@ -5425,3 +5425,6 @@ declare module "quickjs:context" {
     eval(code: string): any;
   }
 }
+
+declare const std: typeof import("quickjs:std");
+declare const os: typeof import("quickjs:os");
