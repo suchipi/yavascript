@@ -2,7 +2,10 @@
 set -e
 
 # install ninja
-sudo apt install ninja-build bat
+sudo apt-get install -y ninja-build bat
+
+# ubuntu package names bat binary "batcat" instead of bat...
+ln -s /usr/bin/batcat /usr/local/bin/bat
 
 # ugh, the gh actions image claims to have nvm, but they don't do this for you
 export NVM_DIR="$HOME/.nvm"
