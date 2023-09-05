@@ -16,10 +16,5 @@ nvm use
 
 set -x
 
-echo PATH: $PATH
-which bat
-
-# env SKIP_FNM_USE=1 meta/build.sh
-# npm test
-
-exit 1
+env SKIP_FNM_USE=1 meta/build.sh
+npm test
