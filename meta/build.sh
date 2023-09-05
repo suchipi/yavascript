@@ -16,7 +16,7 @@ if [[ "$SKIP_NPM_INSTALL" == "" ]]; then
   npm install
 fi
 
-# compile markdown docs to ANSI-escape-sequence-containing txt files using Glow (https://github.com/charmbracelet/glow)
+# compile markdown docs to ANSI-escape-sequence-containing txt files
 if [[ "$SKIP_GLOW" == "" ]]; then
   meta/scripts/assemble-docs.sh
 fi

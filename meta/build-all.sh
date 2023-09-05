@@ -19,7 +19,7 @@ fi
 rm -rf dist
 mkdir -p dist
 
-# compile markdown docs to ANSI-escape-sequence-containing txt files using Glow (https://github.com/charmbracelet/glow)
+# compile markdown docs to ANSI-escape-sequence-containing txt files
 if [[ "$SKIP_GLOW" == "" ]]; then
   meta/scripts/assemble-docs.sh
 fi

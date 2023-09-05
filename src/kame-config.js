@@ -45,7 +45,7 @@ exports.resolve = (id, fromFilePath) => {
         return path.resolve(
           __dirname,
           "../dist/docs",
-          path.basename(id).replace(/\.help\.md$/, ".glow.txt")
+          path.basename(id).replace(/\.help\.md$/, ".term.txt")
         );
       }
 

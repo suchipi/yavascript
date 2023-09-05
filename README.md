@@ -89,7 +89,7 @@ You'll need to install these prerequisites:
 
 - [node.js](https://nodejs.org/en)
 - [ninja](https://ninja-build.org/)
-- [glow](https://github.com/charmbracelet/glow)
+- [bat](https://github.com/sharkdp/bat)
 
 Then run `meta/build.sh` to build binaries for the current platform (will be output in `dist`), or `meta/build-all.sh` to build binaries for all platforms (will be output in `bin`).
 
