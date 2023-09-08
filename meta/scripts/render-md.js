@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 // force chalk (which marked-terminal uses) to always output in color
 process.env.FORCE_COLOR = 3;
 

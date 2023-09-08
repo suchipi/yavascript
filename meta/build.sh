@@ -6,14 +6,9 @@ set -ex
 # Move to repo root
 cd $(git rev-parse --show-toplevel)
 
-# Use node 18
-if [[ "$SKIP_FNM_USE" == "" ]]; then
-  fnm use
-fi
-
 # grab JS dependencies from npm
-if [[ "$SKIP_NPM_INSTALL" == "" ]]; then
-  npm install
+if [[ "$SKIP_BUN_INSTALL" == "" ]]; then
+  bun install
 fi
 
 # compile markdown docs to ANSI-escape-sequence-containing txt files
