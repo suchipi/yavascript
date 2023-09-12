@@ -16,3 +16,5 @@ declare function type(
 ```
 
 See `help(types)` for a list of `TypeValidator`s.
+
+See `help(is)` for a function which returns a boolean instead of throwing.
