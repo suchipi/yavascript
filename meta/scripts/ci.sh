@@ -18,3 +18,4 @@ set -x
 
 env SKIP_FNM_USE=1 meta/build.sh
 npm test
+npm run typecheck
