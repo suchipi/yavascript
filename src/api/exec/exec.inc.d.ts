@@ -34,8 +34,6 @@ declare type BaseExecOptions = {
 };
 
 declare interface Exec {
-  (args: Array<string> | string, options?: BaseExecOptions): void;
-
   (
     args: Array<string> | string,
     options: BaseExecOptions & {
@@ -88,34 +86,6 @@ declare interface Exec {
        * Defaults to true.
        */
       failOnNonZeroStatus: true;
-    }
-  ): void;
-
-  (
-    args: Array<string> | string,
-    options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
-      failOnNonZeroStatus: false;
-    }
-  ):
-    | { status: number; signal: undefined }
-    | { status: undefined; signal: number };
-
-  (
-    args: Array<string> | string,
-    options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
-      failOnNonZeroStatus: true;
       /**
        * If true, stdout and stderr will be collected into strings and returned
        * instead of being printed to the screen.
@@ -125,32 +95,6 @@ declare interface Exec {
       captureOutput: true;
     }
   ): { stdout: string; stderr: string };
-
-  (
-    args: Array<string> | string,
-    options: BaseExecOptions & {
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
-      captureOutput: true;
-    }
-  ): { stdout: string; stderr: string };
-
-  (
-    args: Array<string> | string,
-    options: BaseExecOptions & {
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
-      captureOutput: false;
-    }
-  ): void;
 
   (
     args: Array<string> | string,
@@ -167,6 +111,62 @@ declare interface Exec {
   ):
     | { stdout: string; stderr: string; status: number; signal: undefined }
     | { stdout: string; stderr: string; status: undefined; signal: number };
+
+  (
+    args: Array<string> | string,
+    options: BaseExecOptions & {
+      /**
+       * Whether an Error should be thrown when the process exits with a nonzero
+       * status code.
+       *
+       * Defaults to true.
+       */
+      failOnNonZeroStatus: true;
+    }
+  ): void;
+
+  (
+    args: Array<string> | string,
+    options: BaseExecOptions & {
+      /**
+       * Whether an Error should be thrown when the process exits with a nonzero
+       * status code.
+       *
+       * Defaults to true.
+       */
+      failOnNonZeroStatus: false;
+    }
+  ):
+    | { status: number; signal: undefined }
+    | { status: undefined; signal: number };
+
+  (
+    args: Array<string> | string,
+    options: BaseExecOptions & {
+      /**
+       * If true, stdout and stderr will be collected into strings and returned
+       * instead of being printed to the screen.
+       *
+       * Defaults to false.
+       */
+      captureOutput: true;
+    }
+  ): { stdout: string; stderr: string };
+
+  (
+    args: Array<string> | string,
+    options: BaseExecOptions & {
+      /**
+       * If true, stdout and stderr will be collected into strings and returned
+       * instead of being printed to the screen.
+       *
+       * Defaults to false.
+       */
+      captureOutput: false;
+    }
+  ): void;
+
+  (args: Array<string> | string, options?: BaseExecOptions): void;
 }
 
 /** Runs a child process using the provided arguments. The first value in the arguments array is the program to run. */
