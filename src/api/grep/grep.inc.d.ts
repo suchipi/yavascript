@@ -57,7 +57,11 @@ declare const grepString: {
     str: string,
     pattern: string | RegExp,
     options: { inverse: true; details: true }
-  ): Array<string>;
+  ): Array<{
+    lineNumber: number;
+    lineContent: string;
+    matches: RegExpMatchArray;
+  }>;
 };
 
 /** Read the content at `path`, split it on newline, and then return lines matching `pattern`. */
@@ -123,7 +127,11 @@ declare const grepFile: {
     path: string | Path,
     pattern: string | RegExp,
     options: { inverse: true; details: true }
-  ): Array<string>;
+  ): Array<{
+    lineNumber: number;
+    lineContent: string;
+    matches: RegExpMatchArray;
+  }>;
 };
 
 interface String {
@@ -170,6 +178,10 @@ interface String {
     (
       pattern: string | RegExp,
       options: { inverse: true; details: true }
-    ): Array<string>;
+    ): Array<{
+      lineNumber: number;
+      lineContent: string;
+      matches: RegExpMatchArray;
+    }>;
   };
 }

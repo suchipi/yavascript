@@ -3,6 +3,10 @@ import { escape } from "../regexp-escape";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
+import { setHelpText } from "../help";
+import grepFileHelpText from "./grepFile.help.md";
+import grepStringHelpText from "./grepString.help.md";
+import stringProtoGrepHelpText from "./String_prototype_grep.help.md";
 
 export function grepString(
   str: string,
@@ -30,7 +34,7 @@ export function grepString(
     }
     if (!shouldInclude) return;
 
-    let outLine: typeof outLines[0];
+    let outLine: (typeof outLines)[0];
     if (options.details) {
       outLine = {
         lineNumber: index + 1,
@@ -45,6 +49,8 @@ export function grepString(
 
   return outLines;
 }
+
+setHelpText(grepString, grepStringHelpText);
 
 export function grepFile(
   path: string | Path,
@@ -65,6 +71,8 @@ export function grepFile(
   return grepString(content, pattern, options);
 }
 
+setHelpText(grepFile, grepFileHelpText);
+
 export function installToStringProto(stringProto: any) {
   stringProto.grep = function grep(
     pattern: string | RegExp,
@@ -72,4 +80,6 @@ export function installToStringProto(stringProto: any) {
   ) {
     return grepString(this as string, pattern, options);
   };
+
+  setHelpText(stringProto.grep, stringProtoGrepHelpText);
 }
