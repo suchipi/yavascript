@@ -7,6 +7,7 @@ import { makeErrorWithProperties } from "../../error-with-properties";
 
 type Hint = typeof String | typeof Boolean | typeof Number | typeof Path;
 
+// TODO: update clef-parse to support more flag formats
 export function parseScriptArgs(
   hints: { [key: string]: Hint } = {},
   args: Array<string> = scriptArgs.slice(2)
@@ -39,6 +40,7 @@ export function parseScriptArgs(
       }
 
       case Path: {
+        // TODO: Path hint should return Path object in flags object instead of string
         hintsForClef[key] = clefParse.Path;
         break;
       }
