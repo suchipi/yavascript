@@ -101,3 +101,9 @@ make_program yavascript-bootstrap aarch64-unknown-linux-static qjsbootstrap dist
 # copy stuff into npm folder
 cp -R bin meta/npm
 cp README.md meta/npm
+rm -rf meta/npm/dist
+mkdir -p meta/npm/dist
+cp dist/index-x86_64.js meta/npm/dist
+cp dist/index-arm64.js meta/npm/dist
+cp dist/primordials-x86_64.js meta/npm/dist/
+cp dist/primordials-arm64.js meta/npm/dist/
