@@ -10,14 +10,13 @@ import execHelpText from "./exec.help.md";
 import dollarHelpText from "./_dollar.help.md";
 import { ChildProcess } from "./ChildProcess";
 
-// TODO: 'raw' option for stdout/stderr when using captureOutput
 const exec = (
   args: Array<string> | string,
   options: {
     cwd?: string | Path;
     env?: { [key: string | number]: string | number | boolean };
     failOnNonZeroStatus?: boolean;
-    captureOutput?: boolean;
+    captureOutput?: boolean | "utf8" | "arraybuffer";
     trace?: (...args: Array<any>) => void;
   } = {}
 ): any => {
@@ -43,7 +42,11 @@ const exec = (
   );
   assert.type(
     captureOutput,
-    types.boolean,
+    types.or(
+      types.boolean,
+      types.exactString("utf8"),
+      types.exactString("arraybuffer")
+    ),
     "when present, 'captureOutput' option must be a boolean"
   );
 
@@ -75,15 +78,45 @@ const exec = (
     child.start();
     result = child.waitUntilComplete();
 
-    let stdout: string | null = null;
-    let stderr: string | null = null;
+    let stdout: string | ArrayBuffer | null = null;
+    let stderr: string | ArrayBuffer | null = null;
 
     if (tmpOut != null && tmpErr != null) {
-      // need to seek to beginning to read the data that was written
-      tmpOut.seek(0, std.SEEK_SET);
-      tmpErr.seek(0, std.SEEK_SET);
-      stdout = tmpOut.readAsString();
-      stderr = tmpErr.readAsString();
+      if (captureOutput === "arraybuffer") {
+        const outLen = tmpOut.tell();
+        const errLen = tmpErr.tell();
+        stdout = new ArrayBuffer(outLen);
+        stderr = new ArrayBuffer(errLen);
+
+        // seek back to beginning
+        tmpOut.seek(0, std.SEEK_SET);
+        tmpErr.seek(0, std.SEEK_SET);
+
+        const outBytesRead = tmpOut.read(stdout, 0, outLen);
+        if (outBytesRead !== outLen && trace != null) {
+          // throwing an error at this point seems kinda hostile idk, like the
+          // process has already run to completion, you know? this *shouldn't*
+          // ever happen, in theory, but...
+          trace(
+            `WEIRD! stdout reported it was ${outLen}, but when we read it back, it was ${outBytesRead}. Continuing anyway...`
+          );
+        }
+
+        const errBytesRead = tmpErr.read(stderr, 0, errLen);
+        if (errBytesRead !== errLen && trace != null) {
+          trace(
+            `WEIRD! stderr reported it was ${errLen}, but when we read it back, it was ${errBytesRead}. Continuing anyway...`
+          );
+        }
+      } else {
+        // captureOutput is either true or "utf8"
+
+        // need to seek to beginning to read the data that was written
+        tmpOut.seek(0, std.SEEK_SET);
+        tmpErr.seek(0, std.SEEK_SET);
+        stdout = tmpOut.readAsString();
+        stderr = tmpErr.readAsString();
+      }
     }
 
     if (failOnNonZeroStatus && result.status !== 0) {

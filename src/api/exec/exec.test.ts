@@ -159,6 +159,48 @@ test("exec with captureOutput true", async () => {
   `);
 });
 
+test("exec with captureOutput 'utf8'", async () => {
+  const result = await evaluate(
+    `exec(["echo", "hi there"], { captureOutput: "utf8" })`
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      stdout: "hi there\\n"
+      stderr: ""
+      status: 0
+      signal: undefined
+    }
+    ",
+    }
+  `);
+});
+
+test("exec with captureOutput 'arraybuffer'", async () => {
+  const result = await evaluate(
+    `exec(["echo", "hi there"], { captureOutput: "arraybuffer" })`
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      stdout: ArrayBuffer {
+        │0x00000000│ 68 69 20 74 68 65 72 65 0A
+      }
+      stderr: ArrayBuffer {}
+      status: 0
+      signal: undefined
+    }
+    ",
+    }
+  `);
+});
+
 test("exec with failOnNonZeroStatus false - running 'false'", async () => {
   const result = await evaluate(
     `exec(["false"], { failOnNonZeroStatus: false })`

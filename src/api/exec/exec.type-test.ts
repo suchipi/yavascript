@@ -223,7 +223,7 @@ import { assert, Is } from "typescript-assert-utils";
   assert<Is<typeof ret3, void>>();
 }
 
-// only captureOutput true, return type is stdout/stderr
+// only captureOutput true, return type is stdout/stderr string
 {
   type ExpectedType = { stdout: string; stderr: string };
 
@@ -239,6 +239,46 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret3 = exec(["blah", "blah"], {
     captureOutput: true,
+  });
+  assert<Is<typeof ret3, ExpectedType>>();
+}
+
+// only captureOutput "utf8", return type is stdout/stderr string
+{
+  type ExpectedType = { stdout: string; stderr: string };
+
+  const ret1 = exec("blah", {
+    captureOutput: "utf8",
+  });
+  assert<Is<typeof ret1, ExpectedType>>();
+
+  const ret2 = exec(["blah"], {
+    captureOutput: "utf8",
+  });
+  assert<Is<typeof ret2, ExpectedType>>();
+
+  const ret3 = exec(["blah", "blah"], {
+    captureOutput: "utf8",
+  });
+  assert<Is<typeof ret3, ExpectedType>>();
+}
+
+// only captureOutput "arraybuffer", return type is stdout/stderr array buffer
+{
+  type ExpectedType = { stdout: ArrayBuffer; stderr: ArrayBuffer };
+
+  const ret1 = exec("blah", {
+    captureOutput: "arraybuffer",
+  });
+  assert<Is<typeof ret1, ExpectedType>>();
+
+  const ret2 = exec(["blah"], {
+    captureOutput: "arraybuffer",
+  });
+  assert<Is<typeof ret2, ExpectedType>>();
+
+  const ret3 = exec(["blah", "blah"], {
+    captureOutput: "arraybuffer",
   });
   assert<Is<typeof ret3, ExpectedType>>();
 }
@@ -314,6 +354,54 @@ import { assert, Is } from "typescript-assert-utils";
   assert<Is<typeof ret3, ExpectedType>>();
 }
 
+// other captureOutput/failOnNonZeroStatus combos
+
+{
+  type ExpectedType = { stdout: string; stderr: string };
+
+  const ret1 = exec("blah", {
+    captureOutput: "utf8",
+    failOnNonZeroStatus: true,
+  });
+  assert<Is<typeof ret1, ExpectedType>>();
+
+  const ret2 = exec(["blah"], {
+    captureOutput: "utf8",
+    failOnNonZeroStatus: true,
+  });
+  assert<Is<typeof ret2, ExpectedType>>();
+
+  const ret3 = exec(["blah", "blah"], {
+    captureOutput: "utf8",
+    failOnNonZeroStatus: true,
+  });
+  assert<Is<typeof ret3, ExpectedType>>();
+}
+
+// other captureOutput/failOnNonZeroStatus combos
+
+{
+  type ExpectedType = { stdout: ArrayBuffer; stderr: ArrayBuffer };
+
+  const ret1 = exec("blah", {
+    captureOutput: "arraybuffer",
+    failOnNonZeroStatus: true,
+  });
+  assert<Is<typeof ret1, ExpectedType>>();
+
+  const ret2 = exec(["blah"], {
+    captureOutput: "arraybuffer",
+    failOnNonZeroStatus: true,
+  });
+  assert<Is<typeof ret2, ExpectedType>>();
+
+  const ret3 = exec(["blah", "blah"], {
+    captureOutput: "arraybuffer",
+    failOnNonZeroStatus: true,
+  });
+  assert<Is<typeof ret3, ExpectedType>>();
+}
+
 // this combo of captureOutput and failOnNonZeroStatus results in
 // the larger return type
 {
@@ -345,6 +433,42 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret3 = exec(["blah", "blah"], {
     captureOutput: true,
+    failOnNonZeroStatus: false,
+  });
+  assert<Is<typeof ret3, ExpectedType>>();
+}
+
+// this combo of captureOutput and failOnNonZeroStatus results in
+// the larger return type
+{
+  type ExpectedType =
+    | {
+        stdout: ArrayBuffer;
+        stderr: ArrayBuffer;
+        status: number;
+        signal: undefined;
+      }
+    | {
+        stdout: ArrayBuffer;
+        stderr: ArrayBuffer;
+        status: undefined;
+        signal: number;
+      };
+
+  const ret1 = exec("blah", {
+    captureOutput: "arraybuffer",
+    failOnNonZeroStatus: false,
+  });
+  assert<Is<typeof ret1, ExpectedType>>();
+
+  const ret2 = exec(["blah"], {
+    captureOutput: "arraybuffer",
+    failOnNonZeroStatus: false,
+  });
+  assert<Is<typeof ret2, ExpectedType>>();
+
+  const ret3 = exec(["blah", "blah"], {
+    captureOutput: "arraybuffer",
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret3, ExpectedType>>();

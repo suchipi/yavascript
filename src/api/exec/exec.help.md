@@ -27,19 +27,20 @@ The intent is that it behaves similarly to what you would expect from a UNIX she
 
 `exec` also supports a second argument, an options object which supports the following keys (all are optional):
 
-| Property                      | Purpose                                                                                                                                                                 |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| cwd (string)                  | Sets the current working directory for the child process                                                                                                                |
-| env (object)                  | Sets environment variables within the process                                                                                                                           |
-| failOnNonZeroStatus (boolean) | Throws an `Error` when the child process exits with a non-zero exit status code. Defaults to `true`.                                                                    |
-| captureOutput (boolean)       | When `true`, stdout and stderr will be collected into strings and returned. When false, stdout and stderr will be attached to the calling process. Defaults to `false`. |
-| trace (function)              | a function which will be used to log info about the child process lifecycle, eg console.log. useful for debugging.                                                      |
+| Property                       | Purpose                                         |
+| ------------------------------ | ----------------------------------------------- |
+| cwd (string)                   | current working directory for the child process |
+| env (object)                   | environment variables for the process           |
+| failOnNonZeroStatus (boolean)  | whether to throw error on nonzero exit status   |
+| captureOutput (boolean/string) | controls how stdout/stderr is directed          |
+| trace (function)               | used to log info about the process execution    |
 
 The return value of `exec` varies depending on the options passed:
 
-- When `captureOutput` is true, an object will be returned with `stdout` and `stderr` properties, both strings.
+- When `captureOutput` is true or "utf-8", an object will be returned with `stdout` and `stderr` properties, both strings.
+- When `captureOutput` is "arraybuffer", an object will be returned with `stdout` and `stderr` properties, both `ArrayBuffer`s.
 - When `failOnNonZeroStatus` is false, an object will be returned with `status` (the exit code; number or undefined) and `signal` (the signal that killed the process; number or undefined).
-- When `captureOutput` is true and `failOnNonZeroStatus` is false, an object will be returned with four properties (the two associated with `failOnNonZeroStatus`, and the two associated with `status`).
+- When `captureOutput` is non-false and `failOnNonZeroStatus` is false, an object will be returned with four properties (the two associated with `failOnNonZeroStatus`, and the two associated with `captureOutput`).
 - When `captureOutput` is false or unspecified, and `failOnNonZeroStatus` is true or unspecified, undefined will be returned.
 
 ```ts
@@ -47,11 +48,20 @@ The return value of `exec` varies depending on the options passed:
 declare function exec(
   args: string | Array<string>,
   options?: {
+    /** Defaults to `pwd()` */
     cwd?: string;
+
+    /** Defaults to `env` */
     env?: { [key: string | number]: string | number | boolean };
+
+    /** Defaults to `undefined` */
     trace?: (...args: Array<any>) => void;
+
+    /** Defaults to true */
     failOnNonZeroStatus?: boolean;
-    captureOutput?: boolean;
+
+    /** Defaults to false */
+    captureOutput?: boolean | "utf8" | "arraybuffer";
   }
 );
 ```

@@ -666,31 +666,19 @@ declare type BaseExecOptions = {
   failOnNonZeroStatus?: boolean;
 
   /**
-   * If true, stdout and stderr will be collected into strings and returned
-   * instead of being printed to the screen.
+   * If true, stdout and stderr will be collected into strings or array buffers
+   * and returned instead of being printed to the screen.
    *
-   * Defaults to false.
+   * Defaults to false. true is an alias for "utf8".
    */
-  captureOutput?: boolean;
+  captureOutput?: boolean | "utf8" | "arraybuffer";
 };
 
 declare interface Exec {
   (
     args: Array<string> | string,
     options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
       failOnNonZeroStatus: true;
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
       captureOutput: false;
     }
   ): void;
@@ -698,19 +686,7 @@ declare interface Exec {
   (
     args: Array<string> | string,
     options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
       failOnNonZeroStatus: false;
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
       captureOutput: false;
     }
   ):
@@ -720,19 +696,7 @@ declare interface Exec {
   (
     args: Array<string> | string,
     options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
       failOnNonZeroStatus: true;
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
       captureOutput: true;
     }
   ): { stdout: string; stderr: string };
@@ -740,12 +704,22 @@ declare interface Exec {
   (
     args: Array<string> | string,
     options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
+      failOnNonZeroStatus: true;
+      captureOutput: "utf8";
+    }
+  ): { stdout: string; stderr: string };
+
+  (
+    args: Array<string> | string,
+    options: BaseExecOptions & {
+      failOnNonZeroStatus: true;
+      captureOutput: "arraybuffer";
+    }
+  ): { stdout: ArrayBuffer; stderr: ArrayBuffer };
+
+  (
+    args: Array<string> | string,
+    options: BaseExecOptions & {
       failOnNonZeroStatus: false;
       captureOutput: true;
     }
@@ -756,12 +730,36 @@ declare interface Exec {
   (
     args: Array<string> | string,
     options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
+      failOnNonZeroStatus: false;
+      captureOutput: "utf-8";
+    }
+  ):
+    | { stdout: string; stderr: string; status: number; signal: undefined }
+    | { stdout: string; stderr: string; status: undefined; signal: number };
+
+  (
+    args: Array<string> | string,
+    options: BaseExecOptions & {
+      failOnNonZeroStatus: false;
+      captureOutput: "arraybuffer";
+    }
+  ):
+    | {
+        stdout: ArrayBuffer;
+        stderr: ArrayBuffer;
+        status: number;
+        signal: undefined;
+      }
+    | {
+        stdout: ArrayBuffer;
+        stderr: ArrayBuffer;
+        status: undefined;
+        signal: number;
+      };
+
+  (
+    args: Array<string> | string,
+    options: BaseExecOptions & {
       failOnNonZeroStatus: true;
     }
   ): void;
@@ -769,12 +767,6 @@ declare interface Exec {
   (
     args: Array<string> | string,
     options: BaseExecOptions & {
-      /**
-       * Whether an Error should be thrown when the process exits with a nonzero
-       * status code.
-       *
-       * Defaults to true.
-       */
       failOnNonZeroStatus: false;
     }
   ):
@@ -784,12 +776,6 @@ declare interface Exec {
   (
     args: Array<string> | string,
     options: BaseExecOptions & {
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
       captureOutput: true;
     }
   ): { stdout: string; stderr: string };
@@ -797,12 +783,20 @@ declare interface Exec {
   (
     args: Array<string> | string,
     options: BaseExecOptions & {
-      /**
-       * If true, stdout and stderr will be collected into strings and returned
-       * instead of being printed to the screen.
-       *
-       * Defaults to false.
-       */
+      captureOutput: "utf8";
+    }
+  ): { stdout: string; stderr: string };
+
+  (
+    args: Array<string> | string,
+    options: BaseExecOptions & {
+      captureOutput: "arraybuffer";
+    }
+  ): { stdout: ArrayBuffer; stderr: ArrayBuffer };
+
+  (
+    args: Array<string> | string,
+    options: BaseExecOptions & {
       captureOutput: false;
     }
   ): void;
