@@ -7,13 +7,23 @@ import { makeErrorWithProperties } from "../../error-with-properties";
 
 type Hint = typeof String | typeof Boolean | typeof Number | typeof Path;
 
-// TODO: update clef-parse to support more flag formats
 export function parseScriptArgs(
   hints: { [key: string]: Hint } = {},
   args: Array<string> = scriptArgs.slice(2)
 ): {
   flags: { [key: string]: any };
   args: Array<string>;
+  metadata: {
+    keys: {
+      [key: string]: string | undefined;
+    };
+    hints: {
+      [key: string]: string | undefined;
+    };
+    guesses: {
+      [key: string]: string | undefined;
+    };
+  };
 } {
   assert.type(
     hints,
@@ -22,6 +32,7 @@ export function parseScriptArgs(
   );
 
   const hintsForClef: { [key: string]: clefParse.Hint } = {};
+  const pathKeys: Set<string> = new Set();
   for (const [key, value] of Object.entries(hints)) {
     if (typeof key !== "string") {
       throw makeErrorWithProperties(
@@ -42,6 +53,7 @@ export function parseScriptArgs(
       case Path: {
         // TODO: Path hint should return Path object in flags object instead of string
         hintsForClef[key] = clefParse.Path;
+        pathKeys.add(key);
         break;
       }
 
@@ -64,7 +76,7 @@ export function parseScriptArgs(
   // clef-parse calls `shift` on this
   const argsClone = args.slice();
 
-  const { options, positionalArgs } = clefParse.parseArgv(
+  const { options, positionalArgs, metadata } = clefParse.parseArgv(
     argsClone,
     hintsForClef,
     {
@@ -73,8 +85,17 @@ export function parseScriptArgs(
       getCwd: pwd,
     }
   );
+
+  const optionsClone = { ...options };
+  for (const key of pathKeys) {
+    if (Object.hasOwn(optionsClone, key)) {
+      optionsClone[key] = new Path(optionsClone[key]);
+    }
+  }
+
   return {
-    flags: options,
+    flags: optionsClone,
     args: positionalArgs,
+    metadata,
   };
 }

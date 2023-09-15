@@ -1,4 +1,4 @@
-const { flags, args } = parseScriptArgs(
+const { flags, args, metadata } = parseScriptArgs(
   {
     // Note that while `-v` is also a command-line script for yavascript itself
     // (which prints the yavascript version), you can still use it in your own
@@ -7,7 +7,7 @@ const { flags, args } = parseScriptArgs(
     v: Boolean,
     verbose: Boolean,
     hello: String,
-    input: parseScriptArgs.Path,
+    input: Path,
   },
   // This second argument is optional; in unspecified, it defaults to
   // `scriptArgs.slice(2)`. It's only shown here to demonstrate that it's
@@ -15,4 +15,4 @@ const { flags, args } = parseScriptArgs(
   scriptArgs.slice(2)
 );
 
-console.log({ flags, args });
+console.log({ flags, args, metadata });
