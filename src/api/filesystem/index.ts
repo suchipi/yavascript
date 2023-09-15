@@ -1,5 +1,6 @@
 export { ensureDir } from "./ensureDir";
 export { exists } from "./exists";
+export { isFile } from "./isFile";
 export { isDir } from "./isDir";
 export { isLink } from "./isLink";
 export { readFile } from "./readFile";

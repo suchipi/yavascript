@@ -120,6 +120,7 @@ test("globals", async () => {
     $ function
     ChildProcess function
     exists function
+    isFile function
     isDir function
     isLink function
     readFile function

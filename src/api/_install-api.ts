@@ -42,6 +42,7 @@ const execProps = makeGetterPropertyDescriptorMap({
 
 const filesystemProps = makeGetterPropertyDescriptorMap({
   exists: () => require("./filesystem").exists,
+  isFile: () => require("./filesystem").isFile,
   isDir: () => require("./filesystem").isDir,
   isLink: () => require("./filesystem").isLink,
   readFile: () => require("./filesystem").readFile,

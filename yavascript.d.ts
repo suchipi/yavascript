@@ -195,6 +195,11 @@ declare function writeFile(
 ): void;
 
 /**
+ * Function which returns true if the path points to a regular file.
+ */
+declare function isFile(path: string | Path): boolean;
+
+/**
  * Function which returns true if the path points to a directory, or if the
  * path points to a symlink which points to a directory. Otherwise, it returns
  * false.
