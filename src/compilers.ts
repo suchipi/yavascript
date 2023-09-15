@@ -42,9 +42,11 @@ function compileUsingSucrase(
   sucraseOptions.production = true;
 
   if (options?.expression) {
-    // TODO: sucrase doesn't have transform expression; would need to
-    // do parseExpression + transformAst + generate + get node from body's
-    // first expression statement.
+    // NOTE: sucrase doesn't have transform expression, and it doesn't have
+    // a babel-like AST representation internally that we could use to
+    // more-nicely transform an expression. Best we can do without forking it
+    // is wrap in parens to force "expression mode" and let it error
+    // accordingly if the thing was only valid syntax in a statement position.
     const result = getSucrase().transform("(" + code + ")", sucraseOptions);
     const withoutTrailingSemi = result.code.replace(/;$/, "");
     if (
