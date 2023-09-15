@@ -21,7 +21,7 @@ const includePaths = [
   path.resolve(
     process.cwd(),
     // NOTE: architecture doesn't actually matter here, as the dts files are always the same
-    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts"
+    "node_modules/@suchipi/quickjs/build/dts"
   ),
 ];
 

@@ -5171,6 +5171,10 @@ interface RequireFunction {
 
 declare var require: RequireFunction;
 
+interface ImportMeta {
+  require: RequireFunction;
+}
+
 declare var setTimeout: typeof import("quickjs:os").setTimeout;
 declare var clearTimeout: typeof import("quickjs:os").clearTimeout;
 
