@@ -50,7 +50,7 @@ export function patchRequire(theGlobal: typeof globalThis) {
   });
 }
 
-const CJS_RE = /exports\.\w|module\.exports/;
+const CJS_RE = /exports\.\w|module\.exports|Object\.defineProperty\(exports/;
 export function looksLikeCommonJS(code: string): boolean {
   return CJS_RE.test(code);
 }
