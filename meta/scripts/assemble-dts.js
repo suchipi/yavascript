@@ -18,11 +18,7 @@ globby.sync("./src/**/*.inc.d.ts").forEach((match) => {
 const includePaths = [
   ...dtsFolderPaths,
   path.resolve(process.cwd(), "src/templates"),
-  path.resolve(
-    process.cwd(),
-    // NOTE: architecture doesn't actually matter here, as the dts files are always the same
-    "node_modules/@suchipi/quickjs/build/dts"
-  ),
+  path.resolve(process.cwd(), "node_modules/@suchipi/quickjs/build/dts"),
 ];
 
 const includeRule = macaroni.makeIncludeRule(includePaths);
