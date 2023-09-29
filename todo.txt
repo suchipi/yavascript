@@ -7,3 +7,4 @@
 - [ ] make quoted accept Path objects
 - [ ] make ls, pwd, etc all return Path objects when possible
 - [ ] add something to make "this path but with a different extension" and "this path but swap the basedir from this to this" easier
+- [ ] finish all the help docs!!!
