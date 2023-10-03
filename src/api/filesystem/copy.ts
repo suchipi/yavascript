@@ -207,7 +207,7 @@ export function copy(
     case "file -> dir": {
       // Copy file into dir
       const filename = basename(from);
-      const target = Path.join(to, filename);
+      const target = Path.join(to, filename).toString();
       copyRaw(from, target, trace);
       return;
     }

@@ -74,7 +74,7 @@ class Path {
     return fallback;
   }
 
-  static join(...inputs: Array<string | Path | Array<string | Path>>): string {
+  static join(...inputs: Array<string | Path | Array<string | Path>>): Path {
     assert.type(
       inputs,
       types.arrayOf(
@@ -86,12 +86,10 @@ class Path {
       )
     );
 
-    return new Path(...inputs).toString();
+    return new Path(...inputs);
   }
 
-  static resolve(
-    ...inputs: Array<string | Path | Array<string | Path>>
-  ): string {
+  static resolve(...inputs: Array<string | Path | Array<string | Path>>): Path {
     assert.type(
       inputs,
       types.arrayOf(
@@ -103,12 +101,12 @@ class Path {
       )
     );
 
-    return new Path(...inputs).resolve().toString();
+    return new Path(...inputs).resolve();
   }
 
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
-  ): string {
+  ): Path {
     assert.type(
       inputs,
       types.arrayOf(
@@ -120,7 +118,7 @@ class Path {
       )
     );
 
-    return new Path(...inputs).normalize().toString();
+    return new Path(...inputs).normalize();
   }
 
   static isAbsolute(path: string | Path): boolean {

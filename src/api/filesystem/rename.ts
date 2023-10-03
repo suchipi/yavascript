@@ -1,6 +1,5 @@
 import * as os from "quickjs:os";
 import { Path } from "../path";
-import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
 import { setHelpText } from "../help";
@@ -20,16 +19,8 @@ export function rename(from: string | Path, to: string | Path): void {
     "'to' argument must be either a string or a Path object"
   );
 
-  if (is(from, types.Path)) {
-    from = from.toString();
-  }
-
-  if (is(to, types.Path)) {
-    to = to.toString();
-  }
-
-  from = Path.resolve(from);
-  to = Path.resolve(to);
+  from = Path.resolve(from).toString();
+  to = Path.resolve(to).toString();
 
   from = appendSlashIfWindowsDriveLetter(from);
   to = appendSlashIfWindowsDriveLetter(to);

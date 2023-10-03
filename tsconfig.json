@@ -13,6 +13,7 @@
     "target": "es2020",
     "module": "es2022",
     "outDir": "dist",
+    "skipLibCheck": true,
 
     "strict": true,
     "noImplicitAny": false,

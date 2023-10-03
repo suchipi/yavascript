@@ -38,7 +38,7 @@ export function ls(
     .filter((child) => child !== "." && child !== "..");
   if (!options.relativePaths) {
     const parent = os.realpath(dir);
-    children = children.map((child) => Path.join(parent, child));
+    children = children.map((child) => Path.join(parent, child).toString());
   }
 
   return children;

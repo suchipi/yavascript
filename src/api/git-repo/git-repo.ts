@@ -12,6 +12,7 @@ import commitSHAHelpText from "./git-repo_commitSHA.help.md";
 import branchNameHelpText from "./git-repo_branchName.help.md";
 import isIgnoredHelpText from "./git-repo_isIgnored.help.md";
 import isWorkingTreeDirtyHelpText from "./git-repo_isWorkingTreeDirty.help.md";
+import { is } from "../is";
 
 export class GitRepo {
   repoDir: Path;
@@ -150,7 +151,7 @@ export class GitRepo {
       "'path' argument must be either a string or a Path object"
     );
 
-    const resolvedPath = Path.resolve(pwd(), path);
+    const resolvedPath = Path.resolve(pwd(), path).toString();
     const repoDir = this.repoDir.toString();
 
     if (!resolvedPath.startsWith(repoDir)) {

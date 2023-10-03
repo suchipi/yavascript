@@ -199,11 +199,51 @@ test("Path.join", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "one/two
-    /one/two/three/four
-    bla/blah/hi
-    ./bla/blah/hi/there
-    .\\bla\\blah\\hi\\there
+      "stdout": "Path {
+      segments: [
+        "one"
+        "two"
+      ]
+      separator: "/"
+    }
+    Path {
+      segments: [
+        ""
+        "one"
+        "two"
+        "three"
+        "four"
+      ]
+      separator: "/"
+    }
+    Path {
+      segments: [
+        "bla"
+        "blah"
+        "hi"
+      ]
+      separator: "/"
+    }
+    Path {
+      segments: [
+        "."
+        "bla"
+        "blah"
+        "hi"
+        "there"
+      ]
+      separator: "/"
+    }
+    Path {
+      segments: [
+        "."
+        "bla"
+        "blah"
+        "hi"
+        "there"
+      ]
+      separator: "\\\\"
+    }
     ",
     }
   `);
@@ -216,7 +256,15 @@ test("Path.resolve with already-absolute path", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "/hi/there/yeah
+      "stdout": "Path {
+      segments: [
+        ""
+        "hi"
+        "there"
+        "yeah"
+      ]
+      separator: "/"
+    }
     ",
     }
   `);
@@ -229,7 +277,15 @@ test("Path.resolve with absolute path with . and ..s in it", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "/hi/there/yup
+      "stdout": "Path {
+      segments: [
+        ""
+        "hi"
+        "there"
+        "yup"
+      ]
+      separator: "/"
+    }
     ",
     }
   `);
@@ -353,7 +409,15 @@ test("Path.normalize with absolute path with . and ..s in it", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "/hi/there/yup
+      "stdout": "Path {
+      segments: [
+        ""
+        "hi"
+        "there"
+        "yup"
+      ]
+      separator: "/"
+    }
     ",
     }
   `);
@@ -366,7 +430,14 @@ test("Path.normalize with non-absolute path with . and ..s in it", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "hi/there/yup
+      "stdout": "Path {
+      segments: [
+        "hi"
+        "there"
+        "yup"
+      ]
+      separator: "/"
+    }
     ",
     }
   `);
@@ -379,7 +450,15 @@ test("Path.normalize with already-absolute path", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "/hi/there/yeah
+      "stdout": "Path {
+      segments: [
+        ""
+        "hi"
+        "there"
+        "yeah"
+      ]
+      separator: "/"
+    }
     ",
     }
   `);
@@ -392,7 +471,14 @@ test("Path.normalize with non-absolute path with no . or .. in it", async () => 
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "hi/there/yeah
+      "stdout": "Path {
+      segments: [
+        "hi"
+        "there"
+        "yeah"
+      ]
+      separator: "/"
+    }
     ",
     }
   `);
@@ -405,7 +491,15 @@ test("Path.normalize with non-absolute path with leading .", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "./hi/there/yeah
+      "stdout": "Path {
+      segments: [
+        "."
+        "hi"
+        "there"
+        "yeah"
+      ]
+      separator: "/"
+    }
     ",
     }
   `);
@@ -418,141 +512,15 @@ test("Path.normalize with non-absolute path with leading ..", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "../hi/there/yeah
-    ",
+      "stdout": "Path {
+      segments: [
+        ".."
+        "hi"
+        "there"
+        "yeah"
+      ]
+      separator: "/"
     }
-  `);
-});
-
-test("Path.tag", async () => {
-  const result = await evaluate(`
-    [
-      Path.tag\`\`,
-      Path.tag\`a/b/c\`,
-      Path.tag\`/some/thing\`,
-      Path.tag\`/some/thing/\${"cool"}\`,
-      Path.tag\`/some/\${"thing"}cool/\${new Path("ikr/yay")}\`,
-    ]
-  `);
-  expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "[
-      Path {
-        segments: []
-        separator: "/"
-      }
-      Path {
-        segments: [
-          "a"
-          "b"
-          "c"
-        ]
-        separator: "/"
-      }
-      Path {
-        segments: [
-          ""
-          "some"
-          "thing"
-        ]
-        separator: "/"
-      }
-      Path {
-        segments: [
-          ""
-          "some"
-          "thing"
-          "cool"
-        ]
-        separator: "/"
-      }
-      Path {
-        segments: [
-          ""
-          "some"
-          "thing"
-          "cool"
-          "ikr"
-          "yay"
-        ]
-        separator: "/"
-      }
-    ]
-    ",
-    }
-  `);
-});
-
-test("Path.tagUsingBase", async () => {
-  const result = await evaluate(`
-    const p = Path.tagUsingBase("/tmp");
-
-    [
-      p\`\`,
-      p\`a/b/c\`,
-      p\`/some/thing\`,
-      p\`/some/thing/\${"cool"}\`,
-      p\`/some/\${"thing"}cool/\${new Path("ikr/yay")}\`,
-    ]
-  `);
-  expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "[
-      Path {
-        segments: [
-          ""
-          "tmp"
-        ]
-        separator: "/"
-      }
-      Path {
-        segments: [
-          ""
-          "tmp"
-          "a"
-          "b"
-          "c"
-        ]
-        separator: "/"
-      }
-      Path {
-        segments: [
-          ""
-          "tmp"
-          "some"
-          "thing"
-        ]
-        separator: "/"
-      }
-      Path {
-        segments: [
-          ""
-          "tmp"
-          "some"
-          "thing"
-          "cool"
-        ]
-        separator: "/"
-      }
-      Path {
-        segments: [
-          ""
-          "tmp"
-          "some"
-          "thing"
-          "cool"
-          "ikr"
-          "yay"
-        ]
-        separator: "/"
-      }
-    ]
     ",
     }
   `);

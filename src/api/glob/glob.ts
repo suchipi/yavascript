@@ -153,7 +153,7 @@ export function glob(
     throw new Error(`No such directory: ${dir} (from ${pwd()})`);
   }
 
-  const startingDir = Path.resolve(dir);
+  const startingDir = Path.resolve(dir).toString();
   const allPatterns = patternsArray.map((pattern) => {
     return {
       negated: pattern.startsWith("!"),

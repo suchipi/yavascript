@@ -327,16 +327,14 @@ declare class Path {
   ): string | Fallback;
 
   /** Join together one or more paths. */
-  static join(...inputs: Array<string | Path | Array<string | Path>>): string;
+  static join(...inputs: Array<string | Path | Array<string | Path>>): Path;
 
   /**
    * Turns the input path(s) into an absolute path by resolving all `.` and `..`
    * segments, using `pwd()` as a base dir to use when resolving leading `.` or
    * `..` segments.
    */
-  static resolve(
-    ...inputs: Array<string | Path | Array<string | Path>>
-  ): string;
+  static resolve(...inputs: Array<string | Path | Array<string | Path>>): Path;
 
   /**
    * Concatenates the input path(s) and then resolves all non-leading `.` and
@@ -344,7 +342,7 @@ declare class Path {
    */
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
-  ): string;
+  ): Path;
 
   /**
    * Return whether the provided path is absolute; that is, whether it
