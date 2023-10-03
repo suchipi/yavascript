@@ -6,7 +6,7 @@ declare function stripAnsi(input: string): string;
 /**
  * Wrap a string in double quotes, and escape any double-quotes inside using `\"`.
  */
-declare function quote(input: string): string;
+declare function quote(input: string | Path): string;
 
 // Colors
 

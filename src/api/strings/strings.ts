@@ -8,8 +8,15 @@ import { types } from "../types";
 
 export { stripAnsi };
 
-export const quote = (str: string) => {
-  assert.type(str, types.string, "'str' argument must be a string");
+export const quote = (str: string | Path) => {
+  assert.type(
+    str,
+    types.or(types.string, types.Path),
+    "'str' argument must be a string or Path"
+  );
+  if (typeof str !== "string") {
+    str = str.toString();
+  }
   return JSON.stringify(str);
 };
 
