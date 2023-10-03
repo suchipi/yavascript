@@ -4,6 +4,7 @@ import { types } from "../types";
 import { is } from "../is";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import { appendSlashIfWindowsDriveLetter } from "./_win32Helpers";
+import { quote } from "../strings";
 
 function validateSegments(
   segments: Array<string>,
@@ -226,24 +227,21 @@ class Path {
     return path;
   }
 
-  resolve(from: string | Path = os.getcwd()): Path {
-    assert.type(from, types.or(types.string, types.Path));
+  resolve(...subpaths: Array<string | Path>): Path {
+    assert.type(subpaths, types.arrayOf(types.or(types.string, types.Path)));
 
-    if (this.isAbsolute()) {
-      return this.normalize();
-    }
-
-    const fromPath = typeof from === "string" ? new Path(from) : from;
-    const result = fromPath.concat(this).normalize();
+    const result = this.concat(subpaths).normalize();
     if (!result.isAbsolute()) {
       throw makeErrorWithProperties(
-        `Could not resolve ${this.toString()} from ${fromPath.toString()}`,
+        `.resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'.`,
         {
-          this: this.toString(),
-          from: fromPath.toString(),
+          this: this,
+          subpaths,
+          result,
         }
       );
     }
+
     return result;
   }
 
@@ -284,17 +282,19 @@ class Path {
     return Path.from(newSegments, this.separator);
   }
 
-  concat(other: string | Path | Array<string | Path>): Path {
+  concat(...others: Array<string | Path | Array<string | Path>>): Path {
     assert.type(
-      other,
-      types.or(
-        types.string,
-        types.Path,
-        types.arrayOf(types.or(types.string, types.Path))
+      others,
+      types.arrayOf(
+        types.or(
+          types.string,
+          types.Path,
+          types.arrayOf(types.or(types.string, types.Path))
+        )
       )
     );
 
-    const otherSegments = new Path(other).segments;
+    const otherSegments = new Path(others.flat(1)).segments;
     return Path.from(this.segments.concat(otherSegments), this.separator);
   }
 

@@ -84,13 +84,11 @@ declare class Path {
   static from(segments: Array<string>, separator: string): Path;
 
   /**
-   * Turn this path into an absolute path by resolving all `.` and `..`
-   * segments, using `from` as a base dir to use when resolving leading `.` or
-   * `..` segments.
-   *
-   * If `from` is unspecified, it defaults to `pwd()`.
+   * Create an absolute path by `concat`ting `subpaths` onto this Path (which is
+   * presumed to be an absolute path) and then using `normalize()` on the
+   * result. If the result is not an absolute path, an error will be thrown.
    */
-  resolve(from?: string | Path): Path;
+  resolve(...subpaths: Array<string | Path>): Path;
 
   /**
    * Resolve all non-leading `.` and `..` segments in this path.
@@ -98,21 +96,22 @@ declare class Path {
   normalize(): Path;
 
   /**
-   * Create a new path by appending another path's segments after this path's
-   * segments.
+   * Create a new Path by appending additional path segments onto the end of
+   * this Path's segments.
    *
    * The returned path will use this path's separator.
    */
-  concat(other: string | Path | Array<string | Path>): Path;
+  concat(...other: Array<string | Path | Array<string | Path>>): Path;
 
   /**
    * Return whether this path is absolute; that is, whether it starts with
-   * either `/` or a drive letter (ie `C:`).
+   * either `/`, `\`, or a drive letter (ie `C:`).
    */
   isAbsolute(): boolean;
 
   /**
-   * Make a second Path object containing the same information as this one.
+   * Make a second Path object containing the same segments and separator as
+   * this one.
    */
   clone(): this;
 
@@ -139,7 +138,8 @@ declare class Path {
   toString(): string;
 
   /**
-   * Alias for `toString`; causes Path objects to be serialized as strings.
+   * Alias for `toString`; causes Path objects to be serialized as strings when
+   * they (or an object referencing them) are passed into JSON.stringify.
    */
   toJSON(): string;
 }

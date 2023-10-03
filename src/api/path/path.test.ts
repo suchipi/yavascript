@@ -241,11 +241,33 @@ test("Path.resolve with non-absolute path with leading .", async () => {
   });
   expect(result).toMatchInlineSnapshot(`
     {
-      "code": 0,
+      "code": 1,
       "error": false,
-      "stderr": "",
-      "stdout": "/usr/hi/there/yeah
+      "stderr": "Error: .resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'. (this = Path { segments: […] separator: "/" }, subpaths = [], result = Path { segments: […] separator: "/" })
+      at somewhere
+    {
+      this: Path {
+        segments: [
+          "."
+          "hi"
+          "there"
+          "yeah"
+        ]
+        separator: "/"
+      }
+      subpaths: []
+      result: Path {
+        segments: [
+          "."
+          "hi"
+          "there"
+          "yeah"
+        ]
+        separator: "/"
+      }
+    }
     ",
+      "stdout": "",
     }
   `);
 });
@@ -256,11 +278,33 @@ test("Path.resolve with non-absolute path with leading ..", async () => {
   });
   expect(result).toMatchInlineSnapshot(`
     {
-      "code": 0,
+      "code": 1,
       "error": false,
-      "stderr": "",
-      "stdout": "/hi/there/yeah
+      "stderr": "Error: .resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'. (this = Path { segments: […] separator: "/" }, subpaths = [], result = Path { segments: […] separator: "/" })
+      at somewhere
+    {
+      this: Path {
+        segments: [
+          ".."
+          "hi"
+          "there"
+          "yeah"
+        ]
+        separator: "/"
+      }
+      subpaths: []
+      result: Path {
+        segments: [
+          ".."
+          "hi"
+          "there"
+          "yeah"
+        ]
+        separator: "/"
+      }
+    }
     ",
+      "stdout": "",
     }
   `);
 });
@@ -273,11 +317,28 @@ test("Path.resolve with unresolvable path (leading ..)", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Could not resolve ../hi/there/yeah from / (this = "../hi/there/yeah", from = "/")
+      "stderr": "Error: .resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'. (this = Path { segments: […] separator: "/" }, subpaths = [], result = Path { segments: […] separator: "/" })
       at somewhere
     {
-      this: "../hi/there/yeah"
-      from: "/"
+      this: Path {
+        segments: [
+          ".."
+          "hi"
+          "there"
+          "yeah"
+        ]
+        separator: "/"
+      }
+      subpaths: []
+      result: Path {
+        segments: [
+          ".."
+          "hi"
+          "there"
+          "yeah"
+        ]
+        separator: "/"
+      }
     }
     ",
       "stdout": "",
