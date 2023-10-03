@@ -133,63 +133,6 @@ class Path {
     }
   }
 
-  static tag(
-    _strings: TemplateStringsArray,
-    ..._values: ReadonlyArray<string | Path | Array<string | Path>>
-  ) {
-    assert.type(_strings, types.arrayOf(types.string));
-    assert.type(
-      _values,
-      types.arrayOf(
-        types.or(
-          types.string,
-          types.Path,
-          types.arrayOf(types.or(types.string, types.Path))
-        )
-      )
-    );
-
-    // clone both arrays so we can `.shift()` from them without worry of
-    // mutating the original inputs
-    const strings = [..._strings];
-    const values = [..._values];
-
-    const zipped: Array<string | Path | Array<string | Path>> = [];
-
-    let sourceIsStrings = true;
-    while (strings.length + values.length > 0) {
-      const next = sourceIsStrings ? strings.shift() : values.shift();
-      if (next != null) {
-        zipped.push(next);
-      }
-      sourceIsStrings = !sourceIsStrings;
-    }
-
-    if (zipped[0] === "") {
-      zipped.shift();
-    }
-
-    return new Path(...zipped);
-  }
-
-  static tagUsingBase(dir: string | Path): typeof Path.tag {
-    assert.type(dir, types.or(types.string, types.Path));
-
-    const ret = (strings, ...values) => {
-      const stringsClone = Object.assign([...strings], {
-        raw: [...strings.raw],
-      });
-      stringsClone[0] = Path.join(dir, strings[0]);
-      stringsClone.raw[0] = Path.join(dir, strings.raw[0]);
-      return Path.tag(stringsClone, ...values);
-    };
-    Object.defineProperty(ret, "name", {
-      value: `tagUsingBase(${dir})`,
-      configurable: true,
-    });
-    return ret;
-  }
-
   segments: Array<string>;
   separator: string;
 
