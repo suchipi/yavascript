@@ -36,7 +36,7 @@ export default async function runFileTarget(
     ? fileToRun
     : fileToRun.match(/^\.{1,2}\//)
     ? std.resolveModule(fileToRun, "./<cwd>")
-    : Path.join(pwd(), fileToRun);
+    : Path.join(pwd(), fileToRun).toString();
 
   if (langOverride != null) {
     const compiler = langToCompiler(langOverride);

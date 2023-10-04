@@ -2,7 +2,7 @@ import * as os from "quickjs:os";
 import { Path } from "./api/path";
 import { env } from "./api/env";
 
-export const getConfigDir = (): string | null => {
+export const getConfigDir = (): Path | null => {
   const { HOME, APPDATA, XDG_CONFIG_HOME } = env;
 
   if (os.platform === "win32") {

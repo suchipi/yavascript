@@ -10,7 +10,11 @@ function nodeModulePaths(dir: string) {
 
   const dirs: Array<string> = [];
   parts.forEach((part, index, all) => {
-    const dir = Path.join(...parts.slice(0, index + 1), "node_modules");
+    const dir = Path.join(
+      ...parts.slice(0, index + 1),
+      "node_modules"
+    ).toString();
+
     dirs.push(dir);
   });
 
@@ -82,19 +86,21 @@ export function installModuleHooks(mod: typeof Module) {
     const basedir = dirname(fromFile) || os.getcwd();
     const parts = Path.splitToSegments(name);
     if (parts[0] === "." || parts[0] === "..") {
-      const paths = potentialFilesForPath(Path.join(basedir, ...parts));
+      const paths = potentialFilesForPath(
+        Path.join(basedir, ...parts).toString()
+      );
       for (const path of paths) {
         if (isFile(path)) {
-          return os.realpath(path);
+          return os.realpath(path.toString());
         }
       }
     } else {
       // find node module
       for (const nmPath of nodeModulePaths(basedir)) {
-        const paths = potentialFilesForPath(Path.join(nmPath, name));
+        const paths = potentialFilesForPath(Path.join(nmPath, name).toString());
         for (const path of paths) {
           if (isFile(path)) {
-            return os.realpath(path);
+            return os.realpath(path.toString());
           }
         }
       }
