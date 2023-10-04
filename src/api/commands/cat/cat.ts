@@ -25,3 +25,5 @@ export function cat(...paths: Array<string | Path>): string {
 }
 
 setHelpText(cat, catHelp);
+
+// TODO: ArrayBuffer return value. `cat.raw()`?
