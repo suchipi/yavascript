@@ -6,25 +6,6 @@ const fileContentFixturesDir = path.join(
   "src/test_fixtures/file_content"
 );
 
-test("cat - single file - prints to stdout", async () => {
-  const result = await evaluate(
-    `
-    cat('hello.txt');
-    void 0;
-  `,
-    { cwd: fileContentFixturesDir }
-  );
-  expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "hello, world!!! :D
-    あ",
-    }
-  `);
-});
-
 test("cat - single file - returns string", async () => {
   const result = await evaluate(
     `
@@ -40,29 +21,7 @@ test("cat - single file - returns string", async () => {
       "stderr": "hello, world!!! :D
     あ
     ",
-      "stdout": "hello, world!!! :D
-    あ",
-    }
-  `);
-});
-
-test("cat - multiple files - prints to stdout", async () => {
-  const result = await evaluate(
-    `
-    cat('hello.txt', 'hello2.txt');
-    void 0;
-  `,
-    { cwd: fileContentFixturesDir }
-  );
-
-  expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "hello, world!!! :D
-    あtrailing newline incoming
-    ",
+      "stdout": "",
     }
   `);
 });
@@ -83,9 +42,7 @@ test("cat - multiple files - returns string", async () => {
     あtrailing newline incoming
 
     ",
-      "stdout": "hello, world!!! :D
-    あtrailing newline incoming
-    ",
+      "stdout": "",
     }
   `);
 });

@@ -20,7 +20,6 @@ export function cat(...paths: Array<string | Path>): string {
 
     const newContent = std.loadFile(path);
     content += newContent;
-    std.out.puts(newContent);
   }
   return content;
 }
