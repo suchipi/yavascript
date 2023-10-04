@@ -6,5 +6,5 @@ Provides the same functionality as the unix binary of the same name.
 
 ```ts
 // Defined in yavascript/src/api/commands/dirname
-declare function dirname(path: string | Path): string;
+declare function dirname(path: string | Path): Path;
 ```

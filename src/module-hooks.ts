@@ -83,7 +83,7 @@ export function installModuleHooks(mod: typeof Module) {
       return name;
     }
 
-    const basedir = dirname(fromFile) || os.getcwd();
+    const basedir = dirname(fromFile).toString() || os.getcwd();
     const parts = Path.splitToSegments(name);
     if (parts[0] === "." || parts[0] === "..") {
       const paths = potentialFilesForPath(

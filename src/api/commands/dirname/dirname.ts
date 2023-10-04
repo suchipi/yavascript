@@ -3,7 +3,7 @@ import { is } from "../../is";
 import { setHelpText } from "../../help";
 import dirnameHelpText from "./dirname.help.md";
 
-export function dirname(path: string | Path) {
+export function dirname(path: string | Path): Path {
   let pathObj: Path;
 
   if (is(path, types.Path)) {
@@ -18,7 +18,7 @@ export function dirname(path: string | Path) {
 
   pathObj.segments.pop();
 
-  return pathObj.toString();
+  return pathObj;
 }
 
 setHelpText(dirname, dirnameHelpText);

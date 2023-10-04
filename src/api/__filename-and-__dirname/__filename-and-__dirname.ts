@@ -34,5 +34,5 @@ export function get__dirname(depth: number): string {
   }
 
   const ret = dirname(filename);
-  return wrappedString(ret, dirnameHelp);
+  return wrappedString(ret.toString(), dirnameHelp);
 }
