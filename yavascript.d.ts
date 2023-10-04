@@ -443,6 +443,18 @@ declare class Path {
    * they (or an object referencing them) are passed into JSON.stringify.
    */
   toJSON(): string;
+
+  /**
+   * Return the final path segment of this path. If this path has no path
+   * segments, the empty string is returned.
+   */
+  basename(): string;
+
+  /**
+   * Return the trailing extensionof this path. The `options` parameter works
+   * the same as the global `extname`'s `options` parameter.
+   */
+  extname(options?: { full?: boolean }): string;
 }
 
 /**
@@ -550,14 +562,8 @@ declare function extname(
 /**
  * Returns the contents of a directory, as absolute paths. `.` and `..` are
  * omitted.
- *
- * Use the `relativePaths` option to get relative paths instead (relative to
- * the parent directory).
  */
-declare function ls(
-  dir?: string | Path,
-  options?: { relativePaths?: boolean }
-): Array<string>;
+declare function ls(dir?: string | Path): Array<Path>;
 
 /**
  * Print data to stdout using C-style format specifiers.

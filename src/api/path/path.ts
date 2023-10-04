@@ -4,7 +4,7 @@ import { types } from "../types";
 import { is } from "../is";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import { appendSlashIfWindowsDriveLetter } from "./_win32Helpers";
-import { quote } from "../strings";
+import { extname } from "../commands/extname";
 
 function validateSegments(
   segments: Array<string>,
@@ -252,7 +252,8 @@ class Path {
     return false;
   }
 
-  clone() {
+  clone(): this {
+    // @ts-ignore could be instantiated with different subtype
     return (this.constructor as typeof Path).from(
       this.segments,
       this.separator
@@ -287,7 +288,7 @@ class Path {
     }
   }
 
-  toString() {
+  toString(): string {
     let result = this.segments.join(this.separator);
     if (result == "") {
       return "/";
@@ -297,8 +298,16 @@ class Path {
     }
   }
 
-  toJSON() {
+  toJSON(): string {
     return this.toString();
+  }
+
+  basename(): string {
+    return this.segments.at(-1) || "";
+  }
+
+  extname(options: { full?: boolean } = {}): string {
+    return extname(this, options);
   }
 }
 

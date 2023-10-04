@@ -8,10 +8,7 @@ import { setHelpText } from "../../help";
 import lsHelpText from "./ls.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
-export function ls(
-  dir: string | Path = pwd(),
-  options: { relativePaths?: boolean } = { relativePaths: false }
-): Array<string> {
+export function ls(dir: string | Path = pwd()): Array<Path> {
   if (is(dir, types.Path)) {
     dir = dir.toString();
   }
@@ -24,22 +21,18 @@ export function ls(
 
   dir = appendSlashIfWindowsDriveLetter(dir);
 
-  assert.type(
-    options,
-    Object,
-    "'options' argument must be either an object or undefined"
-  );
-
   if (!isDir(dir)) {
     throw new Error(`Not a directory: ${dir}`);
   }
+
+  const parent = os.realpath(dir);
+
   let children = os
     .readdir(dir)
-    .filter((child) => child !== "." && child !== "..");
-  if (!options.relativePaths) {
-    const parent = os.realpath(dir);
-    children = children.map((child) => Path.join(parent, child).toString());
-  }
+    .filter((child) => child !== "." && child !== "..")
+    .map((child) => {
+      return Path.join(parent, child);
+    });
 
   return children;
 }
