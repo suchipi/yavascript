@@ -3,39 +3,32 @@ import { makeGetterPropertyDescriptorMap } from "../../lazy-load";
 export default makeGetterPropertyDescriptorMap(
   {
     mkdir() {
-      throw new Error(
-        "'mkdir' is not part of the yavascript API. Use 'ensureDir' instead"
+      throw new ReferenceError(
+        "'mkdir' is not defined. Did you mean 'ensureDir'?"
       );
     },
     cp() {
-      throw new Error(
-        "'cp' is not part of the yavascript API. Use 'copy' instead"
-      );
+      throw new ReferenceError("'cp' is not defined. Did you mean 'copy'?");
     },
     mv() {
-      throw new Error(
-        "'mv' is not part of the yavascript API. Use 'rename' instead"
-      );
+      throw new ReferenceError("'mv' is not defined. Did you mean 'rename'?");
     },
     ren() {
-      throw new Error(
-        "'ren' is not part of the yavascript API. Use 'rename' instead"
-      );
+      throw new ReferenceError("'ren' is not defined. Did you mean 'rename'?");
     },
     rm() {
-      throw new Error(
-        "'rm' is not part of the yavascript API. Use 'remove' instead"
-      );
+      throw new ReferenceError("'rm' is not defined. Did you mean 'remove'?");
     },
     grep() {
-      throw new Error(
-        "'grep', as a global function, is not part of the yavascript API. Use 'grepFile', 'grepString', or String.prototype.grep instead"
+      throw new ReferenceError(
+        "'grep' is not defined. Maybe you want 'grepFile', 'grepString', or 'String.prototype.grep'?"
       );
     },
     man() {
-      throw new Error(
-        "'man' is not part of the yavascript API. Use 'help' instead"
-      );
+      throw new ReferenceError("'man' is not defined. Did you mean 'help'?");
+    },
+    cwd() {
+      throw new ReferenceError("'cwd' is not defined. Did you mean 'pwd'?");
     },
   },
   false
