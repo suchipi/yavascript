@@ -114,6 +114,7 @@ test("globals", async () => {
     rm throws error
     grep throws error
     man throws error
+    cwd throws error
     FILE throws error
     env object
     exec function
