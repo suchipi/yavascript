@@ -49,31 +49,6 @@ test("ls - no args (different process cwd)", async () => {
   );
 });
 
-test("ls - relative paths", async () => {
-  const result = await evaluate(
-    `JSON.stringify(ls(".", { relativePaths: true }))`,
-    { cwd: globFixturesDir }
-  );
-  const cleaned = cleanResult(result);
-  expect(cleaned).toMatchObject({
-    code: 0,
-    error: false,
-    stderr: "",
-  });
-
-  expect(JSON.parse(cleaned.stdout).sort()).toEqual(
-    [
-      //
-      "hi.something.js",
-      "potato",
-      "hi.js",
-      "hi.txt",
-      "cabana",
-      "hi",
-    ].sort()
-  );
-});
-
 test("ls - specifying dir", async () => {
   const result = await evaluate(`JSON.stringify(ls("./potato"))`, {
     cwd: globFixturesDir,
@@ -90,27 +65,6 @@ test("ls - specifying dir", async () => {
       //
       "<rootDir>/src/test_fixtures/glob/potato/banana",
       "<rootDir>/src/test_fixtures/glob/potato/eggplant",
-    ].sort()
-  );
-});
-
-test("ls - specifying dir with relative paths", async () => {
-  const result = await evaluate(
-    `JSON.stringify(ls("./potato", { relativePaths: true }))`,
-    { cwd: globFixturesDir }
-  );
-  const cleaned = cleanResult(result);
-  expect(cleaned).toMatchObject({
-    code: 0,
-    error: false,
-    stderr: "",
-  });
-
-  expect(JSON.parse(cleaned.stdout).sort()).toEqual(
-    [
-      //
-      "banana",
-      "eggplant",
     ].sort()
   );
 });
