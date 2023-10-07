@@ -1,12 +1,11 @@
 - [ ] set import.meta.main correctly (will need change in quickjs to support this)
-- [ ] add .makeRelative(other) method to Path (inverse of .relativeTo)
 - [ ] add path-less-traveled-style pathMarker functionality to Path
 - [ ] move all of exec and ChildProcess's string/Path/Array/number handling into parseArgString
 - [ ] expose exec's arg-string-to-array parsing function, for forwarding to 'concurrently', 'nodemon', etc
-- [ ] accept Path objects in exec array
-- [ ] make static Path methods return Paths instead of strings
-- [ ] make quoted accept Path objects
-- [ ] make ls, pwd, etc all return Path objects when possible
+- [x] accept Path objects in exec array
+- [x] make static Path methods return Paths instead of strings
+- [x] make quote accept Path objects
+- [x] make ls, pwd, etc all return Path objects when possible
 - [ ] add something to make "this path but with a different extension" and "this path but swap the basedir from this to this" easier
 - [ ] finish all the help docs!!!
 - [ ] spicy: override types for string-receiving methods to accept anything that can be converted to a string (if quickjs converts it)
