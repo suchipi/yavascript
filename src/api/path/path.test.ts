@@ -1,4 +1,4 @@
-import { evaluate } from "../../test-helpers";
+import { evaluate, rootDir } from "../../test-helpers";
 
 test("Path.OS_SEGMENT_SEPARATOR", async () => {
   const result = await evaluate(`Path.OS_SEGMENT_SEPARATOR`);
@@ -199,51 +199,11 @@ test("Path.join", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        "one"
-        "two"
-      ]
-      separator: "/"
-    }
-    Path {
-      segments: [
-        ""
-        "one"
-        "two"
-        "three"
-        "four"
-      ]
-      separator: "/"
-    }
-    Path {
-      segments: [
-        "bla"
-        "blah"
-        "hi"
-      ]
-      separator: "/"
-    }
-    Path {
-      segments: [
-        "."
-        "bla"
-        "blah"
-        "hi"
-        "there"
-      ]
-      separator: "/"
-    }
-    Path {
-      segments: [
-        "."
-        "bla"
-        "blah"
-        "hi"
-        "there"
-      ]
-      separator: "\\\\"
-    }
+      "stdout": "Path { one/two }
+    Path { /one/two/three/four }
+    Path { bla/blah/hi }
+    Path { ./bla/blah/hi/there }
+    Path { .\\bla\\blah\\hi\\there }
     ",
     }
   `);
@@ -256,15 +216,7 @@ test("Path.resolve with already-absolute path", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        ""
-        "hi"
-        "there"
-        "yeah"
-      ]
-      separator: "/"
-    }
+      "stdout": "Path { /hi/there/yeah }
     ",
     }
   `);
@@ -277,15 +229,7 @@ test("Path.resolve with absolute path with . and ..s in it", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        ""
-        "hi"
-        "there"
-        "yup"
-      ]
-      separator: "/"
-    }
+      "stdout": "Path { /hi/there/yup }
     ",
     }
   `);
@@ -299,28 +243,12 @@ test("Path.resolve with non-absolute path with leading .", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: .resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'. (this = Path { segments: […] separator: "/" }, subpaths = [], result = Path { segments: […] separator: "/" })
+      "stderr": "Error: .resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'. (this = Path { ./hi/there/yeah }, subpaths = [], result = Path { ./hi/there/yeah })
       at somewhere
     {
-      this: Path {
-        segments: [
-          "."
-          "hi"
-          "there"
-          "yeah"
-        ]
-        separator: "/"
-      }
+      this: Path { ./hi/there/yeah }
       subpaths: []
-      result: Path {
-        segments: [
-          "."
-          "hi"
-          "there"
-          "yeah"
-        ]
-        separator: "/"
-      }
+      result: Path { ./hi/there/yeah }
     }
     ",
       "stdout": "",
@@ -336,28 +264,12 @@ test("Path.resolve with non-absolute path with leading ..", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: .resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'. (this = Path { segments: […] separator: "/" }, subpaths = [], result = Path { segments: […] separator: "/" })
+      "stderr": "Error: .resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'. (this = Path { ../hi/there/yeah }, subpaths = [], result = Path { ../hi/there/yeah })
       at somewhere
     {
-      this: Path {
-        segments: [
-          ".."
-          "hi"
-          "there"
-          "yeah"
-        ]
-        separator: "/"
-      }
+      this: Path { ../hi/there/yeah }
       subpaths: []
-      result: Path {
-        segments: [
-          ".."
-          "hi"
-          "there"
-          "yeah"
-        ]
-        separator: "/"
-      }
+      result: Path { ../hi/there/yeah }
     }
     ",
       "stdout": "",
@@ -373,28 +285,12 @@ test("Path.resolve with unresolvable path (leading ..)", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: .resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'. (this = Path { segments: […] separator: "/" }, subpaths = [], result = Path { segments: […] separator: "/" })
+      "stderr": "Error: .resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'. (this = Path { ../hi/there/yeah }, subpaths = [], result = Path { ../hi/there/yeah })
       at somewhere
     {
-      this: Path {
-        segments: [
-          ".."
-          "hi"
-          "there"
-          "yeah"
-        ]
-        separator: "/"
-      }
+      this: Path { ../hi/there/yeah }
       subpaths: []
-      result: Path {
-        segments: [
-          ".."
-          "hi"
-          "there"
-          "yeah"
-        ]
-        separator: "/"
-      }
+      result: Path { ../hi/there/yeah }
     }
     ",
       "stdout": "",
@@ -409,15 +305,7 @@ test("Path.normalize with absolute path with . and ..s in it", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        ""
-        "hi"
-        "there"
-        "yup"
-      ]
-      separator: "/"
-    }
+      "stdout": "Path { /hi/there/yup }
     ",
     }
   `);
@@ -430,14 +318,7 @@ test("Path.normalize with non-absolute path with . and ..s in it", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        "hi"
-        "there"
-        "yup"
-      ]
-      separator: "/"
-    }
+      "stdout": "Path { hi/there/yup }
     ",
     }
   `);
@@ -450,15 +331,7 @@ test("Path.normalize with already-absolute path", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        ""
-        "hi"
-        "there"
-        "yeah"
-      ]
-      separator: "/"
-    }
+      "stdout": "Path { /hi/there/yeah }
     ",
     }
   `);
@@ -471,14 +344,7 @@ test("Path.normalize with non-absolute path with no . or .. in it", async () => 
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        "hi"
-        "there"
-        "yeah"
-      ]
-      separator: "/"
-    }
+      "stdout": "Path { hi/there/yeah }
     ",
     }
   `);
@@ -491,15 +357,7 @@ test("Path.normalize with non-absolute path with leading .", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        "."
-        "hi"
-        "there"
-        "yeah"
-      ]
-      separator: "/"
-    }
+      "stdout": "Path { ./hi/there/yeah }
     ",
     }
   `);
@@ -512,15 +370,7 @@ test("Path.normalize with non-absolute path with leading ..", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        ".."
-        "hi"
-        "there"
-        "yeah"
-      ]
-      separator: "/"
-    }
+      "stdout": "Path { ../hi/there/yeah }
     ",
     }
   `);
@@ -595,19 +445,8 @@ test("Path constructor with fs root strings", async () => {
       "error": false,
       "stderr": "",
       "stdout": "{
-      path: Path {
-        segments: [
-          ""
-        ]
-        separator: "/"
-      }
-      path2: Path {
-        segments: [
-          ""
-          ""
-        ]
-        separator: "\\\\"
-      }
+      path: Path { / }
+      path2: Path { \\ }
     }
     ",
     }
@@ -627,22 +466,119 @@ test("Path constructor with absolute paths", async () => {
       "error": false,
       "stderr": "",
       "stdout": "{
-      path: Path {
-        segments: [
-          ""
-          "tmp"
-        ]
-        separator: "/"
-      }
-      path2: Path {
-        segments: [
-          ""
-          ""
-          "SERVERNAME"
-          "ShareName"
-        ]
-        separator: "\\\\"
-      }
+      path: Path { /tmp }
+      path2: Path { \\\\SERVERNAME\\ShareName }
+    }
+    ",
+    }
+  `);
+});
+
+test("printing of normal Path object", async () => {
+  const result = await evaluate(
+    `
+      new Path(pwd(), "something")
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path { <rootDir>/something }
+    ",
+    }
+  `);
+});
+
+test("printing of empty Path object", async () => {
+  const result = await evaluate(
+    `
+      new Path()
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path {
+      segments: []
+      separator: "/"
+    }
+    ",
+    }
+  `);
+});
+
+test("printing of Path object with extra props", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path(pwd(), "something");
+      p.something = true;
+      p
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path {
+      <rootDir>/something
+      
+      something: true
+    }
+    ",
+    }
+  `);
+});
+
+test("printing of frozen Path object", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path(pwd(), "something");
+      Object.freeze(p);
+      p
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path {
+      Frozen
+      <rootDir>/something
+    }
+    ",
+    }
+  `);
+});
+
+test("printing of Path object with a child path object attached to it", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path(pwd(), "something");
+      const p2 = new Path(pwd(), "something-else");
+      p.p2 = p2;
+      p
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path {
+      <rootDir>/something
+      
+      p2: Path { <rootDir>/something-else }
     }
     ",
     }

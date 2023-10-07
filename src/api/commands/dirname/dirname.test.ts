@@ -7,14 +7,7 @@ test("dirname", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        ""
-        "hi"
-        "there"
-      ]
-      separator: "/"
-    }
+      "stdout": "Path { /hi/there }
     ",
     }
   `);
@@ -27,12 +20,7 @@ test("dirname (folder in root dir)", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        ""
-      ]
-      separator: "/"
-    }
+      "stdout": "Path { / }
     ",
     }
   `);
@@ -45,13 +33,7 @@ test("dirname (windows-style path)", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "Path {
-      segments: [
-        "C:"
-        "Users"
-      ]
-      separator: "\\\\"
-    }
+      "stdout": "Path { C:\\Users }
     ",
     }
   `);

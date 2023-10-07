@@ -36,7 +36,7 @@ npx --no-install qjs meta/scripts/to-bytecode.mjs \
   yavascript-internal.js \
   dist/index.bin
 
-PLATFORM=$(node -e 'console.log(require("@suchipi/quickjs").identifyCurrentPlatform())')
+PLATFORM=$(node -e 'console.log(require("@suchipi/quickjs").identifyCurrentPlatform().name)')
 
 # generate dist/yavascript (final binary)
 cat \

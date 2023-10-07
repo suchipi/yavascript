@@ -3042,6 +3042,18 @@ interface ObjectConstructor {
   isPrimitive(input: any): boolean;
 }
 
+interface StringConstructor {
+  /**
+   * A no-op template literal tag.
+   *
+   * https://github.com/tc39/proposal-string-cooked
+   */
+  cooked(
+    strings: readonly string[] | ArrayLike<string>,
+    ...substitutions: any[]
+  ): string;
+}
+
 interface SymbolConstructor {
   /**
    * A method that changes the result of using the `typeof` operator on the
@@ -3880,6 +3892,151 @@ interface BigDecimal {
 // QuickJS, but TypeScript does not support operator overloading. As such,
 // TypeScript will not understand or handle unary/binary operators for BigFloat
 // and BigDecimal properly.
+
+/** npm: @suchipi/print@2.5.0. License: ISC */
+/* (with some QuickJS-specific modifications) */
+
+/*
+Copyright (c) 2016-2022, John Gardner
+Copyright (c) 2022 Lily Skye
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+/**
+ * Options for {@link inspect}.
+ */
+declare interface InspectOptions {
+  /** Whether to display non-enumerable properties. Defaults to false. */
+  all?: boolean;
+
+  /** Whether to invoke getter functions. Defaults to false. */
+  followGetters?: boolean;
+
+  /** Whether to display the indexes of iterable entries. Defaults to false. */
+  indexes?: boolean;
+
+  /** Hide object details after 𝑁 recursions. Defaults to Infinity. */
+  maxDepth?: number;
+
+  /** If true, don't identify well-known symbols as `@@…`. Defaults to false. */
+  noAmp?: boolean;
+
+  /** If true, don't format byte-arrays as hexadecimal. Defaults to false. */
+  noHex?: boolean;
+
+  /** If true, don't display function source code. Defaults to false. */
+  noSource?: boolean;
+
+  /** Whether to show `__proto__` properties if possible. Defaults to false. */
+  proto?: boolean;
+
+  /** Whether to sort properties alphabetically. When false, properties are sorted by creation order. Defaults to false. */
+  sort?: boolean;
+
+  /** Options that control whether and how ANSI terminal escape sequences for colours should be added to the output. Defaults to false, meaning no colours. */
+  colours?: boolean | 256 | 8 | InspectColours;
+
+  /** Prefix string to use for indentation. Defaults to '\t'. */
+  indent?: string;
+}
+
+declare interface InspectColours {
+  off?: string | number;
+  red?: string | number;
+  grey?: string | number;
+  green?: string | number;
+  darkGreen?: string | number;
+  punct?: string | number;
+  keys?: string | number;
+  keyEscape?: string | number;
+  typeColour?: string | number;
+  primitive?: string | number;
+  escape?: string | number;
+  date?: string | number;
+  hexBorder?: string | number;
+  hexValue?: string | number;
+  hexOffset?: string | number;
+  reference?: string | number;
+  srcBorder?: string | number;
+  srcRowNum?: string | number;
+  srcRowText?: string | number;
+  nul?: string | number;
+  nulProt?: string | number;
+  undef?: string | number;
+  noExts?: string | number;
+  frozen?: string | number;
+  sealed?: string | number;
+  regex?: string | number;
+  string?: string | number;
+  symbol?: string | number;
+  symbolFade?: string | number;
+  braces?: string | number;
+  quotes?: string | number;
+  empty?: string | number;
+  dot?: string | number;
+}
+
+declare interface InspectFunction {
+  /**
+   * Generate a human-readable representation of a value.
+   *
+   * @param value - Value to inspect
+   * @param options - Additional settings for refining output
+   * @returns A string representation of `value`.
+   */
+  (value: any, options?: InspectOptions): string;
+
+  /**
+   * Generate a human-readable representation of a value.
+   *
+   * @param value - Value to inspect
+   * @param key - The value's corresponding member name
+   * @param options - Additional settings for refining output
+   * @returns A string representation of `value`.
+   */
+  (value: any, key?: string | symbol, options?: InspectOptions): string;
+
+  /**
+   * A symbol which can be used to customize how an object gets printed.
+   */
+  custom: symbol;
+}
+
+/**
+ * Generate a human-readable representation of a value.
+ *
+ * @param value - Value to inspect
+ * @param key - The value's corresponding member name
+ * @param options - Additional settings for refining output
+ * @returns A string representation of `value`.
+ */
+declare var inspect: InspectFunction;
+
+declare interface InspectCustomInputs {
+  key: string | symbol;
+  type: string;
+  brackets: [string, string];
+  oneLine: boolean;
+  linesBefore: Array<string>;
+  linesAfter: Array<string>;
+  propLines: Array<string>;
+  readonly tooDeep: boolean;
+  indent: string;
+  typeSuffix: string;
+  opts: InspectOptions;
+  colours: { [Key in keyof Required<InspectColours>]: string };
+}
 
 // Definitions of the globals and modules added by quickjs-libc
 
@@ -5032,6 +5189,58 @@ declare interface InspectFunction {
  */
 declare var inspect: InspectFunction;
 
+declare var setTimeout: typeof import("quickjs:os").setTimeout;
+declare var clearTimeout: typeof import("quickjs:os").clearTimeout;
+
+declare type Interval = { [Symbol.toStringTag]: "Interval" };
+
+declare function setInterval(func: (...args: any) => any, ms: number): Interval;
+declare function clearInterval(interval: Interval): void;
+
+interface StringConstructor {
+  /**
+   * Remove leading minimum indentation from the string.
+   * The first line of the string must be empty.
+   *
+   * https://github.com/tc39/proposal-string-dedent
+   */
+  dedent: {
+    /**
+     * Remove leading minimum indentation from the string.
+     * The first line of the string must be empty.
+     *
+     * https://github.com/tc39/proposal-string-dedent
+     */
+    (input: string): string;
+
+    /**
+     * Remove leading minimum indentation from the template literal.
+     * The first line of the string must be empty.
+     *
+     * https://github.com/tc39/proposal-string-dedent
+     */
+    (
+      strings: readonly string[] | ArrayLike<string>,
+      ...substitutions: any[]
+    ): string;
+
+    /**
+     * Wrap another template tag function such that tagged literals
+     * become dedented before being passed to the wrapped function.
+     *
+     * https://www.npmjs.com/package/string-dedent#usage
+     */
+    <
+      Func extends (
+        strings: readonly string[] | ArrayLike<string>,
+        ...substitutions: any[]
+      ) => string
+    >(
+      input: Func
+    ): Func;
+  };
+}
+
 /**
  * A global which lets you configure the module loader (import/export/require).
  * You can use these properties to add support for importing new filetypes.
@@ -5130,6 +5339,7 @@ interface ModuleGlobal {
   read(modulePath: string): string;
 }
 
+// global added by QJMS_AddModuleGlobal
 declare var Module: ModuleGlobal;
 
 interface RequireFunction {
@@ -5173,72 +5383,43 @@ interface RequireFunction {
   resolve: (source: string) => string;
 }
 
+// global added by QJMS_AddRequireGlobal
 declare var require: RequireFunction;
 
+// gets set per-module by QJMS_SetModuleImportMeta
 interface ImportMeta {
+  /**
+   * A URL representing the current module.
+   *
+   * Usually starts with `file://`.
+   */
+  url: string;
+
+  /**
+   * Whether the current module is the "main" module, meaning that it is the
+   * entrypoint file that's been loaded, or, in other terms, the first
+   * user-authored module that's been loaded.
+   */
+  main: boolean;
+
+  /**
+   * Equivalent to `globalThis.require`. Provided for compatibility with tools
+   * that can leverage a CommonJS require function via `import.meta.require`.
+   */
   require: RequireFunction;
-}
-
-declare var setTimeout: typeof import("quickjs:os").setTimeout;
-declare var clearTimeout: typeof import("quickjs:os").clearTimeout;
-
-declare type Interval = { [Symbol.toStringTag]: "Interval" };
-
-declare function setInterval(func: (...args: any) => any, ms: number): Interval;
-declare function clearInterval(interval: Interval): void;
-
-interface StringConstructor {
-  /**
-   * A no-op template literal tag.
-   *
-   * https://github.com/tc39/proposal-string-cooked
-   */
-  cooked(
-    strings: readonly string[] | ArrayLike<string>,
-    ...substitutions: any[]
-  ): string;
 
   /**
-   * Remove leading minimum indentation from the string.
-   * The first line of the string must be empty.
+   * Resolves a module specifier based on the current module's path.
    *
-   * https://github.com/tc39/proposal-string-dedent
+   * Equivalent to `globalThis.require.resolve`.
+   *
+   * Behaves similarly to [the browser import.meta.resolve](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta/resolve),
+   * but it does not ensure that the returned string is a valid URL, because it
+   * delegates directly to {@link Module.resolve} to resolve the name. If you
+   * want this to return URL strings, change `Module.resolve` and `Module.read`
+   * to work with URL strings.
    */
-  dedent: {
-    /**
-     * Remove leading minimum indentation from the string.
-     * The first line of the string must be empty.
-     *
-     * https://github.com/tc39/proposal-string-dedent
-     */
-    (input: string): string;
-
-    /**
-     * Remove leading minimum indentation from the template literal.
-     * The first line of the string must be empty.
-     *
-     * https://github.com/tc39/proposal-string-dedent
-     */
-    (
-      strings: readonly string[] | ArrayLike<string>,
-      ...substitutions: any[]
-    ): string;
-
-    /**
-     * Wrap another template tag function such that tagged literals
-     * become dedented before being passed to the wrapped function.
-     *
-     * https://www.npmjs.com/package/string-dedent#usage
-     */
-    <
-      Func extends (
-        strings: readonly string[] | ArrayLike<string>,
-        ...substitutions: any[]
-      ) => string
-    >(
-      input: Func
-    ): Func;
-  };
+  resolve: RequireFunction["resolve"];
 }
 
 declare module "quickjs:bytecode" {
@@ -5410,7 +5591,6 @@ declare module "quickjs:context" {
        *
        * NOTE: The following globals, normally part of `js_std_add_helpers`, are NEVER added:
        *
-       * - Module
        * - scriptArgs
        *
        * If you need them in the new context, copy them over from your context's globalThis onto the child context's globalThis.

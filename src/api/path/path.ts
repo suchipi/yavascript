@@ -309,6 +309,63 @@ class Path {
   extname(options: { full?: boolean } = {}): string {
     return extname(this, options);
   }
+
+  [inspect.custom](inputs: InspectCustomInputs) {
+    const isEmpty = this.segments.length === 0;
+    if (isEmpty) {
+      return;
+    }
+
+    const { colours } = inputs;
+
+    // remove prop lines for segments and separator as we'll print those
+    // in our special way
+    {
+      const segmentsIndex = inputs.propLines.findIndex((line) =>
+        line.startsWith(colours.keys + "segments" + colours.off)
+      );
+      const separatorIndex = inputs.propLines.findIndex((line) =>
+        line.startsWith(colours.keys + "separator" + colours.off)
+      );
+
+      if (segmentsIndex !== -1) {
+        inputs.propLines[segmentsIndex] = "";
+      }
+      if (separatorIndex !== -1) {
+        inputs.propLines[separatorIndex] = "";
+      }
+
+      inputs.propLines = inputs.propLines.filter(Boolean);
+    }
+
+    const hasExtraProps = inputs.propLines.length > 0;
+
+    const printedSelfLine = colours.string + this.toString() + colours.off;
+    inputs.linesBefore.push(printedSelfLine);
+
+    if (
+      !hasExtraProps &&
+      inputs.linesBefore.length === 1 &&
+      inputs.linesBefore[0] === printedSelfLine
+    ) {
+      inputs.oneLine = true;
+      inputs.linesBefore = [
+        colours.typeColour +
+          inputs.type +
+          colours.off +
+          " " +
+          colours.punct +
+          inputs.brackets[0] +
+          colours.off +
+          " " +
+          printedSelfLine +
+          " " +
+          colours.punct +
+          inputs.brackets[1] +
+          colours.off,
+      ];
+    }
+  }
 }
 
 // .toString() needs to return a value starting with "class" for pheno.coerce

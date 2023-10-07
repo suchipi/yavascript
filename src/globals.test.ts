@@ -85,12 +85,12 @@ test("globals", async () => {
     console object
     print function
     scriptArgs object
-    require function
-    Module object
     setTimeout function
     clearTimeout function
     setInterval function
     clearInterval function
+    require function
+    Module object
     std object
     os object
     basename function
