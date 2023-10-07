@@ -9,9 +9,11 @@ import { setHelpText } from "../help";
 import execHelpText from "./exec.help.md";
 import dollarHelpText from "./_dollar.help.md";
 import { ChildProcess } from "./ChildProcess";
+import { is } from "../is";
+import { types } from "../types";
 
 const exec = (
-  args: Array<string> | string,
+  args: Array<string | Path | number> | string | Path,
   options: {
     cwd?: string | Path;
     env?: { [key: string | number]: string | number | boolean };
@@ -56,10 +58,6 @@ const exec = (
       types.Function,
       "when present, 'options.trace' must be a function"
     );
-  }
-
-  if (typeof args === "string") {
-    args = parseArgString(args);
   }
 
   const child = new ChildProcess(args, { cwd, env, trace });
@@ -163,7 +161,7 @@ setHelpText(exec, execHelpText);
 
 export { exec };
 
-export function $(args: Array<string> | string): {
+export function $(args: Array<string | Path | number> | string | Path): {
   stdout: string;
   stderr: string;
 } {

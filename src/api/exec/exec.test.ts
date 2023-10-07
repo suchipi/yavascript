@@ -30,13 +30,25 @@ test("exec true - array", async () => {
   `);
 });
 
+test("exec true - Path", async () => {
+  const result = await evaluate(`exec(new Path("/usr/bin/true"))`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "",
+    }
+  `);
+});
+
 test("exec false - string", async () => {
   const result = await evaluate(`exec("false")`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
+      "stderr": "Error: Command failed: "false" (status = 1, signal = undefined)
       at somewhere
     {
       status: 1
@@ -55,6 +67,24 @@ test("exec false - array", async () => {
       "code": 1,
       "error": false,
       "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
+      at somewhere
+    {
+      status: 1
+      signal: undefined
+    }
+    ",
+      "stdout": "",
+    }
+  `);
+});
+
+test("exec false - Path", async () => {
+  const result = await evaluate(`exec(new Path("/usr/bin/false"))`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": false,
+      "stderr": "Error: Command failed: "/usr/bin/false" (status = 1, signal = undefined)
       at somewhere
     {
       status: 1
@@ -273,13 +303,49 @@ test("$ echo hi - array", async () => {
   `);
 });
 
+test("$ echo hi - array with Path", async () => {
+  const result = await evaluate(`$(["echo", new Path("hi")])`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      stdout: "hi\\n"
+      stderr: ""
+      status: 0
+      signal: undefined
+    }
+    ",
+    }
+  `);
+});
+
+test("$ echo hi 2 - array with number", async () => {
+  const result = await evaluate(`$(["echo", "hi", 2])`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "{
+      stdout: "hi 2\\n"
+      stderr: ""
+      status: 0
+      signal: undefined
+    }
+    ",
+    }
+  `);
+});
+
 test("$ false", async () => {
   const result = await evaluate(`$("false")`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
+      "stderr": "Error: Command failed: "false" (status = 1, signal = undefined)
       at somewhere
     {
       status: 1

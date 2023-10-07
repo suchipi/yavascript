@@ -6,10 +6,12 @@ import { env } from "../env";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import { traceAll } from "../trace-all";
 import { is } from "../is";
+import { types } from "../types";
 import { assert } from "../assert";
 import type { Path } from "../path";
 import childProcessHelpText from "./ChildProcess.help.md";
 import { setHelpText } from "../help";
+import { parse } from "path";
 
 export type ChildProcessOptions = {
   cwd?: string | Path;
@@ -35,14 +37,21 @@ export class ChildProcess {
 
   pid: number | null = null;
 
-  constructor(args: string | Array<string>, options: ChildProcessOptions = {}) {
+  constructor(
+    args: string | Path | Array<string | number | Path>,
+    options: ChildProcessOptions = {}
+  ) {
     if (is(args, types.string)) {
       this.args = parseArgString(args);
-    } else if (is(args, types.arrayOf(types.string))) {
-      this.args = args;
+    } else if (is(args, types.Path)) {
+      this.args = parseArgString(args.toString());
+    } else if (
+      is(args, types.arrayOf(types.or(types.string, types.number, types.Path)))
+    ) {
+      this.args = args.map((item) => String(item));
     } else {
       throw makeErrorWithProperties(
-        "'args' argument must be either a string or an array of strings",
+        "'args' argument must be either a string, a Path, or an array of strings/Paths/numbers",
         { received: args }
       );
     }

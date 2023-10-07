@@ -83,7 +83,7 @@ declare interface ChildProcessConstructor {
    * @param options - Options for the process (cwd, env, stdio, etc)
    */
   new (
-    args: string | Array<string>,
+    args: string | Path | Array<string | number | Path>,
     options?: ChildProcessOptions
   ): ChildProcess;
 

@@ -679,7 +679,7 @@ declare type BaseExecOptions = {
 
 declare interface Exec {
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       failOnNonZeroStatus: true;
       captureOutput: false;
@@ -687,7 +687,7 @@ declare interface Exec {
   ): void;
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       failOnNonZeroStatus: false;
       captureOutput: false;
@@ -697,7 +697,7 @@ declare interface Exec {
     | { status: undefined; signal: number };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       failOnNonZeroStatus: true;
       captureOutput: true;
@@ -705,7 +705,7 @@ declare interface Exec {
   ): { stdout: string; stderr: string };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       failOnNonZeroStatus: true;
       captureOutput: "utf8";
@@ -713,7 +713,7 @@ declare interface Exec {
   ): { stdout: string; stderr: string };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       failOnNonZeroStatus: true;
       captureOutput: "arraybuffer";
@@ -721,7 +721,7 @@ declare interface Exec {
   ): { stdout: ArrayBuffer; stderr: ArrayBuffer };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       failOnNonZeroStatus: false;
       captureOutput: true;
@@ -731,7 +731,7 @@ declare interface Exec {
     | { stdout: string; stderr: string; status: undefined; signal: number };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       failOnNonZeroStatus: false;
       captureOutput: "utf-8";
@@ -741,7 +741,7 @@ declare interface Exec {
     | { stdout: string; stderr: string; status: undefined; signal: number };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       failOnNonZeroStatus: false;
       captureOutput: "arraybuffer";
@@ -761,14 +761,14 @@ declare interface Exec {
       };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       failOnNonZeroStatus: true;
     }
   ): void;
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       failOnNonZeroStatus: false;
     }
@@ -777,41 +777,44 @@ declare interface Exec {
     | { status: undefined; signal: number };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       captureOutput: true;
     }
   ): { stdout: string; stderr: string };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       captureOutput: "utf8";
     }
   ): { stdout: string; stderr: string };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       captureOutput: "arraybuffer";
     }
   ): { stdout: ArrayBuffer; stderr: ArrayBuffer };
 
   (
-    args: Array<string> | string,
+    args: Array<string | Path | number> | string | Path,
     options: BaseExecOptions & {
       captureOutput: false;
     }
   ): void;
 
-  (args: Array<string> | string, options?: BaseExecOptions): void;
+  (
+    args: Array<string | Path | number> | string | Path,
+    options?: BaseExecOptions
+  ): void;
 }
 
 /** Runs a child process using the provided arguments. The first value in the arguments array is the program to run. */
 declare const exec: Exec;
 
 /** Alias for `exec(args, { captureOutput: true })` */
-declare function $(args: Array<string> | string): {
+declare function $(args: Array<string | Path | number> | string | Path): {
   stdout: string;
   stderr: string;
 };
@@ -901,7 +904,7 @@ declare interface ChildProcessConstructor {
    * @param options - Options for the process (cwd, env, stdio, etc)
    */
   new (
-    args: string | Array<string>,
+    args: string | Path | Array<string | number | Path>,
     options?: ChildProcessOptions
   ): ChildProcess;
 
