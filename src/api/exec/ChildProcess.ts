@@ -8,10 +8,9 @@ import { traceAll } from "../trace-all";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
-import type { Path } from "../path";
+import { Path } from "../path";
 import childProcessHelpText from "./ChildProcess.help.md";
 import { setHelpText } from "../help";
-import { parse } from "path";
 
 export type ChildProcessOptions = {
   cwd?: string | Path;
@@ -26,7 +25,7 @@ export type ChildProcessOptions = {
 
 export class ChildProcess {
   args: Array<string>;
-  cwd: string;
+  cwd: Path;
   env: { [key: string]: string };
   stdio: {
     in: FILE;
@@ -60,9 +59,9 @@ export class ChildProcess {
     if (cwd == null) {
       this.cwd = pwd();
     } else if (is(cwd, types.Path)) {
-      this.cwd = cwd.toString();
-    } else if (is(cwd, types.string)) {
       this.cwd = cwd;
+    } else if (is(cwd, types.string)) {
+      this.cwd = new Path(cwd);
     } else {
       throw makeErrorWithProperties(
         "when present, 'cwd' option must be either a string or a Path object",
@@ -127,7 +126,7 @@ export class ChildProcess {
 
     this.pid = os.exec(this.args, {
       block: false,
-      cwd: this.cwd,
+      cwd: this.cwd.toString(),
       env: this.env,
       stdin: this.stdio.in.fileno(),
       stdout: this.stdio.out.fileno(),

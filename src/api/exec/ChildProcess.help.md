@@ -8,10 +8,10 @@ Generally, you should not need to use the `ChildProcess` class directly, and sho
 // Defined in yavascript/src/api/exec/ChildProcess.ts
 declare class ChildProcess {
   new(
-    args: string | Array<string>,
+    args: string | Path | Array<string | number | Path>,
     options?: {
-      cwd?: string;
-      env?: { [key: string]: string };
+      cwd?: string | Path;
+      env?: { [key: string | number]: string | number | boolean };
       stdio?: {
         in?: FILE;
         out?: FILE;
@@ -22,7 +22,7 @@ declare class ChildProcess {
   ): ChildProcess;
 
   args: Array<string>;
-  cwd: string;
+  cwd: Path;
   env: { [key: string]: string };
 
   stdio: {

@@ -7,7 +7,7 @@ declare interface ChildProcess {
   args: Array<string>;
 
   /** The current working directory for the process. */
-  cwd: string;
+  cwd: Path;
 
   /** The environment variables for the process. */
   env: { [key: string]: string };
@@ -49,7 +49,7 @@ declare interface ChildProcess {
  */
 declare type ChildProcessOptions = {
   /** The current working directory for the process. */
-  cwd?: string;
+  cwd?: string | Path;
 
   /** The environment variables for the process. */
   env?: { [key: string]: string };

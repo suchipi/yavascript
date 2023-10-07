@@ -19,11 +19,11 @@ test("cd and pwd", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "<rootDir>
-    <rootDir>/src
-    <rootDir>
-    <rootDir>/meta
-    /tmp
+      "stdout": "Path { <rootDir> }
+    Path { <rootDir>/src }
+    Path { <rootDir> }
+    Path { <rootDir>/meta }
+    Path { /tmp }
     ",
     }
   `);

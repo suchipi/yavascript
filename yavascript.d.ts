@@ -350,18 +350,6 @@ declare class Path {
    */
   static isAbsolute(path: string | Path): boolean;
 
-  /** A tagged template literal function that creates a `Path` object. */
-  static tag(
-    strings: TemplateStringsArray,
-    ...values: ReadonlyArray<string | Path | Array<string | Path>>
-  ): Path;
-
-  /**
-   * Returns a tagged template literal that creates a `Path` object. `dir` is
-   * used as a prefix for every `Path` object created.
-   */
-  static tagUsingBase(dir: string | Path): typeof Path.tag;
-
   /**
    * An array of the path segments that make up this path.
    *
@@ -451,7 +439,7 @@ declare class Path {
   basename(): string;
 
   /**
-   * Return the trailing extensionof this path. The `options` parameter works
+   * Return the trailing extension of this path. The `options` parameter works
    * the same as the global `extname`'s `options` parameter.
    */
   extname(options?: { full?: boolean }): string;
@@ -579,7 +567,7 @@ declare function printf(format: string, ...args: Array<any>): void;
  *
  * Provides the same functionality as the shell builtin of the same name.
  */
-declare function pwd(): string;
+declare function pwd(): Path;
 
 /**
  * Reads a symlink.
@@ -828,7 +816,7 @@ declare interface ChildProcess {
   args: Array<string>;
 
   /** The current working directory for the process. */
-  cwd: string;
+  cwd: Path;
 
   /** The environment variables for the process. */
   env: { [key: string]: string };
@@ -870,7 +858,7 @@ declare interface ChildProcess {
  */
 declare type ChildProcessOptions = {
   /** The current working directory for the process. */
-  cwd?: string;
+  cwd?: string | Path;
 
   /** The environment variables for the process. */
   env?: { [key: string]: string };

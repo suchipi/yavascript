@@ -150,7 +150,7 @@ test("exec with cwd", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "/tmp
+      "stdout": "Path { /tmp }
     ",
     }
   `);

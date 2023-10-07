@@ -49,7 +49,7 @@ declare function exec(
   args: string | Array<string>,
   options?: {
     /** Defaults to `pwd()` */
-    cwd?: string;
+    cwd?: string | Path;
 
     /** Defaults to `env` */
     env?: { [key: string | number]: string | number | boolean };
