@@ -576,7 +576,7 @@ declare function pwd(): Path;
  *
  * Provides the same functionality as the unix binary of the same name.
  */
-declare function readlink(path: string | Path): string;
+declare function readlink(path: string | Path): Path;
 
 /**
  * Get the absolute path given a relative path. Symlinks are also resolved.
@@ -585,7 +585,7 @@ declare function readlink(path: string | Path): string;
  *
  * Provides the same functionality as the unix binary of the same name.
  */
-declare function realpath(path: string | Path): string;
+declare function realpath(path: string | Path): Path;
 
 /**
  * Blocks the current thread for at least the specified number of milliseconds,

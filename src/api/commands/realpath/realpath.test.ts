@@ -31,18 +31,18 @@ test("realpath resolution behavior", async () => {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "/tmp
-    <rootDir>/src/test_fixtures/symlinks
-    <rootDir>/src/test_fixtures
-    <rootDir>/src/test_fixtures/symlinks/some-folder
-    <rootDir>/src/test_fixtures/symlinks/some-file
-    <rootDir>/src/test_fixtures/symlinks/some-folder
-    <rootDir>/src/test_fixtures/symlinks/some-file
-    <rootDir>/src/test_fixtures/symlinks/some-folder
-    <rootDir>/src/test_fixtures/symlinks/some-file
-    <rootDir>/src/test_fixtures/symlinks/some-folder
-    <rootDir>/src/test_fixtures/symlinks/some-file
-    <rootDir>
+      "stdout": "Path { /tmp }
+    Path { <rootDir>/src/test_fixtures/symlinks }
+    Path { <rootDir>/src/test_fixtures }
+    Path { <rootDir>/src/test_fixtures/symlinks/some-folder }
+    Path { <rootDir>/src/test_fixtures/symlinks/some-file }
+    Path { <rootDir>/src/test_fixtures/symlinks/some-folder }
+    Path { <rootDir>/src/test_fixtures/symlinks/some-file }
+    Path { <rootDir>/src/test_fixtures/symlinks/some-folder }
+    Path { <rootDir>/src/test_fixtures/symlinks/some-file }
+    Path { <rootDir>/src/test_fixtures/symlinks/some-folder }
+    Path { <rootDir>/src/test_fixtures/symlinks/some-file }
+    Path { <rootDir> }
     ",
     }
   `);

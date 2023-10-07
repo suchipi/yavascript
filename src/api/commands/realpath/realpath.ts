@@ -1,12 +1,12 @@
 import * as os from "quickjs:os";
 import { is } from "../../is";
 import { assert } from "../../assert";
-import type { Path } from "../../path";
+import { Path } from "../../path";
 import { setHelpText } from "../../help";
 import realpathHelpText from "./realpath.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
-export function realpath(path: string | Path): string {
+export function realpath(path: string | Path): Path {
   if (is(path, types.Path)) {
     path = path.toString();
   }
@@ -19,7 +19,8 @@ export function realpath(path: string | Path): string {
 
   path = appendSlashIfWindowsDriveLetter(path);
 
-  return os.realpath(path);
+  const result = os.realpath(path);
+  return new Path(result);
 }
 
 setHelpText(realpath, realpathHelpText);

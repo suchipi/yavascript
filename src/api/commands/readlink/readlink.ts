@@ -1,11 +1,11 @@
 import * as os from "quickjs:os";
 import { is } from "../../is";
 import { assert } from "../../assert";
-import type { Path } from "../../path";
+import { Path } from "../../path";
 import { setHelpText } from "../../help";
 import readlinkHelpText from "./readlink.help.md";
 
-export function readlink(path: string | Path): string {
+export function readlink(path: string | Path): Path {
   if (is(path, types.Path)) {
     path = path.toString();
   }
@@ -21,7 +21,7 @@ export function readlink(path: string | Path): string {
       `readlink is not yet supported in platform '${os.platform}'`
     );
   } else {
-    return os.readlink(path);
+    return new Path(os.readlink(path));
   }
 }
 

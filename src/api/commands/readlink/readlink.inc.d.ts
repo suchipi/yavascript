@@ -5,4 +5,4 @@
  *
  * Provides the same functionality as the unix binary of the same name.
  */
-declare function readlink(path: string | Path): string;
+declare function readlink(path: string | Path): Path;

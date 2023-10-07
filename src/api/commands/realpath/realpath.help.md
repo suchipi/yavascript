@@ -8,5 +8,5 @@ Provides the same functionality as the unix binary of the same name.
 
 ```ts
 // Defined in yavascript/src/api/commands/realpath
-declare function realpath(path: string | Path): string;
+declare function realpath(path: string | Path): Path;
 ```

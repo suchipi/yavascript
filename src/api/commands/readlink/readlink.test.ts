@@ -14,9 +14,9 @@ test("readlink", async () => {
       "error": false,
       "stderr": "",
       "stdout": "[
-      "./nowhere-real"
-      "./some-file"
-      "./some-folder"
+      Path { ./nowhere-real }
+      Path { ./some-file }
+      Path { ./some-folder }
     ]
     ",
     }
