@@ -9,5 +9,5 @@
 - [ ] add something to make "this path but with a different extension" and "this path but swap the basedir from this to this" easier
 - [ ] finish all the help docs!!!
 - [ ] spicy: override types for string-receiving methods to accept anything that can be converted to a string (if quickjs converts it)
-- [ ] add frozen "initial pwd" somewhere
+- [x] add frozen "initial pwd" somewhere
 - [ ] expose "makeErrorWithProperties" somehow. new error constructor? overload base error constructor?

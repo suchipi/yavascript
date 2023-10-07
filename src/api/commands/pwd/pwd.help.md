@@ -8,3 +8,5 @@ Provides the same functionality as the shell builtin of the same name.
 // Defined in yavascript/src/api/commands/pwd
 declare function pwd(): Path;
 ```
+
+See also `help(pwd.initial)`.
