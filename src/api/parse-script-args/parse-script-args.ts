@@ -82,7 +82,7 @@ export function parseScriptArgs(
     {
       isAbsolute: Path.isAbsolute,
       resolvePath: (...args) => Path.resolve(...args).toString(),
-      getCwd: pwd,
+      getCwd: () => pwd.toString(),
     }
   );
 
