@@ -12,3 +12,4 @@
 - [x] add frozen "initial pwd" somewhere
 - [ ] expose "makeErrorWithProperties" somehow. new error constructor? overload base error constructor?
 - [ ] tests for `which`
+- [ ] make string color/style functions accept Path objects (convert them to strings internally)
