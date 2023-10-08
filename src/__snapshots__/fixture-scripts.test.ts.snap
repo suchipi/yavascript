@@ -126,6 +126,18 @@ exports[`some-civet.civet 1`] = `
   "stdout": "object
 object
 false
+{
+  $$typeof: Symbol(JSX.Element)
+  type: "div"
+  props: {
+    class: "hi"
+    disabled: true
+    children: [
+      "hi"
+    ]
+  }
+  key: null
+}
 ",
 }
 `;

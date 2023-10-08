@@ -126,7 +126,7 @@ const compilers = {
       js: true,
       filename: options?.filename,
     });
-    return compilers.js(compiled, options);
+    return compilers.jsx(compiled, options);
   },
 
   autodetect(code: string, options?: CompilerOptions): string {

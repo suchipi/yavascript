@@ -9,3 +9,9 @@ echo typeof os
 "potato"
 |> isDir
 |> echo
+
+someEl :=
+  <.hi +disabled>
+    hi
+
+echo someEl
