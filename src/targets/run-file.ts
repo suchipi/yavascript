@@ -4,6 +4,7 @@ import compilers from "../compilers";
 import { extname } from "../api/commands/extname";
 import { Path } from "../api/path";
 import { pwd } from "../api/commands/pwd";
+import { realpath } from "../api/commands/realpath";
 
 function overrideCompiler(
   fileToRun: string,
@@ -32,11 +33,13 @@ export default async function runFileTarget(
   fileToRun: string,
   langOverride: string | null
 ) {
-  const absFileToRun = Path.isAbsolute(fileToRun)
+  let absFileToRun = Path.isAbsolute(fileToRun)
     ? fileToRun
     : fileToRun.match(/^\.{1,2}\//)
     ? std.resolveModule(fileToRun, "./<cwd>")
     : Path.join(pwd(), fileToRun).toString();
+
+  absFileToRun = realpath(absFileToRun).toString();
 
   if (langOverride != null) {
     const compiler = langToCompiler(langOverride);
