@@ -139,6 +139,7 @@ test("globals", async () => {
     glob function
     types object
     is function
+    _is function
     assert function
     GitRepo function
     quote function

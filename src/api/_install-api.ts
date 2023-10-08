@@ -74,6 +74,8 @@ const typesProps = makeGetterPropertyDescriptorMap({
 
 const isProps = makeGetterPropertyDescriptorMap({
   is: () => require("./is").is,
+  // Alias `_is` to `is` for Civet, because `is` is a reserved keyword in Civet.
+  _is: () => require("./is").is,
 });
 
 const assertProps = makeGetterPropertyDescriptorMap({
