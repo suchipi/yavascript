@@ -37,7 +37,7 @@ exports[`../something.js --lang potato 1`] = `
   ],
   "result": {
     "message": "Invalid --lang: "potato".
-Valid values for --lang are js, javascript, ts, typescript, jsx, tsx, coffee or coffeescript.
+Valid values for --lang are js, javascript, ts, typescript, jsx, tsx, coffee, coffeescript or civet.
 ",
     "target": "invalid",
   },
@@ -256,7 +256,7 @@ exports[`--lang ../something.js 1`] = `
   ],
   "result": {
     "message": "Invalid --lang: "../something.js".
-Valid values for --lang are js, javascript, ts, typescript, jsx, tsx, coffee or coffeescript.
+Valid values for --lang are js, javascript, ts, typescript, jsx, tsx, coffee, coffeescript or civet.
 ",
     "target": "invalid",
   },

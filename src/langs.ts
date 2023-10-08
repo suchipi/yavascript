@@ -7,6 +7,7 @@ export const LANGS = new Set([
   "tsx",
   "coffee",
   "coffeescript",
+  "civet",
 ]);
 
 export function langToCompiler(lang: string) {
@@ -32,6 +33,8 @@ export function langToCompiler(lang: string) {
     case "coffeescript": {
       return compilers.coffee;
     }
+    case "civet":
+      return compilers.civet;
     default: {
       throw new Error(`No compiler for lang: ${lang}`);
     }
