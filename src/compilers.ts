@@ -2,11 +2,14 @@ import { memoize } from "./lazy-load";
 import * as CJS from "./cjs-interop";
 import * as npmProto from "./module-protocols/npm";
 
-const getSucrase: () => typeof import("sucrase") = memoize(
-  () => require("sucrase") as any
+const getSucrase: () => typeof import("sucrase") = memoize(() =>
+  require("sucrase")
 );
-const getCoffeeScript: () => typeof import("coffeescript") = memoize(
-  () => require("coffeescript") as any
+const getCoffeeScript: () => typeof import("coffeescript") = memoize(() =>
+  require("coffeescript")
+);
+const getCivet: () => typeof import("@danielx/civet") = memoize(() =>
+  require("@danielx/civet")
 );
 
 export type CompilerOptions = {
@@ -118,17 +121,29 @@ const compilers = {
     return compilers.js(compiled, options);
   },
 
+  civet(code: string, options?: CompilerOptions): string {
+    const compiled = getCivet().compile(code, {
+      js: true,
+      filename: options?.filename,
+    });
+    return compilers.js(compiled, options);
+  },
+
   autodetect(code: string, options?: CompilerOptions): string {
     try {
       return compilers.jsx(code, options);
-    } catch (err) {
+    } catch {
       try {
         return compilers.tsx(code, options);
-      } catch (err2) {
+      } catch {
         try {
-          return compilers.coffee(code, options);
-        } catch (err3) {
-          return code;
+          return compilers.civet(code, options);
+        } catch {
+          try {
+            return compilers.coffee(code, options);
+          } catch {
+            return code;
+          }
         }
       }
     }

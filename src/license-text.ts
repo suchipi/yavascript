@@ -527,6 +527,14 @@ Apache 2.0
 
 ${APACHE2}
 
+-------------- @danielx/civet --------------
+
+MIT License
+
+Copyright (c) 2022 Daniel X Moore and other contributors
+
+${MIT}
+
 -------------- yavascript --------------
 
 YavaScript script interpreter

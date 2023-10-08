@@ -107,6 +107,7 @@ test("globals", async () => {
     realpath function
     sleep function
     touch function
+    which function
     mkdir throws error
     cp throws error
     mv throws error
@@ -115,6 +116,7 @@ test("globals", async () => {
     grep throws error
     man throws error
     cwd throws error
+    where throws error
     FILE throws error
     env object
     exec function

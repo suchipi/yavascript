@@ -18,7 +18,7 @@ exports.resolve = (id, fromFilePath) => {
       return "external:" + id;
 
     // node builtins that we don't provide (coffeescript and others ask for
-    // these but don't need them)
+    // these but don't actually need them)
     case "fs":
     case "path":
     case "vm": {
@@ -90,6 +90,12 @@ exports.load = (filename) => {
     const result = runtimeForBuildtimeEval.load(modulePath);
 
     return `module.exports = ${JSON.stringify(result)};`;
+  } else if (filename.endsWith("node_modules/@danielx/civet/dist/main.js")) {
+    const result = defaultLoader.load(filename, { target: "es2020" });
+    const code = typeof result === "string" ? result : result.code;
+
+    // avoid emitting a spurious additional chunk.
+    return code.replaceAll(`import("fs")`, `(_IMPORT_FS)`);
   } else {
     return defaultLoader.load(filename, { target: "es2020" });
   }

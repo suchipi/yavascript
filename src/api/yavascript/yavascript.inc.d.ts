@@ -56,6 +56,11 @@ declare const yavascript: {
       options?: { filename?: string; expression?: boolean }
     ): string;
 
+    civet(
+      code: string,
+      options?: { filename?: string; expression?: boolean }
+    ): string;
+
     autodetect(
       code: string,
       options?: { filename?: string; expression?: boolean }

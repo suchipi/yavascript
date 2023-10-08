@@ -118,6 +118,18 @@ exports[`npm-proto-import-error.js 1`] = `
 }
 `;
 
+exports[`some-civet.civet 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "object
+object
+false
+",
+}
+`;
+
 exports[`some-coffeescript.coffee 1`] = `
 {
   "code": 0,
