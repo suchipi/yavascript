@@ -15,3 +15,5 @@ someEl :=
     hi
 
 echo someEl
+
+type Something = string
