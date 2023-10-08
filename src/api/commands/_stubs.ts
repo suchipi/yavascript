@@ -30,6 +30,9 @@ export default makeGetterPropertyDescriptorMap(
     cwd() {
       throw new ReferenceError("'cwd' is not defined. Did you mean 'pwd'?");
     },
+    where() {
+      throw new ReferenceError("'where' is not defined. Did you mean 'which'?");
+    },
   },
   false
 );

@@ -312,6 +312,14 @@ declare class Path {
    */
   static readonly OS_ENV_VAR_SEPARATOR: ":" | ";";
 
+  /**
+   * A list of suffixes that could appear in the filename for a program on the
+   * current OS. For instance, on Windows, programs often end with ".exe".
+   *
+   * On Unix-like OSes, this is empty, On Windows, it's based on `env.PATHEXT`.
+   */
+  static readonly OS_PROGRAM_EXTENSIONS: ReadonlySet<string>;
+
   /** Split one or more path strings into an array of path segments. */
   static splitToSegments(inputParts: Array<string> | string): Array<string>;
 
@@ -642,6 +650,26 @@ declare var sleep: {
  * @param path The target path for the file.
  */
 declare function touch(path: string | Path): void;
+
+/**
+ * Searches the system for the path to a program named `binaryName`.
+ *
+ * If the program can't be found, `null` is returned.
+ *
+ * @param binaryName The program to search for
+ * @param options Options which affect how the search is performed
+ * @param options.searchPaths A list of folders where programs may be found. Defaults to `env.PATH?.split(Path.OS_ENV_VAR_SEPARATOR) || []`.
+ * @param options.suffixes A list of filename extension suffixes to include in the search, ie [".exe"]. Defaults to `Path.OS_PROGRAM_EXTENSIONS`.
+ * @param options.trace A logging function that will be called at various times during the execution of `which`. Defaults to `traceAll.getDefaultTrace()`.
+ */
+declare function which(
+  binaryName: string,
+  options?: {
+    searchPaths?: Array<Path | string>;
+    suffixes?: Array<string>;
+    trace?: (...args: Array<any>) => void;
+  }
+): Path | null;
 
 declare type BaseExecOptions = {
   /** Sets the current working directory for the child process. */
@@ -2808,8 +2836,9 @@ declare class GitRepo {
 }
 
 /**
- * Configures the default value of `trace` in functions which receive `trace`
- * as an option.
+ * Configures the default value of `trace` in yavascript API functions which
+ * receive `trace` as an option, like {@link which}, {@link exec}, {@link copy}
+ * and {@link glob}.
  *
  * - If called with `true`, the default value of `trace` in all functions which
  *   receive a `trace` option will be changed to `console.error`.
@@ -2818,10 +2847,12 @@ declare class GitRepo {
  * - If called with any other value, the provided value will be used as the
  *   default value of `trace` in all functions which receive a `trace` option.
  *
- * If you would like to make your own functions use the default value of
- * `trace` as set by this function (in order to get the same behavior as
- * yavascript API functions which do so), call `traceAll.getDefaultTrace()` to
- * get the value which should be used as the default value.
+ * If you would like to make your own functions use the default value of `trace`
+ * as set by this function (in order to get the same behavior as yavascript API
+ * functions which do so), call `traceAll.getDefaultTrace()` to get the current
+ * value which should be used as the default value.
+ *
+ * `traceAll` provides similar functionality to shell builtin `set -x`.
  */
 declare const traceAll: ((
   trace: boolean | undefined | ((...args: Array<any>) => void)

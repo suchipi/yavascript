@@ -28,9 +28,19 @@ function validateSegments(
   });
 }
 
+// Default value of env.PATHEXT on Windows Vista and up.
+// XP is the same but without ".MSC".
+const windowsDefaultPathExt =
+  ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC";
+
 class Path {
   static OS_SEGMENT_SEPARATOR = os.platform === "win32" ? "\\" : "/";
   static OS_ENV_VAR_SEPARATOR = os.platform === "win32" ? ";" : ":";
+  static OS_PROGRAM_EXTENSIONS = new Set(
+    os.platform === "win32"
+      ? (env.PATHEXT || windowsDefaultPathExt).split(";")
+      : []
+  );
 
   static splitToSegments(inputParts: Array<string> | string): Array<string> {
     assert.type(

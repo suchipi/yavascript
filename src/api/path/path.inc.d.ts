@@ -9,6 +9,14 @@ declare class Path {
    */
   static readonly OS_ENV_VAR_SEPARATOR: ":" | ";";
 
+  /**
+   * A list of suffixes that could appear in the filename for a program on the
+   * current OS. For instance, on Windows, programs often end with ".exe".
+   *
+   * On Unix-like OSes, this is empty, On Windows, it's based on `env.PATHEXT`.
+   */
+  static readonly OS_PROGRAM_EXTENSIONS: ReadonlySet<string>;
+
   /** Split one or more path strings into an array of path segments. */
   static splitToSegments(inputParts: Array<string> | string): Array<string>;
 

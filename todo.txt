@@ -11,3 +11,4 @@
 - [ ] spicy: override types for string-receiving methods to accept anything that can be converted to a string (if quickjs converts it)
 - [x] add frozen "initial pwd" somewhere
 - [ ] expose "makeErrorWithProperties" somehow. new error constructor? overload base error constructor?
+- [ ] tests for `which`

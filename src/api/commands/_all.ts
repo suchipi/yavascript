@@ -2,7 +2,7 @@
 // the top of the list in the text editor's sidebar
 import { makeGetterPropertyDescriptorMap } from "../../lazy-load";
 
-// TODO: which, whoami, open/xdg-open, hostname
+// TODO: whoami, open/xdg-open, hostname
 
 export default makeGetterPropertyDescriptorMap({
   basename: () =>
@@ -22,4 +22,5 @@ export default makeGetterPropertyDescriptorMap({
     (require("./realpath") as typeof import("./realpath")).realpath,
   sleep: () => (require("./sleep") as typeof import("./sleep")).sleep,
   touch: () => (require("./touch") as typeof import("./touch")).touch,
+  which: () => (require("./which") as typeof import("./which")).which,
 });
