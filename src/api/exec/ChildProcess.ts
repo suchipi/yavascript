@@ -1,6 +1,6 @@
 import * as std from "quickjs:std";
 import * as os from "quickjs:os";
-import { parseArgString } from "./parse-arg-string";
+import { toArgv } from "./to-argv";
 import { pwd } from "../commands/pwd";
 import { env } from "../env";
 import { makeErrorWithProperties } from "../../error-with-properties";
@@ -40,20 +40,8 @@ export class ChildProcess {
     args: string | Path | Array<string | number | Path>,
     options: ChildProcessOptions = {}
   ) {
-    if (is(args, types.string)) {
-      this.args = parseArgString(args);
-    } else if (is(args, types.Path)) {
-      this.args = parseArgString(args.toString());
-    } else if (
-      is(args, types.arrayOf(types.or(types.string, types.number, types.Path)))
-    ) {
-      this.args = args.map((item) => String(item));
-    } else {
-      throw makeErrorWithProperties(
-        "'args' argument must be either a string, a Path, or an array of strings/Paths/numbers",
-        { received: args }
-      );
-    }
+    // type of `args` gets checked in `toArgv`
+    this.args = toArgv(args);
 
     const cwd = options.cwd;
     if (cwd == null) {

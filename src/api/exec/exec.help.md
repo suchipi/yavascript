@@ -46,7 +46,7 @@ The return value of `exec` varies depending on the options passed:
 ```ts
 // Defined in yavascript/src/api/exec
 declare function exec(
-  args: string | Array<string>,
+  args: string | Path | Array<string | Path | number>,
   options?: {
     /** Defaults to `pwd()` */
     cwd?: string | Path;
@@ -64,4 +64,9 @@ declare function exec(
     captureOutput?: boolean | "utf8" | "arraybuffer";
   }
 );
+
+// Converts `args` to an Array<string> using the same logic `exec` does.
+declare function exec.toArgv(
+  args: string | Path | Array<string | Path | number>,
+): Array<string>;
 ```

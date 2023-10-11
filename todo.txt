@@ -1,7 +1,7 @@
 - [ ] set import.meta.main correctly (will need change in quickjs to support this)
 - [ ] add path-less-traveled-style pathMarker functionality to Path
-- [ ] move all of exec and ChildProcess's string/Path/Array/number handling into parseArgString
-- [ ] expose exec's arg-string-to-array parsing function, for forwarding to 'concurrently', 'nodemon', etc
+- [x] move all of exec and ChildProcess's string/Path/Array/number handling into parseArgString
+- [x] expose exec's arg-string-to-array parsing function, for forwarding to 'concurrently', 'nodemon', etc
 - [x] accept Path objects in exec array
 - [x] make static Path methods return Paths instead of strings
 - [x] make quote accept Path objects

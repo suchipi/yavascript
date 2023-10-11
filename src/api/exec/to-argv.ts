@@ -1,12 +1,34 @@
-// Used internally by `exec`. Exported from a separate file for testing purposes
+import { Path } from "../path";
+import { is } from "../is";
+import { types } from "../types";
+import { makeErrorWithProperties } from "../../error-with-properties";
 
-export function parseArgString(args: string): Array<string> {
+export function toArgv(
+  args: string | Path | Array<string | number | Path>
+): Array<string> {
+  let stringInput: string;
+
+  if (is(args, types.string)) {
+    stringInput = args;
+  } else if (is(args, types.Path)) {
+    stringInput = args.toString();
+  } else if (
+    is(args, types.arrayOf(types.or(types.string, types.number, types.Path)))
+  ) {
+    return args.map((item) => String(item));
+  } else {
+    throw makeErrorWithProperties(
+      "'args' argument must be either a string, a Path, or an array of strings/Paths/numbers",
+      { received: args }
+    );
+  }
+
   const result: Array<string> = [];
 
   let mode: "DEFAULT" | "IN_DOUBLE_STRING" | "IN_SINGLE_STRING" = "DEFAULT";
   let argBeingBuilt = "";
 
-  const chars = args.split("");
+  const chars = stringInput.split("");
   for (let i = 0; i < chars.length; i++) {
     const prevChar: string | null = chars[i - 1] ?? null;
     const char: string = chars[i];
@@ -100,11 +122,11 @@ export function parseArgString(args: string): Array<string> {
     result.push(argBeingBuilt);
   } else if (mode === "IN_DOUBLE_STRING") {
     throw new Error(
-      `Invalid command string: unterminated double-quote: ${args}`
+      `Invalid command-line string: unterminated double-quote: ${stringInput}`
     );
   } else if (mode === "IN_SINGLE_STRING") {
     throw new Error(
-      `Invalid command string: unterminated single-quote: ${args}`
+      `Invalid command-line string: unterminated single-quote: ${stringInput}`
     );
   }
 

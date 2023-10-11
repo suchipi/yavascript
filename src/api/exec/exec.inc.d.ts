@@ -164,9 +164,19 @@ declare interface Exec {
     args: Array<string | Path | number> | string | Path,
     options?: BaseExecOptions
   ): void;
+
+  /**
+   * Parse the provided value into an array of command-line argument strings,
+   * using the same logic that {@link exec} and {@link ChildProcess} use.
+   */
+  toArgv(args: Array<string | Path | number> | string | Path): Array<string>;
 }
 
-/** Runs a child process using the provided arguments. The first value in the arguments array is the program to run. */
+/**
+ * Runs a child process using the provided arguments.
+ *
+ * The first value in the arguments array is the program to run.
+ */
 declare const exec: Exec;
 
 /** Alias for `exec(args, { captureOutput: true })` */

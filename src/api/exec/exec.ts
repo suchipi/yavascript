@@ -1,5 +1,5 @@
 import * as std from "quickjs:std";
-import { parseArgString } from "./parse-arg-string";
+import { toArgv } from "./to-argv";
 import { env } from "../env";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import { traceAll } from "../trace-all";
@@ -9,7 +9,6 @@ import { setHelpText } from "../help";
 import execHelpText from "./exec.help.md";
 import dollarHelpText from "./_dollar.help.md";
 import { ChildProcess } from "./ChildProcess";
-import { is } from "../is";
 import { types } from "../types";
 
 const exec = (
@@ -170,5 +169,7 @@ export function $(args: Array<string | Path | number> | string | Path): {
     failOnNonZeroStatus: true,
   });
 }
+
+exec.toArgv = toArgv;
 
 setHelpText($, dollarHelpText);
