@@ -55,9 +55,9 @@ module.exports = {
   arch: getArch(),
 };
 
-const wellKnownArchictectures = new Set(["arm64", "x86_64"]);
+const wellKnownArchitectures = new Set(["arm64", "x86_64"]);
 
-if (!wellKnownArchictectures.has(module.exports.arch)) {
+if (!wellKnownArchitectures.has(module.exports.arch)) {
   console.warn(
     `WARNING: yavascript.arch will be set to '${module.exports.arch}', which may not be desirable. Generally, it should be either 'arm64' or 'x86_64'. Feel free to ignore this message if compiling for a different architecture.`
   );
