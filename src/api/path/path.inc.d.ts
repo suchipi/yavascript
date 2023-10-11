@@ -148,4 +148,98 @@ declare class Path {
    * the same as the global `extname`'s `options` parameter.
    */
   extname(options?: { full?: boolean }): string;
+
+  /**
+   * Return whether this path starts with the provided value, by comparing one
+   * path segment at a time.
+   *
+   * The starting segments of this path must *exactly* match the segments in the
+   * provided value.
+   *
+   * This means that, given two Paths A and B:
+   *
+   * ```
+   *   A: Path { /home/user/.config }
+   *   B: Path { /home/user/.config2 }
+   * ```
+   *
+   * Path B does *not* start with Path A, because `".config" !== ".config2"`.
+   */
+  startsWith(value: string | Path | Array<string | Path>): boolean;
+
+  /**
+   * Return whether this path ends with the provided value, by comparing one
+   * path segment at a time.
+   *
+   * The ending segments of this path must *exactly* match the segments in the
+   * provided value.
+   *
+   * This means that, given two Paths A and B:
+   *
+   * ```
+   *   A: Path { /home/1user/.config }
+   *   B: Path { user/.config }
+   * ```
+   *
+   * Path A does *not* end with Path B, because `"1user" !== "user"`.
+   */
+  endsWith(value: string | Path | Array<string | Path>): boolean;
+
+  /**
+   * Return the path segment index at which `value` appears in this path, or
+   * `-1` if it doesn't appear in this path.
+   *
+   * @param value - The value to search for. If the value contains more than one path segment, the returned index will refer to the location of the value's first path segment.
+   * @param fromIndex - The index into this path's segments to begin searching at. Defaults to `0`.
+   */
+  indexOf(
+    value: string | Path | Array<string | Path>,
+    fromIndex?: number | undefined
+  ): number;
+
+  /**
+   * Return whether `value` appears in this path.
+   *
+   * @param value - The value to search for.
+   * @param fromIndex - The index into this path's segments to begin searching at. Defaults to `0`.
+   */
+  includes(
+    value: string | Path | Array<string | Path>,
+    fromIndex?: number | undefined
+  ): boolean;
+
+  /**
+   * Return a new Path wherein the segments in `value` have been replaced with
+   * the segments in `replacement`. If the segments in `value` are not present
+   * in this path, a clone of this path is returned.
+   *
+   * Note that only the first match is replaced.
+   *
+   * @param value - What should be replaced
+   * @param replacement - What it should be replaced with
+   */
+  replace(
+    value: string | Path | Array<string | Path>,
+    replacement: string | Path | Array<string | Path>
+  ): Path;
+
+  /**
+   * Return a new Path wherein all occurrences of the segments in `value` have
+   * been replaced with the segments in `replacement`. If the segments in
+   * `value` are not present in this path, a clone of this path is returned.
+   *
+   * @param value - What should be replaced
+   * @param replacement - What it should be replaced with
+   */
+  replaceAll(
+    value: string | Path | Array<string | Path>,
+    replacement: string | Path | Array<string | Path>
+  ): Path;
+
+  /**
+   * Return a copy of this path but with the final segment replaced with `replacement`
+   *
+   * @param replacement - The new final segment(s) for the returned Path
+   */
+  replaceLast(replacement: string | Path | Array<string | Path>): Path;
 }

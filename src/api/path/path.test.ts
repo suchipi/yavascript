@@ -584,3 +584,200 @@ test("printing of Path object with a child path object attached to it", async ()
     }
   `);
 });
+
+test("Path.startsWith", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path(pwd(), "something", "yeah");
+      const p2 = new Path(pwd(), "something-else", "yeah", "yup");
+      const p3 = new Path(pwd(), "something");
+
+      // All true
+      echo(p.startsWith(pwd()));
+      echo(p2.startsWith(pwd()));
+      echo(p3.startsWith(pwd()));
+      echo(p.startsWith(p));
+      echo(p2.startsWith(p2));
+      echo(p3.startsWith(p3));
+
+      // All false
+      echo(p.startsWith(p2));
+      echo(p2.startsWith(p));
+      echo(p2.startsWith(p3));
+
+      // true
+      echo(p.startsWith(p3));
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    true
+    true
+    true
+    true
+    true
+    false
+    false
+    false
+    true
+    ",
+    }
+  `);
+});
+
+test("Path.endsWith", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path(pwd(), "something", "yup");
+      const p2 = new Path(pwd(), "something-else", "yeah", "yup");
+      const p3 = new Path("yeah", "yup");
+
+      // All true
+      echo(p.endsWith(p));
+      echo(p2.endsWith(p2));
+      echo(p3.endsWith(p3));
+
+      // All false
+      echo(p.endsWith(p2));
+      echo(p2.endsWith(p));
+      echo(p.endsWith(p3));
+
+      // true
+      echo(p2.endsWith(p3));
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "true
+    true
+    true
+    false
+    false
+    false
+    true
+    ",
+    }
+  `);
+});
+
+test("Path.indexOf", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path("/tmp/something/yeah/yup");
+      
+      echo([
+        p.indexOf("not here"),
+        p.indexOf("/tmp"),
+        // weird quirk of how we store segments: first segment in unix-style absolute path is ""
+        p.indexOf("tmp"),
+        p.indexOf("yup"),
+        p.indexOf("something"),
+
+        // You can specify search index... best way to test that is to make it miss something, I guess
+        p.indexOf("tmp", 2),
+        p.indexOf("yup", 2), // works because yup is after index 2
+      ]);
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "[
+      -1
+      0
+      1
+      4
+      2
+      -1
+      4
+    ]
+    ",
+    }
+  `);
+});
+
+test("Path.replace", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path(pwd(), "something", "yup", "yeah");
+      
+      echo([
+        p.replace("something", "something-else"),
+        p.replace("something/yup", "something/nah"),
+        p.replace("something/yup", "something-again"),
+        p.replace(pwd(), "/tmp"),
+        p.replace(["something", "yup", "yeah"], "/mhm"),
+      ])
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "[
+      Path { <rootDir>/something-else/yup/yeah }
+      Path { <rootDir>/something/nah/yeah }
+      Path { <rootDir>/something-again/yeah }
+      Path { /tmp/something/yup/yeah }
+      Path { <rootDir>/mhm }
+    ]
+    ",
+    }
+  `);
+});
+
+test("Path.replaceAll", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path("/one/two/three/two/one/zero");
+      echo(p.replaceAll("one", "nine/ten"));
+
+      // replaceAll avoids an infinite loop by only replacing forwards
+      echo(p.replaceAll("one", "one"));
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path { /nine/ten/two/three/two/nine/ten/zero }
+    Path { /one/two/three/two/one/zero }
+    ",
+    }
+  `);
+});
+
+test("Path.replaceLast", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path("/one/two/three/two/one/zero");
+      echo(p.replaceLast("twenty-two"));
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path { /one/two/three/two/one/twenty-two }
+    ",
+    }
+  `);
+});

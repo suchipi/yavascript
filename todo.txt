@@ -6,7 +6,7 @@
 - [x] make static Path methods return Paths instead of strings
 - [x] make quote accept Path objects
 - [x] make ls, pwd, etc all return Path objects when possible
-- [ ] add something to make "this path but with a different extension" and "this path but swap the basedir from this to this" easier
+- [x] add something to make "this path but with a different extension" and "this path but swap the basedir from this to this" easier
 - [ ] finish all the help docs!!!
 - [ ] spicy: override types for string-receiving methods to accept anything that can be converted to a string (if quickjs converts it)
 - [x] add frozen "initial pwd" somewhere

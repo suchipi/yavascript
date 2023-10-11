@@ -320,6 +320,107 @@ class Path {
     return extname(this, options);
   }
 
+  startsWith(value: string | Path | Array<string | Path>): boolean {
+    value = new Path(value);
+
+    return value.segments.every(
+      (segment, index) => this.segments[index] === segment
+    );
+  }
+
+  endsWith(value: string | Path | Array<string | Path>): boolean {
+    value = new Path(value);
+
+    const valueSegmentsReversed = [...value.segments].reverse();
+    const ownSegmentsReversed = [...this.segments].reverse();
+
+    return valueSegmentsReversed.every(
+      (segment, index) => ownSegmentsReversed[index] === segment
+    );
+  }
+
+  indexOf(
+    value: string | Path | Array<string | Path>,
+    fromIndex: number = 0
+  ): number {
+    value = new Path(value);
+
+    const ownSegmentsLength = this.segments.length;
+    for (let i = fromIndex; i < ownSegmentsLength; i++) {
+      if (
+        value.segments.every((valueSegment, valueIndex) => {
+          return this.segments[i + valueIndex] === valueSegment;
+        })
+      ) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  includes(
+    value: string | Path | Array<string | Path>,
+    fromIndex: number = 0
+  ): boolean {
+    return this.indexOf(value, fromIndex) !== -1;
+  }
+
+  replace(
+    value: string | Path | Array<string | Path>,
+    replacement: string | Path | Array<string | Path>
+  ): Path {
+    value = new Path(value);
+    replacement = new Path(replacement);
+
+    const matchIndex = this.indexOf(value);
+
+    if (matchIndex === -1) {
+      return this.clone();
+    } else {
+      const newSegments = [
+        ...this.segments.slice(0, matchIndex),
+        ...replacement.segments,
+        ...this.segments.slice(matchIndex + value.segments.length),
+      ];
+      return Path.from(newSegments, this.separator);
+    }
+  }
+
+  replaceAll(
+    value: string | Path | Array<string | Path>,
+    replacement: string | Path | Array<string | Path>
+  ): Path {
+    replacement = new Path(replacement);
+
+    let searchIndex = 0;
+
+    let currentPath: Path = this;
+
+    const ownLength = this.segments.length;
+    while (searchIndex < ownLength) {
+      const matchingIndex = this.indexOf(value, searchIndex);
+      if (matchingIndex === -1) {
+        break;
+      } else {
+        currentPath = currentPath.replace(value, replacement);
+        searchIndex = matchingIndex + replacement.segments.length;
+      }
+    }
+
+    return currentPath;
+  }
+
+  replaceLast(replacement: string | Path | Array<string | Path>): Path {
+    replacement = new Path(replacement);
+
+    const segments = [...this.segments];
+    segments.pop();
+    segments.push(...replacement.segments);
+
+    return Path.from(segments, this.separator);
+  }
+
   [inspect.custom](inputs: InspectCustomInputs) {
     const isEmpty = this.segments.length === 0;
     if (isEmpty) {
