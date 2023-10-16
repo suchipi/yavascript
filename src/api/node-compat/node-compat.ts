@@ -30,6 +30,21 @@ export function installNodeCompat(global: any) {
     get execPath() {
       return os.realpath(os.execPath());
     },
+    get exitCode() {
+      return std.getExitCode();
+    },
+    set exitCode(value: number) {
+      std.setExitCode(value);
+    },
+    exit(code?: number | null | undefined) {
+      // TODO: process.on("exit", ...)
+
+      if (code != null) {
+        std.exit(code);
+      } else {
+        std.exit();
+      }
+    },
   };
 
   Object.defineProperty(global, "process", {
