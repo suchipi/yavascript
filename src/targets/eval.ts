@@ -1,4 +1,4 @@
-import * as std from "quickjs:std";
+import * as mod from "quickjs:module";
 import * as os from "quickjs:os";
 import * as esmToRequire from "../esm-to-require";
 import { NOTHING } from "../api/repl/special";
@@ -14,7 +14,7 @@ export default function evalTarget(inputCode: string, lang: string) {
   const filename =
     os.getcwd() + (os.platform === "win32" ? "\\" : "/") + "<evalScript>";
 
-  const result = std.evalScript(transformedCode, {
+  const result = mod.evalScript(transformedCode, {
     backtraceBarrier: true,
     filename,
   });

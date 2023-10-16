@@ -4323,54 +4323,42 @@ declare interface FILE {
 
 declare module "quickjs:std" {
   /**
+   * Set the exit code that the process should exit with in the future, if it
+   * exits normally.
+   *
+   * Can only be called from the main thread.
+   *
+   * This exit code will only be used if the process exits "normally", ie, when
+   * there are no more pending JS tasks/listeners. If an unhandled exception is
+   * thrown, the process will always exit with status `1`, regardless of the
+   * status code passed to `setExitCode`. If someone calls {@link exit} and
+   * passes in a status code, that status code will take precedence over the
+   * status code passed to `setExitCode`.
+   *
+   * @param statusCode The future exit code; 0 for success, nonzero for failure.
+   */
+  export function setExitCode(statusCode: number): void;
+
+  /**
+   * Return the exit code that was previously set by {@link setExitCode}, or 0 if
+   * it hasn't yet been set.
+   *
+   * Can only be called from the main thread.
+   */
+  export function getExitCode(): number;
+
+  /**
    * Exit the process with the provided status code.
+   *
+   * Can only be called from the main thread.
+   *
+   * If `statusCode` is not provided, a value previously passed into
+   * {@link setExitCode} will be used. If no value was previously passed into
+   * setExitCode, `0` will be used.
    *
    * @param statusCode The exit code; 0 for success, nonzero for failure.
    */
-  export function exit(statusCode: number): void;
-
-  /**
-   * Evaluate the string `code` as a script (global eval).
-   *
-   * @param code - The code to evaluate.
-   * @param options - An optional object containing the following optional properties:
-   * @property backtraceBarrier - Boolean (default = false). If true, error backtraces do not list the stack frames below the evalScript.
-   * @property filename - String (default = "<evalScript>"). The filename to associate with the code being executed.
-   * @returns The result of the evaluation.
-   */
-  export function evalScript(
-    code: string,
-    options?: { backtraceBarrier?: boolean; filename?: string }
-  ): any;
-
-  /**
-   * Evaluate the file `filename` as a script (global eval).
-   *
-   * @param filename - The relative or absolute path to the file to load. Relative paths are resolved relative to the process's current working directory.
-   * @returns The result of the evaluation.
-   */
-  export function loadScript(filename: string): any;
-
-  /**
-   * Evaluate the file `filename` as a module. Effectively a synchronous dynamic `import()`.
-   *
-   * @param filename - The relative or absolute path to the file to import. Relative paths are resolved relative to the file calling `importModule`, or `basename` if present.
-   * @param basename - If present and `filename` is a relative path, `filename` will be resolved relative to this basename.
-   * @returns The result of the evaluation (module namespace object).
-   */
-  export function importModule(
-    filename: string,
-    basename?: string
-  ): { [key: string]: any };
-
-  /**
-   * Return the resolved path to a module.
-   *
-   * @param filename - The relative or absolute path to the file to import. Relative paths are resolved relative to the file calling `importModule`, or `basename` if present.
-   * @param basename - If present and `filename` is a relative path, `filename` will be resolved relative to this basename.
-   * @returns The resolved module path.
-   */
-  export function resolveModule(filename: string, basename?: string): string;
+  export function exit(statusCode?: number): never;
 
   /**
    * Load the file `filename` and return it as a string assuming UTF-8 encoding.
@@ -4378,15 +4366,6 @@ declare module "quickjs:std" {
    * @param filename - The relative or absolute path to the file to load. Relative paths are resolved relative to the process's current working directory.
    */
   export function loadFile(filename: string): string;
-
-  /**
-   * Read the script of module filename from an active stack frame, then return it as a string.
-   *
-   * If there isn't a valid filename for the specified stack frame, an error will be thrown.
-   *
-   * @param stackLevels - How many levels up the stack to search for a filename. Defaults to 0, which uses the current stack frame.
-   */
-  export function getFileNameFromStack(stackLevels?: number): string;
 
   /**
    * Return a boolean indicating whether the provided value is a FILE object.
@@ -5471,6 +5450,79 @@ interface ImportMeta {
   resolve: RequireFunction["resolve"];
 }
 
+declare module "quickjs:module" {
+  /**
+   * Return whether the provided resolved module path is set as the main module.
+   *
+   * In other words, return what the value of `import.meta.main` would be within
+   * the module.
+   *
+   * The main module can be set via {@link setMainModule}.
+   */
+  export function isMainModule(resolvedFilepath: string): boolean;
+
+  /**
+   * Set the main module to the module with the provided resolved path.
+   *
+   * This will affect the value of `import.meta.main` for modules loaded in the
+   * future, but it will NOT retroactively change the value of
+   * `import.meta.main` in existing already-loaded modules.
+   */
+  export function setMainModule(resolvedFilepath: string): void;
+
+  /**
+   * Evaluate the string `code` as a script (global eval).
+   *
+   * @param code - The code to evaluate.
+   * @param options - An optional object containing the following optional properties:
+   * @property backtraceBarrier - Boolean (default = false). If true, error backtraces do not list the stack frames below the evalScript.
+   * @property filename - String (default = "<evalScript>"). The filename to associate with the code being executed.
+   * @returns The result of the evaluation.
+   */
+  export function evalScript(
+    code: string,
+    options?: { backtraceBarrier?: boolean; filename?: string }
+  ): any;
+
+  /**
+   * Evaluate the file `filename` as a script (global eval).
+   *
+   * @param filename - The relative or absolute path to the file to load. Relative paths are resolved relative to the process's current working directory.
+   * @returns The result of the evaluation.
+   */
+  export function runScript(filename: string): any;
+
+  /**
+   * Evaluate the file `filename` as a module. Effectively a synchronous dynamic `import()`.
+   *
+   * @param filename - The relative or absolute path to the file to import. Relative paths are resolved relative to the file calling `importModule`, or `basename` if present.
+   * @param basename - If present and `filename` is a relative path, `filename` will be resolved relative to this basename.
+   * @returns The result of the evaluation (module namespace object).
+   */
+  export function importModule(
+    filename: string,
+    basename?: string
+  ): { [key: string]: any };
+
+  /**
+   * Return the resolved path to a module.
+   *
+   * @param filename - The relative or absolute path to the file to import. Relative paths are resolved relative to the file calling `importModule`, or `basename` if present.
+   * @param basename - If present and `filename` is a relative path, `filename` will be resolved relative to this basename.
+   * @returns The resolved module path.
+   */
+  export function resolveModule(filename: string, basename?: string): string;
+
+  /**
+   * Read the script of module filename from an active stack frame, then return it as a string.
+   *
+   * If there isn't a valid filename for the specified stack frame, an error will be thrown.
+   *
+   * @param stackLevels - How many levels up the stack to search for a filename. Defaults to 0, which uses the current stack frame.
+   */
+  export function getFileNameFromStack(stackLevels?: number): string;
+}
+
 declare module "quickjs:bytecode" {
   /**
    * Convert the module or script in the specified file into bytecode.
@@ -5542,6 +5594,10 @@ declare module "quickjs:context" {
      * - Symbol
      * - eval (but it doesn't work unless the `eval` option is enabled)
      * - globalThis
+     *
+     * Note that new contexts don't have a `scriptArgs` global. If you need one
+     * to be present in the new context, you can add one onto the Context's
+     * `globalThis` property.
      */
     constructor(options?: {
       /** Enables `Date`. Defaults to `true` */
@@ -5552,6 +5608,9 @@ declare module "quickjs:context" {
 
       /** Enables `String.prototype.normalize`. Defaults to `true`. */
       stringNormalize?: boolean;
+
+      /** Enables `String.dedent`. Defaults to `true`. */
+      stringDedent?: boolean;
 
       /** Enables `RegExp`. Defaults to `true`. */
       regExp?: boolean;
@@ -5619,32 +5678,22 @@ declare module "quickjs:context" {
        */
       operators?: boolean;
 
-      /** Enables "use math". Defaults to `true`. */
+      /** Enables `"use math"`. Defaults to `true`. */
       useMath?: boolean;
 
+      /** Enables `inspect`. Defaults to `true`. */
+      inspect?: boolean;
+      /** Enables `console`. Defaults to `true`. */
+      console?: boolean;
+      /** Enables `print`. Defaults to `true`. */
+      print?: boolean;
+      /** Enables `require` and `Module`. Defaults to `true`. */
+      moduleGlobals?: boolean;
       /**
-       * Enables:
-       *
-       * - inspect
-       * - console
-       * - print
-       * - require (and require.resolve)
-       * - setTimeout
-       * - clearTimeout
-       * - setInterval
-       * - clearInterval
-       * - String.cooked
-       * - String.dedent
-       *
-       * Defaults to `true`.
-       *
-       * NOTE: The following globals, normally part of `js_std_add_helpers`, are NEVER added:
-       *
-       * - scriptArgs
-       *
-       * If you need them in the new context, copy them over from your context's globalThis onto the child context's globalThis.
+       * Enables `setTimeout`, `clearTimeout`, `setInterval`, and
+       * `clearInterval`. Defaults to `true`.
        */
-      stdHelpers?: boolean;
+      timers?: boolean;
 
       /** Enable builtin modules. */
       modules?: {
@@ -5656,6 +5705,8 @@ declare module "quickjs:context" {
         "quickjs:bytecode"?: boolean;
         /** Enables the "quickjs:context" module. Defaults to `true`. */
         "quickjs:context"?: boolean;
+        /** Enables the "quickjs:module" module. Defaults to `true`. */
+        "quickjs:module"?: boolean;
       };
     });
 

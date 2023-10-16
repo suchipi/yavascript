@@ -5,12 +5,11 @@ const { defaultResolver, Runtime, defaultLoader } = require("kame");
 const stubPath = path.resolve(__dirname, "kame-module-stub.js");
 
 exports.resolve = (id, fromFilePath) => {
-  switch (id) {
-    case "quickjs:os":
-      return "external:quickjs:os";
-    case "quickjs:std":
-      return "external:quickjs:std";
+  if (id.startsWith("quickjs:")) {
+    return "external:" + id;
+  }
 
+  switch (id) {
     // intentionally unresolved; coffeescript checks for this in a try-catch,
     // and we don't want to pull it into the bundle.
     case "babel-core":

@@ -1,4 +1,4 @@
-import * as std from "quickjs:std";
+import * as mod from "quickjs:module";
 import { makeErrorWithProperties } from "./error-with-properties";
 
 const hasOwn = Object.hasOwn;
@@ -7,10 +7,10 @@ export function patchRequire(theGlobal: typeof globalThis) {
   const nativeRequire = theGlobal.require;
 
   const newRequire = (path: string) => {
-    const callerFile = std.getFileNameFromStack(1);
+    const callerFile = mod.getFileNameFromStack(1);
     let resolved: string;
     try {
-      resolved = std.resolveModule(path, callerFile);
+      resolved = mod.resolveModule(path, callerFile);
     } catch (err) {
       throw makeErrorWithProperties(`Cannot find module`, {
         request: path,
@@ -18,28 +18,28 @@ export function patchRequire(theGlobal: typeof globalThis) {
       });
     }
 
-    const mod = nativeRequire(resolved);
+    const exps = nativeRequire(resolved);
     if (
-      hasOwn(mod, "__isCjsModule") &&
-      mod.__isCjsModule === true &&
-      hasOwn(mod, "__cjsExports")
+      hasOwn(exps, "__isCjsModule") &&
+      exps.__isCjsModule === true &&
+      hasOwn(exps, "__cjsExports")
     ) {
-      const exportedNames = Object.keys(mod);
+      const exportedNames = Object.keys(exps);
       if (
         // if the only exports are the previously-checked __isCjsModule and __cjsExports...
         exportedNames.length === 2 ||
         // or those two plus 'default'
-        (exportedNames.length === 3 && hasOwn(mod, "default"))
+        (exportedNames.length === 3 && hasOwn(exps, "default"))
       ) {
         // respect its cjs exports
-        return mod.__cjsExports;
+        return exps.__cjsExports;
       }
 
       // if they mixed ESM and CJS for anything other than 'default',
       // treat it like ESM.
     }
 
-    return mod;
+    return exps;
   };
 
   theGlobal.require = Object.assign(newRequire, nativeRequire);

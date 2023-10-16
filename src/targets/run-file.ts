@@ -1,4 +1,4 @@
-import * as std from "quickjs:std";
+import * as mod from "quickjs:module";
 import { langToCompiler } from "../langs";
 import compilers from "../compilers";
 import { extname } from "../api/commands/extname";
@@ -36,7 +36,7 @@ export default async function runFileTarget(
   let absFileToRun = Path.isAbsolute(fileToRun)
     ? fileToRun
     : fileToRun.match(/^\.{1,2}\//)
-    ? std.resolveModule(fileToRun, "./<cwd>")
+    ? mod.resolveModule(fileToRun, "./<cwd>")
     : Path.join(pwd(), fileToRun).toString();
 
   absFileToRun = realpath(absFileToRun).toString();
@@ -48,8 +48,9 @@ export default async function runFileTarget(
     });
   }
 
+  mod.setMainModule(absFileToRun);
   try {
-    std.importModule(absFileToRun, "./<cwd>");
+    mod.importModule(absFileToRun, "./<cwd>");
   } catch (err: any) {
     if (
       typeof err === "object" &&
@@ -65,7 +66,7 @@ export default async function runFileTarget(
 
       let result: any;
       try {
-        const exp = std.importModule(absFileToRun, "./<cwd>");
+        const exp = mod.importModule(absFileToRun, "./<cwd>");
         result = exp.__toplevel_await_promise__;
       } catch (err: any) {
         if (
