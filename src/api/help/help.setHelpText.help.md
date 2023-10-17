@@ -1,4 +1,4 @@
-`help.setHelpText` - Registers the help text associated with a value
+# `help.setHelpText` - Registers the help text associated with a value
 
 To register help text for a provided value, use `help.setHelpText`:
 

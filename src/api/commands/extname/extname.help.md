@@ -1,4 +1,4 @@
-`extname` - Get file extension
+# `extname` - Get file extension
 
 Returns the file extension of the file at a given path.
 

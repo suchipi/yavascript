@@ -1,4 +1,4 @@
-`echo` - Print stuff to the screen
+# `echo` - Print stuff to the screen
 
 Print one or more values to stdout.
 

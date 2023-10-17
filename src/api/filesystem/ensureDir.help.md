@@ -1,4 +1,4 @@
-`ensureDir` - Ensures directories exist
+# `ensureDir` - Ensures directories exist
 
 Creates directories for each of the provided path components, if they don't already exist.
 

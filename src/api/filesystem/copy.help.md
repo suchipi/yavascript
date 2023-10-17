@@ -1,4 +1,4 @@
-`copy` - Copy files/folders
+# `copy` - Copy files/folders
 
 Copies a file or folder from one location to another. Folders are copied recursively.
 

@@ -1,4 +1,4 @@
-`CSV` - Serializes or deserializes CSV data.
+# `CSV` - Serializes or deserializes CSV data.
 
 The `CSV` object contains a `parse` function and a `stringify` function which can be used to parse strings of CSV (comma-separated values) data into arrays-of-arrays-of-strings and serialize arrays-of-arrays-of-strings into strings of CSV data.
 

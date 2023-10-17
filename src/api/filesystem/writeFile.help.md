@@ -1,4 +1,4 @@
-`writeFile` - Write data to a file on disk
+# `writeFile` - Write data to a file on disk
 
 `writeFile` is a function which writes the provided data to a file on disk. The data can be either a string or an ArrayBuffer.
 

@@ -1,4 +1,4 @@
-`pwd` - Get the current working directory.
+# `pwd` - Get the current working directory.
 
 Returns the process's current working directory.
 

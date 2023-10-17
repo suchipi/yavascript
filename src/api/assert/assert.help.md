@@ -1,4 +1,4 @@
-`assert` - Throws an error if its argument isn't truthy.
+# `assert` - Throws an error if its argument isn't truthy.
 
 Accepts two arguments: `value`, and (optionally) `message`.
 

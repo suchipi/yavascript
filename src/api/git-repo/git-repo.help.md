@@ -1,4 +1,4 @@
-`GitRepo` - Utility for working with git repositories
+# `GitRepo` - Utility for working with git repositories
 
 The `GitRepo` class can be used to get information about a git repository on disk.
 

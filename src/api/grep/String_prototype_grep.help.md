@@ -1,4 +1,4 @@
-`String.prototype.grep` - returns lines in string matching pattern
+# `String.prototype.grep` - returns lines in string matching pattern
 
 The `String.prototype.grep` method splits the string on `\n` and then returns the lines matching the specified pattern, as an array of strings.
 

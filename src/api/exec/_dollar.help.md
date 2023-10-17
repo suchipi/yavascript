@@ -1,4 +1,4 @@
-`$` - Run system command and return stdout/stderr
+# `$` - Run system command and return stdout/stderr
 
 `$(...)` is an alias for `exec(..., { captureOutput: true, failOnNonZeroStatus: true })`. It's often used to capture the output of a program:
 

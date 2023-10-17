@@ -1,4 +1,4 @@
-`sleep` - Wait the specified number of milliseconds
+# `sleep` - Wait the specified number of milliseconds
 
 `sleep` and `sleep.sync` block the current thread for at least the specified number of milliseconds, or maybe a tiny bit longer.
 

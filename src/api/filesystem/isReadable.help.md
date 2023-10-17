@@ -1,4 +1,4 @@
-`isReadable` - Returns whether a given path can be read
+# `isReadable` - Returns whether a given path can be read
 
 `isReadable` is a function which returns a boolean indicating whether the current user can read the resource at the provided path.
 

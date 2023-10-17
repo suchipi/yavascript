@@ -1,4 +1,4 @@
-`sleep.async` - Wait for a while without blocking the thread
+# `sleep.async` - Wait for a while without blocking the thread
 
 `sleep.async` returns a Promise which resolves in at least the specified number of milliseconds, or maybe a tiny bit longer.
 

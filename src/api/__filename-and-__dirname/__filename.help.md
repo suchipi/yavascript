@@ -1,4 +1,4 @@
-`__filename` - The absolute path to the currently-executing file.
+# `__filename` - The absolute path to the currently-executing file.
 
 The absolute path to the current file (whether script or module).
 

@@ -1,4 +1,4 @@
-`GitRepo.prototype.isIgnored` - Check whether a file is gitignored
+# `GitRepo.prototype.isIgnored` - Check whether a file is gitignored
 
 The `isIgnored` method returns a boolean indicating whether the provided path is ignored by one or more `.gitignore` files in the repository.
 

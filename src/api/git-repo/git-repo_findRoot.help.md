@@ -1,4 +1,4 @@
-`GitRepo.findRoot` - Locate the root of a repo from a path within the repo.
+# `GitRepo.findRoot` - Locate the root of a repo from a path within the repo.
 
 Given a path to a file or folder on disk, the `GitRepo.findRoot` function searches upwards through the directory ancestry to find a `.git` folder, then returns the `Path` that contains that `.git` folder. If no `.git` folder is found, an error will be thrown.
 

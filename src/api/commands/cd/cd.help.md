@@ -1,4 +1,4 @@
-`cd` - Change the current directory
+# `cd` - Change the current directory
 
 Changes the process's current working directory to the specified path. If no path is specified, moves to the user's home directory.
 

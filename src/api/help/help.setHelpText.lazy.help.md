@@ -1,4 +1,4 @@
-`help.setHelpText.lazy` - Lazily registers the help text associated with a value
+# `help.setHelpText.lazy` - Lazily registers the help text associated with a value
 
 Lazily sets the help text for the provided value using the provided string-returning function.
 

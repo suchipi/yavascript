@@ -1,4 +1,4 @@
-`exec` - Run system commands via child processes
+# `exec` - Run system commands via child processes
 
 The `exec` function runs a child process and blocks until it exits. You can call it with either a string or an array of strings.
 

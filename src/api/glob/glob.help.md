@@ -1,4 +1,4 @@
-`glob` - Turn a glob string into an array of paths
+# `glob` - Turn a glob string into an array of paths
 
 The `glob` function is used to resolve [UNIX-style glob strings][man-glob-7] into an array of matching filesystem paths.
 

@@ -1,4 +1,4 @@
-`cat` - Read files from disk
+# `cat` - Read files from disk
 
 Reads the contents of one or more files from disk as one UTF-8 string.
 

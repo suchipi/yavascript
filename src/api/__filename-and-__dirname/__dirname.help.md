@@ -1,4 +1,4 @@
-`__dirname` - The absolute path to the folder containing the currently-executing file.
+# `__dirname` - The absolute path to the folder containing the currently-executing file.
 
 The absolute path to the directory the current file is inside of.
 

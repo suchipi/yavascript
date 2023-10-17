@@ -1,4 +1,4 @@
-`chmod` - Change file permissions
+# `chmod` - Change file permissions
 
 Set the permission bits for the specified file.
 

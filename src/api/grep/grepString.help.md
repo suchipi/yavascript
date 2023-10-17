@@ -1,4 +1,4 @@
-`grepString` - returns lines in string matching pattern
+# `grepString` - returns lines in string matching pattern
 
 The `grepString` function splits the string passed into it on `\n` and then returns the lines matching the specified pattern, as an array of strings.
 

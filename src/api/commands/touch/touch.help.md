@@ -1,4 +1,4 @@
-`touch` - Create a file, or update its access/modified timestamp
+# `touch` - Create a file, or update its access/modified timestamp
 
 If the file at `path` exists, update its creation/modification timestamps.
 

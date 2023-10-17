@@ -1,4 +1,4 @@
-`dirname` - Get a path's enclosing folder path
+# `dirname` - Get a path's enclosing folder path
 
 Removes the final component from a path string.
 

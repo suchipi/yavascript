@@ -1,4 +1,4 @@
-`GitRepo.prototype.isWorkingTreeDirty` - Check for uncommitted changes
+# `GitRepo.prototype.isWorkingTreeDirty` - Check for uncommitted changes
 
 Returns a boolean indicating whether there are uncommited changes in the git repo. `true` means there are changes, `false` means there are no changes (ie. the repo is clean).
 

@@ -1,4 +1,4 @@
-`which` - Search the filesystem for a program with the given name
+# `which` - Search the filesystem for a program with the given name
 
 Searches the system for the path to a program named `binaryName`.
 

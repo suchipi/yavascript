@@ -1,4 +1,4 @@
-`rename` - Rename files/folders
+# `rename` - Rename files/folders
 
 Renames the file or directory at the specified path.
 

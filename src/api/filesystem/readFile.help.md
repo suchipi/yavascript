@@ -1,4 +1,4 @@
-`readFile` - Read the contents of a file on disk
+# `readFile` - Read the contents of a file on disk
 
 `readFile` is a function which reads a file from disk and returns its contents. With no options specified, it reads the file as UTF-8 and returns a string:
 

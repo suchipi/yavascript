@@ -1,4 +1,4 @@
-`assert.type` - Throws an error if its argument isn't the correct type.
+# `assert.type` - Throws an error if its argument isn't the correct type.
 
 Accepts three arguments: `value`, `type` and (optionally) `message`.
 

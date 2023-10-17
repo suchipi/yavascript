@@ -1,4 +1,4 @@
-`readlink` - Gets a symlink's target.
+# `readlink` - Gets a symlink's target.
 
 Reads a symlink.
 

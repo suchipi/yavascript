@@ -1,4 +1,4 @@
-`exists` - Check if a file/folder exists
+# `exists` - Check if a file/folder exists
 
 Returns true if a file or directory exists at the specified path.
 

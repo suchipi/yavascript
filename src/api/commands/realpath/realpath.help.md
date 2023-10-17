@@ -1,4 +1,4 @@
-`realpath` - Resolve symlinks and relative paths
+# `realpath` - Resolve symlinks and relative paths
 
 Get the absolute path given a relative path. Symlinks are also resolved.
 

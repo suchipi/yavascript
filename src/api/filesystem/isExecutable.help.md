@@ -1,4 +1,4 @@
-`isExecutable` - Returns whether a given path can be run
+# `isExecutable` - Returns whether a given path can be run
 
 `isExecutable` is a function which returns a boolean indicating whether the current user can execute the resource at the provided path.
 

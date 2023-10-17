@@ -1,4 +1,4 @@
-`CSV.parse` - Deserializes CSV data.
+# `CSV.parse` - Deserializes CSV data.
 
 `CSV.parse` can be used to parse strings of CSV (comma-separated values) data into arrays-of-arrays-of-strings.
 

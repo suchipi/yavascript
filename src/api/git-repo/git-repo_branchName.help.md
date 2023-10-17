@@ -1,4 +1,4 @@
-`GitRepo.prototype.branchName` - Get the current branch name, if present
+# `GitRepo.prototype.branchName` - Get the current branch name, if present
 
 The `branchName` method returns the name of the current git branch as a string, or null if there is no branch associated with the current HEAD of the repo.
 

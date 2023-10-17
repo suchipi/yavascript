@@ -1,4 +1,4 @@
-`grepFile` - returns lines in file matching pattern
+# `grepFile` - returns lines in file matching pattern
 
 The `grepFile` function reads a file, splits it on `\n`, and then returns the lines matching the specified pattern, as an array of strings.
 

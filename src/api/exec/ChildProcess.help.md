@@ -1,4 +1,4 @@
-`ChildProcess` - Run system commands via child processes
+# `ChildProcess` - Run system commands via child processes
 
 The `ChildProcess` class is the API used internally by the `exec` function to spawn child processes.
 

@@ -1,4 +1,4 @@
-`CSV.stringify` - Serializes data to CSV.
+# `CSV.stringify` - Serializes data to CSV.
 
 `CSV.stringify` can be used and serialize arrays-of-arrays-of-strings into strings of CSV data.
 

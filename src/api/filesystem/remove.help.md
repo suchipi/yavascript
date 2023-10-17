@@ -1,4 +1,4 @@
-`remove` - Delete files/folders
+# `remove` - Delete files/folders
 
 Delete the file or directory at the specified path.
 

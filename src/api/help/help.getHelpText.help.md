@@ -1,4 +1,4 @@
-`help.getHelpText` - Get the help text associated with a value, if any
+# `help.getHelpText` - Get the help text associated with a value, if any
 
 If you are wrapping a function and would like to preserve its help text, you may wish to use `help.getHelpText`:
 

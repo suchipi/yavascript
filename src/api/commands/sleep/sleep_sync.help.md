@@ -1,4 +1,4 @@
-`sleep.sync` - Block the current thread for a while
+# `sleep.sync` - Block the current thread for a while
 
 `sleep.sync` blocks the current thread for at least the specified number of milliseconds, or maybe a tiny bit longer.
 

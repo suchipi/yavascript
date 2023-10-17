@@ -1,4 +1,4 @@
-`help` - Print help text to stdout
+# `help` - Print help text to stdout
 
 Prints help and usage text about the provided value, if any is available.
 

@@ -1,4 +1,4 @@
-`ls` - Return directory contents
+# `ls` - Return directory contents
 
 Returns the contents of a directory, as absolute paths. `.` and `..` are omitted.
 

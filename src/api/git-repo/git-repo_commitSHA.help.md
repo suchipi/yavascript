@@ -1,4 +1,4 @@
-`GitRepo.prototype.commitSHA` - Get the commit SHA the git repo is currently pointed at
+# `GitRepo.prototype.commitSHA` - Get the commit SHA the git repo is currently pointed at
 
 The `commitSHA` method returns a string containing the full SHA-1 hash associated with the current commit the repository is pointed towards. For example:
 
