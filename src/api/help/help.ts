@@ -7,7 +7,9 @@ import setHelpTextHelpText from "./help.setHelpText.help.md";
 import setHelpTextLazyHelpText from "./help.setHelpText.lazy.help.md";
 
 const helpTextMap = new WeakMap<any, string>();
+const primitiveHelpTextMap = new Map<any, string>();
 const lazyHelpTextMap = new WeakMap<any, () => string>();
+const primitiveLazyHelpTextMap = new Map<any, () => string>();
 
 export function setHelpText(value: any, text: string) {
   if (typeof text !== "string" && !((text as any) instanceof String)) {
@@ -19,14 +21,10 @@ export function setHelpText(value: any, text: string) {
   }
 
   if (Object.isPrimitive(value)) {
-    throw makeErrorWithProperties(
-      `Cannot register help text for the value '${value}'. Help text is stored using a WeakMap, and '${value}' cannot be used as a WeakMap key, because its type is what's known as a 'primitive' type. Strings, numbers, and other values which are passed-by-value instead of passed-by-reference are all 'primitive' types.`,
-      { value },
-      TypeError
-    );
+    primitiveHelpTextMap.set(value, text);
+  } else {
+    helpTextMap.set(value, text);
   }
-
-  helpTextMap.set(value, text);
 }
 
 function setLazyHelpText(value: any, getText: () => string) {
@@ -39,27 +37,27 @@ function setLazyHelpText(value: any, getText: () => string) {
   }
 
   if (Object.isPrimitive(value)) {
-    throw makeErrorWithProperties(
-      `Cannot register help text for the value '${value}'. Help text is stored using a WeakMap, and '${value}' cannot be used as a WeakMap key, because its type is what's known as a 'primitive' type. Strings, numbers, and other values which are passed-by-value instead of passed-by-reference are all 'primitive' types.`,
-      { value },
-      TypeError
-    );
+    primitiveLazyHelpTextMap.set(value, getText);
+  } else {
+    lazyHelpTextMap.set(value, getText);
   }
-
-  lazyHelpTextMap.set(value, getText);
 }
 
 setHelpText.lazy = setLazyHelpText;
 
 export function getHelpText(value: any): string | null {
-  const resultFromHelpTextMap = helpTextMap.get(value);
-  if (resultFromHelpTextMap != null) {
-    return resultFromHelpTextMap;
+  const { textMap, lazyTextMap } = Object.isPrimitive(value)
+    ? { textMap: primitiveHelpTextMap, lazyTextMap: primitiveLazyHelpTextMap }
+    : { textMap: helpTextMap, lazyTextMap: lazyHelpTextMap };
+
+  const textResult = textMap.get(value);
+  if (textResult != null) {
+    return textResult;
   }
 
-  const resultFromLazyHelpTextMap = lazyHelpTextMap.get(value);
-  if (resultFromLazyHelpTextMap != null) {
-    const text = resultFromLazyHelpTextMap();
+  const lazyResult = lazyTextMap.get(value);
+  if (lazyResult != null) {
+    const text = lazyResult();
     setHelpText(value, text);
     lazyHelpTextMap.delete(value);
     return text;

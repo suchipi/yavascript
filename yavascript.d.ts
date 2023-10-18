@@ -2982,7 +2982,7 @@ declare const traceAll: ((
 declare namespace JSX {
   /**
    * A string containing the expression that should be called to create JSX
-   * elements.
+   * elements. yavascript's internals use this string to transpile JSX syntax.
    *
    * Defaults to "JSX.createElement".
    *
@@ -3002,7 +3002,8 @@ declare namespace JSX {
 
   /**
    * A string containing the expression that should be used as the first
-   * parameter when creating JSX fragment elements.
+   * parameter when creating JSX fragment elements. yavascript's internals use
+   * this string to transpile JSX syntax.
    *
    * Defaults to "JSX.Fragment".
    *
@@ -3042,10 +3043,19 @@ declare namespace JSX {
   export type Fragment = Element<{}, typeof Fragment>;
 
   /**
-   * The JSX element constructor, which gets invoked whenever JSX syntax is
+   * The JSX element builder function, which gets invoked whenever JSX syntax is
    * used (unless {@link JSX.pragma} is changed).
+   *
+   * Note that if you change this, you need to verify that the following
+   * expression always evaluates to `true` (by changing {@link types.JSX.Element}
+   * and {@link types.JSX.Fragment}):
+   * ```jsx
+   * types.JSX.Element(<a />) && types.JSX.Fragment(<></>)
+   * ```
+   *
+   * Failure to uphold this guarantee indicates a bug.
    */
-  export const createElement: {
+  export let createElement: {
     <Type extends string | typeof Fragment | ((...args: any) => any)>(
       type: Type
     ): Element<{}, Type>;

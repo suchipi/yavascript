@@ -46,7 +46,13 @@ const highlightersProxy = new Proxy(
 
       return function syntaxHighlight(code) {
         const lang = propertyKey;
-        return printWithBat(code, lang);
+        return (
+          chalk.gray("```" + lang) +
+          "\n" +
+          printWithBat(code, lang) +
+          "\n" +
+          chalk.gray("```")
+        );
       };
     },
   }
@@ -71,6 +77,10 @@ marked.setOptions({
 
     paragraph: (content) => wrapAnsi(content, PRINT_WIDTH),
     listitem: (content) => wrapAnsi(content, PRINT_WIDTH - 4),
+
+    // This returns an empty string in order to omit HTML comments, which
+    // *should* be the only HTML appearing in our markdown docs.
+    html: (content) => "",
 
     showSectionPrefix: true,
     syntaxHighlighters: highlightersProxy,
