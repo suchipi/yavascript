@@ -81,8 +81,9 @@ export function parseScriptArgs(
     hintsForClef,
     {
       isAbsolute: Path.isAbsolute,
-      resolvePath: (...args) => Path.resolve(...args).toString(),
-      getCwd: () => pwd.toString(),
+      resolvePath: (...args) =>
+        Path.from(args, Path.OS_SEGMENT_SEPARATOR).normalize().toString(),
+      getCwd: () => pwd().toString(),
     }
   );
 
