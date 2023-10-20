@@ -2,6 +2,7 @@ import * as os from "quickjs:os";
 import { assert } from "../assert";
 import { types } from "../types";
 import { is } from "../is";
+import { env } from "../env";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import { appendSlashIfWindowsDriveLetter } from "./_win32Helpers";
 import { extname } from "../commands/extname";
