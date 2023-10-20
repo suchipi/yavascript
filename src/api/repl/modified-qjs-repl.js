@@ -101,6 +101,13 @@ export function startRepl(lang) {
   var utf8 = true;
   var show_time = false;
   var show_colors = hasColors();
+
+  if (!show_colors) {
+    for (const key of Object.keys(colors)) {
+      colors[key] = "";
+    }
+  }
+
   var eval_time = 0;
 
   var mexpr = "";
