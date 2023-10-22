@@ -43,10 +43,10 @@ test("globals", async () => {
     [x] encodeURIComponent: function
     [x] escape: function
     [x] unescape: function
-    [ ] Infinity: number
-    [ ] NaN: number
-    [ ] undefined: undefined
-    [ ] __date_clock: function
+    [x] Infinity: number
+    [x] NaN: number
+    [x] undefined: undefined
+    [x] __date_clock: function
     [x] Number: function
     [x] Boolean: function
     [x] String: function
