@@ -117,6 +117,11 @@ export function installGlobalHelpTexts(global: typeof globalThis) {
       `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis`,
     ],
     [
+      global.Infinity,
+      "Infinity",
+      `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity`,
+    ],
+    [
       global.Int16Array,
       "Int16Array",
       `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array`,
@@ -160,6 +165,11 @@ export function installGlobalHelpTexts(global: typeof globalThis) {
       global.Math,
       "Math",
       `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math`,
+    ],
+    [
+      global.NaN,
+      "NaN",
+      `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN`,
     ],
     [
       global.Number,
@@ -265,6 +275,11 @@ export function installGlobalHelpTexts(global: typeof globalThis) {
       global.unescape,
       "unescape()",
       `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/unescape`,
+    ],
+    [
+      global.undefined,
+      "undefined",
+      `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#undefined_type`,
     ],
     [
       global.URIError,
