@@ -2,7 +2,7 @@ import { _mkText } from "./_mkText";
 import { setHelpText } from "../api/help/help";
 
 export function installGlobalHelpTexts(global: typeof globalThis) {
-  for (const [value, name, link] of [
+  for (const [value, name, link, allowUndefined = false] of [
     [
       global.AggregateError,
       "AggregateError",
@@ -280,6 +280,7 @@ export function installGlobalHelpTexts(global: typeof globalThis) {
       global.undefined,
       "undefined",
       `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#undefined_type`,
+      true,
     ],
     [
       global.URIError,
@@ -297,7 +298,15 @@ export function installGlobalHelpTexts(global: typeof globalThis) {
       "WeakSet",
       `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet`,
     ],
+
+    // not technically a global, but, it functions like one
+    [
+      null,
+      "null",
+      `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/null`,
+      true,
+    ],
   ] as const) {
-    setHelpText(value, _mkText(name, link));
+    setHelpText(value, _mkText(name, link), allowUndefined);
   }
 }

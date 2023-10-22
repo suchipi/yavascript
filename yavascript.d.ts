@@ -29,8 +29,11 @@ declare var help: {
      *
      * If the value is later passed into the `help` function, the provided text
      * will be printed.
+     *
+     * To set help text for the values `null` or `undefined`, `allowNullish`
+     * must be `true`.
      */
-    (value: object, text: string): void;
+    (value: object, text: string, allowNullish?: boolean): void;
 
     /**
      * Lazily sets the help text for the provided value using the provided
@@ -5738,3 +5741,7 @@ declare module "quickjs:context" {
 
 declare const std: typeof import("quickjs:std");
 declare const os: typeof import("quickjs:os");
+
+// undocumented from quickjs, but it's there
+/** Get the current unix timestamp with microsecond precision. */
+declare function __date_clock(): number;

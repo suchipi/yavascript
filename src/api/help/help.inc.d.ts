@@ -19,8 +19,11 @@ declare var help: {
      *
      * If the value is later passed into the `help` function, the provided text
      * will be printed.
+     *
+     * To set help text for the values `null` or `undefined`, `allowNullish`
+     * must be `true`.
      */
-    (value: object, text: string): void;
+    (value: object, text: string, allowNullish?: boolean): void;
 
     /**
      * Lazily sets the help text for the provided value using the provided

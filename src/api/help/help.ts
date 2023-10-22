@@ -11,7 +11,17 @@ const primitiveHelpTextMap = new Map<any, string>();
 const lazyHelpTextMap = new WeakMap<any, () => string>();
 const primitiveLazyHelpTextMap = new Map<any, () => string>();
 
-export function setHelpText(value: any, text: string) {
+export function setHelpText(
+  value: any,
+  text: string,
+  allowNullish: boolean = false
+) {
+  if (value == null && !allowNullish) {
+    throw new Error(
+      "Attempting to set help text for the value 'null' or 'undefined'. This is usually a mistake. If you truly wish to do this, pass `true` as the third argument to setHelpText."
+    );
+  }
+
   if (typeof text !== "string" && !((text as any) instanceof String)) {
     throw makeErrorWithProperties(
       "'text' argument must be a string",
