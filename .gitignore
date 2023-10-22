@@ -5,6 +5,4 @@ bin
 .vscode
 yavascript-internal.js
 
-quickjs
-meta/quickjs
 meta/tgz-release
