@@ -84,7 +84,7 @@ test("globals", async () => {
     [ ] BigFloatEnv: function
     [ ] BigDecimal: function
     [ ] Operators: function
-    [ ] inspect: function
+    [x] inspect: function
     [ ] __qjsbootstrap_offset: number
     [x] console: object
     [x] print: function
