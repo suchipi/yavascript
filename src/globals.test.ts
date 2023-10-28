@@ -103,6 +103,7 @@ test("globals", async () => {
     [x] chmod: function
     [x] dirname: function
     [x] echo: function
+    [x] exit: function
     [x] extname: function
     [x] ls: function
     [x] printf: function

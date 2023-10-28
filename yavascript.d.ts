@@ -646,6 +646,22 @@ declare function dirname(path: string | Path): Path;
 declare const echo: typeof console.log;
 
 /**
+ * Exit the yavascript process.
+ *
+ * Provides the same functionality as the shell builtin of the same name.
+ *
+ * If exit is called with an argument, that argument is used as the exit code.
+ * Otherwise, `exit.code` is used, which defaults to 0.
+ *
+ * `exit.code` will also be used as the exit status code for the yavascript
+ * process if the process exits normally.
+ */
+declare const exit: {
+  (code?: number): never;
+  code: number;
+};
+
+/**
  * Returns the file extension of the file at a given path.
  *
  * If the file has no extension (eg `Makefile`, etc), then `''` will be returned.

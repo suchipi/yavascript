@@ -12,6 +12,7 @@ export default makeGetterPropertyDescriptorMap({
   chmod: () => (require("./chmod") as typeof import("./chmod")).chmod,
   dirname: () => (require("./dirname") as typeof import("./dirname")).dirname,
   echo: () => (require("./echo") as typeof import("./echo")).echo,
+  exit: () => (require("./exit") as typeof import("./exit")).exit,
   extname: () => (require("./extname") as typeof import("./extname")).extname,
   ls: () => (require("./ls") as typeof import("./ls")).ls,
   printf: () => (require("./printf") as typeof import("./printf")).printf,
