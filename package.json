@@ -36,6 +36,7 @@
     "path-less-traveled": "^2.0.0",
     "pheno": "^0.7.1",
     "prettier": "^2.7.1",
+    "resolve-everything": "^0.1.1",
     "strip-ansi": "^6.0.1",
     "sucrase": "^3.28.0",
     "tmp": "^0.2.1",
