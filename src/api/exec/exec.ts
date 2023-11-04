@@ -48,7 +48,7 @@ const exec = (
       types.exactString("utf8"),
       types.exactString("arraybuffer")
     ),
-    "when present, 'captureOutput' option must be a boolean"
+    "when present, 'captureOutput' option must be either a boolean or one of the strings 'utf8' or 'arraybuffer'"
   );
 
   if (trace != null) {
