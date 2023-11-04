@@ -2714,7 +2714,6 @@ declare const types: {
   ) => TypeValidator<UnwrapTypeFromCoerceableOrValidator<V>>;
 
   FILE: TypeValidator<FILE>;
-  Module: TypeValidator<{ [key: string]: unknown }>;
   Path: TypeValidator<Path>;
   JSX: {
     unknownElement: TypeValidator<
@@ -4322,6 +4321,20 @@ declare interface FILE {
   write(buffer: ArrayBuffer, position: number, length: number): number;
 
   /**
+   * Write this file into `target`, using a memory buffer of size `bufferSize`.
+   *
+   * If `limit` is specified, only that amount of bytes will be read and
+   * written. Otherwise, data is read and written until this file reaches EOF.
+   *
+   * A `limit` of 0 is treated the same as not specifying a limit.
+   *
+   * Internally, this function uses libc `fread` and `fwrite` in a loop.
+   *
+   * Returns the number of bytes read and written.
+   */
+  writeTo(target: FILE, bufferSize: number, limit?: number): number;
+
+  /**
    * Return the next line from the file, assuming UTF-8 encoding, excluding the trailing line feed or EOF.
    *
    * If the end of the file has been reached, then `null` will be returned instead of a string.
@@ -5299,13 +5312,13 @@ interface StringConstructor {
 }
 
 /**
- * A global which lets you configure the module loader (import/export/require).
+ * An object which lets you configure the module loader (import/export/require).
  * You can use these properties to add support for importing new filetypes.
  *
- * This global can also be used to identify whether an object is a module
+ * This object can also be used to identify whether an object is a module
  * namespace record.
  */
-interface ModuleGlobal {
+interface Module {
   /**
    * Returns true if `target` is a module namespace object.
    */
@@ -5324,7 +5337,7 @@ interface ModuleGlobal {
    * See the doc comment on {@link require} for more information.
    *
    * NOTE: If you add a new extension to this array, you will likely also want
-   * to add to {@link Module.compilers}.
+   * to add to {@link compilers}.
    */
   searchExtensions: Array<string>;
 
@@ -5365,7 +5378,7 @@ interface ModuleGlobal {
    * And `names` will be a string containing the contents of names.txt.
    *
    * NOTE: When adding to this object, you may also wish to add to
-   * {@link Module.searchExtensions}.
+   * {@link searchExtensions}.
    */
   compilers: {
     [extensionWithDot: string]: (filename: string, content: string) => string;
@@ -5378,7 +5391,8 @@ interface ModuleGlobal {
   define(name: string, obj: { [key: string]: any }): void;
 
   /**
-   * Resolves a require/import request from `fromFile` into a canonicalized path.
+   * Resolves a require/import request from `fromFile` into a canonicalized
+   * path.
    *
    * To change native module resolution behavior, replace this function with
    * your own implementation. Note that you must handle
@@ -5395,9 +5409,6 @@ interface ModuleGlobal {
    */
   read(modulePath: string): string;
 }
-
-// global added by QJMS_AddModuleGlobal
-declare var Module: ModuleGlobal;
 
 interface RequireFunction {
   /**
@@ -5425,8 +5436,8 @@ interface RequireFunction {
    * ```
    *
    * then the engine will look for `somewhere.js`. If that doesn't exist, the
-   * engine will look for `somewhere/index.js`. If *that* doesn't exist, an error
-   * will be thrown.
+   * engine will look for `somewhere/index.js`. If *that* doesn't exist, an
+   * error will be thrown.
    *
    * If you add more extensions to `Module.searchExtensions`, then the engine
    * will use those, too. It will search in the same order as the strings appear
@@ -5440,7 +5451,7 @@ interface RequireFunction {
   resolve: (source: string) => string;
 }
 
-// global added by QJMS_AddRequireGlobal
+// global added by QJMS_InitContext
 declare var require: RequireFunction;
 
 // gets set per-module by QJMS_SetModuleImportMeta
@@ -5550,6 +5561,15 @@ declare module "quickjs:module" {
    * @param stackLevels - How many levels up the stack to search for a filename. Defaults to 0, which uses the current stack frame.
    */
   export function getFileNameFromStack(stackLevels?: number): string;
+
+  /**
+   * An object which lets you configure the module loader (import/export/require).
+   * You can use these properties to add support for importing new filetypes.
+   *
+   * This object can also be used to identify whether an object is a module
+   * namespace record.
+   */
+  export const Module: Module;
 }
 
 declare module "quickjs:bytecode" {

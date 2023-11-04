@@ -1,3 +1,4 @@
+import { Module } from "quickjs:module";
 import compilers from "../compilers";
 
 Module.compilers[".civet"] = (filename: string, content: string) => {

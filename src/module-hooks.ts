@@ -1,4 +1,5 @@
 import * as os from "quickjs:os";
+import { Module } from "quickjs:module";
 import { Path } from "./api/path";
 import { dirname } from "./api/commands/dirname";
 import { readFile, isFile } from "./api/filesystem";
@@ -45,7 +46,7 @@ function potentialFilesForPath(path: string) {
   return potentials;
 }
 
-export function installModuleHooks(mod: typeof Module) {
+export function installModuleHooks() {
   const builtins = new Set([
     "quickjs:std",
     "quickjs:os",
@@ -53,13 +54,13 @@ export function installModuleHooks(mod: typeof Module) {
     "quickjs:context",
   ]);
 
-  const originalDefine = mod.define;
-  mod.define = (name, obj) => {
+  const originalDefine = Module.define;
+  Module.define = (name, obj) => {
     originalDefine(name, obj);
     builtins.add(name);
   };
 
-  mod.resolve = (name, fromFile) => {
+  Module.resolve = (name, fromFile) => {
     if (builtins.has(name)) {
       return name;
     }
@@ -115,8 +116,8 @@ export function installModuleHooks(mod: typeof Module) {
     );
   };
 
-  const originalRead = mod.read;
-  mod.read = (modulePath) => {
+  const originalRead = Module.read;
+  Module.read = (modulePath) => {
     if (protos.npm.handlesModulePath(modulePath)) {
       return protos.npm.readModule(modulePath);
     }

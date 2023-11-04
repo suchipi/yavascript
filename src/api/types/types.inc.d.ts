@@ -1332,7 +1332,6 @@ declare const types: {
   ) => TypeValidator<UnwrapTypeFromCoerceableOrValidator<V>>;
 
   FILE: TypeValidator<FILE>;
-  Module: TypeValidator<{ [key: string]: unknown }>;
   Path: TypeValidator<Path>;
   JSX: {
     unknownElement: TypeValidator<

@@ -216,7 +216,7 @@ export default function installApi(target: typeof globalThis) {
 
   installToStringProto(target.String.prototype);
   installRegexpEscape(target.RegExp);
-  installModuleHooks((target as any).Module);
+  installModuleHooks();
   installNodeCompat(target);
   patchRequire(target);
   installBuiltinsHelpText(target);

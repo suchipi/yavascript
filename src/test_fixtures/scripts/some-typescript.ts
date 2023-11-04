@@ -5,7 +5,7 @@ declare var something: any;
 echo(typeof something);
 
 import * as std from "quickjs:std";
-echo(typeof std, std instanceof (Module as any));
+echo(typeof std);
 
 function look(path: Path) {
   echo(`path: ${path}`);

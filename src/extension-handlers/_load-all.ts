@@ -1,5 +1,6 @@
 // This file has an underscore at the beginning of its name so that it is at
 // the top of the list in the text editor's sidebar
+import { Module } from "quickjs:module";
 
 import "./civet";
 import "./coffee";

@@ -1,3 +1,4 @@
+import { Module } from "quickjs:module";
 import compilers from "../compilers";
 
 Module.compilers[".coffee"] = (filename: string, content: string) => {

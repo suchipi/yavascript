@@ -94,7 +94,6 @@ test("globals", async () => {
     [ ] setInterval: function
     [ ] clearInterval: function
     [ ] require: function
-    [ ] Module: object
     [ ] std: object
     [ ] os: object
     [x] basename: function

@@ -4,9 +4,9 @@
 // YavaScript has builtin support for parsing and executing TypeScript files.
 
 import * as std from "quickjs:std";
-echo(typeof std, std instanceof Module);
+echo(typeof std);
 
-function look(path: string) {
+function look(path: Path) {
   echo(`path: ${path}`);
   ls(path);
   exec("git status");

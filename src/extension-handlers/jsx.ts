@@ -1,3 +1,4 @@
+import { Module } from "quickjs:module";
 import compilers from "../compilers";
 
 Module.compilers[".jsx"] = (filename: string, content: string) => {

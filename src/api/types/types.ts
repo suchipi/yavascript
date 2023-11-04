@@ -1341,7 +1341,6 @@ type types = {
   ) => TypeValidator<UnwrapTypeFromCoerceableOrValidator<V>>;
 
   FILE: TypeValidator<FILE>;
-  Module: TypeValidator<{ [key: string]: unknown }>;
   Path: TypeValidator<Path>;
   JSX: {
     unknownElement: TypeValidator<
@@ -1363,9 +1362,6 @@ export const types: types = Object.assign(Object.create(null), {
 
   FILE(value: any): value is FILE {
     return std.isFILE(value);
-  },
-  Module(value: any): value is { [key: string]: unknown } {
-    return value instanceof (Module as any);
   },
   Path(value: any): value is Path {
     return value instanceof Path;

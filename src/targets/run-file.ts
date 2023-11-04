@@ -17,10 +17,10 @@ function overrideCompiler(
   const extension = extname(fileToRun);
 
   const defaultBehavior =
-    Module.compilers[extension] ||
+    mod.Module.compilers[extension] ||
     ((filename: string, content: string) => content);
 
-  Module.compilers[extension] = (filename: string, content: string) => {
+  mod.Module.compilers[extension] = (filename: string, content: string) => {
     if (filename === fileToRun) {
       return callback(filename, content, defaultBehavior);
     } else {

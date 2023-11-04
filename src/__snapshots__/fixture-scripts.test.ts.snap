@@ -209,7 +209,7 @@ exports[`some-typescript.ts 1`] = `
   "error": false,
   "stderr": "",
   "stdout": "undefined
-object true
+object
 path: <rootDir>/src/test_fixtures/scripts
 Path { <rootDir>/src/test_fixtures/scripts }
 ",
