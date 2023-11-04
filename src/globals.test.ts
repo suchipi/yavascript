@@ -183,7 +183,7 @@ test("globals", async () => {
     [x] symbol: function
     [x] JSX: object
     [x] CSV: object
-    [ ] YAML: object
+    [x] YAML: object
     [ ] traceAll: function
     [ ] parseScriptArgs: function
     [ ] startRepl: function
