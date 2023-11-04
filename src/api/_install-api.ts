@@ -119,10 +119,6 @@ const consoleProps = makeGetterPropertyDescriptorMap({
   clear: () => require("./console").clear,
 });
 
-const pipeProps = makeGetterPropertyDescriptorMap({
-  pipe: () => require("./pipe").pipe,
-});
-
 const othersProps = makeGetterPropertyDescriptorMap(
   {
     bigint: () => require("./others").bigint,
@@ -186,7 +182,6 @@ export default function installApi(target: typeof globalThis) {
     ...gitRepoProps,
     ...stringsProps,
     ...consoleProps,
-    ...pipeProps,
     ...othersProps,
     ...jsxProps,
     ...csvProps,

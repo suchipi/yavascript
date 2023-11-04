@@ -176,7 +176,6 @@ test("globals", async () => {
     [ ] white: function
     [ ] yellow: function
     [x] clear: function
-    [ ] pipe: function
     [x] bigint: function
     [x] boolean: function
     [x] number: function

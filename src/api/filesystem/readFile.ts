@@ -1,6 +1,6 @@
 import * as std from "quickjs:std";
+import * as os from "quickjs:os";
 import { Path } from "../path";
-import { pipe } from "../pipe";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
@@ -41,7 +41,15 @@ export const readFile: ReadFile = function readFile(
   }
 
   if (options.binary) {
-    return pipe({ path }, ArrayBuffer).target;
+    const stats = os.stat(path);
+    const buffer = new ArrayBuffer(stats.size);
+    const file = std.open(path, "rb");
+    try {
+      file.read(buffer, 0, stats.size);
+    } finally {
+      file.close();
+    }
+    return buffer;
   } else {
     return std.loadFile(path);
   }
