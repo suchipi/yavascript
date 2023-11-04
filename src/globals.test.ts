@@ -80,10 +80,10 @@ test("globals", async () => {
     [x] Atomics: object
     [x] Promise: function
     [x] BigInt: function
-    [ ] BigFloat: function
-    [ ] BigFloatEnv: function
-    [ ] BigDecimal: function
-    [ ] Operators: function
+    [x] BigFloat: function
+    [x] BigFloatEnv: function
+    [x] BigDecimal: function
+    [x] Operators: function
     [x] inspect: function
     [ ] __qjsbootstrap_offset: number
     [x] console: object
