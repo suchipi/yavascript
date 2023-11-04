@@ -7,6 +7,11 @@ export default makeGetterPropertyDescriptorMap(
         "'mkdir' is not defined. Did you mean 'ensureDir'?"
       );
     },
+    mkdirp() {
+      throw new ReferenceError(
+        "'mkdirp' is not defined. Did you mean 'ensureDir'?"
+      );
+    },
     cp() {
       throw new ReferenceError("'cp' is not defined. Did you mean 'copy'?");
     },

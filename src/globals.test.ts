@@ -114,6 +114,7 @@ test("globals", async () => {
     [x] touch: function
     [x] which: function
     [-] mkdir throws error
+    [-] mkdirp throws error
     [-] cp throws error
     [-] mv throws error
     [-] ren throws error
