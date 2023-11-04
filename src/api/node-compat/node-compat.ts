@@ -1,5 +1,6 @@
 import * as os from "quickjs:os";
 import { version as ysVersion, arch as ysArch } from "../../hardcoded";
+import { setHelpText } from "../help";
 
 export function installNodeCompat(global: any) {
   Object.defineProperty(global, "global", {
@@ -53,4 +54,6 @@ export function installNodeCompat(global: any) {
     enumerable: false,
     value: process,
   });
+
+  setHelpText.lazy(process, () => require("./node-process.help.md"));
 }

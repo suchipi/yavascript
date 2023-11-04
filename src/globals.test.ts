@@ -195,7 +195,7 @@ test("globals", async () => {
     [x] grepFile: function
     [x] grepString: function
     [x] global: object
-    [ ] process: object
+    [x] process: object
     ",
     }
   `);
