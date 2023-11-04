@@ -51,33 +51,8 @@ function copyRaw(
     const toFile = std.fdopen(toFd, "w");
     filesToCloseLater[to] = toFile;
 
-    const chunkSize = 16 * 1024 * 1024; // 16MB
-    const buffer = new ArrayBuffer(chunkSize);
-
-    if (trace) {
-      trace("copying data", { from, to, chunkSize });
-    }
-    while (!fromFile.eof()) {
-      const amountRemaining = fromStats.size - fromFile.tell();
-      if (trace) {
-        trace(`${amountRemaining} bytes remaining`);
-      }
-      if (amountRemaining === 0) break;
-      const amountToRead = Math.min(amountRemaining, chunkSize);
-
-      const bytesRead = fromFile.read(buffer, 0, amountToRead);
-      if (trace) {
-        trace(`read ${bytesRead} bytes into buffer`);
-      }
-      if (bytesRead === 0) break;
-      if (trace) {
-        trace(`writing ${bytesRead} bytes from buffer into file`);
-      }
-      toFile.write(buffer, 0, bytesRead);
-    }
-    if (trace) {
-      trace("reached eof");
-    }
+    const bufferSize = 16 * 1024 * 1024; // 16MB
+    fromFile.writeTo(toFile, bufferSize);
   } catch (err) {
     if (trace) {
       trace("copyRaw failed:", { from, to, err });
