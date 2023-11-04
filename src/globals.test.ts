@@ -88,7 +88,7 @@ test("globals", async () => {
     [ ] __qjsbootstrap_offset: number
     [x] console: object
     [x] print: function
-    [ ] scriptArgs: object
+    [x] scriptArgs: object
     [ ] setTimeout: function
     [ ] clearTimeout: function
     [ ] setInterval: function
