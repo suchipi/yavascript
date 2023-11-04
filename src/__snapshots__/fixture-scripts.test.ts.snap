@@ -69,7 +69,7 @@ exports[`importing-from-npm-protocol.js 1`] = `
   Null prototype
   Sealed
   
-  Component: Function "b" {}
+  Component: Function "m" {}
   Fragment: Function "k" {}
   cloneElement: Function "F" {}
   createContext: Function "G" {}
@@ -83,7 +83,7 @@ exports[`importing-from-npm-protocol.js 1`] = `
     __e: Function "__e" {}
   }
   render: Function "B" {}
-  toChildArray: Function "C" {}
+  toChildArray: Function "$" {}
 }
 ",
 }
