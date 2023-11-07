@@ -11,7 +11,6 @@ declare function <function-name>(input: string | number): string;
 
 Where `<function-name>` can be any of these:
 
-- `stripAnsi` - removes all ANSI control characters from a string
 - `black` - make text color black
 - `red` - make text color red
 - `green` - make text color green
@@ -30,7 +29,6 @@ Where `<function-name>` can be any of these:
 - `bgMagenta` - make text background color magenta
 - `bgCyan` - make text background color cyan
 - `bgWhite` - make text background color white
-- `reset` - unset all styles
 - `bold` - make text bold
 - `dim` - make text dimmed ("grayed out")
 - `italic` - make text italic
@@ -38,3 +36,4 @@ Where `<function-name>` can be any of these:
 - `inverse` - swap the foreground and background text colors
 - `hidden` - hide text
 - `strikethrough` - strike a horizontal like through text
+- `reset` - unset all styles

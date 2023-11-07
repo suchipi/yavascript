@@ -8,6 +8,10 @@ import { types } from "../types";
 
 import { setHelpText } from "../help";
 import stringStylingHelpText from "./string-styling.help.md";
+import quoteHelpText from "./quote.help.md";
+import stripAnsiHelpText from "./stripAnsi.help.md";
+
+setHelpText(stripAnsi, stripAnsiHelpText);
 
 export { stripAnsi };
 
@@ -22,6 +26,8 @@ export const quote = (str: string | Path) => {
   }
   return JSON.stringify(str);
 };
+
+setHelpText(quote, quoteHelpText);
 
 const {
   bgBlack,

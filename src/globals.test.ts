@@ -147,8 +147,8 @@ test("globals", async () => {
     [x] _is: function
     [x] assert: function
     [x] GitRepo: function
-    [ ] quote: function
-    [ ] stripAnsi: function
+    [x] quote: function
+    [x] stripAnsi: function
     [x] bgBlack: function
     [x] bgBlue: function
     [x] bgCyan: function
