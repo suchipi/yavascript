@@ -20,22 +20,15 @@ fi
 mkdir -p dist
 touch dist/yavascript.d.ts
 
-# meta/scripts/shinobi-wrapper.sh \
-#   dist/build.ninja \
-#   ./meta/scripts/defs.ninja.js \
-#   ./meta/scripts/rules.ninja.js \
-#   ./meta/scripts/dts.ninja.js \
-#   ./meta/scripts/docs.ninja.js \
-#   ./meta/scripts/bundles.ninja.js \
-#   ./meta/scripts/bytecode.ninja.js \
-#   ./meta/scripts/programs.ninja.js
-
 meta/scripts/shinobi-wrapper.sh \
   dist/build.ninja \
   ./meta/scripts/defs.ninja.js \
   ./meta/scripts/rules.ninja.js \
   ./meta/scripts/dts.ninja.js \
-  ./meta/scripts/bundles.ninja.js
+  ./meta/scripts/docs.ninja.js \
+  ./meta/scripts/bundles.ninja.js \
+  ./meta/scripts/bytecode.ninja.js \
+  ./meta/scripts/programs.ninja.js
 
 # should be no-op if we didn't update the ninja.build file
 ninja -f dist/build.ninja
