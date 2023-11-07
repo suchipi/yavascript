@@ -17,7 +17,7 @@ if (errors.length > 0) {
   });
 }
 
-const moduleFilenames = Array.from(modules.keys())
+let moduleFilenames = Array.from(modules.keys())
   .map((filename) => filename.replace(/\?.*$/, ""))
   .map((filename) => rootDir.relative(filename));
 

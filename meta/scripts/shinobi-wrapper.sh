@@ -19,6 +19,3 @@ NEW_BUILD_NINJA_CONTENT=$(npx --no-install shinobi $NINJA_JS_FILES)
 if [[ "$NEW_BUILD_NINJA_CONTENT" != "$EXISTING_BUILD_NINJA_CONTENT" ]]; then
   echo "$NEW_BUILD_NINJA_CONTENT" > "$NINJA_BUILD_PATH"
 fi
-
-# no-op if we didn't update the ninja.build file
-ninja -f "$NINJA_BUILD_PATH"

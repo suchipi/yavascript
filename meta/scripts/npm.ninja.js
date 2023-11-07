@@ -2,26 +2,22 @@
 
 const quickjs = require("@suchipi/quickjs");
 
-// # copy stuff into npm folder
-// cp -R bin meta/npm
-// cp README.md meta/npm
-// rm -rf meta/npm/dist
-// mkdir -p meta/npm/dist
-
 for (const platform of quickjs.platforms) {
   const programPath = `bin/${platform.name}/yavascript${platform.programSuffix}`;
 
   build({
-    rule: "copy",
+    rule: "copy-if-different",
     inputs: builddir(programPath),
     output: `meta/npm/${programPath}`,
+    implicitInputs: implicitInputs["copy-if-different"],
   });
 }
 
 build({
-  rule: "copy",
+  rule: "copy-if-different",
   inputs: ["README.md"],
   output: "meta/npm/README.md",
+  implicitInputs: implicitInputs["copy-if-different"],
 });
 
 for (const filename of [
@@ -31,8 +27,9 @@ for (const filename of [
   "primordials-arm64.js",
 ]) {
   build({
-    rule: "copy",
+    rule: "copy-if-different",
     inputs: [builddir(`dist/bundles/${filename}`)],
     output: `meta/npm/dist/${filename}`,
+    implicitInputs: implicitInputs["copy-if-different"],
   });
 }

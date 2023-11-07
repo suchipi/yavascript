@@ -11,6 +11,14 @@ rule("copy", {
 });
 implicitInputs.copy = [];
 
+rule("copy-if-different", {
+  command: ["meta/scripts/copy-if-content-differs.sh $in $out"],
+  description: "COPY-IF-DIFFERENT $out",
+});
+implicitInputs["copy-if-different"] = [
+  "meta/scripts/copy-if-content-differs.sh",
+];
+
 rule("render-md", {
   command: `meta/scripts/render-md.js $in $out`,
 });

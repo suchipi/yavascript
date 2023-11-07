@@ -31,10 +31,19 @@ const dtsRaw = build({
     INCLUDE_PATHS: JSON.stringify(includePaths.join(",")),
   },
 });
-build({
+const dtsPrettified = build({
   rule: "prettier",
   inputs: [dtsRaw],
+  output: builddir("yavascript-prettified.d.ts"),
+});
+
+// only update dist/yavascript.d.ts if its content differs,
+// to avoid invalidating all the bundles on the next build.
+build({
+  rule: "copy-if-different",
+  inputs: [dtsPrettified],
   output: builddir("yavascript.d.ts"),
+  implicitInputs: implicitInputs["copy-if-different"],
 });
 
 build({
