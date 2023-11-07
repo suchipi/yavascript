@@ -16,6 +16,7 @@ declare const startRepl: {
       | "tsx"
       | "coffee"
       | "coffeescript"
+      | "civet"
   ): void;
 
   /**
