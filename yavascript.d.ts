@@ -324,7 +324,7 @@ declare class Path {
    * A list of suffixes that could appear in the filename for a program on the
    * current OS. For instance, on Windows, programs often end with ".exe".
    *
-   * On Unix-like OSes, this is empty, On Windows, it's based on `env.PATHEXT`.
+   * On Unix-like OSes, this is empty. On Windows, it's based on `env.PATHEXT`.
    */
   static readonly OS_PROGRAM_EXTENSIONS: ReadonlySet<string>;
 

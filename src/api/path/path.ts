@@ -497,4 +497,14 @@ Object.defineProperty(Path, "toString", {
   value: () => "class Path {\n    [native code]\n}",
 });
 
+import { setHelpText } from "../help";
+
+// prettier-ignore
+{
+  setHelpText(Path, require("./help-text/path.help.md"));
+  setHelpText(Path.OS_ENV_VAR_SEPARATOR, require("./help-text/Path.OS_ENV_VAR_SEPARATOR.help.md"));
+  setHelpText(Path.OS_PROGRAM_EXTENSIONS, require("./help-text/Path.OS_PROGRAM_EXTENSIONS.help.md"));
+  setHelpText(Path.OS_SEGMENT_SEPARATOR, require("./help-text/Path.OS_SEGMENT_SEPARATOR.help.md"));
+}
+
 export { Path };

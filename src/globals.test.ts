@@ -140,7 +140,7 @@ test("globals", async () => {
     [x] isExecutable: function
     [x] isReadable: function
     [x] isWritable: function
-    [ ] Path: function
+    [x] Path: function
     [x] glob: function
     [ ] types: object
     [x] is: function
