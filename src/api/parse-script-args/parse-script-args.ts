@@ -4,6 +4,8 @@ import { pwd } from "../commands/pwd";
 import { assert } from "../assert";
 import { types } from "../types";
 import { makeErrorWithProperties } from "../../error-with-properties";
+import { setHelpText } from "../help";
+import parseScriptArgsHelpText from "./parse-script-args.help.md";
 
 type Hint = typeof String | typeof Boolean | typeof Number | typeof Path;
 
@@ -100,3 +102,5 @@ export function parseScriptArgs(
     metadata,
   };
 }
+
+setHelpText(parseScriptArgs, parseScriptArgsHelpText);
