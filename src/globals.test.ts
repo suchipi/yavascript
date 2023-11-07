@@ -188,7 +188,7 @@ test("globals", async () => {
     [x] parseScriptArgs: function
     [ ] startRepl: function
     [ ] InteractivePrompt: function
-    [ ] yavascript: object
+    [x] yavascript: object
     [x] help: function
     [x] __filename: string
     [x] __dirname: string
