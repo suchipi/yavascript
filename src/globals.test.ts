@@ -149,32 +149,32 @@ test("globals", async () => {
     [x] GitRepo: function
     [ ] quote: function
     [ ] stripAnsi: function
-    [ ] bgBlack: function
-    [ ] bgBlue: function
-    [ ] bgCyan: function
-    [ ] bgGreen: function
-    [ ] bgMagenta: function
-    [ ] bgRed: function
-    [ ] bgWhite: function
-    [ ] bgYellow: function
-    [ ] black: function
-    [ ] blue: function
-    [ ] bold: function
-    [ ] cyan: function
-    [ ] dim: function
-    [ ] gray: function
-    [ ] green: function
-    [ ] grey: function
-    [ ] hidden: function
-    [ ] inverse: function
-    [ ] italic: function
-    [ ] magenta: function
-    [ ] red: function
-    [ ] reset: function
-    [ ] strikethrough: function
-    [ ] underline: function
-    [ ] white: function
-    [ ] yellow: function
+    [x] bgBlack: function
+    [x] bgBlue: function
+    [x] bgCyan: function
+    [x] bgGreen: function
+    [x] bgMagenta: function
+    [x] bgRed: function
+    [x] bgWhite: function
+    [x] bgYellow: function
+    [x] black: function
+    [x] blue: function
+    [x] bold: function
+    [x] cyan: function
+    [x] dim: function
+    [x] gray: function
+    [x] green: function
+    [x] grey: function
+    [x] hidden: function
+    [x] inverse: function
+    [x] italic: function
+    [x] magenta: function
+    [x] red: function
+    [x] reset: function
+    [x] strikethrough: function
+    [x] underline: function
+    [x] white: function
+    [x] yellow: function
     [x] clear: function
     [x] bigint: function
     [x] boolean: function
