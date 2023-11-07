@@ -1,7 +1,8 @@
 import { cleanResult, rootDir } from "./test-helpers";
 import { spawn } from "first-base";
 
-test("win32 exe smoke test (via docker)", async () => {
+// skipping this for now until I can get a reliable wine-in-docker working
+test.skip("win32 exe smoke test (via docker)", async () => {
   const hasDocker = await getHasDocker();
   if (!hasDocker) {
     throw new Error("You must install docker to run this test.");
@@ -14,7 +15,10 @@ test("win32 exe smoke test (via docker)", async () => {
     rootDir() + ":" + rootDir(),
     `-w`,
     rootDir(),
-    `scottyhardy/docker-wine:stable-8.0.2-20231015`,
+    `--platform`,
+    `linux/amd64`,
+    `suchipi/yavascript-wine-test-image`,
+    `wine`,
     `bin/x86_64-pc-windows-static/yavascript.exe`,
     `-e`,
     `echo('hi');`,
