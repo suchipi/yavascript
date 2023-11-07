@@ -17,7 +17,7 @@ if [[ "$SKIP_NPM_INSTALL" == "" ]]; then
 fi
 
 # compile markdown docs to ANSI-escape-sequence-containing txt files
-if [[ "$SKIP_GLOW" == "" ]]; then
+if [[ "$SKIP_DOCS" == "" ]]; then
   meta/scripts/assemble-docs.sh
 fi
 
@@ -25,22 +25,13 @@ fi
 meta/scripts/assemble-dts.js
 
 # generate dist/index.js (bundles in dependencies from npm)
-npm run bundle -- --output dist/index.js
-if [[ "$WITH_PRIMORDIALS" == "1" ]]; then
-  npm run bundle:primordials -- --output dist/primordials.js
-fi
-
-# compile dist/index.js to bytecode
-cp dist/index.js yavascript-internal.js # to have clearer filename in stack traces
-npx --no-install qjs meta/scripts/to-bytecode.mjs \
-  yavascript-internal.js \
-  dist/index.bin
+meta/scripts/assemble-bundles.sh
 
 PLATFORM=$(node -e 'console.log(require("@suchipi/quickjs").identifyCurrentPlatform().name)')
 
 # generate dist/yavascript (final binary)
 cat \
   "node_modules/@suchipi/quickjs/build/$PLATFORM/bin/qjsbootstrap-bytecode" \
-  dist/index.bin \
+  dist/bundles/index.bin \
 > dist/yavascript
 chmod +x dist/yavascript
