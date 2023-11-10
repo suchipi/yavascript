@@ -25,9 +25,13 @@ function walkJsDeps(entrypoint, { useKameResolver = false } = {}) {
     });
   }
 
-  return Array.from(modules.keys()).map((filename) =>
-    rootDir.relative(filename.replace(/\?.*$/, ""))
-  );
+  return Array.from(modules.keys()).map((filename) => {
+    // our kame resolver adds "query params" to the end of filenames sometimes
+    const withoutTrailingQueryParam = filename.replace(/\?.*$/, "");
+    // these don't strictly-speaking need to be relative paths, but it makes
+    // the build.ninja file easier to read
+    return rootDir.relative(withoutTrailingQueryParam);
+  });
 }
 
 module.exports = { walkJsDeps };
