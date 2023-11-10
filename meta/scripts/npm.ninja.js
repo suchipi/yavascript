@@ -15,6 +15,13 @@ for (const platform of quickjs.platforms) {
 
 build({
   rule: "copy-if-different",
+  inputs: builddir("yavascript.d.ts"),
+  output: "meta/npm/yavascript.d.ts",
+  implicitInputs: implicitInputs["copy-if-different"],
+});
+
+build({
+  rule: "copy-if-different",
   inputs: ["README.md"],
   output: "meta/npm/README.md",
   implicitInputs: implicitInputs["copy-if-different"],

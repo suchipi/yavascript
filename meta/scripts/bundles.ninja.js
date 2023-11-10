@@ -19,7 +19,15 @@ if (errors.length > 0) {
 
 let moduleFilenames = Array.from(modules.keys())
   .map((filename) => filename.replace(/\?.*$/, ""))
-  .map((filename) => rootDir.relative(filename));
+  .map((filename) => rootDir.relative(filename))
+  // TODO: there's a loop in the build where each subsequent build always
+  // compiles the bundles. It seems to be because the bundles include
+  // yavascript.d.ts, but I can't find a reason that yavascript.d.ts would
+  // depend on the bundles. Omitting yavascript.d.ts from the bundle implicit
+  // inputs avoids the issue, though. This does mean, though, that the data for
+  // `yavascript --print-types` could be out of date unless it was a fresh build...
+  // more investigation needed
+  .filter((filename) => !filename.endsWith("yavascript.d.ts"));
 
 const index_arm64_js = build({
   rule: "kame",

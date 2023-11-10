@@ -46,12 +46,6 @@ build({
   implicitInputs: implicitInputs["copy-if-different"],
 });
 
-build({
-  rule: "copy",
-  inputs: builddir("yavascript.d.ts"),
-  output: "meta/npm/yavascript.d.ts",
-});
-
 const dtsGitRaw = build({
   rule: "macaroni",
   inputs: ["src/templates/yavascript-git.d.ts.tmpl"],
