@@ -1,4 +1,4 @@
-/// <reference path="../../node_modules/@suchipi/shinobi/globals.d.ts" />
+/// <reference types="@suchipi/shinobi/globals.d.ts" />
 
 const index_arm64_bin = build({
   rule: "to-bytecode",

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -exuo pipefail
+shopt -s globstar
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 cd "$SCRIPT_DIR/../.." # go to root
@@ -23,12 +24,7 @@ if [[ ! -e dist/yavascript.d.ts ]]; then
 fi
 
 env BUILDDIR=dist npx --no-install shinobi \
-  ./meta/scripts/rules.ninja.js \
-  ./meta/scripts/dts.ninja.js \
-  ./meta/scripts/docs.ninja.js \
-  ./meta/scripts/bundles.ninja.js \
-  ./meta/scripts/bytecode.ninja.js \
-  ./meta/scripts/programs.ninja.js \
+  ./meta/ninja/**/*.ninja.js \
   -o dist/build.ninja
 
 ninja -f dist/build.ninja

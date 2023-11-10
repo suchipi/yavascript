@@ -1,25 +1,7 @@
-/// <reference path="../../node_modules/@suchipi/shinobi/globals.d.ts" />
-const { walk } = require("resolve-everything");
-const rootDir = require("./root-dir");
-const { resolve } = require("../../src/kame-config");
+/// <reference types="@suchipi/shinobi/globals.d.ts" />
+const { walkJsDeps } = require("../scripts/lib/walk");
 
-const entrypoint = rootDir("src/index.ts");
-
-console.error("Walking JS module tree...");
-const { errors, modules } = walk(entrypoint, {
-  resolver: resolve,
-  skip: /node_modules/g,
-});
-
-if (errors.length > 0) {
-  throw Object.assign(new Error("module traversal errors occurred"), {
-    errors,
-  });
-}
-
-let moduleFilenames = Array.from(modules.keys())
-  .map((filename) => filename.replace(/\?.*$/, ""))
-  .map((filename) => rootDir.relative(filename));
+const moduleFilenames = walkJsDeps("src/index.ts", { useKameResolver: true });
 
 const index_arm64_js = build({
   rule: "kame",

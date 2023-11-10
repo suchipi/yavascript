@@ -1,4 +1,4 @@
-/// <reference path="../../node_modules/@suchipi/shinobi/globals.d.ts" />
+/// <reference types="@suchipi/shinobi/globals.d.ts" />
 
 const quickjs = require("@suchipi/quickjs");
 
@@ -32,7 +32,7 @@ for (const filename of [
 ]) {
   build({
     rule: "copy",
-    inputs: [builddir(`dist/bundles/${filename}`)],
+    inputs: [builddir(`bundles/${filename}`)],
     output: `meta/npm/dist/${filename}`,
   });
 }

@@ -1,7 +1,6 @@
-/// <reference path="../../node_modules/@suchipi/shinobi/globals.d.ts" />
+/// <reference types="@suchipi/shinobi/globals.d.ts" />
 const path = require("path");
 
-console.error("Finding .inc.d.ts files...");
 const includeFiles = glob("src/**/*.inc.d.ts");
 
 const dtsFolderPaths = new Set();
@@ -15,7 +14,6 @@ const includePaths = [
   "node_modules/@suchipi/quickjs/build/dts",
 ];
 
-console.error("Finding .d.ts files in QuickJS...");
 const quickjsDtsFiles = glob("node_modules/@suchipi/quickjs/build/dts/*");
 
 const dtsRaw = build({

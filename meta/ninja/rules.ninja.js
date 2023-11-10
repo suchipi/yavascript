@@ -1,6 +1,6 @@
-/// <reference path="../../node_modules/@suchipi/shinobi/globals.d.ts" />
+/// <reference types="@suchipi/shinobi/globals.d.ts" />
 const path = require("path");
-const rootDir = require("./root-dir");
+const { walkJsDeps } = require("../scripts/lib/walk");
 
 rule("copy", {
   command: "cp -R $in $out",
@@ -10,7 +10,7 @@ rule("copy", {
 rule("render-md", {
   command: `meta/scripts/render-md.js $in $out`,
   description: "RENDER-MD $out",
-  implicitInputs: "meta/scripts/render-md.js",
+  implicitInputs: walkJsDeps("meta/scripts/render-md.js"),
 });
 
 // NOTE: must define YAVASCRIPT_ARCH

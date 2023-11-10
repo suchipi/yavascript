@@ -16,7 +16,7 @@ nvm use
 
 set -x
 
-env SKIP_FNM_USE=1 meta/build-all.sh
+env SKIP_FNM_USE=1 meta/build.sh
 npm run typecheck
 # commented out until I can get it working locally
 # meta/docker/wine-test-image/build.sh
