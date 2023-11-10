@@ -27,15 +27,9 @@ const dtsRaw = build({
     INCLUDE_PATHS: JSON.stringify(includePaths.join(",")),
   },
 });
-const dtsPrettified = build({
+build({
   rule: "prettier",
   inputs: [dtsRaw],
-  output: builddir("yavascript-prettified.d.ts"),
-});
-
-build({
-  rule: "copy",
-  inputs: [dtsPrettified],
   output: builddir("yavascript.d.ts"),
 });
 
