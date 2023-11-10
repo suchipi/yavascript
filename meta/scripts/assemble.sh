@@ -18,7 +18,9 @@ fi
 # this file needs to exist for the module resolve step in bundles.ninja.js
 # to work
 mkdir -p dist
-touch dist/yavascript.d.ts
+if [[ ! -e dist/yavascript.d.ts ]]; then
+  touch dist/yavascript.d.ts
+fi
 
 npx --no-install shinobi \
   ./meta/scripts/defs.ninja.js \
