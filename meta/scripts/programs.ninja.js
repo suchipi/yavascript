@@ -4,7 +4,6 @@ function program(programName, target, base, input) {
   build({
     rule: "make-program",
     inputs: [input],
-    implicitInputs: implicitInputs["make-program"],
     ruleVariables: {
       TARGET: target,
       BASE: base,

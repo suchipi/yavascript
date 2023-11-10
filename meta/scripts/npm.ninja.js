@@ -9,7 +9,6 @@ for (const platform of quickjs.platforms) {
     rule: "copy-if-different",
     inputs: builddir(programPath),
     output: `meta/npm/${programPath}`,
-    implicitInputs: implicitInputs["copy-if-different"],
   });
 }
 
@@ -17,14 +16,12 @@ build({
   rule: "copy-if-different",
   inputs: builddir("yavascript.d.ts"),
   output: "meta/npm/yavascript.d.ts",
-  implicitInputs: implicitInputs["copy-if-different"],
 });
 
 build({
   rule: "copy-if-different",
   inputs: ["README.md"],
   output: "meta/npm/README.md",
-  implicitInputs: implicitInputs["copy-if-different"],
 });
 
 for (const filename of [
@@ -37,6 +34,5 @@ for (const filename of [
     rule: "copy-if-different",
     inputs: [builddir(`dist/bundles/${filename}`)],
     output: `meta/npm/dist/${filename}`,
-    implicitInputs: implicitInputs["copy-if-different"],
   });
 }

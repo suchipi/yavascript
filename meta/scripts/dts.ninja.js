@@ -22,11 +22,7 @@ const dtsRaw = build({
   rule: "macaroni",
   inputs: ["src/templates/yavascript.d.ts.tmpl"],
   output: builddir("dts/yavascript-raw.d.ts"),
-  implicitInputs: [
-    ...implicitInputs.macaroni,
-    ...includeFiles,
-    ...quickjsDtsFiles,
-  ],
+  implicitInputs: [...includeFiles, ...quickjsDtsFiles],
   ruleVariables: {
     INCLUDE_PATHS: JSON.stringify(includePaths.join(",")),
   },
@@ -37,24 +33,17 @@ const dtsPrettified = build({
   output: builddir("yavascript-prettified.d.ts"),
 });
 
-// only update dist/yavascript.d.ts if its content differs,
-// to avoid invalidating all the bundles on the next build.
 build({
   rule: "copy-if-different",
   inputs: [dtsPrettified],
   output: builddir("yavascript.d.ts"),
-  implicitInputs: implicitInputs["copy-if-different"],
 });
 
 const dtsGitRaw = build({
   rule: "macaroni",
   inputs: ["src/templates/yavascript-git.d.ts.tmpl"],
   output: builddir("dts/yavascript-git-raw.d.ts"),
-  implicitInputs: [
-    ...implicitInputs.macaroni,
-    ...includeFiles,
-    ...quickjsDtsFiles,
-  ],
+  implicitInputs: [...includeFiles, ...quickjsDtsFiles],
   ruleVariables: {
     INCLUDE_PATHS: JSON.stringify(includePaths.join(",")),
   },

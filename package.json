@@ -14,7 +14,7 @@
     "@suchipi/marked-terminal": "^5.2.0",
     "@suchipi/print": "^2.4.0",
     "@suchipi/quickjs": "^0.6.0",
-    "@suchipi/shinobi": "^0.2.0",
+    "@suchipi/shinobi": "^1.0.0",
     "@types/coffeescript": "^2.5.2",
     "@types/jest": "^29.2.4",
     "@types/minimatch": "^5.1.2",

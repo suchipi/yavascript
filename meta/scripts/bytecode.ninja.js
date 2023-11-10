@@ -3,14 +3,12 @@
 const index_arm64_bin = build({
   rule: "to-bytecode",
   inputs: [builddir("bundles/index-arm64.js")],
-  implicitInputs: implicitInputs["to-bytecode"],
   output: builddir("bytecode/index-arm64.bin"),
 });
 
 const index_x86_64_bin = build({
   rule: "to-bytecode",
   inputs: [builddir("bundles/index-x86_64.js")],
-  implicitInputs: implicitInputs["to-bytecode"],
   output: builddir("bytecode/index-x86_64.bin"),
 });
 

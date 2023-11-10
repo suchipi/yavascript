@@ -12,7 +12,6 @@ for (const helpDoc of helpDocs) {
   build({
     output: outputFile,
     inputs: [inputFile],
-    implicitInputs: implicitInputs["render-md"],
     rule: "render-md",
   });
 }

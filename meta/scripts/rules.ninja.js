@@ -2,27 +2,22 @@
 const path = require("path");
 const rootDir = require("./root-dir");
 
-const implicitInputs = {};
-globalThis.implicitInputs = implicitInputs;
-
 rule("copy", {
   command: "cp -R $in $out",
   description: "COPY $out",
 });
-implicitInputs.copy = [];
 
 rule("copy-if-different", {
   command: ["meta/scripts/copy-if-content-differs.sh $in $out"],
   description: "COPY-IF-DIFFERENT $out",
+  implicitInputs: "meta/scripts/copy-if-content-differs.sh",
 });
-implicitInputs["copy-if-different"] = [
-  "meta/scripts/copy-if-content-differs.sh",
-];
 
 rule("render-md", {
   command: `meta/scripts/render-md.js $in $out`,
+  description: "RENDER-MD $out",
+  implicitInputs: "meta/scripts/render-md.js",
 });
-implicitInputs["render-md"] = [rootDir("meta/scripts/render-md.js")];
 
 // NOTE: must define YAVASCRIPT_ARCH
 rule("kame", {
@@ -34,8 +29,8 @@ rule("kame", {
     `--output $out`,
   ],
   description: "KAME BUNDLE $out",
+  implicitInputs: ["src/kame-config.js"],
 });
-implicitInputs.kame = [rootDir("src/kame-config.js")];
 
 // to-bytecode rule
 {
@@ -63,8 +58,8 @@ implicitInputs.kame = [rootDir("src/kame-config.js")];
       `rm -rf yavascript-internal.js`,
     ],
     description: "TO-BYTECODE $out",
+    implicitInputs: [quickjsRunBinPath, fileToByteCodePath],
   });
-  implicitInputs["to-bytecode"] = [quickjsRunBinPath, fileToByteCodePath];
 }
 
 // NOTE: must define TARGET and BASE
@@ -75,21 +70,19 @@ rule("make-program", {
     "&& chmod +x $out",
   ],
   description: "MAKE-PROGRAM $out",
+  implicitInputs: glob("node_modules/@suchipi/quickjs/build/**/*"),
 });
-implicitInputs["make-program"] = glob(
-  "node_modules/@suchipi/quickjs/build/**/*"
-);
 
 // NOTE: must define INCLUDE_PATHS
 rule("macaroni", {
   command:
     "npx --no-install macaroni --include-paths $INCLUDE_PATHS $in > $out",
   description: "MACARONI $out",
+  implicitInputs: [`node_modules/@suchipi/macaroni/dist/cli.js`],
 });
-implicitInputs.macaroni = [`node_modules/@suchipi/macaroni/dist/cli.js`];
 
 rule("prettier", {
   command: "npx --no-install prettier $in > $out",
   description: "PRETTIER $out",
+  implicitInputs: [`node_modules/prettier/bin-prettier.js`],
 });
-implicitInputs.prettier = [`node_modules/prettier/bin-prettier.js`];
