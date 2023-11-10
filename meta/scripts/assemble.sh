@@ -22,8 +22,7 @@ if [[ ! -e dist/yavascript.d.ts ]]; then
   touch dist/yavascript.d.ts
 fi
 
-npx --no-install shinobi \
-  ./meta/scripts/defs.ninja.js \
+env BUILDDIR=dist npx --no-install shinobi \
   ./meta/scripts/rules.ninja.js \
   ./meta/scripts/dts.ninja.js \
   ./meta/scripts/docs.ninja.js \
