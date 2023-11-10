@@ -6,20 +6,20 @@ for (const platform of quickjs.platforms) {
   const programPath = `bin/${platform.name}/yavascript${platform.programSuffix}`;
 
   build({
-    rule: "copy-if-different",
+    rule: "copy",
     inputs: builddir(programPath),
     output: `meta/npm/${programPath}`,
   });
 }
 
 build({
-  rule: "copy-if-different",
+  rule: "copy",
   inputs: builddir("yavascript.d.ts"),
   output: "meta/npm/yavascript.d.ts",
 });
 
 build({
-  rule: "copy-if-different",
+  rule: "copy",
   inputs: ["README.md"],
   output: "meta/npm/README.md",
 });
@@ -31,7 +31,7 @@ for (const filename of [
   "primordials-arm64.js",
 ]) {
   build({
-    rule: "copy-if-different",
+    rule: "copy",
     inputs: [builddir(`dist/bundles/${filename}`)],
     output: `meta/npm/dist/${filename}`,
   });

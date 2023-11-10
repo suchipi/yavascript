@@ -34,7 +34,7 @@ const dtsPrettified = build({
 });
 
 build({
-  rule: "copy-if-different",
+  rule: "copy",
   inputs: [dtsPrettified],
   output: builddir("yavascript.d.ts"),
 });
