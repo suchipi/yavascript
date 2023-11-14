@@ -2,10 +2,11 @@ FROM --platform=linux/amd64 ubuntu:22.04
 
 RUN dpkg --add-architecture i386 && \
   apt-get update && apt-get install -y \
-    wine wine32
+    wine wine32 wine64
 
 RUN mkdir /wineprefix
 ENV WINEPREFIX=/wineprefix
+ENV WINEARCH=win64
 
 ADD sample.bat /opt/sample.bat
 
