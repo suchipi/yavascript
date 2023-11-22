@@ -28,7 +28,7 @@
 
 import * as std from "quickjs:std";
 import * as os from "quickjs:os";
-import * as mod from "quickjs:module";
+import * as engine from "quickjs:engine";
 import printError from "../../print-error";
 import * as inspectOptions from "../../inspect-options";
 import { NOTHING } from "./special";
@@ -980,7 +980,7 @@ export function startRepl(lang) {
       if (filename.lastIndexOf(".") <= filename.lastIndexOf("/")) {
         filename += ".js";
       }
-      mod.runScript(filename);
+      engine.runScript(filename);
       return false;
     } else if (cmd === "t") {
       show_time = !show_time;
@@ -1026,7 +1026,7 @@ export function startRepl(lang) {
       }
       var now = new Date().getTime();
       /* eval as a script */
-      result = mod.evalScript(expr, {
+      result = engine.evalScript(expr, {
         backtraceBarrier: true,
         filename: eval_filename,
       });

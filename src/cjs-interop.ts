@@ -1,4 +1,4 @@
-import * as mod from "quickjs:module";
+import * as engine from "quickjs:engine";
 import { makeErrorWithProperties } from "./error-with-properties";
 
 const hasOwn = Object.hasOwn;
@@ -7,10 +7,10 @@ export function patchRequire(theGlobal: typeof globalThis) {
   const nativeRequire = theGlobal.require;
 
   const newRequire = (path: string) => {
-    const callerFile = mod.getFileNameFromStack(1);
+    const callerFile = engine.getFileNameFromStack(1);
     let resolved: string;
     try {
-      resolved = mod.resolveModule(path, callerFile);
+      resolved = engine.resolveModule(path, callerFile);
     } catch (err) {
       throw makeErrorWithProperties(`Cannot find module`, {
         request: path,

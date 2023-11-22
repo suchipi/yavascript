@@ -1,6 +1,6 @@
 // This file has an underscore at the beginning of its name so that it is at
 // the top of the list in the text editor's sidebar
-import { Module } from "quickjs:module";
+import { ModuleDelegate } from "quickjs:engine";
 
 import "./civet";
 import "./coffee";
@@ -11,4 +11,11 @@ import "./jsx";
 import "./ts";
 import "./tsx";
 
-Module.searchExtensions = [".civet", ".ts", ".tsx", ".coffee", ".jsx", ".js"];
+ModuleDelegate.searchExtensions = [
+  ".civet",
+  ".ts",
+  ".tsx",
+  ".coffee",
+  ".jsx",
+  ".js",
+];

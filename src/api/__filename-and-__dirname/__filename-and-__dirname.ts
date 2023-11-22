@@ -1,5 +1,5 @@
 import * as os from "quickjs:os";
-import * as mod from "quickjs:module";
+import * as engine from "quickjs:engine";
 import { dirname } from "../commands/dirname";
 import { setHelpText } from "../help";
 import filenameHelp from "./__filename.help.md";
@@ -14,7 +14,7 @@ function wrappedString(str: string, helpText: string): string {
 
 // Not public API; exported for __filename, which *is* a public API
 export function get__filename(depth: number): string {
-  let ret = mod.getFileNameFromStack(depth);
+  let ret = engine.getFileNameFromStack(depth);
   try {
     ret = os.realpath(ret);
   } catch (err) {
@@ -26,7 +26,7 @@ export function get__filename(depth: number): string {
 
 // Not public API; exported for __dirname, which *is* a public API
 export function get__dirname(depth: number): string {
-  let filename = mod.getFileNameFromStack(depth);
+  let filename = engine.getFileNameFromStack(depth);
   try {
     filename = os.realpath(filename);
   } catch (err) {

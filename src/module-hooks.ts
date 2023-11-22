@@ -1,5 +1,5 @@
 import * as os from "quickjs:os";
-import { Module } from "quickjs:module";
+import { ModuleDelegate } from "quickjs:engine";
 import { Path } from "./api/path";
 import { dirname } from "./api/commands/dirname";
 import { readFile, isFile } from "./api/filesystem";
@@ -25,8 +25,8 @@ function nodeModulePaths(dir: string) {
 function potentialFilesForPath(path: string) {
   const potentials = [
     path,
-    ...Module.searchExtensions.map((ext) => path + ext),
-    ...Module.searchExtensions.map((ext) => path + "/index" + ext),
+    ...ModuleDelegate.searchExtensions.map((ext) => path + ext),
+    ...ModuleDelegate.searchExtensions.map((ext) => path + "/index" + ext),
   ];
 
   try {
@@ -52,15 +52,18 @@ export function installModuleHooks() {
     "quickjs:os",
     "quickjs:bytecode",
     "quickjs:context",
+    "quickjs:engine",
   ]);
 
-  const originalDefine = Module.define;
-  Module.define = (name, obj) => {
-    originalDefine(name, obj);
-    builtins.add(name);
-  };
+  // TODO: quickjs needs to expose the list of builtin modules so that we don't have to do this
+  //
+  // const originalDefine = defineBuiltinModule;
+  // Module.define = (name, obj) => {
+  //   originalDefine(name, obj);
+  //   builtins.add(name);
+  // };
 
-  Module.resolve = (name, fromFile) => {
+  ModuleDelegate.resolve = (name, fromFile) => {
     if (builtins.has(name)) {
       return name;
     }
@@ -116,8 +119,8 @@ export function installModuleHooks() {
     );
   };
 
-  const originalRead = Module.read;
-  Module.read = (modulePath) => {
+  const originalRead = ModuleDelegate.read;
+  ModuleDelegate.read = (modulePath) => {
     if (protos.npm.handlesModulePath(modulePath)) {
       return protos.npm.readModule(modulePath);
     }

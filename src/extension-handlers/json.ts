@@ -1,5 +1,5 @@
 import * as std from "quickjs:std";
-import { Module } from "quickjs:module";
+import { ModuleDelegate } from "quickjs:engine";
 
 const template = (data: any) =>
   `const data = ${JSON.stringify(data, null, 2)};
@@ -10,7 +10,7 @@ export const __isCjsModule = true;
 export const __cjsExports = data;
 `;
 
-Module.compilers[".json"] = (filename: string, content: string) => {
+ModuleDelegate.compilers[".json"] = (filename: string, content: string) => {
   const data = std.parseExtJSON(content);
   return template(data);
 };

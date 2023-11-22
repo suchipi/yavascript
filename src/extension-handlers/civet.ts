@@ -1,7 +1,7 @@
-import { Module } from "quickjs:module";
+import { ModuleDelegate } from "quickjs:engine";
 import compilers from "../compilers";
 
-Module.compilers[".civet"] = (filename: string, content: string) => {
+ModuleDelegate.compilers[".civet"] = (filename: string, content: string) => {
   const compiled = compilers.civet(content, { filename });
   return compiled;
 };

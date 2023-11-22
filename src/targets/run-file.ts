@@ -1,4 +1,4 @@
-import * as mod from "quickjs:module";
+import * as engine from "quickjs:engine";
 import { langToCompiler } from "../langs";
 import compilers from "../compilers";
 import { extname } from "../api/commands/extname";
@@ -17,10 +17,13 @@ function overrideCompiler(
   const extension = extname(fileToRun);
 
   const defaultBehavior =
-    mod.Module.compilers[extension] ||
+    engine.ModuleDelegate.compilers[extension] ||
     ((filename: string, content: string) => content);
 
-  mod.Module.compilers[extension] = (filename: string, content: string) => {
+  engine.ModuleDelegate.compilers[extension] = (
+    filename: string,
+    content: string
+  ) => {
     if (filename === fileToRun) {
       return callback(filename, content, defaultBehavior);
     } else {
@@ -31,12 +34,13 @@ function overrideCompiler(
 
 export default async function runFileTarget(
   fileToRun: string,
-  langOverride: string | null
+  langOverride: string | null,
+  asMain: boolean = true
 ) {
   let absFileToRun = Path.isAbsolute(fileToRun)
     ? fileToRun
     : fileToRun.match(/^\.{1,2}\//)
-    ? mod.resolveModule(fileToRun, "./<cwd>")
+    ? engine.resolveModule(fileToRun, "./<cwd>")
     : Path.join(pwd(), fileToRun).toString();
 
   absFileToRun = realpath(absFileToRun).toString();
@@ -48,9 +52,11 @@ export default async function runFileTarget(
     });
   }
 
-  mod.setMainModule(absFileToRun);
+  if (asMain) {
+    engine.setMainModule(absFileToRun);
+  }
   try {
-    mod.importModule(absFileToRun, "./<cwd>");
+    engine.importModule(absFileToRun, "./<cwd>");
   } catch (err: any) {
     if (
       typeof err === "object" &&
@@ -66,7 +72,7 @@ export default async function runFileTarget(
 
       let result: any;
       try {
-        const exp = mod.importModule(absFileToRun, "./<cwd>");
+        const exp = engine.importModule(absFileToRun, "./<cwd>");
         result = exp.__toplevel_await_promise__;
       } catch (err: any) {
         if (

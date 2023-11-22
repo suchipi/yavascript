@@ -4417,9 +4417,6 @@ declare module "quickjs:std" {
   /** Constant for {@link FILE.setvbuf}. Declares that the buffer mode should be 'no buffering'. */
   export var _IONBF: number;
 
-  /** Manually invoke the cycle removal algorithm (garbage collector). The cycle removal algorithm is automatically started when needed, so this function is useful in case of specific memory constraints or for testing. */
-  export function gc(): void;
-
   /** Return the value of the environment variable `name` or `undefined` if it is not defined. */
   export function getenv(name: string): string | undefined;
 
@@ -5070,7 +5067,7 @@ declare module "quickjs:os" {
   export function dup2(oldfd: number, newfd: number): number;
 
   /** `pipe` Unix system call. Return two handles as `[read_fd, write_fd]`. */
-  export function pipe(): null | [number, number];
+  export function pipe(): [number, number];
 
   /** Sleep for `delay_ms` milliseconds. */
   export function sleep(delay_ms: number): void;
@@ -5237,19 +5234,9 @@ interface StringConstructor {
 
 /**
  * An object which lets you configure the module loader (import/export/require).
- * You can use these properties to add support for importing new filetypes.
- *
- * This object can also be used to identify whether an object is a module
- * namespace record.
+ * You can change these properties to add support for importing new filetypes.
  */
-interface Module {
-  /**
-   * Returns true if `target` is a module namespace object.
-   */
-  [Symbol.hasInstance](target: any): target is {
-    [key: string | number | symbol]: any;
-  };
-
+interface ModuleDelegate {
   /**
    * A list of filetype extensions that may be omitted from an import specifier
    * string.
@@ -5288,7 +5275,7 @@ interface Module {
    * ```js
    * import * as std from "std";
    *
-   * Module.compilers[".txt"] = (filename, content) => {
+   * ModuleDelegate.compilers[".txt"] = (filename, content) => {
    *   return `export default ${JSON.stringify(content)}`;
    * }
    * ```
@@ -5309,18 +5296,13 @@ interface Module {
   };
 
   /**
-   * Create a virtual built-in module whose exports consist of the own
-   * enumerable properties of `obj`.
-   */
-  define(name: string, obj: { [key: string]: any }): void;
-
-  /**
    * Resolves a require/import request from `fromFile` into a canonicalized
    * path.
    *
    * To change native module resolution behavior, replace this function with
    * your own implementation. Note that you must handle
-   * `Module.searchExtensions` yourself in your replacement implementation.
+   * `ModuleDelegate.searchExtensions` yourself in your replacement
+   * implementation.
    */
   resolve(name: string, fromFile: string): string;
 
@@ -5328,8 +5310,8 @@ interface Module {
    * Reads the contents of the given resolved module name into a string.
    *
    * To change native module loading behavior, replace this function with your
-   * own implementation. Note that you must handle `Module.compilers` yourself
-   * in your replacement implementation.
+   * own implementation. Note that you must handle `ModuleDelegate.compilers`
+   * yourself in your replacement implementation.
    */
   read(modulePath: string): string;
 }
@@ -5342,8 +5324,8 @@ interface RequireFunction {
    *
    * If `source` does not have a file extension, and a file without an extension
    * cannot be found, the engine will check for files with the extensions in
-   * {@link Module.searchExtensions}, and use one of those if present. This
-   * behavior also happens when using normal `import` statements.
+   * {@link ModuleDelegate.searchExtensions}, and use one of those if present.
+   * This behavior also happens when using normal `import` statements.
    *
    * For example, if you write:
    *
@@ -5352,8 +5334,8 @@ interface RequireFunction {
    * ```
    *
    * but there's no file named `somewhere` in the same directory as the file
-   * where that import appears, and `Module.searchExtensions` is the default
-   * value:
+   * where that import appears, and `ModuleDelegate.searchExtensions` is the
+   * default value:
    *
    * ```js
    * [".js"]
@@ -5363,9 +5345,9 @@ interface RequireFunction {
    * engine will look for `somewhere/index.js`. If *that* doesn't exist, an
    * error will be thrown.
    *
-   * If you add more extensions to `Module.searchExtensions`, then the engine
-   * will use those, too. It will search in the same order as the strings appear
-   * in the `Module.searchExtensions` array.
+   * If you add more extensions to `ModuleDelegate.searchExtensions`, then the
+   * engine will use those, too. It will search in the same order as the strings
+   * appear in the `ModuleDelegate.searchExtensions` array.
    */
   (source: string): any;
 
@@ -5405,16 +5387,17 @@ interface ImportMeta {
    *
    * Equivalent to `globalThis.require.resolve`.
    *
-   * Behaves similarly to [the browser import.meta.resolve](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta/resolve),
+   * Behaves similarly to [the browser
+   * import.meta.resolve](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta/resolve),
    * but it does not ensure that the returned string is a valid URL, because it
-   * delegates directly to {@link Module.resolve} to resolve the name. If you
-   * want this to return URL strings, change `Module.resolve` and `Module.read`
-   * to work with URL strings.
+   * delegates directly to {@link ModuleDelegate.resolve} to resolve the name.
+   * If you want this to return URL strings, change `ModuleDelegate.resolve` and
+   * `ModuleDelegate.read` to work with URL strings.
    */
   resolve: RequireFunction["resolve"];
 }
 
-declare module "quickjs:module" {
+declare module "quickjs:engine" {
   /**
    * Return whether the provided resolved module path is set as the main module.
    *
@@ -5487,13 +5470,32 @@ declare module "quickjs:module" {
   export function getFileNameFromStack(stackLevels?: number): string;
 
   /**
-   * An object which lets you configure the module loader (import/export/require).
-   * You can use these properties to add support for importing new filetypes.
-   *
-   * This object can also be used to identify whether an object is a module
-   * namespace record.
+   * Returns true if `target` is a module namespace object.
    */
-  export const Module: Module;
+  export function isModuleNamespace(target: any): boolean;
+
+  /**
+   * Create a virtual built-in module whose exports consist of the own
+   * enumerable properties of `obj`.
+   */
+  export function defineBuiltinModule(
+    name: string,
+    obj: { [key: string]: any }
+  ): void;
+
+  /**
+   * An object which lets you configure the module loader (import/export/require).
+   * You can change these properties to add support for importing new filetypes.
+   */
+  export const ModuleDelegate: ModuleDelegate;
+
+  /**
+   * Manually invoke the cycle removal algorithm (garbage collector).
+   *
+   * The cycle removal algorithm is automatically started when needed, so this
+   * function is useful in case of specific memory constraints or for testing.
+   */
+  export function gc(): void;
 }
 
 declare module "quickjs:bytecode" {
@@ -5504,7 +5506,11 @@ declare module "quickjs:bytecode" {
    */
   export function fromFile(
     path: string,
-    options?: { byteSwap?: boolean; sourceType?: "module" | "script" }
+    options?: {
+      byteSwap?: boolean;
+      sourceType?: "module" | "script";
+      encodedFileName?: string;
+    }
   ): ArrayBuffer;
 
   /**
@@ -5660,7 +5666,7 @@ declare module "quickjs:context" {
       console?: boolean;
       /** Enables `print`. Defaults to `true`. */
       print?: boolean;
-      /** Enables `require` and `Module`. Defaults to `true`. */
+      /** Enables `require`. Defaults to `true`. */
       moduleGlobals?: boolean;
       /**
        * Enables `setTimeout`, `clearTimeout`, `setInterval`, and
@@ -5678,8 +5684,8 @@ declare module "quickjs:context" {
         "quickjs:bytecode"?: boolean;
         /** Enables the "quickjs:context" module. Defaults to `true`. */
         "quickjs:context"?: boolean;
-        /** Enables the "quickjs:module" module. Defaults to `true`. */
-        "quickjs:module"?: boolean;
+        /** Enables the "quickjs:engine" module. Defaults to `true`. */
+        "quickjs:engine"?: boolean;
       };
     });
 

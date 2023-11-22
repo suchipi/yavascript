@@ -15,7 +15,7 @@ async function main(): Promise<void> {
           require("./targets/run-file").default;
 
         for (const file of targetInfo.filesToLoadFirst) {
-          await runFileTarget(file, null);
+          await runFileTarget(file, null, false);
         }
       }
 
@@ -62,7 +62,7 @@ async function main(): Promise<void> {
           require("./targets/run-file").default;
 
         for (const file of targetInfo.filesToLoadFirst) {
-          await runFileTarget(file, null);
+          await runFileTarget(file, null, false);
         }
       }
 
@@ -78,7 +78,7 @@ async function main(): Promise<void> {
         require("./targets/run-file").default;
 
       for (const file of targetInfo.filesToLoadFirst) {
-        await runFileTarget(file, null);
+        await runFileTarget(file, null, false);
       }
 
       const { file, lang } = targetInfo;

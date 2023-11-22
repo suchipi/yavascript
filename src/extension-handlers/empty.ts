@@ -1,6 +1,6 @@
-import { Module } from "quickjs:module";
+import { ModuleDelegate } from "quickjs:engine";
 import compilers from "../compilers";
 
-Module.compilers[""] = (filename: string, content: string) => {
+ModuleDelegate.compilers[""] = (filename: string, content: string) => {
   return compilers.autodetect(content, { filename });
 };
