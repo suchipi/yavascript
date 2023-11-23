@@ -1,6 +1,5 @@
 import { spawn } from "first-base";
 import { binaryPath } from "../test-helpers";
-import { sleep } from "a-mimir";
 
 describe("repl", () => {
   test("basic run", async () => {
@@ -8,12 +7,9 @@ describe("repl", () => {
     await run.outputContains("> ");
     run.write("2 + 2\n");
     await run.outputContains("4");
-    // TODO: it's annoying that you have to hit Ctrl+C more than once
-    {
-      run.kill("SIGINT");
-      await sleep.async(10);
-      run.kill("SIGINT");
-    }
+    run.kill("SIGINT"); // Ctrl-C
+    await run.outputContains("Press Ctrl-C again");
+    run.kill("SIGINT");
     await run.completion;
     expect(run.result).toMatchInlineSnapshot(`
       {
