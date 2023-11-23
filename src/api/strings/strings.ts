@@ -1,4 +1,4 @@
-import stripAnsi from "strip-ansi";
+import stripAnsiFromString from "strip-ansi";
 import kleur from "kleur";
 
 kleur.enabled = true;
@@ -11,15 +11,23 @@ import stringStylingHelpText from "./string-styling.help.md";
 import quoteHelpText from "./quote.help.md";
 import stripAnsiHelpText from "./stripAnsi.help.md";
 
+function stripAnsi(input: string | number | Path) {
+  if (typeof input === "string") {
+    return stripAnsiFromString(input);
+  } else {
+    return stripAnsiFromString(String(input));
+  }
+}
+
 setHelpText(stripAnsi, stripAnsiHelpText);
 
 export { stripAnsi };
 
-export const quote = (str: string | Path) => {
+export const quote = (str: string | number | Path) => {
   assert.type(
     str,
-    types.or(types.string, types.Path),
-    "'str' argument must be a string or Path"
+    types.or(types.string, types.number, types.Path),
+    "'str' argument must be a string, number, or Path"
   );
   if (typeof str !== "string") {
     str = str.toString();
