@@ -1094,7 +1094,7 @@ export function startRepl(lang) {
     level = 0;
 
     /* run the garbage collector after each command */
-    std.gc();
+    engine.gc();
   }
 
   function colorize_js(str) {
