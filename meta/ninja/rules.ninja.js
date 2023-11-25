@@ -44,12 +44,11 @@ rule("kame", {
 
   rule("to-bytecode", {
     command: [
-      // to have clearer stack trace in filenames
-      `cp $in yavascript-internal.js &&`,
       JSON.stringify(quickjsRunBinPath),
       JSON.stringify(fileToByteCodePath),
-      `yavascript-internal.js $out &&`,
-      `rm -rf yavascript-internal.js`,
+      `$in $out`,
+      // to have clearer stack trace in filenames
+      `yavascript-internal.js`,
     ],
     description: "TO-BYTECODE $out",
     implicitInputs: [quickjsRunBinPath, fileToByteCodePath],

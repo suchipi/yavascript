@@ -56,3 +56,10 @@ if (process.arch === "arm64") {
     output: builddir("bundles/index.js"),
   });
 }
+
+// so you can click-to-position in stack traces
+build({
+  rule: "copy",
+  inputs: [builddir("bundles/index.js")],
+  output: "yavascript-internal.js",
+});
