@@ -19,4 +19,4 @@
 - [ ] support source maps for compiled languages
 - [ ] pager for long help text (when using repl)
 - [ ] create solution for tracing `exec` and friends without it being crazy chatty. maybe log levels
-- [ ] allow catting multiple files together, and do so as binary
+- [x] allow catting multiple files together, and do so as binary
