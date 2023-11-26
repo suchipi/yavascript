@@ -1,4 +1,5 @@
 import * as os from "quickjs:os";
+import * as encoding from "quickjs:encoding";
 import { assert } from "../../assert";
 import { is } from "../../is";
 import { TypeValidator, types } from "../../types";
@@ -67,11 +68,7 @@ export function cat(
   if (options.binary) {
     return content.buffer;
   } else {
-    // utf-8...ish. need to make this better
-    return String.fromCharCode.apply(
-      null,
-      new Uint8Array(content.buffer) as any
-    );
+    return encoding.toUtf8(content.buffer);
   }
 }
 

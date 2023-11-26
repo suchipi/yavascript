@@ -53,6 +53,7 @@ export function installModuleHooks() {
     "quickjs:bytecode",
     "quickjs:context",
     "quickjs:engine",
+    "quickjs:encoding",
   ]);
 
   // TODO: quickjs needs to expose the list of builtin modules so that we don't have to do this

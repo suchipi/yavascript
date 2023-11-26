@@ -5732,6 +5732,12 @@ declare module "quickjs:context" {
   }
 }
 
+// WHATWG encoding spec at https://encoding.spec.whatwg.org/ would be better,
+// but this is better than nothing
+declare module "quickjs:encoding" {
+  export function toUtf8(input: ArrayBuffer): string;
+}
+
 declare const std: typeof import("quickjs:std");
 declare const os: typeof import("quickjs:os");
 
