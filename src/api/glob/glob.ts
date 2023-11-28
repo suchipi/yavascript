@@ -4,7 +4,7 @@ import { exists } from "../filesystem";
 import { pwd } from "../commands/pwd";
 import { Path } from "../path";
 import { makeErrorWithProperties } from "../../error-with-properties";
-import { traceAll } from "../trace-all";
+import { logger } from "../logger";
 import { is } from "../is";
 import { assert } from "../assert";
 import { types } from "../types";
@@ -37,6 +37,7 @@ export type GlobOptions = {
   dir?: string | Path;
   followSymlinks?: boolean;
   trace?: (...args: Array<any>) => void;
+  info?: (...args: Array<any>) => void;
 };
 
 const HAS_GLOB_METACHARS_RE = /[*{}]|\+\(|^!/;
@@ -70,8 +71,11 @@ export function glob(
   );
 
   let dir = options.dir ?? null;
-  const trace = options.trace ?? traceAll.getDefaultTrace();
+  const trace = options.trace ?? logger.trace;
+  const info = options.info ?? logger.info;
+
   const patternsArray = Array.isArray(patterns) ? patterns : [patterns];
+  info(`glob: expanding ${JSON.stringify(patternsArray)}`);
 
   if (is(dir, types.Path)) {
     dir = dir.toString();
@@ -100,13 +104,11 @@ export function glob(
         Path.detectSeparator(absolutePattern, "/")
       ).normalize();
 
-      if (trace) {
-        trace(
-          `using absolute pattern to infer starting dir: ${JSON.stringify(
-            absolutePattern
-          )} -> ${JSON.stringify(result.toString())}`
-        );
-      }
+      trace(
+        `using absolute pattern to infer starting dir: ${JSON.stringify(
+          absolutePattern
+        )} -> ${JSON.stringify(result.toString())}`
+      );
 
       return result;
     });
@@ -133,14 +135,12 @@ export function glob(
     } else {
       dir = Path.from(commonParentDirParts).normalize();
 
-      if (trace) {
-        trace(
-          `inferred starting dir from absolute pattern(s): ${dir.toString()}`
-        );
+      trace(
+        `inferred starting dir from absolute pattern(s): ${dir.toString()}`
+      );
 
-        if (dir.segments.length === 1) {
-          trace("--- WARNING: inferred starting dir to root dir! ---");
-        }
+      if (dir.segments.length === 1) {
+        trace("--- WARNING: inferred starting dir to root dir! ---");
       }
     }
   }
@@ -167,17 +167,13 @@ export function glob(
   const matches: Array<string> = [];
 
   function find(searchDir: string) {
-    if (trace) {
-      trace(`reading children of ${searchDir}`);
-    }
+    trace(`reading children of ${searchDir}`);
 
     searchDir = appendSlashIfWindowsDriveLetter(searchDir);
 
     const children = os.readdir(searchDir);
 
-    if (trace) {
-      trace(`found ${children.length} children of ${searchDir}`);
-    }
+    trace(`found ${children.length} children of ${searchDir}`);
 
     for (const child of children) {
       if (child === ".") continue;
@@ -185,9 +181,7 @@ export function glob(
 
       const fullName = searchDir + "/" + child;
 
-      if (trace) {
-        trace(`checking ${fullName}`);
-      }
+      trace(`checking ${fullName}`);
 
       try {
         let stat: os.Stats;
@@ -206,17 +200,15 @@ export function glob(
           allPatterns.every(({ pattern, negated, regexp }) => {
             let didMatch = regexp.test(fullName);
 
-            if (trace) {
-              trace(
-                "match info:",
-                JSON.stringify({
-                  didMatch,
-                  pattern,
-                  negated,
-                  fullName,
-                })
-              );
-            }
+            trace(
+              "match info:",
+              JSON.stringify({
+                didMatch,
+                pattern,
+                negated,
+                fullName,
+              })
+            );
 
             return didMatch;
           })
@@ -239,13 +231,11 @@ export function glob(
           for (const { regexp, pattern } of negatedPatterns) {
             const matchesNegated = !regexp.test(fullName);
             if (matchesNegated) {
-              if (trace) {
-                trace(
-                  `not traversing deeper into dir as it matches a negated pattern: ${JSON.stringify(
-                    { dir: fullName, pattern }
-                  )}`
-                );
-              }
+              trace(
+                `not traversing deeper into dir as it matches a negated pattern: ${JSON.stringify(
+                  { dir: fullName, pattern }
+                )}`
+              );
 
               shouldGoDeeper = false;
               break;
@@ -259,9 +249,7 @@ export function glob(
       } catch (err: any) {
         try {
           const message = `glob encountered error: ${err.message}`;
-          if (trace) {
-            trace(message);
-          }
+          trace(message);
           console.warn(message);
         } catch (err2) {
           // ignore

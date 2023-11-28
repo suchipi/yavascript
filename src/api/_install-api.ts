@@ -142,8 +142,8 @@ const yamlProps = makeGetterPropertyDescriptorMap({
   YAML: () => require("./yaml").YAML,
 });
 
-const traceAllProps = makeGetterPropertyDescriptorMap({
-  traceAll: () => require("./trace-all").traceAll,
+const loggerProps = makeGetterPropertyDescriptorMap({
+  logger: () => require("./logger").logger,
 });
 
 const parseScriptArgsProps = makeGetterPropertyDescriptorMap({
@@ -186,7 +186,7 @@ export default function installApi(target: typeof globalThis) {
     ...jsxProps,
     ...csvProps,
     ...yamlProps,
-    ...traceAllProps,
+    ...loggerProps,
     ...parseScriptArgsProps,
     ...replProps,
     ...yavascriptProps,

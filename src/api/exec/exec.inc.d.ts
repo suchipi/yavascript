@@ -17,6 +17,14 @@ declare type BaseExecOptions = {
   trace?: (...args: Array<any>) => void;
 
   /**
+   * An optional, user-provided logging function to be used for informational
+   * messages.
+   *
+   * Defaults to {@link logger.info}.
+   */
+  info?: (...args: Array<any>) => void;
+
+  /**
    * Whether an Error should be thrown when the process exits with a nonzero
    * status code.
    *

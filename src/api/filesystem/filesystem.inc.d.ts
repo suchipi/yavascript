@@ -119,6 +119,14 @@ declare type CopyOptions = {
    * ```
    */
   trace?: (...args: Array<any>) => void;
+
+  /**
+   * An optional, user-provided logging function to be used for informational
+   * messages.
+   *
+   * Defaults to {@link logger.info}.
+   */
+  info?: (...args: Array<any>) => void;
 };
 
 /**

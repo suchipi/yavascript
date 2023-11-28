@@ -6,12 +6,13 @@ import whichHelpText from "./which.help.md";
 import { assert } from "../../assert";
 import { types } from "../../types";
 import { quote } from "../../strings";
+import { logger } from "../../logger";
 
 function optionDefaults() {
   return {
     searchPaths: env.PATH?.split(Path.OS_ENV_VAR_SEPARATOR) || [],
     suffixes: Array.from(Path.OS_PROGRAM_EXTENSIONS),
-    trace: traceAll.getDefaultTrace(),
+    trace: logger.trace,
   };
 }
 
@@ -59,11 +60,7 @@ export function which(
   } = options ?? defaults;
 
   for (const lookupPath of searchPaths) {
-    if (trace) {
-      trace(
-        `which: Searching for ${quote(binaryName)} in ${quote(lookupPath)}`
-      );
-    }
+    trace(`which: Searching for ${quote(binaryName)} in ${quote(lookupPath)}`);
 
     const potentialPaths = new Set([new Path(lookupPath, binaryName)]);
     for (const suffix of suffixes) {
@@ -71,24 +68,16 @@ export function which(
     }
 
     for (const potentialPath of potentialPaths) {
-      if (trace) {
-        trace(`which: Checking for ${quote(potentialPath)}`);
-      }
+      trace(`which: Checking for ${quote(potentialPath)}`);
 
       if (exists(potentialPath) && isExecutable(potentialPath)) {
-        if (trace) {
-          trace(
-            `which: Found ${quote(binaryName)} at ${quote(potentialPath)}!`
-          );
-        }
+        trace(`which: Found ${quote(binaryName)} at ${quote(potentialPath)}!`);
         return potentialPath;
       }
     }
   }
 
-  if (trace) {
-    trace(`which: Failed to find ${quote(binaryName)}...`);
-  }
+  trace(`which: Failed to find ${quote(binaryName)}...`);
   return null;
 }
 

@@ -11,7 +11,7 @@ If the program can't be found, `null` is returned.
 - `suffixes`
   - A list of filename extension suffixes to include in the search, ie `[".exe"]`. Defaults to `Path.OS_PROGRAM_EXTENSIONS`.
 - `trace`
-  - A logging function that will be called at various times during the execution of `which`. Useful for debugging. Defaults to `traceAll.getDefaultTrace()`.
+  - A logging function that will be called at various times during the execution of `which`. Useful for debugging. Defaults to `logger.trace`.
 
 ```ts
 // Defined in yavascript/src/api/commands/which

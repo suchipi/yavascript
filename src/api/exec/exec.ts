@@ -2,7 +2,7 @@ import * as std from "quickjs:std";
 import { toArgv } from "./to-argv";
 import { env } from "../env";
 import { makeErrorWithProperties } from "../../error-with-properties";
-import { traceAll } from "../trace-all";
+import { logger } from "../logger";
 import { assert } from "../assert";
 import type { Path } from "../path";
 import { setHelpText } from "../help";
@@ -19,6 +19,7 @@ const exec = (
     failOnNonZeroStatus?: boolean;
     captureOutput?: boolean | "utf8" | "arraybuffer";
     trace?: (...args: Array<any>) => void;
+    info?: (...args: Array<any>) => void;
   } = {}
 ): any => {
   // 'args' type gets checked in ChildProcess constructor
@@ -33,7 +34,8 @@ const exec = (
     captureOutput = false,
     cwd,
     env,
-    trace = traceAll.getDefaultTrace(),
+    trace = logger.trace,
+    info = logger.info,
   } = options;
 
   assert.type(
@@ -51,13 +53,17 @@ const exec = (
     "when present, 'captureOutput' option must be either a boolean or one of the strings 'utf8' or 'arraybuffer'"
   );
 
-  if (trace != null) {
-    assert.type(
-      trace,
-      types.Function,
-      "when present, 'options.trace' must be a function"
-    );
-  }
+  assert.type(
+    trace,
+    types.Function,
+    "when present, 'options.trace' must be a function"
+  );
+
+  assert.type(
+    info,
+    types.Function,
+    "when present, 'options.info' must be a function"
+  );
 
   const child = new ChildProcess(args, { cwd, env, trace });
 
@@ -72,8 +78,12 @@ const exec = (
 
   let result: ReturnType<typeof child.waitUntilComplete> | null = null;
   try {
+    info(`exec: ${child.args.join(" ")}`);
     child.start();
     result = child.waitUntilComplete();
+    if (result.status !== 0) {
+      info(`  exec -> ${JSON.stringify(result)}`);
+    }
 
     let stdout: string | ArrayBuffer | null = null;
     let stderr: string | ArrayBuffer | null = null;
@@ -90,7 +100,7 @@ const exec = (
         tmpErr.seek(0, std.SEEK_SET);
 
         const outBytesRead = tmpOut.read(stdout, 0, outLen);
-        if (outBytesRead !== outLen && trace != null) {
+        if (outBytesRead !== outLen) {
           // throwing an error at this point seems kinda hostile idk, like the
           // process has already run to completion, you know? this *shouldn't*
           // ever happen, in theory, but...
@@ -100,7 +110,7 @@ const exec = (
         }
 
         const errBytesRead = tmpErr.read(stderr, 0, errLen);
-        if (errBytesRead !== errLen && trace != null) {
+        if (errBytesRead !== errLen) {
           trace(
             `WEIRD! stderr reported it was ${errLen}, but when we read it back, it was ${errBytesRead}. Continuing anyway...`
           );
@@ -146,9 +156,7 @@ const exec = (
       );
     }
   } catch (err) {
-    if (trace) {
-      trace("exec error:", err);
-    }
+    trace("exec error:", err);
     throw err;
   } finally {
     if (tmpOut != null) tmpOut.close();
