@@ -26,12 +26,6 @@ declare interface ChildProcess {
     err: FILE;
   };
 
-  /**
-   * Optional trace function which, if present, will be called at various times
-   * to provide information about the lifecycle of the process.
-   */
-  trace?: (...args: Array<any>) => void;
-
   pid: number | null;
 
   /** Spawns the process and returns its pid (process id). */
@@ -68,11 +62,17 @@ declare type ChildProcessOptions = {
     err?: FILE;
   };
 
-  /**
-   * Optional trace function which, if present, will be called at various times
-   * to provide information about the lifecycle of the process.
-   */
-  trace?: (...args: Array<any>) => void;
+  /** Options which control logging */
+  logging?: {
+    /**
+     * Optional trace function which, if present, will be called at various
+     * times to provide information about the lifecycle of the process.
+     *
+     * Defaults to the current value of {@link logger.trace}. `logger.trace`
+     * defaults to a function which writes to stderr.
+     */
+    trace?: (...args: Array<any>) => void;
+  };
 };
 
 declare interface ChildProcessConstructor {

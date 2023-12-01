@@ -5,24 +5,34 @@ declare type BaseExecOptions = {
   /** Sets environment variables within the process. */
   env?: { [key: string | number]: string | number | boolean };
 
-  /**
-   * If provided, this function will be called multiple times as `exec`
-   * runs, to help you understand what's going on and/or troubleshoot things.
-   * In most cases, it makes sense to use a logging function here, like so:
-   *
-   * ```js
-   * exec(["echo", "hi"], { trace: console.log });
-   * ```
-   */
-  trace?: (...args: Array<any>) => void;
+  /** Options which control logging. */
+  logging?: {
+    /**
+     * If provided, this logging function will be called multiple times as
+     * `exec` runs, to help you understand what's going on and/or troubleshoot
+     * things. In most cases, it makes sense to use a function from `console`
+     * here, like so:
+     *
+     * ```js
+     * exec(["echo", "hi"], {
+     *   logging: { trace: console.log },
+     * });
+     * ```
+     *
+     * Defaults to the current value of {@link logger.trace}. `logger.trace`
+     * defaults to a no-op function.
+     */
+    trace?: (...args: Array<any>) => void;
 
-  /**
-   * An optional, user-provided logging function to be used for informational
-   * messages.
-   *
-   * Defaults to {@link logger.info}.
-   */
-  info?: (...args: Array<any>) => void;
+    /**
+     * An optional, user-provided logging function to be used for informational
+     * messages. Less verbose than `logging.trace`.
+     *
+     * Defaults to the current value of {@link logger.info}. `logger.info`
+     * defaults to a function which logs to stderr.
+     */
+    info?: (...args: Array<any>) => void;
+  };
 
   /**
    * Whether an Error should be thrown when the process exits with a nonzero

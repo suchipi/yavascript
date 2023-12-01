@@ -7,7 +7,7 @@ Generally, you should not need to use the `ChildProcess` class directly, and sho
 ```ts
 // Defined in yavascript/src/api/exec/ChildProcess.ts
 declare class ChildProcess {
-  new(
+  constructor(
     args: string | Path | Array<string | number | Path>,
     options?: {
       cwd?: string | Path;
@@ -17,7 +17,9 @@ declare class ChildProcess {
         out?: FILE;
         err?: FILE;
       };
-      trace?: (...args: Array<any>) => void;
+      logging?: {
+        trace?: (...args: Array<any>) => void;
+      };
     }
   ): ChildProcess;
 
@@ -30,7 +32,6 @@ declare class ChildProcess {
     out: FILE;
     err: FILE;
   };
-  trace?: (...args: Array<any>) => void;
 
   pid: number | null;
   start(): number;

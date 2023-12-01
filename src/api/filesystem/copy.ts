@@ -19,7 +19,9 @@ function formatPath(path: Path | string): string {
     path = new Path(path);
   }
   if (path.startsWith(pwd())) {
-    return new Path(path).replace(pwd(), "").toString();
+    return new Path(path).replace(pwd(), []).toString();
+  } else if (path.startsWith(".")) {
+    return new Path(path).replace(".", []).toString();
   } else {
     return path.toString();
   }
@@ -101,8 +103,10 @@ function copyRaw(
 
 export type CopyOptions = {
   whenTargetExists?: "overwrite" | "skip" | "error";
-  trace?: (...args: Array<any>) => void;
-  info?: (...args: Array<any>) => void;
+  logging?: {
+    trace?: (...args: Array<any>) => void;
+    info?: (...args: Array<any>) => void;
+  };
 };
 
 export function copy(
@@ -130,8 +134,7 @@ export function copy(
 
   const {
     whenTargetExists = "error",
-    trace = logger.trace,
-    info = logger.info,
+    logging: { trace = logger.trace, info = logger.info } = {},
   } = options;
 
   assert.type(
@@ -147,13 +150,13 @@ export function copy(
   assert.type(
     trace,
     types.or(types.undefined, types.anyFunction),
-    "when present, 'trace' option must be a function."
+    "when present, 'logging.trace' option must be a function."
   );
 
   assert.type(
     info,
     types.or(types.undefined, types.anyFunction),
-    "when present, 'info' option must be a function."
+    "when present, 'logging.info' option must be a function."
   );
 
   if (is(to, types.Path)) {

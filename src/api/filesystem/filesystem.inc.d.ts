@@ -108,25 +108,34 @@ declare type CopyOptions = {
    */
   whenTargetExists?: "overwrite" | "skip" | "error";
 
-  /**
-   * If provided, this function will be called multiple times as `copy`
-   * traverses the filesystem, to help you understand what's going on and/or
-   * troubleshoot things. In most cases, it makes sense to use a logging
-   * function here, like so:
-   *
-   * ```js
-   * copy("./source", "./destination", { trace: console.log });
-   * ```
-   */
-  trace?: (...args: Array<any>) => void;
+  /** Options which control logging. */
+  logging?: {
+    /**
+     * If provided, this function will be called multiple times as `copy`
+     * traverses the filesystem, to help you understand what's going on and/or
+     * troubleshoot things. In most cases, it makes sense to use a logging
+     * function here, like so:
+     *
+     * ```js
+     * copy("./source", "./destination", {
+     *   logging: { trace: console.log },
+     * });
+     * ```
+     *
+     * Defaults to the current value of {@link logger.trace}. `logger.trace`
+     * defaults to a no-op function.
+     */
+    trace?: (...args: Array<any>) => void;
 
-  /**
-   * An optional, user-provided logging function to be used for informational
-   * messages.
-   *
-   * Defaults to {@link logger.info}.
-   */
-  info?: (...args: Array<any>) => void;
+    /**
+     * An optional, user-provided logging function to be used for informational
+     * messages.
+     *
+     * Defaults to the current value of {@link logger.info}. `logger.info`
+     * defaults to a function which writes to stderr.
+     */
+    info?: (...args: Array<any>) => void;
+  };
 };
 
 /**

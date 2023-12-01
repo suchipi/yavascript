@@ -500,12 +500,15 @@ test("copy", async () => {
   const result = await evaluate(
     `copy(${JSON.stringify(source)}, ${JSON.stringify(target)})`
   );
-  expect(cleanResult(result)).toEqual({
-    code: 0,
-    error: false,
-    stderr: "",
-    stdout: "",
-  });
+  expect(cleanResult(result)).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "copy: src/test_fixtures/copy/blah/blah2/hi.txt -> src/test_fixtures/copy/blah_copy/blah2/hi.txt
+    ",
+      "stdout": "",
+    }
+  `);
 
   const blah2 = path.join(target, "blah2");
   const blah3 = path.join(target, "blah3");

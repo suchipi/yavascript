@@ -20,7 +20,9 @@ declare function which(
   options?: {
     searchPaths?: Array<Path | string>;
     suffixes?: Array<string>;
-    trace?: (...args: Array<any>) => void;
+    logging?: {
+      trace?: (...args: Array<any>) => void;
+    };
   }
 ): Path | null;
 ```

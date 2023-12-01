@@ -36,8 +36,10 @@ function compile(pattern: string, startingDir: string) {
 export type GlobOptions = {
   dir?: string | Path;
   followSymlinks?: boolean;
-  trace?: (...args: Array<any>) => void;
-  info?: (...args: Array<any>) => void;
+  logging?: {
+    trace?: (...args: Array<any>) => void;
+    info?: (...args: Array<any>) => void;
+  };
 };
 
 const HAS_GLOB_METACHARS_RE = /[*{}]|\+\(|^!/;
@@ -65,14 +67,25 @@ export function glob(
   );
 
   assert.type(
-    options.trace,
-    types.or(types.undefined, types.anyFunction),
-    "when present, 'trace' option must be a function"
+    options.logging,
+    types.or(types.undefined, types.object),
+    "when present, 'logging' option must be an object"
   );
 
   let dir = options.dir ?? null;
-  const trace = options.trace ?? logger.trace;
-  const info = options.info ?? logger.info;
+  const trace = options.logging?.trace ?? logger.trace;
+  const info = options.logging?.info ?? logger.info;
+
+  assert.type(
+    trace,
+    types.or(types.undefined, types.anyFunction),
+    "when present, 'logging.trace' option must be a function"
+  );
+  assert.type(
+    info,
+    types.or(types.undefined, types.anyFunction),
+    "when present, 'logging.info' option must be a function"
+  );
 
   const patternsArray = Array.isArray(patterns) ? patterns : [patterns];
   info(`glob: expanding ${JSON.stringify(patternsArray)}`);

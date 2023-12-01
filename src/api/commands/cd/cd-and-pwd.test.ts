@@ -40,7 +40,8 @@ test("cd affects working directory of exec", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: sh -c "echo $PWD"
+    ",
       "stdout": "<rootDir>/src
     ",
     }

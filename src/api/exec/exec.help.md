@@ -27,14 +27,13 @@ The intent is that it behaves similarly to what you would expect from a UNIX she
 
 `exec` also supports a second argument, an options object which supports the following keys (all are optional):
 
-| Property                       | Purpose                                               |
-| ------------------------------ | ----------------------------------------------------- |
-| cwd (string)                   | current working directory for the child process       |
-| env (object)                   | environment variables for the process                 |
-| failOnNonZeroStatus (boolean)  | whether to throw error on nonzero exit status         |
-| captureOutput (boolean/string) | controls how stdout/stderr is directed                |
-| trace (function)               | used to log detailed info about the process execution |
-| info (function)                | used to log info about the process execution          |
+| Property                       | Purpose                                         |
+| ------------------------------ | ----------------------------------------------- |
+| cwd (string)                   | current working directory for the child process |
+| env (object)                   | environment variables for the process           |
+| failOnNonZeroStatus (boolean)  | whether to throw error on nonzero exit status   |
+| captureOutput (boolean/string) | controls how stdout/stderr is directed          |
+| logging (object)               | controls how/whether info messages are logged   |
 
 The return value of `exec` varies depending on the options passed:
 
@@ -55,11 +54,13 @@ declare function exec(
     /** Defaults to `env` */
     env?: { [key: string | number]: string | number | boolean };
 
-    /** Defaults to `undefined` */
-    trace?: (...args: Array<any>) => void;
+    logging?: {
+      /** Defaults to `logger.trace`. */
+      trace?: (...args: Array<any>) => void;
 
-    /** Defaults to {@link logger.info}. */
-    info?: (...args: Array<any>) => void;
+      /** Defaults to `logger.info`. */
+      info?: (...args: Array<any>) => void;
+    }
 
     /** Defaults to true */
     failOnNonZeroStatus?: boolean;

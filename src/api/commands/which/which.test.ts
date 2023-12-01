@@ -31,10 +31,14 @@ test("which", async () => {
 
       which("sample", {
         suffixes: [".one", ".two"],
-        trace: console.error,
+        logging: {
+          trace: console.error,
+        },
       }),
       which("program2", {
-        trace: console.error,
+        logging: {
+          trace: console.error,
+        },
       }),
     ]);
   `;

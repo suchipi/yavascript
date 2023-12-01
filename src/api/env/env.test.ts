@@ -43,7 +43,8 @@ test("setting env affects child processes", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: <yavascript binary> -e "env.BLAH_BLAH"
+    ",
       "stdout": "yes
     ",
     }

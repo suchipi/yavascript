@@ -12,7 +12,8 @@ test("exec true - string", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: true
+    ",
       "stdout": "",
     }
   `);
@@ -24,7 +25,8 @@ test("exec true - array", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: true
+    ",
       "stdout": "",
     }
   `);
@@ -36,7 +38,8 @@ test("exec true - Path", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: /usr/bin/true
+    ",
       "stdout": "",
     }
   `);
@@ -48,7 +51,8 @@ test("exec false - string", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Command failed: "false" (status = 1, signal = undefined)
+      "stderr": "exec: false
+    Error: Command failed: "false" (status = 1, signal = undefined)
       at somewhere
     {
       status: 1
@@ -66,7 +70,8 @@ test("exec false - array", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Command failed: ["false"] (status = 1, signal = undefined)
+      "stderr": "exec: false
+    Error: Command failed: ["false"] (status = 1, signal = undefined)
       at somewhere
     {
       status: 1
@@ -84,7 +89,8 @@ test("exec false - Path", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Command failed: "/usr/bin/false" (status = 1, signal = undefined)
+      "stderr": "exec: /usr/bin/false
+    Error: Command failed: "/usr/bin/false" (status = 1, signal = undefined)
       at somewhere
     {
       status: 1
@@ -106,7 +112,8 @@ test("exec - child process receives args", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: <yavascript binary> -e scriptArgs bla blah -- haha
+    ",
       "stdout": "[
       Frozen
       "<yavascript binary>"
@@ -132,7 +139,8 @@ test("exec with env vars", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: <yavascript binary> -e env
+    ",
       "stdout": "{
       HI_MOM: "yup"
     }
@@ -149,7 +157,8 @@ test("exec with cwd", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: <yavascript binary> -e "pwd()"
+    ",
       "stdout": "Path { /tmp }
     ",
     }
@@ -162,7 +171,8 @@ test("exec with env", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: env
+    ",
       "stdout": "HI=yeah
     ",
     }
@@ -177,7 +187,8 @@ test("exec with captureOutput true", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: echo "hi there"
+    ",
       "stdout": "{
       stdout: "hi there\\n"
       stderr: ""
@@ -197,7 +208,8 @@ test("exec with captureOutput 'utf8'", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: echo "hi there"
+    ",
       "stdout": "{
       stdout: "hi there\\n"
       stderr: ""
@@ -217,7 +229,8 @@ test("exec with captureOutput 'arraybuffer'", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: echo "hi there"
+    ",
       "stdout": "{
       stdout: ArrayBuffer {
         │0x00000000│ 68 69 20 74 68 65 72 65 0A
@@ -239,7 +252,9 @@ test("exec with failOnNonZeroStatus false - running 'false'", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: false
+      exec -> {"status":1}
+    ",
       "stdout": "{
       status: 1
       signal: undefined
@@ -257,7 +272,8 @@ test("exec with failOnNonZeroStatus false - running 'true'", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: true
+    ",
       "stdout": "{
       status: 0
       signal: undefined
@@ -273,7 +289,8 @@ test("$ echo hi - string", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: echo hi
+    ",
       "stdout": "{
       stdout: "hi\\n"
       stderr: ""
@@ -291,7 +308,8 @@ test("$ echo hi - array", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: echo hi
+    ",
       "stdout": "{
       stdout: "hi\\n"
       stderr: ""
@@ -309,7 +327,8 @@ test("$ echo hi - array with Path", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: echo hi
+    ",
       "stdout": "{
       stdout: "hi\\n"
       stderr: ""
@@ -327,7 +346,8 @@ test("$ echo hi 2 - array with number", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: echo hi 2
+    ",
       "stdout": "{
       stdout: "hi 2\\n"
       stderr: ""
@@ -345,7 +365,8 @@ test("$ false", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Command failed: "false" (status = 1, signal = undefined)
+      "stderr": "exec: false
+    Error: Command failed: "false" (status = 1, signal = undefined)
       at somewhere
     {
       status: 1
@@ -365,7 +386,8 @@ test("exec parses arg string properly", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: bash -c "echo hi"
+    ",
       "stdout": "hi
     ",
     }
@@ -378,7 +400,8 @@ test("exec's string parsing does not interpolate env vars", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: echo "$HI"
+    ",
       "stdout": "$HI
     ",
     }
@@ -391,7 +414,8 @@ test("exec's string parsing does not parse globs", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "",
+      "stderr": "exec: echo "**/*"
+    ",
       "stdout": "**/*
     ",
     }
@@ -406,28 +430,8 @@ test("logging", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "ChildProcess.start: [
-      "echo"
-      "hi"
-    ]
-    ChildProcess result: [
-      "echo"
-      "hi"
-    ] -> {
-      status: 0
-      signal: undefined
-    }
-    ChildProcess.start: [
-      "echo"
-      "   hi"
-    ]
-    ChildProcess result: [
-      "echo"
-      "   hi"
-    ] -> {
-      status: 0
-      signal: undefined
-    }
+      "stderr": "exec: echo hi
+    exec: echo "   hi"
     ",
       "stdout": "hi
        hi

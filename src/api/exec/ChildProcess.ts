@@ -20,7 +20,9 @@ export type ChildProcessOptions = {
     out?: FILE;
     err?: FILE;
   };
-  trace?: (...args: Array<any>) => void;
+  logging?: {
+    trace?: (...args: Array<any>) => void;
+  };
 };
 
 export class ChildProcess {
@@ -32,7 +34,10 @@ export class ChildProcess {
     out: FILE;
     err: FILE;
   };
-  trace: (...args: Array<any>) => void;
+
+  private _logging: {
+    trace: (...args: Array<any>) => void;
+  };
 
   pid: number | null = null;
 
@@ -95,18 +100,20 @@ export class ChildProcess {
       "when present, 'stdio.err' option must be a FILE object"
     );
 
-    this.trace = options.trace ?? logger.trace;
+    this._logging = {
+      trace: options.logging?.trace ?? logger.trace,
+    };
 
     assert.type(
-      this.trace,
+      this._logging.trace,
       types.Function,
-      "when present, 'options.trace' must be a function"
+      "when present, 'options.logging.trace' must be a function"
     );
   }
 
   /** returns pid */
   start(): number {
-    this.trace.call(null, "ChildProcess.start:", this.args);
+    this._logging.trace.call(null, "ChildProcess.start:", this.args);
 
     this.pid = os.exec(this.args, {
       block: false,
@@ -134,11 +141,22 @@ export class ChildProcess {
       if (ret == pid) {
         if (os.WIFEXITED(status)) {
           const ret = { status: os.WEXITSTATUS(status), signal: undefined };
-          this.trace.call(null, "ChildProcess result:", this.args, "->", ret);
+          this._logging.trace.call(
+            null,
+            "ChildProcess result:",
+            this.args,
+            "->",
+            ret
+          );
           return ret;
         } else if (os.WIFSIGNALED(status)) {
           const ret = { status: undefined, signal: os.WTERMSIG(status) };
-          this.trace.call(null, "ChildProcess result:", this.args, "->");
+          this._logging.trace.call(
+            null,
+            "ChildProcess result:",
+            this.args,
+            "->"
+          );
           return ret;
         }
       }

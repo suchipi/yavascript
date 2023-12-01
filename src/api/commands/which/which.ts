@@ -5,6 +5,7 @@ import { setHelpText } from "../../help";
 import whichHelpText from "./which.help.md";
 import { assert } from "../../assert";
 import { types } from "../../types";
+import { is } from "../../is";
 import { quote } from "../../strings";
 import { logger } from "../../logger";
 
@@ -12,7 +13,9 @@ function optionDefaults() {
   return {
     searchPaths: env.PATH?.split(Path.OS_ENV_VAR_SEPARATOR) || [],
     suffixes: Array.from(Path.OS_PROGRAM_EXTENSIONS),
-    trace: logger.trace,
+    logging: {
+      trace: logger.trace,
+    },
   };
 }
 
@@ -21,7 +24,9 @@ export function which(
   options?: {
     searchPaths?: Array<Path | string>;
     suffixes?: Array<string>;
-    trace?: (...args: Array<any>) => void;
+    logging?: {
+      trace?: (...args: Array<any>) => void;
+    };
   }
 ): Path | null {
   assert.type(binaryName, types.string, "'binaryName' must be a string");
@@ -46,17 +51,25 @@ export function which(
       "when present, 'options.suffixes' must be an Array of strings"
     );
     assert.type(
-      options.trace,
-      types.or(types.undefined, types.Function),
-      "when present, 'options.trace' must be a Function"
+      options.logging,
+      types.or(types.undefined, types.object),
+      "when present, 'options.logging' must be an object"
     );
+
+    if (is(options.logging, types.object)) {
+      assert.type(
+        options.logging.trace,
+        types.or(types.undefined, types.Function),
+        "when present, 'options.logging.trace' must be a Function"
+      );
+    }
   }
 
   const defaults = optionDefaults();
   const {
     searchPaths = defaults.searchPaths,
     suffixes = defaults.suffixes,
-    trace = defaults.trace,
+    logging: { trace = defaults.logging.trace } = defaults.logging,
   } = options ?? defaults;
 
   for (const lookupPath of searchPaths) {

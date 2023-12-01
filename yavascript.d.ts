@@ -277,25 +277,34 @@ declare type CopyOptions = {
    */
   whenTargetExists?: "overwrite" | "skip" | "error";
 
-  /**
-   * If provided, this function will be called multiple times as `copy`
-   * traverses the filesystem, to help you understand what's going on and/or
-   * troubleshoot things. In most cases, it makes sense to use a logging
-   * function here, like so:
-   *
-   * ```js
-   * copy("./source", "./destination", { trace: console.log });
-   * ```
-   */
-  trace?: (...args: Array<any>) => void;
+  /** Options which control logging. */
+  logging?: {
+    /**
+     * If provided, this function will be called multiple times as `copy`
+     * traverses the filesystem, to help you understand what's going on and/or
+     * troubleshoot things. In most cases, it makes sense to use a logging
+     * function here, like so:
+     *
+     * ```js
+     * copy("./source", "./destination", {
+     *   logging: { trace: console.log },
+     * });
+     * ```
+     *
+     * Defaults to the current value of {@link logger.trace}. `logger.trace`
+     * defaults to a no-op function.
+     */
+    trace?: (...args: Array<any>) => void;
 
-  /**
-   * An optional, user-provided logging function to be used for informational
-   * messages.
-   *
-   * Defaults to {@link logger.info}.
-   */
-  info?: (...args: Array<any>) => void;
+    /**
+     * An optional, user-provided logging function to be used for informational
+     * messages.
+     *
+     * Defaults to the current value of {@link logger.info}. `logger.info`
+     * defaults to a function which writes to stderr.
+     */
+    info?: (...args: Array<any>) => void;
+  };
 };
 
 /**
@@ -818,9 +827,37 @@ declare function touch(path: string | Path): void;
 declare function which(
   binaryName: string,
   options?: {
+    /**
+     * A list of folders where programs may be found. Defaults to
+     * `env.PATH?.split(Path.OS_ENV_VAR_SEPARATOR) || []`.
+     */
     searchPaths?: Array<Path | string>;
+
+    /**
+     * A list of filename extension suffixes to include in the search, ie
+     * `[".exe"]`. Defaults to {@link Path.OS_PROGRAM_EXTENSIONS}.
+     */
     suffixes?: Array<string>;
-    trace?: (...args: Array<any>) => void;
+
+    /** Options which control logging. */
+    logging?: {
+      /**
+       * If provided, this logging function will be called multiple times as
+       * `which` runs, to help you understand what's going on and/or troubleshoot
+       * things. In most cases, it makes sense to use a function from `console`
+       * here, like so:
+       *
+       * ```js
+       * which("bash", {
+       *   logging: { trace: console.log }
+       * });
+       * ```
+       *
+       * Defaults to the current value of {@link logger.trace}. `logger.trace`
+       * defaults to a no-op function.
+       */
+      trace?: (...args: Array<any>) => void;
+    };
   }
 ): Path | null;
 
@@ -831,24 +868,34 @@ declare type BaseExecOptions = {
   /** Sets environment variables within the process. */
   env?: { [key: string | number]: string | number | boolean };
 
-  /**
-   * If provided, this function will be called multiple times as `exec`
-   * runs, to help you understand what's going on and/or troubleshoot things.
-   * In most cases, it makes sense to use a logging function here, like so:
-   *
-   * ```js
-   * exec(["echo", "hi"], { trace: console.log });
-   * ```
-   */
-  trace?: (...args: Array<any>) => void;
+  /** Options which control logging. */
+  logging?: {
+    /**
+     * If provided, this logging function will be called multiple times as
+     * `exec` runs, to help you understand what's going on and/or troubleshoot
+     * things. In most cases, it makes sense to use a function from `console`
+     * here, like so:
+     *
+     * ```js
+     * exec(["echo", "hi"], {
+     *   logging: { trace: console.log },
+     * });
+     * ```
+     *
+     * Defaults to the current value of {@link logger.trace}. `logger.trace`
+     * defaults to a no-op function.
+     */
+    trace?: (...args: Array<any>) => void;
 
-  /**
-   * An optional, user-provided logging function to be used for informational
-   * messages.
-   *
-   * Defaults to {@link logger.info}.
-   */
-  info?: (...args: Array<any>) => void;
+    /**
+     * An optional, user-provided logging function to be used for informational
+     * messages. Less verbose than `logging.trace`.
+     *
+     * Defaults to the current value of {@link logger.info}. `logger.info`
+     * defaults to a function which logs to stderr.
+     */
+    info?: (...args: Array<any>) => void;
+  };
 
   /**
    * Whether an Error should be thrown when the process exits with a nonzero
@@ -1047,12 +1094,6 @@ declare interface ChildProcess {
     err: FILE;
   };
 
-  /**
-   * Optional trace function which, if present, will be called at various times
-   * to provide information about the lifecycle of the process.
-   */
-  trace?: (...args: Array<any>) => void;
-
   pid: number | null;
 
   /** Spawns the process and returns its pid (process id). */
@@ -1089,11 +1130,17 @@ declare type ChildProcessOptions = {
     err?: FILE;
   };
 
-  /**
-   * Optional trace function which, if present, will be called at various times
-   * to provide information about the lifecycle of the process.
-   */
-  trace?: (...args: Array<any>) => void;
+  /** Options which control logging */
+  logging?: {
+    /**
+     * Optional trace function which, if present, will be called at various
+     * times to provide information about the lifecycle of the process.
+     *
+     * Defaults to the current value of {@link logger.trace}. `logger.trace`
+     * defaults to a function which writes to stderr.
+     */
+    trace?: (...args: Array<any>) => void;
+  };
 };
 
 declare interface ChildProcessConstructor {
@@ -1125,25 +1172,34 @@ declare type GlobOptions = {
    */
   followSymlinks?: boolean;
 
-  /**
-   * If provided, this function will be called multiple times as `glob`
-   * traverses the filesystem, to help you understand what's going on and/or
-   * troubleshoot things. In most cases, it makes sense to use a logging
-   * function here, like so:
-   *
-   * ```js
-   * glob(["./*.js"], { trace: console.log });
-   * ```
-   */
-  trace?: (...args: Array<any>) => void;
+  /** Options which control logging. */
+  logging?: {
+    /**
+     * If provided, this function will be called multiple times as `glob`
+     * traverses the filesystem, to help you understand what's going on and/or
+     * troubleshoot things. In most cases, it makes sense to use a logging
+     * function here, like so:
+     *
+     * ```js
+     * glob(["./*.js"], {
+     *  logging: { trace: console.log }
+     * });
+     * ```
+     *
+     * Defaults to the current value of {@link logger.trace}. `logger.trace`
+     * defaults to a no-op function.
+     */
+    trace?: (...args: Array<any>) => void;
 
-  /**
-   * An optional, user-provided logging function to be used for informational
-   * messages.
-   *
-   * Defaults to {@link logger.info}.
-   */
-  info?: (...args: Array<any>) => void;
+    /**
+     * An optional, user-provided logging function to be used for informational
+     * messages. Less verbose than `logging.trace`.
+     *
+     * Defaults to the current value of {@link logger.info}. `logger.info`
+     * defaults to a function which writes to stderr.
+     */
+    info?: (...args: Array<any>) => void;
+  };
 
   /**
    * Directory to interpret glob patterns relative to. Defaults to `pwd()`.

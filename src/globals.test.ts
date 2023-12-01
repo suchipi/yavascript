@@ -184,7 +184,7 @@ test("globals", async () => {
     [x] JSX: object
     [x] CSV: object
     [x] YAML: object
-    [ ] traceAll: function
+    [ ] logger: object
     [x] parseScriptArgs: function
     [ ] startRepl: function
     [ ] InteractivePrompt: function

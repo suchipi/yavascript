@@ -10,6 +10,7 @@ import execHelpText from "./exec.help.md";
 import dollarHelpText from "./_dollar.help.md";
 import { ChildProcess } from "./ChildProcess";
 import { types } from "../types";
+import { quote } from "../strings";
 
 const exec = (
   args: Array<string | Path | number> | string | Path,
@@ -18,8 +19,10 @@ const exec = (
     env?: { [key: string | number]: string | number | boolean };
     failOnNonZeroStatus?: boolean;
     captureOutput?: boolean | "utf8" | "arraybuffer";
-    trace?: (...args: Array<any>) => void;
-    info?: (...args: Array<any>) => void;
+    logging?: {
+      trace?: (...args: Array<any>) => void;
+      info?: (...args: Array<any>) => void;
+    };
   } = {}
 ): any => {
   // 'args' type gets checked in ChildProcess constructor
@@ -34,8 +37,7 @@ const exec = (
     captureOutput = false,
     cwd,
     env,
-    trace = logger.trace,
-    info = logger.info,
+    logging: { trace = logger.trace, info = logger.info } = {},
   } = options;
 
   assert.type(
@@ -56,16 +58,16 @@ const exec = (
   assert.type(
     trace,
     types.Function,
-    "when present, 'options.trace' must be a function"
+    "when present, 'options.logging.trace' must be a function"
   );
 
   assert.type(
     info,
     types.Function,
-    "when present, 'options.info' must be a function"
+    "when present, 'options.logging.info' must be a function"
   );
 
-  const child = new ChildProcess(args, { cwd, env, trace });
+  const child = new ChildProcess(args, { cwd, env, logging: { trace } });
 
   let tmpOut: FILE | null = null;
   let tmpErr: FILE | null = null;
@@ -78,10 +80,14 @@ const exec = (
 
   let result: ReturnType<typeof child.waitUntilComplete> | null = null;
   try {
-    info(`exec: ${child.args.join(" ")}`);
+    info(
+      `exec: ${child.args
+        .map((arg) => (/[^A-Za-z\-0-9_=\/]/.test(arg) ? quote(arg) : arg))
+        .join(" ")}`
+    );
     child.start();
     result = child.waitUntilComplete();
-    if (result.status !== 0) {
+    if (result.status !== 0 && !failOnNonZeroStatus) {
       info(`  exec -> ${JSON.stringify(result)}`);
     }
 

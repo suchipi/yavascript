@@ -40,7 +40,6 @@ function testGlob(
     expect(result).toMatchObject({
       code: 0,
       error: false,
-      stderr: "",
     });
 
     const cleaned = cleanResult(result);
@@ -203,11 +202,17 @@ test("error reading dead link does not stop search", async () => {
 
   const cleaned = cleanResult(result);
 
-  expect(cleaned).toMatchObject({
-    code: 0,
-    error: false,
-    stderr: `glob encountered error: No such file or directory (errno = 2, path = <rootDir>/src/test_fixtures/symlinks/dead-link, linkpath = ./nowhere-real)\n`,
-  });
+  expect(cleaned).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "glob: expanding ["**/*"]
+    glob encountered error: No such file or directory (errno = 2, path = <rootDir>/src/test_fixtures/symlinks/dead-link, linkpath = ./nowhere-real)
+    ",
+      "stdout": "["<rootDir>/src/test_fixtures/symlinks/link-to-file","<rootDir>/src/test_fixtures/symlinks/link-to-folder","<rootDir>/src/test_fixtures/symlinks/some-folder","<rootDir>/src/test_fixtures/symlinks/some-file"]
+    ",
+    }
+  `);
 
   compareResult(cleaned, expected);
 });
@@ -249,7 +254,9 @@ testGlob(
 test("using trace", async () => {
   const result = await evaluate(
     `JSON.stringify(glob(["**/*.txt", "!**/potato/**"], {
-      trace: console.error,
+      logging: {
+        trace: console.error,
+      },
       dir: ${JSON.stringify(globDir)}
     }))`
   );
@@ -291,6 +298,7 @@ test("using trace", async () => {
     found 3 children of <rootDir>/src/test_fixtures/glob/cabana
     found 4 children of <rootDir>/src/test_fixtures/glob/hi
     found 8 children of <rootDir>/src/test_fixtures/glob
+    glob: expanding ["**/*.txt","!**/potato/**"]
     match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/test_fixtures/glob/cabana"}
     match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/test_fixtures/glob/cabana/.gitkeep"}
     match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/src/test_fixtures/glob/hi"}
