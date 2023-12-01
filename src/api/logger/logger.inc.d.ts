@@ -10,7 +10,7 @@
 declare const logger: {
   /**
    * This property is used as the default value for `trace` in yavascript API
-   * functions which receive `trace` as an option, like {@link which},
+   * functions which receive `logging.trace` as an option, like {@link which},
    * {@link exec}, {@link copy} and {@link glob}.
    *
    * The default value of `logger.trace` is a no-op function.
@@ -19,8 +19,8 @@ declare const logger: {
 
   /**
    * This property is used as the default value for `info` in yavascript API
-   * functions which receive `info` as an option, like {@link exec}, {@link copy},
-   * and {@link glob}.
+   * functions which receive `logging.info` as an option, like {@link exec},
+   * {@link copy}, and {@link glob}.
    *
    * The default value of `logger.info` writes dimmed text to stdout.
    */
