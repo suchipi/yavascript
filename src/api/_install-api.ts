@@ -163,6 +163,10 @@ const helpProps = makeGetterPropertyDescriptorMap({
   help: () => require("./help").help,
 });
 
+const tomlProps = makeGetterPropertyDescriptorMap({
+  TOML: () => require("./toml").TOML,
+});
+
 import { get__filename, get__dirname } from "./__filename-and-__dirname";
 
 export default function installApi(target: typeof globalThis) {
@@ -191,6 +195,7 @@ export default function installApi(target: typeof globalThis) {
     ...replProps,
     ...yavascriptProps,
     ...helpProps,
+    ...tomlProps,
 
     __filename: {
       get() {

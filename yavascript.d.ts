@@ -3180,6 +3180,17 @@ declare const CSV: {
   stringify(input: Array<Array<string>>): string;
 };
 
+declare var TOML: {
+  /**
+   * Parse a TOML document (`data`) into an object.
+   */
+  parse(data: string): { [key: string]: any };
+  /**
+   * Convert an object into a TOML document.
+   */
+  stringify(data: { [key: string]: any }): string;
+};
+
 interface RegExpConstructor {
   /** See https://github.com/tc39/proposal-regex-escaping */
   escape(str: any): string;

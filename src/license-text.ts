@@ -535,6 +535,14 @@ Copyright (c) 2022 Daniel X Moore and other contributors
 
 ${MIT}
 
+-------------- @iarna/toml --------------
+
+ISC License
+
+Copyright (c) 2016, Rebecca Turner <me@re-becca.org>
+
+${ISC}
+
 -------------- yavascript --------------
 
 YavaScript script interpreter

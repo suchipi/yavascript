@@ -190,6 +190,7 @@ test("globals", async () => {
     [ ] InteractivePrompt: function
     [x] yavascript: object
     [x] help: function
+    [x] TOML: object
     [x] __filename: string
     [x] __dirname: string
     [x] grepFile: function
