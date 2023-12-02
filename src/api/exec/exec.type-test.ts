@@ -63,17 +63,17 @@ import { assert, Is } from "typescript-assert-utils";
 // only trace specified, return type is void
 {
   const ret1 = exec("blah", {
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret3, void>>();
 }
@@ -103,19 +103,19 @@ import { assert, Is } from "typescript-assert-utils";
 {
   const ret1 = exec("blah", {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret3, void>>();
 }
@@ -124,19 +124,19 @@ import { assert, Is } from "typescript-assert-utils";
 {
   const ret1 = exec("blah", {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret3, void>>();
 }
@@ -146,21 +146,21 @@ import { assert, Is } from "typescript-assert-utils";
   const ret1 = exec("blah", {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
   });
   assert<Is<typeof ret3, void>>();
 }
@@ -880,19 +880,19 @@ import { assert, Is } from "typescript-assert-utils";
 
 {
   const ret1 = exec("blah", {
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret3, void>>();
@@ -904,19 +904,19 @@ import { assert, Is } from "typescript-assert-utils";
     | { status: undefined; signal: number };
 
   const ret1 = exec("blah", {
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret1, ExpectedType>>();
 
   const ret2 = exec(["blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret2, ExpectedType>>();
 
   const ret3 = exec(["blah", "blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret3, ExpectedType>>();
@@ -924,19 +924,19 @@ import { assert, Is } from "typescript-assert-utils";
 
 {
   const ret1 = exec("blah", {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret3, void>>();
@@ -946,19 +946,19 @@ import { assert, Is } from "typescript-assert-utils";
   type ExpectedType = { stdout: string; stderr: string };
 
   const ret1 = exec("blah", {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret1, ExpectedType>>();
 
   const ret2 = exec(["blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret2, ExpectedType>>();
 
   const ret3 = exec(["blah", "blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret3, ExpectedType>>();
@@ -966,21 +966,21 @@ import { assert, Is } from "typescript-assert-utils";
 
 {
   const ret1 = exec("blah", {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
@@ -993,21 +993,21 @@ import { assert, Is } from "typescript-assert-utils";
     | { status: undefined; signal: number };
 
   const ret1 = exec("blah", {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret1, ExpectedType>>();
 
   const ret2 = exec(["blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret2, ExpectedType>>();
 
   const ret3 = exec(["blah", "blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
@@ -1018,21 +1018,21 @@ import { assert, Is } from "typescript-assert-utils";
   type ExpectedType = { stdout: string; stderr: string };
 
   const ret1 = exec("blah", {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret1, ExpectedType>>();
 
   const ret2 = exec(["blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret2, ExpectedType>>();
 
   const ret3 = exec(["blah", "blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
@@ -1055,21 +1055,21 @@ import { assert, Is } from "typescript-assert-utils";
       };
 
   const ret1 = exec("blah", {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret1, ExpectedType>>();
 
   const ret2 = exec(["blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret2, ExpectedType>>();
 
   const ret3 = exec(["blah", "blah"], {
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
@@ -1305,21 +1305,21 @@ import { assert, Is } from "typescript-assert-utils";
 {
   const ret1 = exec("blah", {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret3, void>>();
@@ -1332,21 +1332,21 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret1 = exec("blah", {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret1, ExpectedType>>();
 
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret2, ExpectedType>>();
 
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret3, ExpectedType>>();
@@ -1355,21 +1355,21 @@ import { assert, Is } from "typescript-assert-utils";
 {
   const ret1 = exec("blah", {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret3, void>>();
@@ -1380,21 +1380,21 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret1 = exec("blah", {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret1, ExpectedType>>();
 
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret2, ExpectedType>>();
 
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret3, ExpectedType>>();
@@ -1403,7 +1403,7 @@ import { assert, Is } from "typescript-assert-utils";
 {
   const ret1 = exec("blah", {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
@@ -1411,7 +1411,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
@@ -1419,7 +1419,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
@@ -1433,7 +1433,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret1 = exec("blah", {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
@@ -1441,7 +1441,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
@@ -1449,7 +1449,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
@@ -1461,7 +1461,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret1 = exec("blah", {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
@@ -1469,7 +1469,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
@@ -1477,7 +1477,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
@@ -1501,7 +1501,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret1 = exec("blah", {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
@@ -1509,7 +1509,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
@@ -1517,7 +1517,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
@@ -1529,21 +1529,21 @@ import { assert, Is } from "typescript-assert-utils";
 {
   const ret1 = exec("blah", {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret3, void>>();
@@ -1556,21 +1556,21 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret1 = exec("blah", {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret1, ExpectedType>>();
 
   const ret2 = exec(["blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret2, ExpectedType>>();
 
   const ret3 = exec(["blah", "blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret3, ExpectedType>>();
@@ -1579,21 +1579,21 @@ import { assert, Is } from "typescript-assert-utils";
 {
   const ret1 = exec("blah", {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret1, void>>();
 
   const ret2 = exec(["blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret2, void>>();
 
   const ret3 = exec(["blah", "blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret3, void>>();
@@ -1604,21 +1604,21 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret1 = exec("blah", {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret1, ExpectedType>>();
 
   const ret2 = exec(["blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret2, ExpectedType>>();
 
   const ret3 = exec(["blah", "blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret3, ExpectedType>>();
@@ -1627,7 +1627,7 @@ import { assert, Is } from "typescript-assert-utils";
 {
   const ret1 = exec("blah", {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
@@ -1635,7 +1635,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret2 = exec(["blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
@@ -1643,7 +1643,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret3 = exec(["blah", "blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
@@ -1657,7 +1657,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret1 = exec("blah", {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
@@ -1665,7 +1665,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret2 = exec(["blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
@@ -1673,7 +1673,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret3 = exec(["blah", "blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
@@ -1685,7 +1685,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret1 = exec("blah", {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
@@ -1693,7 +1693,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret2 = exec(["blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
@@ -1701,7 +1701,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret3 = exec(["blah", "blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
@@ -1725,7 +1725,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret1 = exec("blah", {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
@@ -1733,7 +1733,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret2 = exec(["blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
@@ -1741,7 +1741,7 @@ import { assert, Is } from "typescript-assert-utils";
 
   const ret3 = exec(["blah", "blah"], {
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
@@ -1754,7 +1754,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret1 = exec("blah", {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret1, void>>();
@@ -1762,7 +1762,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret2, void>>();
@@ -1770,7 +1770,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: true,
   });
   assert<Is<typeof ret3, void>>();
@@ -1784,7 +1784,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret1 = exec("blah", {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret1, ExpectedType>>();
@@ -1792,7 +1792,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret2, ExpectedType>>();
@@ -1800,7 +1800,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     failOnNonZeroStatus: false,
   });
   assert<Is<typeof ret3, ExpectedType>>();
@@ -1810,7 +1810,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret1 = exec("blah", {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret1, void>>();
@@ -1818,7 +1818,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret2, void>>();
@@ -1826,7 +1826,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
   });
   assert<Is<typeof ret3, void>>();
@@ -1838,7 +1838,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret1 = exec("blah", {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret1, ExpectedType>>();
@@ -1846,7 +1846,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret2, ExpectedType>>();
@@ -1854,7 +1854,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
   });
   assert<Is<typeof ret3, ExpectedType>>();
@@ -1864,7 +1864,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret1 = exec("blah", {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
@@ -1873,7 +1873,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
@@ -1882,7 +1882,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: true,
   });
@@ -1897,7 +1897,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret1 = exec("blah", {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
@@ -1906,7 +1906,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
@@ -1915,7 +1915,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: false,
     failOnNonZeroStatus: false,
   });
@@ -1928,7 +1928,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret1 = exec("blah", {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
@@ -1937,7 +1937,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
@@ -1946,7 +1946,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: true,
   });
@@ -1971,7 +1971,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret1 = exec("blah", {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
@@ -1980,7 +1980,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret2 = exec(["blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
@@ -1989,7 +1989,7 @@ import { assert, Is } from "typescript-assert-utils";
   const ret3 = exec(["blah", "blah"], {
     cwd: "somewhere",
     env: { some: "thing" },
-    trace: console.log,
+    logging: { trace: console.log },
     captureOutput: true,
     failOnNonZeroStatus: false,
   });
