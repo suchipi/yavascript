@@ -11,8 +11,8 @@
 - [ ] finish all the help docs!!!
 - [ ] spicy: override types for string-receiving methods to accept anything that can be converted to a string (if quickjs converts it)
 - [x] add frozen "initial pwd" somewhere
-- [-] expose "makeErrorWithProperties" somehow. new error constructor? overload base error constructor?
-  - changed base Error constructor in QuickJS; this will get pulled in on next QuickJS upgrade
+- [x] expose "makeErrorWithProperties" somehow. new error constructor? overload base error constructor?
+  - changed base Error constructor in QuickJS
 - [x] tests for `which`
 - [x] make string color/style functions accept Path objects (convert them to strings internally)
 - [ ] InteractivePrompt: screen contents can get messed up when hitting backspace repeatedly

@@ -5808,6 +5808,8 @@ declare module "quickjs:context" {
         "quickjs:context"?: boolean;
         /** Enables the "quickjs:engine" module. Defaults to `true`. */
         "quickjs:engine"?: boolean;
+        /** Enables the "quickjs:encoding" module. Defaults to `true`. */
+        "quickjs:encoding"?: boolean;
       };
     });
 
@@ -5831,6 +5833,7 @@ declare module "quickjs:context" {
 // but this is better than nothing
 declare module "quickjs:encoding" {
   export function toUtf8(input: ArrayBuffer): string;
+  export function fromUtf8(input: string): ArrayBuffer;
 }
 
 declare const std: typeof import("quickjs:std");
