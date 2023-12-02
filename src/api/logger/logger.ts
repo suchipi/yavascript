@@ -3,6 +3,8 @@ import { assert } from "../assert";
 import { inspectManyToParts } from "../shared/make-inspect-log";
 import { types } from "../types";
 import { dim } from "../strings";
+import { setHelpText } from "../help";
+import loggerHelpText from "./logger.help.md";
 
 type LoggerFunction = (...args: Array<any>) => void;
 
@@ -16,7 +18,9 @@ let _info: LoggerFunction = (...args: Array<any>) => {
   }
   std.err.puts("\n");
 };
+setHelpText(_info, loggerHelpText);
 let _trace: LoggerFunction = noop;
+setHelpText(_trace, loggerHelpText);
 
 export const logger = {
   get info() {
@@ -42,3 +46,5 @@ export const logger = {
     _trace = newValue;
   },
 };
+
+setHelpText(logger, loggerHelpText);
