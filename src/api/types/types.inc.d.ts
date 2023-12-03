@@ -204,17 +204,9 @@ declare const types: {
   exactSymbol<T extends symbol>(sym: T): TypeValidator<T>;
   hasClassName<Name extends string>(
     name: Name
-  ): TypeValidator<{
-    constructor: Function & {
-      name: Name;
-    };
-  }>;
+  ): TypeValidator<{ constructor: Function & { name: Name } }>;
   hasToStringTag(name: string): TypeValidator<any>;
-  instanceOf<
-    Klass extends Function & {
-      prototype: any;
-    }
-  >(
+  instanceOf<Klass extends Function & { prototype: any }>(
     klass: Klass
   ): TypeValidator<Klass["prototype"]>;
   stringMatching(regexp: RegExp): TypeValidator<string>;

@@ -2,6 +2,8 @@ import * as std from "quickjs:std";
 import { TypeValidator, $BasicTypes, $TypeConstructors } from "pheno";
 import coerce, { $CoercingTypeConstructors } from "pheno/coerce";
 import { Path } from "../path";
+import { setHelpText } from "../help";
+import typesHelpText from "./types.help.md";
 
 export { TypeValidator };
 
@@ -1402,3 +1404,5 @@ export const types: types = Object.assign(Object.create(null), {
     },
   },
 });
+
+setHelpText(types, typesHelpText);
