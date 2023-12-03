@@ -135,6 +135,9 @@ program(
 const platform = require("@suchipi/quickjs").identifyCurrentPlatform().name;
 build({
   rule: "copy",
-  inputs: [builddir(`bin/${platform}/yavascript`)],
+  inputs: [
+    builddir(`bin/${platform}/yavascript`) +
+      (process.platform === "win32" ? ".exe" : ""),
+  ],
   output: builddir("yavascript"),
 });

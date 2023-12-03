@@ -8,7 +8,7 @@ rule("copy", {
 });
 
 rule("render-md", {
-  command: `meta/scripts/render-md.js $in $out`,
+  command: `node meta/scripts/render-md.js $in $out`,
   description: "RENDER-MD $out",
   implicitInputs: walkJsDeps("meta/scripts/render-md.js"),
 });
@@ -39,8 +39,15 @@ rule("kame", {
     "bin"
   );
 
-  const quickjsRunBinPath = path.join(quickjsBinsPath, "quickjs-run");
-  const fileToByteCodePath = path.join(quickjsBinsPath, "file-to-bytecode.js");
+  const quickjsBinsPathRel = path.relative(process.cwd(), quickjsBinsPath);
+
+  const quickjsRunBinPath =
+    path.join(quickjsBinsPathRel, "quickjs-run") +
+    (process.platform === "win32" ? ".exe" : "");
+  const fileToByteCodePath = path.join(
+    quickjsBinsPathRel,
+    "file-to-bytecode.js"
+  );
 
   rule("to-bytecode", {
     command: [
