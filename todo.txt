@@ -22,3 +22,4 @@
 - [-] create solution for tracing `exec` and friends without it being crazy chatty. maybe log levels
 - [x] allow catting multiple files together, and do so as binary
 - [ ] jsx in the repl behaves weirdly because the repl autocomplete thinks the slash is a regexp literal
+- [ ] in windows powershell, numbers printed in the repl (ie from running `2 + 2`) aren't visible
