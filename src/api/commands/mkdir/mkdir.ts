@@ -6,12 +6,20 @@ import { types } from "../../types";
 import { _getPathInfo } from "../../filesystem/_getPathInfo";
 import { dirname } from "../dirname";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
+import { logger } from "../../logger";
 import { setHelpText } from "../../help";
 import mkdirHelp from "./mkdir.help.md";
 
 export function mkdir(
   path: string | Path,
-  options?: { recursive?: boolean; mode?: number }
+  options?: {
+    recursive?: boolean;
+    mode?: number;
+    logging?: {
+      trace?: (...args: Array<any>) => void;
+      info?: (...args: Array<any>) => void;
+    };
+  }
 ): void {
   if (is(path, types.string)) {
     path = new Path(path);
@@ -36,6 +44,21 @@ export function mkdir(
     "when present, 'options.mode' must be a number"
   );
 
+  const trace = options?.logging?.trace ?? logger.trace;
+  const info = options?.logging?.info ?? logger.info;
+
+  assert.type(
+    trace,
+    types.Function,
+    "when present, 'options.logging.trace' must be a function"
+  );
+
+  assert.type(
+    info,
+    types.Function,
+    "when present, 'options.logging.info' must be a function"
+  );
+
   if (options?.recursive) {
     const components = path.segments;
 
@@ -47,9 +70,18 @@ export function mkdir(
 
       pathSoFar = appendSlashIfWindowsDriveLetter(pathSoFar);
 
-      const info = _getPathInfo(pathSoFar);
-      switch (info) {
+      const pathInfo = _getPathInfo(pathSoFar);
+      switch (pathInfo) {
         case "nonexistent": {
+          const modeOctal = "0o" + mode.toString(8);
+          if (i === 0) {
+            info(`mkdir: '${pathSoFar}'`);
+            trace(`mkdir: '${pathSoFar}' (mode: ${modeOctal})`);
+          } else {
+            trace(
+              `mkdir with { recursive: true } creating subpath: '${pathSoFar}' (mode: ${modeOctal})`
+            );
+          }
           os.mkdir(pathSoFar, mode);
           break;
         }
@@ -102,7 +134,11 @@ export function mkdir(
     switch (ownPathInfo) {
       case "nonexistent": {
         // this is ok
-        os.mkdir(path.toString(), mode);
+        const modeOctal = "0o" + mode.toString(8);
+        const pathStr = path.toString();
+        info(`mkdir: '${pathStr}'`);
+        trace(`mkdir: '${pathStr}' (mode: ${modeOctal})`);
+        os.mkdir(pathStr, mode);
         break;
       }
       case "dir": {

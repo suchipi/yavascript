@@ -14,6 +14,8 @@ import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 import { setHelpText } from "../help";
 import copyHelpText from "./copy.help.md";
 
+const noop = () => {};
+
 function formatPath(path: Path | string): string {
   if (typeof path === "string") {
     path = new Path(path);
@@ -219,7 +221,7 @@ export function copy(
     case "dir -> nonexistent": {
       // Create new dir at target path and copy contents into it recursively
       trace("ensuring dir", to);
-      mkdir(to, { recursive: true });
+      mkdir(to, { recursive: true, logging: { info: noop } });
 
       const children = ls(from);
       for (const child of children) {
@@ -234,7 +236,7 @@ export function copy(
       const dirname = basename(from);
       const targetDir = Path.join(to, dirname);
       trace("ensuring dir", targetDir);
-      mkdir(targetDir, { recursive: true });
+      mkdir(targetDir, { recursive: true, logging: { info: noop } });
 
       const children = ls(from);
       for (const child of children) {

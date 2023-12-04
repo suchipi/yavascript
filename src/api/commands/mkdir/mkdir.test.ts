@@ -16,7 +16,7 @@ beforeEach(clean);
 afterAll(clean);
 
 describe("non-recursive", () => {
-  test("mkdir - relative path", async () => {
+  test("relative path", async () => {
     const target = rootDir.relative(workDir("relative"));
 
     expect(fs.existsSync(target)).toBe(false);
@@ -28,7 +28,8 @@ describe("non-recursive", () => {
       {
         "code": 0,
         "error": false,
-        "stderr": "",
+        "stderr": "mkdir: 'src/test_fixtures/mkdir/relative'
+      ",
         "stdout": "",
       }
     `);
@@ -36,7 +37,7 @@ describe("non-recursive", () => {
     expect(fs.existsSync(target)).toBe(true);
   });
 
-  test("mkdir - absolute path", async () => {
+  test("absolute path", async () => {
     const target = workDir("relative");
 
     expect(fs.existsSync(target)).toBe(false);
@@ -46,7 +47,8 @@ describe("non-recursive", () => {
       {
         "code": 0,
         "error": false,
-        "stderr": "",
+        "stderr": "mkdir: '<rootDir>/src/test_fixtures/mkdir/relative'
+      ",
         "stdout": "",
       }
     `);
@@ -54,7 +56,7 @@ describe("non-recursive", () => {
     expect(fs.existsSync(target)).toBe(true);
   });
 
-  test("mkdir - file collision errors", async () => {
+  test("file collision errors", async () => {
     const outerTarget = workDir("collision");
     const target = path.join(outerTarget, "file");
 
@@ -79,7 +81,7 @@ describe("non-recursive", () => {
     `);
   });
 
-  test("mkdir - parent file collision errors", async () => {
+  test("parent file collision errors", async () => {
     const outerTarget = workDir("parent_collision");
     const target = path.join(outerTarget, "file");
 
@@ -105,10 +107,10 @@ describe("non-recursive", () => {
   });
 });
 
-describe("recursive", () => {
+describe("recursive via option", () => {
   const recursiveWorkDir = workDir.concat("recursive");
 
-  test("mkdir recursive - relative path", async () => {
+  test("relative path", async () => {
     const outerTarget = rootDir.relative(recursiveWorkDir("relative"));
     const target = path.join(outerTarget, "some/very/deep/path");
 
@@ -131,7 +133,7 @@ describe("recursive", () => {
     expect(fs.existsSync(target)).toBe(true);
   });
 
-  test("mkdir recursive - absolute path", async () => {
+  test("absolute path", async () => {
     const outerTarget = recursiveWorkDir("relative");
     const target = path.join(outerTarget, "very/deep/path");
 
@@ -153,7 +155,7 @@ describe("recursive", () => {
     expect(fs.existsSync(target)).toBe(true);
   });
 
-  test("mkdir recursive - file collision errors", async () => {
+  test("file collision errors", async () => {
     const outerTarget = recursiveWorkDir("collision");
     const target = path.join(outerTarget, "file");
 
@@ -181,7 +183,7 @@ describe("recursive", () => {
     `);
   });
 
-  test("mkdir recursive - parent file collision errors", async () => {
+  test("parent file collision errors", async () => {
     const outerTarget = recursiveWorkDir("parent_collision");
     const target = path.join(outerTarget, "file");
 
@@ -201,6 +203,103 @@ describe("recursive", () => {
       {
         path: Path { <rootDir>/src/test_fixtures/mkdir/recursive/parent_collision/file }
         pathSoFar: Path { <rootDir>/src/test_fixtures/mkdir/recursive/parent_collision }
+      }
+      ",
+        "stdout": "",
+      }
+    `);
+  });
+});
+
+describe("recursive via mkdirp", () => {
+  const recursiveWorkDir = workDir.concat("recursive_mkdirp");
+
+  test("relative path", async () => {
+    const outerTarget = rootDir.relative(recursiveWorkDir("relative"));
+    const target = path.join(outerTarget, "some/very/deep/path");
+
+    expect(fs.existsSync(outerTarget)).toBe(false);
+
+    const result = await evaluate(`mkdirp(${JSON.stringify(target)})`, {
+      cwd: rootDir(),
+    });
+    expect(cleanResult(result)).toMatchInlineSnapshot(`
+      {
+        "code": 0,
+        "error": false,
+        "stderr": "",
+        "stdout": "",
+      }
+    `);
+
+    expect(fs.existsSync(outerTarget)).toBe(true);
+    expect(fs.existsSync(target)).toBe(true);
+  });
+
+  test("absolute path", async () => {
+    const outerTarget = recursiveWorkDir("relative");
+    const target = path.join(outerTarget, "very/deep/path");
+
+    expect(fs.existsSync(outerTarget)).toBe(false);
+
+    const result = await evaluate(`mkdirp(${JSON.stringify(target)})`);
+    expect(cleanResult(result)).toMatchInlineSnapshot(`
+      {
+        "code": 0,
+        "error": false,
+        "stderr": "",
+        "stdout": "",
+      }
+    `);
+
+    expect(fs.existsSync(outerTarget)).toBe(true);
+    expect(fs.existsSync(target)).toBe(true);
+  });
+
+  test("file collision errors", async () => {
+    const outerTarget = recursiveWorkDir("collision");
+    const target = path.join(outerTarget, "file");
+
+    expect(fs.existsSync(outerTarget)).toBe(false);
+
+    fs.mkdirSync(outerTarget, { recursive: true });
+    fs.writeFileSync(target, "hi");
+
+    const result = await evaluate(`mkdirp(${JSON.stringify(target)})`);
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "code": 1,
+        "error": false,
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file' because '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file' is a file, not a directory.
+        at somewhere
+      {
+        path: Path { <rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file }
+        pathSoFar: Path { <rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file }
+      }
+      ",
+        "stdout": "",
+      }
+    `);
+  });
+
+  test("parent file collision errors", async () => {
+    const outerTarget = recursiveWorkDir("parent_collision");
+    const target = path.join(outerTarget, "file");
+
+    expect(fs.existsSync(outerTarget)).toBe(false);
+    fs.mkdirSync(path.dirname(outerTarget), { recursive: true });
+    fs.writeFileSync(outerTarget, "hi");
+
+    const result = await evaluate(`mkdirp(${JSON.stringify(target)})`);
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "code": 1,
+        "error": false,
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision/file' because '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision' is a file, not a directory.
+        at somewhere
+      {
+        path: Path { <rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision/file }
+        pathSoFar: Path { <rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision }
       }
       ",
         "stdout": "",

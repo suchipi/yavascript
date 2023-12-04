@@ -5,6 +5,8 @@ import { getConfigDir } from "../../config-dir";
 import { touch } from "../../api/commands/touch";
 import { mkdir } from "../commands/mkdir";
 
+const noop = () => {};
+
 export class HistoryFile {
   path: Path | null;
 
@@ -15,7 +17,7 @@ export class HistoryFile {
       return;
     }
 
-    mkdir(configDir, { recursive: true });
+    mkdir(configDir, { recursive: true, logging: { info: noop } });
 
     const path = new Path(configDir, filename);
     // create it if it doesn't  exist
