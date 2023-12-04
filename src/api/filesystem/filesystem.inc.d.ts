@@ -89,14 +89,6 @@ declare function remove(path: string | Path): void;
 declare function exists(path: string | Path): boolean;
 
 /**
- * Creates directories for each of the provided path components,
- * if they don't already exist.
- *
- * Provides the same functionality as the command `mkdir -p`.
- */
-declare function ensureDir(path: string | Path): string;
-
-/**
  * Options for {@link copy}.
  */
 declare type CopyOptions = {

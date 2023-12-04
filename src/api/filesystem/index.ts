@@ -1,4 +1,3 @@
-export { ensureDir } from "./ensureDir";
 export { exists } from "./exists";
 export { isFile } from "./isFile";
 export { isDir } from "./isDir";

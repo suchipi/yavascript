@@ -34,7 +34,7 @@
     "marked": "^5.1.2",
     "minimatch": "^5.1.0",
     "papaparse": "^5.3.2",
-    "path-less-traveled": "^2.0.0",
+    "path-less-traveled": "^2.1.0",
     "pheno": "^0.7.1",
     "prettier": "^2.7.1",
     "resolve-everything": "^0.1.1",

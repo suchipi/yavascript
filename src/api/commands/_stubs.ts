@@ -2,15 +2,8 @@ import { makeGetterPropertyDescriptorMap } from "../../lazy-load";
 
 export default makeGetterPropertyDescriptorMap(
   {
-    mkdir() {
-      throw new ReferenceError(
-        "'mkdir' is not defined. Did you mean 'ensureDir'?"
-      );
-    },
-    mkdirp() {
-      throw new ReferenceError(
-        "'mkdirp' is not defined. Did you mean 'ensureDir'?"
-      );
+    ensureDir() {
+      throw new ReferenceError("'ensureDir' has been renamed to 'mkdirp'.");
     },
     cp() {
       throw new ReferenceError("'cp' is not defined. Did you mean 'copy'?");

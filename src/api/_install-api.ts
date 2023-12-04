@@ -48,7 +48,6 @@ const filesystemProps = makeGetterPropertyDescriptorMap({
   readFile: () => require("./filesystem").readFile,
   remove: () => require("./filesystem").remove,
   writeFile: () => require("./filesystem").writeFile,
-  ensureDir: () => require("./filesystem").ensureDir,
   copy: () => require("./filesystem").copy,
   rename: () => require("./filesystem").rename,
   isExecutable: () => require("./filesystem").isExecutable,

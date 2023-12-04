@@ -1,8 +1,9 @@
 import * as std from "quickjs:std";
-import { ensureDir, readFile } from "../../api/filesystem";
+import { readFile } from "../../api/filesystem";
 import { Path } from "../../api/path";
 import { getConfigDir } from "../../config-dir";
 import { touch } from "../../api/commands/touch";
+import { mkdir } from "../commands/mkdir";
 
 export class HistoryFile {
   path: Path | null;
@@ -14,7 +15,7 @@ export class HistoryFile {
       return;
     }
 
-    ensureDir(configDir);
+    mkdir(configDir, { recursive: true });
 
     const path = new Path(configDir, filename);
     // create it if it doesn't  exist

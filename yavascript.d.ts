@@ -258,14 +258,6 @@ declare function remove(path: string | Path): void;
 declare function exists(path: string | Path): boolean;
 
 /**
- * Creates directories for each of the provided path components,
- * if they don't already exist.
- *
- * Provides the same functionality as the command `mkdir -p`.
- */
-declare function ensureDir(path: string | Path): string;
-
-/**
  * Options for {@link copy}.
  */
 declare type CopyOptions = {
@@ -722,6 +714,25 @@ declare function extname(
  * omitted.
  */
 declare function ls(dir?: string | Path): Array<Path>;
+
+/**
+ * Create a directory (folder).
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ */
+declare function mkdir(
+  path: string | Path,
+  options?: { recursive?: boolean; mode?: number }
+): void;
+
+/**
+ * Create a directory (folder) and all parents, recursively
+ *
+ * Alias for `mkdir(path, { recursive: true })`.
+ *
+ * Provides the same functionality as `mkdir -p`.
+ */
+declare function mkdirp(path: string | Path, options?: { mode?: number }): void;
 
 /**
  * Print data to stdout using C-style format specifiers.
@@ -3235,6 +3246,10 @@ declare type TypedArrayConstructor =
   | Uint32ArrayConstructor
   | Float32ArrayConstructor
   | Float64ArrayConstructor;
+
+interface ErrorOptions {
+  [key: string]: any;
+}
 
 // ==========================================
 // ------------------------------------------

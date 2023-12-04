@@ -45,3 +45,7 @@ declare type TypedArrayConstructor =
   | Uint32ArrayConstructor
   | Float32ArrayConstructor
   | Float64ArrayConstructor;
+
+interface ErrorOptions {
+  [key: string]: any;
+}

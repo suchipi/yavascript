@@ -9,7 +9,7 @@ import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
 import { _getPathInfo } from "./_getPathInfo";
-import { ensureDir } from "./ensureDir";
+import { mkdir } from "../commands/mkdir";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 import { setHelpText } from "../help";
 import copyHelpText from "./copy.help.md";
@@ -219,7 +219,7 @@ export function copy(
     case "dir -> nonexistent": {
       // Create new dir at target path and copy contents into it recursively
       trace("ensuring dir", to);
-      ensureDir(to);
+      mkdir(to, { recursive: true });
 
       const children = ls(from);
       for (const child of children) {
@@ -234,7 +234,7 @@ export function copy(
       const dirname = basename(from);
       const targetDir = Path.join(to, dirname);
       trace("ensuring dir", targetDir);
-      ensureDir(targetDir);
+      mkdir(targetDir, { recursive: true });
 
       const children = ls(from);
       for (const child of children) {

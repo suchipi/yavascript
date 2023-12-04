@@ -15,6 +15,8 @@ export default makeGetterPropertyDescriptorMap({
   exit: () => (require("./exit") as typeof import("./exit")).exit,
   extname: () => (require("./extname") as typeof import("./extname")).extname,
   ls: () => (require("./ls") as typeof import("./ls")).ls,
+  mkdir: () => (require("./mkdir") as typeof import("./mkdir")).mkdir,
+  mkdirp: () => (require("./mkdir") as typeof import("./mkdir")).mkdirp,
   printf: () => (require("./printf") as typeof import("./printf")).printf,
   pwd: () => (require("./pwd") as typeof import("./pwd")).pwd,
   readlink: () =>

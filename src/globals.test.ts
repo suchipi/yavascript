@@ -105,6 +105,8 @@ test("globals", async () => {
     [x] exit: function
     [x] extname: function
     [x] ls: function
+    [x] mkdir: function
+    [x] mkdirp: function
     [x] printf: function
     [x] pwd: function
     [x] readlink: function
@@ -112,8 +114,7 @@ test("globals", async () => {
     [x] sleep: function
     [x] touch: function
     [x] which: function
-    [-] mkdir throws error
-    [-] mkdirp throws error
+    [-] ensureDir throws error
     [-] cp throws error
     [-] mv throws error
     [-] ren throws error
@@ -134,7 +135,6 @@ test("globals", async () => {
     [x] readFile: function
     [x] remove: function
     [x] writeFile: function
-    [x] ensureDir: function
     [x] copy: function
     [x] rename: function
     [x] isExecutable: function
