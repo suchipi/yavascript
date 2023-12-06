@@ -39,6 +39,7 @@ For more information about each of these, see its corresponding help page. For i
 - toJSON (Function)
 - basename (Function)
 - extname (Function)
+- dirname (Function)
 - startsWith (Function)
 - endsWith (Function)
 - indexOf (Function)
@@ -84,6 +85,7 @@ declare class Path {
   toJSON(): string;
   basename(): string;
   extname(options?: { full?: boolean }): string;
+  dirname(): Path;
   startsWith(value: string | Path | Array<string | Path>): boolean;
   endsWith(value: string | Path | Array<string | Path>): boolean;
   indexOf(

@@ -781,3 +781,79 @@ test("Path.replaceLast", async () => {
     }
   `);
 });
+
+test("Path.basename", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path("/one/two/three/two/one/zero.help.txt");
+      echo(p.basename());
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "zero.help.txt
+    ",
+    }
+  `);
+});
+
+test("Path.extname", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path("/one/two/three/two/one/zero.help.txt");
+      echo(p.extname());
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": ".txt
+    ",
+    }
+  `);
+});
+
+test("Path.extname full", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path("/one/two/three/two/one/zero.help.txt");
+      echo(p.extname({ full: true }));
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": ".help.txt
+    ",
+    }
+  `);
+});
+
+test("Path.dirname", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path("/one/two/three/two/one/zero.help.txt");
+      echo(p.dirname());
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path { /one/two/three/two/one }
+    ",
+    }
+  `);
+});

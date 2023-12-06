@@ -321,6 +321,10 @@ class Path {
     return extname(this, options);
   }
 
+  dirname(): Path {
+    return this.replaceLast([]);
+  }
+
   startsWith(value: string | Path | Array<string | Path>): boolean {
     value = new Path(value);
 

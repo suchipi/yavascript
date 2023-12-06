@@ -150,6 +150,12 @@ declare class Path {
   extname(options?: { full?: boolean }): string;
 
   /**
+   * Return a new Path containing all of the path segments in this one except
+   * for the last one; ie. the path to the directory that contains this path.
+   */
+  dirname(): Path;
+
+  /**
    * Return whether this path starts with the provided value, by comparing one
    * path segment at a time.
    *

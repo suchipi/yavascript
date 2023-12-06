@@ -7,7 +7,7 @@ export function dirname(path: string | Path): Path {
   let pathObj: Path;
 
   if (is(path, types.Path)) {
-    pathObj = path.clone();
+    pathObj = path;
   } else if (is(path, types.string)) {
     pathObj = new Path(path);
   } else {
@@ -16,9 +16,7 @@ export function dirname(path: string | Path): Path {
     );
   }
 
-  pathObj.segments.pop();
-
-  return pathObj;
+  return pathObj.dirname();
 }
 
 setHelpText(dirname, dirnameHelpText);
