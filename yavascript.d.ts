@@ -394,8 +394,12 @@ declare class Path {
   /** Create a new Path object using the provided input(s). */
   constructor(...inputs: Array<string | Path | Array<string | Path>>);
 
-  /** Create a new Path object using the provided segments and separator. */
-  static from(segments: Array<string>, separator: string): Path;
+  /**
+   * Create a new Path object using the provided segments and separator.
+   *
+   * If unspecified, `separator` defaults to `Path.OS_SEGMENT_SEPARATOR`.
+   */
+  static from(segments: Array<string>, separator?: string): Path;
 
   /**
    * Create an absolute path by `concat`ting `subpaths` onto this Path (which is

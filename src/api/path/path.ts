@@ -85,6 +85,7 @@ class Path {
     return fallback;
   }
 
+  // TODO: this is equivalent to the constructor. We should remove this
   static join(...inputs: Array<string | Path | Array<string | Path>>): Path {
     assert.type(
       inputs,
@@ -100,6 +101,7 @@ class Path {
     return new Path(...inputs);
   }
 
+  // TODO: this is almost the same as normalize. We should find a way to not need both
   static resolve(...inputs: Array<string | Path | Array<string | Path>>): Path {
     assert.type(
       inputs,
@@ -166,6 +168,7 @@ class Path {
     this.separator = Path.detectSeparator(parts);
   }
 
+  // TODO: Should `Path.from` have similar behavior to `Array.from`? Should this be renamed?
   static from(
     segments: Array<string>,
     separator: string = Path.OS_SEGMENT_SEPARATOR
