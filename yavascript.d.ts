@@ -950,22 +950,7 @@ declare class ExecResult<
   StdioType extends ArrayBuffer | string | never,
   Completed extends boolean = false
 > {
-  child: ChildProcess;
-  stdioType: StdioType extends ArrayBuffer
-    ? "arraybuffer"
-    : StdioType extends string
-    ? "utf8"
-    : null;
-
-  constructor(init: {
-    child: ChildProcess;
-    stdioType: StdioType extends ArrayBuffer
-      ? "arraybuffer"
-      : StdioType extends string
-      ? "utf8"
-      : null;
-    trace?: undefined | null | ((...args: Array<any>) => void);
-  });
+  wait(): ExecResult<StdioType, true>;
 
   /**
    * The stdout from the child process.
@@ -998,7 +983,21 @@ declare class ExecResult<
    */
   get signal(): Completed extends true ? number | undefined : never;
 
-  wait(): ExecResult<StdioType, true>;
+  stdioType: StdioType extends ArrayBuffer
+    ? "arraybuffer"
+    : StdioType extends string
+    ? "utf8"
+    : null;
+
+  constructor(init: {
+    child: ChildProcess;
+    stdioType: StdioType extends ArrayBuffer
+      ? "arraybuffer"
+      : StdioType extends string
+      ? "utf8"
+      : null;
+    trace?: undefined | null | ((...args: Array<any>) => void);
+  });
 }
 
 /**

@@ -7,43 +7,52 @@ import {
 } from "../../test-helpers";
 
 test("exec true - string", async () => {
-  const result = await evaluate(`exec("true")`);
+  const result = await evaluate(`exec("true").wait()`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "",
+      "stdout": "ExecResult {
+      stdioType: null
+    }
+    ",
     }
   `);
 });
 
 test("exec true - array", async () => {
-  const result = await evaluate(`exec(["true"])`);
+  const result = await evaluate(`exec(["true"]).wait()`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "",
+      "stdout": "ExecResult {
+      stdioType: null
+    }
+    ",
     }
   `);
 });
 
 test("exec true - Path", async () => {
-  const result = await evaluate(`exec(new Path("/usr/bin/true"))`);
+  const result = await evaluate(`exec(new Path("/usr/bin/true")).wait()`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "",
+      "stdout": "ExecResult {
+      stdioType: null
+    }
+    ",
     }
   `);
 });
 
 test("exec false - string", async () => {
-  const result = await evaluate(`exec("false")`);
+  const result = await evaluate(`exec("false").wait()`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 1,
@@ -61,7 +70,7 @@ test("exec false - string", async () => {
 });
 
 test("exec false - array", async () => {
-  const result = await evaluate(`exec(["false"])`);
+  const result = await evaluate(`exec(["false"]).wait()`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 1,
@@ -79,7 +88,7 @@ test("exec false - array", async () => {
 });
 
 test("exec false - Path", async () => {
-  const result = await evaluate(`exec(new Path("/usr/bin/false"))`);
+  const result = await evaluate(`exec(new Path("/usr/bin/false")).wait()`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 1,
@@ -100,7 +109,7 @@ test("exec - child process receives args", async () => {
   const result = await evaluate(
     `exec([${JSON.stringify(
       binaryPath
-    )}, "-e", "scriptArgs", "bla", "blah", "--", "haha"])`
+    )}, "-e", "scriptArgs", "bla", "blah", "--", "haha"]).wait()`
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -117,6 +126,9 @@ test("exec - child process receives args", async () => {
       "--"
       "haha"
     ]
+    ExecResult {
+      stdioType: null
+    }
     ",
     }
   `);
@@ -126,7 +138,7 @@ test("exec with env vars", async () => {
   const result = await evaluate(
     `exec([${JSON.stringify(
       binaryPath
-    )}, "-e", "env"], { env: { HI_MOM: "yup" } })`
+    )}, "-e", "env"], { env: { HI_MOM: "yup" } }).wait()`
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -136,6 +148,9 @@ test("exec with env vars", async () => {
       "stdout": "{
       HI_MOM: "yup"
     }
+    ExecResult {
+      stdioType: null
+    }
     ",
     }
   `);
@@ -143,7 +158,9 @@ test("exec with env vars", async () => {
 
 test("exec with cwd", async () => {
   const result = await evaluate(
-    `exec([${JSON.stringify(binaryPath)}, "-e", "pwd()"], { cwd: "/tmp" })`
+    `exec([${JSON.stringify(
+      binaryPath
+    )}, "-e", "pwd()"], { cwd: "/tmp" }).wait()`
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -151,28 +168,38 @@ test("exec with cwd", async () => {
       "error": false,
       "stderr": "",
       "stdout": "Path { /tmp }
+    ExecResult {
+      stdioType: null
+    }
     ",
     }
   `);
 });
 
 test("exec with env", async () => {
-  const result = await evaluate(`exec(['env'], { env: { HI: 'yeah' } })`);
+  const result = await evaluate(
+    `exec(['env'], { env: { HI: 'yeah' } }).wait()`
+  );
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
       "error": false,
       "stderr": "",
       "stdout": "HI=yeah
+    ExecResult {
+      stdioType: null
+    }
     ",
     }
   `);
 });
 
 test("exec with captureOutput true", async () => {
-  const result = await evaluate(
-    `exec(["echo", "hi there"], { captureOutput: true })`
-  );
+  const result = await evaluate(`
+    const result = exec(["echo", "hi there"], { captureOutput: true }).wait()
+    const { stdout, stderr, status, signal } = result;
+    ({ stdout, stderr, status, signal })
+  `);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -190,9 +217,11 @@ test("exec with captureOutput true", async () => {
 });
 
 test("exec with captureOutput 'utf8'", async () => {
-  const result = await evaluate(
-    `exec(["echo", "hi there"], { captureOutput: "utf8" })`
-  );
+  const result = await evaluate(`
+    const result = exec(["echo", "hi there"], { captureOutput: "utf8" }).wait()
+    const { stdout, stderr, status, signal } = result;
+    ({ stdout, stderr, status, signal })
+  `);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -210,9 +239,11 @@ test("exec with captureOutput 'utf8'", async () => {
 });
 
 test("exec with captureOutput 'arraybuffer'", async () => {
-  const result = await evaluate(
-    `exec(["echo", "hi there"], { captureOutput: "arraybuffer" })`
-  );
+  const result = await evaluate(`
+    const result = exec(["echo", "hi there"], { captureOutput: "arraybuffer" }).wait()
+    const { stdout, stderr, status, signal } = result;
+    ({ stdout, stderr, status, signal })
+  `);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -232,9 +263,11 @@ test("exec with captureOutput 'arraybuffer'", async () => {
 });
 
 test("exec with failOnNonZeroStatus false - running 'false'", async () => {
-  const result = await evaluate(
-    `exec(["false"], { failOnNonZeroStatus: false })`
-  );
+  const result = await evaluate(`
+    const result = exec(["false"], { failOnNonZeroStatus: false }).wait();
+    const { status, signal } = result;
+    ({ status, signal })
+  `);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -251,7 +284,11 @@ test("exec with failOnNonZeroStatus false - running 'false'", async () => {
 
 test("exec with failOnNonZeroStatus false - running 'true'", async () => {
   const result = await evaluate(
-    `exec(["true"], { failOnNonZeroStatus: false })`
+    `
+      const result = exec(["true"], { failOnNonZeroStatus: false }).wait()
+      const { status, signal } = result;
+      ({ status, signal })
+    `
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -268,17 +305,18 @@ test("exec with failOnNonZeroStatus false - running 'true'", async () => {
 });
 
 test("$ echo hi - string", async () => {
-  const result = await evaluate(`$(\`echo hi\`)`);
+  const result = await evaluate(`
+    const result = $("echo hi");
+    const { stdout, stderr, status, signal } = result;
+    ({ stdout, stderr, status, signal })
+  `);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "{
-      stdout: "hi\\n"
-      stderr: ""
-      status: 0
-      signal: undefined
+      "stdout": "ExecResult {
+      stdioType: "utf8"
     }
     ",
     }
@@ -286,7 +324,11 @@ test("$ echo hi - string", async () => {
 });
 
 test("$ echo hi - array", async () => {
-  const result = await evaluate(`$(["echo", "hi"])`);
+  const result = await evaluate(`
+    const result = $(["echo", "hi"]);
+    const { stdout, stderr, status, signal } = result;
+    ({ stdout, stderr, status, signal })
+  `);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -304,17 +346,18 @@ test("$ echo hi - array", async () => {
 });
 
 test("$ echo hi - array with Path", async () => {
-  const result = await evaluate(`$(["echo", new Path("hi")])`);
+  const result = await evaluate(`
+    const result = $(["echo", new Path("hi")]);
+    const { stdout, stderr, status, signal } = result;
+    ({ stdout, stderr, status, signal })
+  `);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "{
-      stdout: "hi\\n"
-      stderr: ""
-      status: 0
-      signal: undefined
+      "stdout": "ExecResult {
+      stdioType: "utf8"
     }
     ",
     }
@@ -322,7 +365,11 @@ test("$ echo hi - array with Path", async () => {
 });
 
 test("$ echo hi 2 - array with number", async () => {
-  const result = await evaluate(`$(["echo", "hi", 2])`);
+  const result = await evaluate(`
+    const result = $(["echo", "hi", 2]);
+    const { stdout, stderr, status, signal } = result;
+    ({ stdout, stderr, status, signal })
+  `);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -360,7 +407,7 @@ test("$ false", async () => {
 });
 
 test("exec parses arg string properly", async () => {
-  const result = await evaluate(`exec("bash -c 'echo hi'")`);
+  const result = await evaluate(`void exec("bash -c 'echo hi'").wait()`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -373,7 +420,9 @@ test("exec parses arg string properly", async () => {
 });
 
 test("exec's string parsing does not interpolate env vars", async () => {
-  const result = await evaluate(`exec('echo $HI', { env: { HI: 'yeah' } })`);
+  const result = await evaluate(
+    `void exec('echo $HI', { env: { HI: 'yeah' } }).wait()`
+  );
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -385,8 +434,8 @@ test("exec's string parsing does not interpolate env vars", async () => {
   `);
 });
 
-test("exec's string parsing does not parse globs", async () => {
-  const result = await evaluate(`exec('echo **/*')`);
+test("exec's string parsing does not expand globs", async () => {
+  const result = await evaluate(`void exec('echo **/*').wait()`);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
@@ -400,7 +449,7 @@ test("exec's string parsing does not parse globs", async () => {
 
 test("logging", async () => {
   const result = await evaluate(
-    `exec('echo hi', { trace: console.error }); exec(['echo', '   hi'], { trace: console.error });`
+    `void exec('echo hi', { trace: console.error }).wait(); exec(['echo', '   hi'], { trace: console.error }).wait();`
   );
   expect(result).toMatchInlineSnapshot(`
     {

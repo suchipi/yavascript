@@ -10,13 +10,13 @@ export class ExecResult<
   StdioType extends ArrayBuffer | string | never,
   Finished extends boolean = false
 > {
-  child: ChildProcess;
+  #child: ChildProcess;
   stdioType: StdioType extends ArrayBuffer
     ? "arraybuffer"
     : StdioType extends string
     ? "utf8"
     : null;
-  private _trace?: undefined | null | ((...args: Array<any>) => void);
+  #trace: undefined | null | ((...args: Array<any>) => void);
 
   constructor({
     child,
@@ -47,13 +47,13 @@ export class ExecResult<
       "'trace' option must be either undefined, null, or a function"
     );
 
-    this.child = child;
+    this.#child = child;
     this.stdioType = stdioType;
-    this._trace = trace;
+    this.#trace = trace;
   }
 
   private _getStdio(which: "out" | "err"): StdioType {
-    const trace = this._trace;
+    const trace = this.#trace;
 
     if (this.stdioType === null) {
       throw new Error(
@@ -61,7 +61,7 @@ export class ExecResult<
       );
     }
 
-    const stream = this.child.stdio[which];
+    const stream = this.#child.stdio[which];
 
     if (this.stdioType === "utf8") {
       // seek back to beginning
@@ -91,12 +91,12 @@ export class ExecResult<
   private _assertDone(
     request: string
   ): asserts this is ExecResult<StdioType, true> {
-    if (this.child.state.id === "unstarted") {
+    if (this.#child.state.id === "unstarted") {
       throw new Error(
         `Cannot get ${request} of child process because it has not yet been started. Please call \`.wait()\` first.`
       );
     }
-    if (this.child.state.id === "running") {
+    if (this.#child.state.id === "running") {
       throw new Error(
         `Cannot get ${request} of child process because it has not yet finished running. Please call \`.wait()\` first.`
       );
@@ -119,9 +119,9 @@ export class ExecResult<
 
   get status(): Finished extends true ? number | undefined : never {
     this._assertDone("exit status");
-    if (this.child.state.id === "exited") {
+    if (this.#child.state.id === "exited") {
       // @ts-ignore returning into never
-      return this.child.state.status;
+      return this.#child.state.status;
     } else {
       // @ts-ignore returning into never
       return undefined;
@@ -130,9 +130,9 @@ export class ExecResult<
 
   get signal(): Finished extends true ? number | undefined : never {
     this._assertDone("exit signal");
-    if (this.child.state.id === "signaled") {
+    if (this.#child.state.id === "signaled") {
       // @ts-ignore returning into never
-      return this.child.state.signal;
+      return this.#child.state.signal;
     } else {
       // @ts-ignore returning into never
       return undefined;
@@ -140,7 +140,7 @@ export class ExecResult<
   }
 
   wait(): ExecResult<StdioType, true> {
-    this.child.waitUntilComplete();
+    this.#child.waitUntilComplete();
     return this as ExecResult<StdioType, true>;
   }
 }
