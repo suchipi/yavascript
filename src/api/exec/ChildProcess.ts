@@ -11,6 +11,7 @@ import { assert } from "../assert";
 import { Path } from "../path";
 import childProcessHelpText from "./ChildProcess.help.md";
 import { setHelpText } from "../help";
+import { setBytecodeClassToString } from "../../set-bytecode-class-tostring";
 
 export type ChildProcessOptions = {
   cwd?: string | Path;
@@ -206,5 +207,7 @@ export class ChildProcess {
     }
   }
 }
+
+setBytecodeClassToString(ChildProcess);
 
 setHelpText(ChildProcess, childProcessHelpText);

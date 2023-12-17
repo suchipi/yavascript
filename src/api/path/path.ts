@@ -480,22 +480,9 @@ class Path {
   }
 }
 
-// .toString() needs to return a value starting with "class" for pheno.coerce
-// to see this function as a class, and therefore coerce it into the type
-// "instanceOf(Path)" when it appears in a function that accepts a type
-// validator (ie. `is` or `assert.type`).
-//
-// Normally, `Path.toString()` would already start with "class", because we
-// defined it using class syntax. But, as part of compiling yavascript, the
-// source code is converted to QuickJS bytecode, and that bytecode
-// representation does not preserve Function bodies, so `Path.toString()`
-// changes. It instead returns "function Path() {\n    [native code]\n}".
-//
-// Explicitly overriding it like this ensures that it has the correct value
-// even after bytecode conversion.
-Object.defineProperty(Path, "toString", {
-  value: () => "class Path {\n    [native code]\n}",
-});
+import { setBytecodeClassToString } from "../../set-bytecode-class-tostring";
+
+setBytecodeClassToString(Path);
 
 import { setHelpText } from "../help";
 

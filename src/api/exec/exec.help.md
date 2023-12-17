@@ -1,13 +1,20 @@
 # `exec` - Run system commands via child processes
 
-The `exec` function runs a child process and blocks until it exits. You can call it with either a string or an array of strings.
-
-When calling `exec` with an array of strings, the first string in the array is the program to run, and the rest of the strings in the array are arguments to the program, eg:
+The `exec` function runs a child process. You can call it with either a string or an array of strings.
 
 ```ts
-exec(["echo", "hi", "there"]);
-exec(["printf", "something with spaces\n"]);
+exec(`echo hello`);
+exec(["echo", "hello"]);
 ```
+
+To block until the child process is done running, add `.wait()` to the end:
+
+```ts
+exec(`echo hello`).wait();
+exec(["echo", "hello"]).wait();
+```
+
+When calling `exec` with an array of strings, the first string in the array is the program to run, and the rest of the strings in the array are arguments to the program.
 
 When calling with a string instead of an array, the string will be split into separate arguments using the following rules:
 
@@ -19,8 +26,8 @@ When calling with a string instead of an array, the string will be split into se
 For example:
 
 ```ts
-exec(`echo hi there`);
-exec(`printf "something with spaces\n"`);
+exec(`echo hi there`); // -> ["echo", "hi", "there"]
+exec(`printf "something with spaces\n"`); // -> ["printf", "something with spaces\n"]
 ```
 
 The intent is that it behaves similarly to what you would expect from a UNIX shell, but only the "safe" features. "Unsafe" features like environment variable expansion (`$VAR` or `${VAR}`), subshells (\`echo hi\` or `$(echo hi)`), and redirection (`> /dev/null` or `2>&1 `) are not supported. To use those features, shell out to `bash` or `sh` directly via eg `exec(['bash', '-c', 'your command string'])`, but be aware of the security implications of doing so.
@@ -35,13 +42,19 @@ The intent is that it behaves similarly to what you would expect from a UNIX she
 | captureOutput (boolean/string) | controls how stdout/stderr is directed          |
 | trace (function)               | used to log info about the process execution    |
 
-The return value of `exec` varies depending on the options passed:
+The return value of `exec` is an 'ExecResult' object, which has the following notable properties:
 
-- When `captureOutput` is true or "utf-8", an object will be returned with `stdout` and `stderr` properties, both strings.
-- When `captureOutput` is "arraybuffer", an object will be returned with `stdout` and `stderr` properties, both `ArrayBuffer`s.
-- When `failOnNonZeroStatus` is false, an object will be returned with `status` (the exit code; number or undefined) and `signal` (the signal that killed the process; number or undefined).
-- When `captureOutput` is non-false and `failOnNonZeroStatus` is false, an object will be returned with four properties (the two associated with `failOnNonZeroStatus`, and the two associated with `captureOutput`).
-- When `captureOutput` is false or unspecified, and `failOnNonZeroStatus` is true or unspecified, undefined will be returned.
+| Property                       | Purpose                                        |
+| ------------------------------ | ---------------------------------------------- |
+| wait (Function)                | wait until the child process has finished      |
+| stdout (string or ArrayBuffer) | data the child process emitted to stdout       |
+| stderr (string or ArrayBuffer) | data the child process emitted to stderr       |
+| signal (number or undefined)   | signal the child process exited with           |
+| status (number or undefined)   | exit status code the child process exited with |
+
+The type of `stdout` and `stderr` depends on the value of the `captureOutput` option passed into `exec`. If captureOutput is `true` or "utf8", stdout and stderr will be strings. If captureOutput is "arraybuffer", stdout and stderr will be ArrayBuffers. Otherwise, attempting to access the `stdout`/`stderr` properties will throw an error.
+
+When present, the signal number will match one of the signal number constants on the `os` global; `os.SIGTERM`, `os.SIGINT`, etc.
 
 ```ts
 // Defined in yavascript/src/api/exec
@@ -63,7 +76,7 @@ declare function exec(
     /** Defaults to false */
     captureOutput?: boolean | "utf8" | "arraybuffer";
   }
-);
+): ExecResult<string | ArrayBuffer | never>;
 
 // Converts `args` to an Array<string> using the same logic `exec` does.
 declare function exec.toArgv(

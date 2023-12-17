@@ -2,10 +2,20 @@ import * as std from "quickjs:std";
 import { ChildProcess } from "./ChildProcess";
 import { types } from "../types";
 import { assert } from "../assert";
+import { setHelpText } from "../help";
+import execResultHelpText from "./ExecResult.help.md";
+import { setBytecodeClassToString } from "../../set-bytecode-class-tostring";
 
-export class ExecResult<StdioType extends ArrayBuffer | string | never> {
+export class ExecResult<
+  StdioType extends ArrayBuffer | string | never,
+  Finished extends boolean = false
+> {
   child: ChildProcess;
-  stdioType: "arraybuffer" | "utf8" | null;
+  stdioType: StdioType extends ArrayBuffer
+    ? "arraybuffer"
+    : StdioType extends string
+    ? "utf8"
+    : null;
   private _trace?: undefined | null | ((...args: Array<any>) => void);
 
   constructor({
@@ -14,7 +24,11 @@ export class ExecResult<StdioType extends ArrayBuffer | string | never> {
     trace,
   }: {
     child: ChildProcess;
-    stdioType: "arraybuffer" | "utf8" | null;
+    stdioType: StdioType extends ArrayBuffer
+      ? "arraybuffer"
+      : StdioType extends string
+      ? "utf8"
+      : null;
     trace?: undefined | null | ((...args: Array<any>) => void);
   }) {
     assert.type(
@@ -47,7 +61,6 @@ export class ExecResult<StdioType extends ArrayBuffer | string | never> {
       );
     }
 
-    this.child.waitUntilComplete();
     const stream = this.child.stdio[which];
 
     if (this.stdioType === "utf8") {
@@ -75,29 +88,62 @@ export class ExecResult<StdioType extends ArrayBuffer | string | never> {
     }
   }
 
-  get stdout(): StdioType {
-    return this._getStdio("out");
+  private _assertDone(
+    request: string
+  ): asserts this is ExecResult<StdioType, true> {
+    if (this.child.state.id === "unstarted") {
+      throw new Error(
+        `Cannot get ${request} of child process because it has not yet been started. Please call \`.wait()\` first.`
+      );
+    }
+    if (this.child.state.id === "running") {
+      throw new Error(
+        `Cannot get ${request} of child process because it has not yet finished running. Please call \`.wait()\` first.`
+      );
+    }
   }
 
-  get stderr(): StdioType {
-    return this._getStdio("err");
+  get stdout(): Finished extends true ? StdioType : never {
+    this._assertDone("stdout");
+    const result: StdioType = this._getStdio("out");
+    // @ts-ignore returning into never
+    return result;
   }
 
-  get status(): number | undefined {
-    this.child.waitUntilComplete();
+  get stderr(): Finished extends true ? StdioType : never {
+    this._assertDone("stderr");
+    const result: StdioType = this._getStdio("err");
+    // @ts-ignore returning into never
+    return result;
+  }
+
+  get status(): Finished extends true ? number | undefined : never {
+    this._assertDone("exit status");
     if (this.child.state.id === "exited") {
+      // @ts-ignore returning into never
       return this.child.state.status;
     } else {
+      // @ts-ignore returning into never
       return undefined;
     }
   }
 
-  get signal(): number | undefined {
-    this.child.waitUntilComplete();
+  get signal(): Finished extends true ? number | undefined : never {
+    this._assertDone("exit signal");
     if (this.child.state.id === "signaled") {
+      // @ts-ignore returning into never
       return this.child.state.signal;
     } else {
+      // @ts-ignore returning into never
       return undefined;
     }
   }
+
+  wait(): ExecResult<StdioType, true> {
+    this.child.waitUntilComplete();
+    return this as ExecResult<StdioType, true>;
+  }
 }
+
+setBytecodeClassToString(ExecResult);
+setHelpText(ExecResult, execResultHelpText);
