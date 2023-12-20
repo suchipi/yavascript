@@ -5,6 +5,7 @@ import { assert } from "../assert";
 import { setHelpText } from "../help";
 import execResultHelpText from "./ExecResult.help.md";
 import { setBytecodeClassToString } from "../../set-bytecode-class-tostring";
+import { makeErrorWithProperties } from "../../error-with-properties";
 
 export class ExecResult<
   StdioType extends ArrayBuffer | string | never,
@@ -142,6 +143,20 @@ export class ExecResult<
   wait(): ExecResult<StdioType, true> {
     this.#child.waitUntilComplete();
     return this as ExecResult<StdioType, true>;
+  }
+
+  assertExitStatusZero(): this {
+    const status = this.status;
+    if (status !== 0) {
+      throw makeErrorWithProperties(
+        `Child process ${this.#child.args.join(
+          " "
+        )} exited with a nonzero status code`,
+        { status }
+      );
+    }
+
+    return this;
   }
 }
 

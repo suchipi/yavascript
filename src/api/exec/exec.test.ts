@@ -262,9 +262,9 @@ test("exec with captureOutput 'arraybuffer'", async () => {
   `);
 });
 
-test("exec with failOnNonZeroStatus false - running 'false'", async () => {
+test("exec with assertExitStatusZero false - running 'false'", async () => {
   const result = await evaluate(`
-    const result = exec(["false"], { failOnNonZeroStatus: false }).wait();
+    const result = exec(["false"]).wait().assertExitStatusZero();
     const { status, signal } = result;
     ({ status, signal })
   `);
@@ -282,10 +282,10 @@ test("exec with failOnNonZeroStatus false - running 'false'", async () => {
   `);
 });
 
-test("exec with failOnNonZeroStatus false - running 'true'", async () => {
+test("exec with assertExitStatusZero false - running 'true'", async () => {
   const result = await evaluate(
     `
-      const result = exec(["true"], { failOnNonZeroStatus: false }).wait()
+      const result = exec(["true"]).wait().assertExitStatusZero();
       const { status, signal } = result;
       ({ status, signal })
     `

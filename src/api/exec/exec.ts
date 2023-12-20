@@ -16,7 +16,6 @@ const exec = (
   options: {
     cwd?: string | Path;
     env?: { [key: string | number]: string | number | boolean };
-    failOnNonZeroStatus?: boolean;
     captureOutput?: boolean | "utf8" | "arraybuffer";
     trace?: (...args: Array<any>) => void;
   } = {}
@@ -29,18 +28,12 @@ const exec = (
   );
 
   const {
-    failOnNonZeroStatus = true,
     captureOutput = false,
     cwd,
     env,
     trace = traceAll.getDefaultTrace(),
   } = options;
 
-  assert.type(
-    failOnNonZeroStatus,
-    types.boolean,
-    "when present, 'failOnNonZeroStatus' option must be a boolean"
-  );
   assert.type(
     captureOutput,
     types.or(
@@ -96,8 +89,9 @@ export function $(
 ): ExecResult<string, true> {
   return exec(args as any, {
     captureOutput: true,
-    failOnNonZeroStatus: true,
-  }).wait();
+  })
+    .wait()
+    .assertExitStatusZero();
 }
 
 exec.toArgv = toArgv;

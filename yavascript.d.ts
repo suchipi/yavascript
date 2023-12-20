@@ -808,14 +808,6 @@ declare type ExecOptions = {
   trace?: (...args: Array<any>) => void;
 
   /**
-   * Whether an Error should be thrown when the process exits with a nonzero
-   * status code.
-   *
-   * Defaults to true.
-   */
-  failOnNonZeroStatus?: boolean;
-
-  /**
    * If true, stdout and stderr will be collected into strings or array buffers
    * and returned instead of being printed to the screen.
    *
@@ -950,6 +942,9 @@ declare class ExecResult<
   StdioType extends ArrayBuffer | string | never,
   Completed extends boolean = false
 > {
+  /**
+   * Synchronously block the calling thread until the child process has exited.
+   */
   wait(): ExecResult<StdioType, true>;
 
   /**
@@ -982,6 +977,15 @@ declare class ExecResult<
    * thrown. You can chain off of `.wait()`, ie: `result.wait().signal`
    */
   get signal(): Completed extends true ? number | undefined : never;
+
+  /**
+   * Throws an error if the child process exited with a nonzero exit code.
+   *
+   * Call `.wait()` before calling this, or else an error will be thrown due to
+   * the status code being unavailable. You can chain off of `.wait()`, ie:
+   * `result.wait().assertExitStatusZero()`
+   */
+  assertExitStatusZero(): this;
 
   stdioType: StdioType extends ArrayBuffer
     ? "arraybuffer"

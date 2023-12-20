@@ -38,19 +38,19 @@ The intent is that it behaves similarly to what you would expect from a UNIX she
 | ------------------------------ | ----------------------------------------------- |
 | cwd (string)                   | current working directory for the child process |
 | env (object)                   | environment variables for the process           |
-| failOnNonZeroStatus (boolean)  | whether to throw error on nonzero exit status   |
 | captureOutput (boolean/string) | controls how stdout/stderr is directed          |
 | trace (function)               | used to log info about the process execution    |
 
 The return value of `exec` is an 'ExecResult' object, which has the following notable properties:
 
-| Property                       | Purpose                                        |
-| ------------------------------ | ---------------------------------------------- |
-| wait (Function)                | wait until the child process has finished      |
-| stdout (string or ArrayBuffer) | data the child process emitted to stdout       |
-| stderr (string or ArrayBuffer) | data the child process emitted to stderr       |
-| signal (number or undefined)   | signal the child process exited with           |
-| status (number or undefined)   | exit status code the child process exited with |
+| Property                        | Purpose                                                       |
+| ------------------------------- | ------------------------------------------------------------- |
+| wait (Function)                 | wait until the child process has finished                     |
+| stdout (string or ArrayBuffer)  | data the child process emitted to stdout                      |
+| stderr (string or ArrayBuffer)  | data the child process emitted to stderr                      |
+| signal (number or undefined)    | signal the child process exited with                          |
+| status (number or undefined)    | exit status code the child process exited with                |
+| assertExitStatusZero (Function) | throw an error if the child process's exit status wasn't zero |
 
 The type of `stdout` and `stderr` depends on the value of the `captureOutput` option passed into `exec`. If captureOutput is `true` or "utf8", stdout and stderr will be strings. If captureOutput is "arraybuffer", stdout and stderr will be ArrayBuffers. Otherwise, attempting to access the `stdout`/`stderr` properties will throw an error.
 
@@ -69,9 +69,6 @@ declare function exec(
 
     /** Defaults to `undefined` */
     trace?: (...args: Array<any>) => void;
-
-    /** Defaults to true */
-    failOnNonZeroStatus?: boolean;
 
     /** Defaults to false */
     captureOutput?: boolean | "utf8" | "arraybuffer";

@@ -77,10 +77,9 @@ export class GitRepo {
     const repoDir = this.repoDir.toString();
 
     const result = exec(["git", "rev-parse", "HEAD"], {
-      failOnNonZeroStatus: false,
       captureOutput: true,
       cwd: repoDir,
-    });
+    }).wait();
     if (result.status !== 0) {
       throw makeErrorWithProperties("'git rev-parse HEAD' failed", {
         status: result.status,
@@ -98,10 +97,9 @@ export class GitRepo {
     const repoDir = this.repoDir.toString();
 
     const result = exec(["git", "rev-parse", "--abbrev-ref", "HEAD"], {
-      failOnNonZeroStatus: false,
       captureOutput: true,
       cwd: repoDir,
-    });
+    }).wait();
     if (result.status !== 0) {
       throw makeErrorWithProperties(
         "'git rev-parse --abbrev-ref HEAD' failed",
@@ -127,10 +125,9 @@ export class GitRepo {
     const repoDir = this.repoDir.toString();
 
     const result = exec(["git", "diff", "--quiet"], {
-      failOnNonZeroStatus: false,
       captureOutput: true,
       cwd: repoDir,
-    });
+    }).wait();
     if (result.status !== 0 && result.status !== 1) {
       throw makeErrorWithProperties("'git diff --quiet' failed", {
         status: result.status,
@@ -167,9 +164,8 @@ export class GitRepo {
     }
 
     const result = exec(["git", "check-ignore", resolvedPath], {
-      failOnNonZeroStatus: false,
       captureOutput: true,
-    });
+    }).wait();
     if (result.status !== 0 && result.status !== 1) {
       throw makeErrorWithProperties(
         `'git check-ignore '${resolvedPath}' failed`,

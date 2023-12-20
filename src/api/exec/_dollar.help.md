@@ -1,6 +1,6 @@
 # `$` - Run system command and return stdout/stderr
 
-`$(...)` is an alias for `exec(..., { captureOutput: true, failOnNonZeroStatus: true })`. It's often used to capture the output of a program:
+`$(...)` is an alias for `exec(..., { captureOutput: true }).wait().assertExitStatusZero()`. It's often used to capture the output of a program:
 
 ```ts
 const result = $(`echo hi`).stdout;
