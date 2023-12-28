@@ -23,6 +23,7 @@ const exec = (
       trace?: (...args: Array<any>) => void;
       info?: (...args: Array<any>) => void;
     };
+    block?: boolean;
   } = {}
 ): any => {
   // 'args' type gets checked in ChildProcess constructor
@@ -38,6 +39,7 @@ const exec = (
     cwd,
     env,
     logging: { trace = logger.trace, info = logger.info } = {},
+    block = true,
   } = options;
 
   assert.type(
@@ -67,6 +69,12 @@ const exec = (
     "when present, 'options.logging.info' must be a function"
   );
 
+  assert.type(
+    block,
+    types.boolean,
+    "when present, 'block' option must be a boolean"
+  );
+
   const child = new ChildProcess(args, { cwd, env, logging: { trace } });
 
   let tmpOut: FILE | null = null;
@@ -86,87 +94,107 @@ const exec = (
         .join(" ")}`
     );
     child.start();
-    result = child.waitUntilComplete();
-    if (result.status !== 0 && !failOnNonZeroStatus) {
-      info(`  exec -> ${JSON.stringify(result)}`);
-    }
 
-    let stdout: string | ArrayBuffer | null = null;
-    let stderr: string | ArrayBuffer | null = null;
+    const waiter = {
+      wait() {
+        try {
+          result = child.waitUntilComplete();
+          if (result.status !== 0 && !failOnNonZeroStatus) {
+            info(`  exec -> ${JSON.stringify(result)}`);
+          }
 
-    if (tmpOut != null && tmpErr != null) {
-      if (captureOutput === "arraybuffer") {
-        const outLen = tmpOut.tell();
-        const errLen = tmpErr.tell();
-        stdout = new ArrayBuffer(outLen);
-        stderr = new ArrayBuffer(errLen);
+          let stdout: string | ArrayBuffer | null = null;
+          let stderr: string | ArrayBuffer | null = null;
 
-        // seek back to beginning
-        tmpOut.seek(0, std.SEEK_SET);
-        tmpErr.seek(0, std.SEEK_SET);
+          if (tmpOut != null && tmpErr != null) {
+            if (captureOutput === "arraybuffer") {
+              const outLen = tmpOut.tell();
+              const errLen = tmpErr.tell();
+              stdout = new ArrayBuffer(outLen);
+              stderr = new ArrayBuffer(errLen);
 
-        const outBytesRead = tmpOut.read(stdout, 0, outLen);
-        if (outBytesRead !== outLen) {
-          // throwing an error at this point seems kinda hostile idk, like the
-          // process has already run to completion, you know? this *shouldn't*
-          // ever happen, in theory, but...
-          trace(
-            `WEIRD! stdout reported it was ${outLen}, but when we read it back, it was ${outBytesRead}. Continuing anyway...`
-          );
+              // seek back to beginning
+              tmpOut.seek(0, std.SEEK_SET);
+              tmpErr.seek(0, std.SEEK_SET);
+
+              const outBytesRead = tmpOut.read(stdout, 0, outLen);
+              if (outBytesRead !== outLen) {
+                // throwing an error at this point seems kinda hostile idk, like the
+                // process has already run to completion, you know? this *shouldn't*
+                // ever happen, in theory, but...
+                trace(
+                  `WEIRD! stdout reported it was ${outLen}, but when we read it back, it was ${outBytesRead}. Continuing anyway...`
+                );
+              }
+
+              const errBytesRead = tmpErr.read(stderr, 0, errLen);
+              if (errBytesRead !== errLen) {
+                trace(
+                  `WEIRD! stderr reported it was ${errLen}, but when we read it back, it was ${errBytesRead}. Continuing anyway...`
+                );
+              }
+            } else {
+              // captureOutput is either true or "utf8"
+
+              // need to seek to beginning to read the data that was written
+              tmpOut.seek(0, std.SEEK_SET);
+              tmpErr.seek(0, std.SEEK_SET);
+              stdout = tmpOut.readAsString();
+              stderr = tmpErr.readAsString();
+            }
+          }
+
+          if (failOnNonZeroStatus && result.status !== 0) {
+            const err = makeErrorWithProperties(
+              `Command failed: ${JSON.stringify(args)}`,
+              result
+            );
+            if (stdout != null) {
+              err.stdout = stdout;
+            }
+            if (stderr != null) {
+              err.stderr = stderr;
+            }
+            throw err;
+          }
+
+          if (!captureOutput) {
+            if (failOnNonZeroStatus) {
+              return undefined;
+            } else {
+              return result;
+            }
+          }
+
+          if (stdout != null && stderr != null) {
+            if (failOnNonZeroStatus) {
+              return { stdout, stderr };
+            } else {
+              return { stdout, stderr, ...result };
+            }
+          } else {
+            throw new Error(
+              "Internal error: tmpOut and tmpErr weren't set, but attempted to return stdout and stderr. This indicates a bug in the exec function"
+            );
+          }
+        } catch (err) {
+          trace("exec error:", err);
+          throw err;
+        } finally {
+          if (tmpOut != null) tmpOut.close();
+          if (tmpErr != null) tmpErr.close();
         }
+      },
+    };
 
-        const errBytesRead = tmpErr.read(stderr, 0, errLen);
-        if (errBytesRead !== errLen) {
-          trace(
-            `WEIRD! stderr reported it was ${errLen}, but when we read it back, it was ${errBytesRead}. Continuing anyway...`
-          );
-        }
-      } else {
-        // captureOutput is either true or "utf8"
-
-        // need to seek to beginning to read the data that was written
-        tmpOut.seek(0, std.SEEK_SET);
-        tmpErr.seek(0, std.SEEK_SET);
-        stdout = tmpOut.readAsString();
-        stderr = tmpErr.readAsString();
-      }
-    }
-
-    if (failOnNonZeroStatus && result.status !== 0) {
-      const err = makeErrorWithProperties(
-        `Command failed: ${JSON.stringify(args)}`,
-        result
-      );
-      if (stdout != null) {
-        err.stdout = stdout;
-      }
-      if (stderr != null) {
-        err.stderr = stderr;
-      }
-      throw err;
-    }
-
-    if (!captureOutput) {
-      if (failOnNonZeroStatus) {
-        return undefined;
-      } else {
-        return result;
-      }
-    }
-
-    if (stdout != null && stderr != null) {
-      return { stdout, stderr, ...result };
+    if (block) {
+      return waiter.wait();
     } else {
-      throw new Error(
-        "Internal error: tmpOut and tmpErr weren't set, but attempted to return stdout and stderr. This indicates a bug in the exec function"
-      );
+      return waiter;
     }
   } catch (err) {
     trace("exec error:", err);
     throw err;
-  } finally {
-    if (tmpOut != null) tmpOut.close();
-    if (tmpErr != null) tmpErr.close();
   }
 };
 

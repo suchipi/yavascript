@@ -27,13 +27,14 @@ The intent is that it behaves similarly to what you would expect from a UNIX she
 
 `exec` also supports a second argument, an options object which supports the following keys (all are optional):
 
-| Property                       | Purpose                                         |
-| ------------------------------ | ----------------------------------------------- |
-| cwd (string)                   | current working directory for the child process |
-| env (object)                   | environment variables for the process           |
-| failOnNonZeroStatus (boolean)  | whether to throw error on nonzero exit status   |
-| captureOutput (boolean/string) | controls how stdout/stderr is directed          |
-| logging (object)               | controls how/whether info messages are logged   |
+| Property                       | Purpose                                             |
+| ------------------------------ | --------------------------------------------------- |
+| cwd (string)                   | current working directory for the child process     |
+| env (object)                   | environment variables for the process               |
+| failOnNonZeroStatus (boolean)  | whether to throw error on nonzero exit status       |
+| captureOutput (boolean/string) | controls how stdout/stderr is directed              |
+| logging (object)               | controls how/whether info messages are logged       |
+| block (boolean)                | whether to wait for child process exit now or later |
 
 The return value of `exec` varies depending on the options passed:
 
@@ -42,6 +43,7 @@ The return value of `exec` varies depending on the options passed:
 - When `failOnNonZeroStatus` is false, an object will be returned with `status` (the exit code; number or undefined) and `signal` (the signal that killed the process; number or undefined).
 - When `captureOutput` is non-false and `failOnNonZeroStatus` is false, an object will be returned with four properties (the two associated with `failOnNonZeroStatus`, and the two associated with `captureOutput`).
 - When `captureOutput` is false or unspecified, and `failOnNonZeroStatus` is true or unspecified, undefined will be returned.
+- If `block` is false, an object with a "wait" method is returned instead, which blocks the calling thread until the process exits, and then returns one of the values described above.
 
 ```ts
 // Defined in yavascript/src/api/exec
@@ -67,6 +69,9 @@ declare function exec(
 
     /** Defaults to false */
     captureOutput?: boolean | "utf8" | "arraybuffer";
+
+    /** Defaults to true */
+    block?: boolean;
   }
 );
 

@@ -1995,3 +1995,463 @@ import { assert, Is } from "typescript-assert-utils";
   });
   assert<Is<typeof ret3, ExpectedType>>();
 }
+
+// ------ with block: false ------
+{
+  // only block: false, return type of wait is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", { block: false });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], { block: false });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], { block: false });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // only block: false and cwd specified, return type of wait is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", {
+      cwd: "somewhere",
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      cwd: "somewhere",
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      cwd: "somewhere",
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // only block: false and env specified, return type of wait is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", {
+      block: false,
+      env: { some: "thing" },
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      block: false,
+      env: { some: "thing" },
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      block: false,
+      env: { some: "thing" },
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // only block: false and trace specified, return type of wait is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", {
+      block: false,
+      logging: { trace: console.log },
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      block: false,
+      logging: { trace: console.log },
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      block: false,
+      logging: { trace: console.log },
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // block: false cwd and env specified, return type of wait is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", {
+      cwd: "somewhere",
+      env: { some: "thing" },
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      cwd: "somewhere",
+      env: { some: "thing" },
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      cwd: "somewhere",
+      env: { some: "thing" },
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // block: false cwd and trace specified, return type of wait is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", {
+      block: false,
+      cwd: "somewhere",
+      logging: { trace: console.log },
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      block: false,
+      cwd: "somewhere",
+      logging: { trace: console.log },
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      block: false,
+      cwd: "somewhere",
+      logging: { trace: console.log },
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // block: false env and trace specified, return type of wait is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", {
+      env: { some: "thing" },
+      logging: { trace: console.log },
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      env: { some: "thing" },
+      logging: { trace: console.log },
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      env: { some: "thing" },
+      logging: { trace: console.log },
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // block: false env and cwd and trace specified, return type of wait is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", {
+      cwd: "somewhere",
+      env: { some: "thing" },
+      logging: { trace: console.log },
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      cwd: "somewhere",
+      env: { some: "thing" },
+      logging: { trace: console.log },
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      cwd: "somewhere",
+      env: { some: "thing" },
+      logging: { trace: console.log },
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // only block: false and failOnNonZeroStatus true, return type is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", {
+      failOnNonZeroStatus: true,
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      failOnNonZeroStatus: true,
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      failOnNonZeroStatus: true,
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // only block: false and failOnNonZeroStatus false, return type of wait is status/signal
+  {
+    type ExpectedType = {
+      wait():
+        | { status: number; signal: undefined }
+        | { status: undefined; signal: number };
+    };
+
+    const ret1 = exec("blah", {
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // only block: false and captureOutput false, return type is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", {
+      captureOutput: false,
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      captureOutput: false,
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      captureOutput: false,
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // only block: false and captureOutput true, return type of wait is stdout/stderr string
+  {
+    type ExpectedType = {
+      wait(): { stdout: string; stderr: string };
+    };
+
+    const ret1 = exec("blah", {
+      captureOutput: true,
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      captureOutput: true,
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      captureOutput: true,
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // only block: false and captureOutput "utf8", return type of wait is stdout/stderr string
+  {
+    type ExpectedType = {
+      wait(): { stdout: string; stderr: string };
+    };
+
+    const ret1 = exec("blah", {
+      captureOutput: "utf8",
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      captureOutput: "utf8",
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      captureOutput: "utf8",
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // only block: false and captureOutput "arraybuffer", return type of wait is stdout/stderr array buffer
+  {
+    type ExpectedType = {
+      wait(): { stdout: ArrayBuffer; stderr: ArrayBuffer };
+    };
+
+    const ret1 = exec("blah", {
+      captureOutput: "arraybuffer",
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      captureOutput: "arraybuffer",
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      captureOutput: "arraybuffer",
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // block: false and captureOutput and failOnNonZeroStatus default values, return type of wait is void
+  {
+    type ExpectedType = { wait(): void };
+
+    const ret1 = exec("blah", {
+      captureOutput: false,
+      failOnNonZeroStatus: true,
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      captureOutput: false,
+      failOnNonZeroStatus: true,
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      captureOutput: false,
+      failOnNonZeroStatus: true,
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // the big one (string 1)
+  {
+    type ExpectedType = {
+      wait(): { stdout: string; stderr: string } & (
+        | { status: number; signal: undefined }
+        | { status: undefined; signal: number }
+      );
+    };
+
+    const ret1 = exec("blah", {
+      captureOutput: "utf8",
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      captureOutput: "utf8",
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      captureOutput: "utf8",
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // the big one (string 2)
+  {
+    type ExpectedType = {
+      wait(): { stdout: string; stderr: string } & (
+        | { status: number; signal: undefined }
+        | { status: undefined; signal: number }
+      );
+    };
+
+    const ret1 = exec("blah", {
+      captureOutput: true,
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      captureOutput: true,
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      captureOutput: true,
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+
+  // the big one (arraybuffer)
+  {
+    type ExpectedType = {
+      wait(): { stdout: ArrayBuffer; stderr: ArrayBuffer } & (
+        | { status: number; signal: undefined }
+        | { status: undefined; signal: number }
+      );
+    };
+
+    const ret1 = exec("blah", {
+      captureOutput: "arraybuffer",
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret1, ExpectedType>>();
+
+    const ret2 = exec(["blah"], {
+      captureOutput: "arraybuffer",
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret2, ExpectedType>>();
+
+    const ret3 = exec(["blah", "blah"], {
+      captureOutput: "arraybuffer",
+      failOnNonZeroStatus: false,
+      block: false,
+    });
+    assert<Is<typeof ret3, ExpectedType>>();
+  }
+}

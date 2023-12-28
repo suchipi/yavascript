@@ -949,139 +949,46 @@ declare type BaseExecOptions = {
    * Defaults to false. true is an alias for "utf8".
    */
   captureOutput?: boolean | "utf8" | "arraybuffer";
+
+  /**
+   * If true, exec doesn't return until the process is done running. If false,
+   * exec returns an object with a "wait" method which can be used to wait for
+   * the process to be done running.
+   *
+   * Defaults to true.
+   */
+  block?: boolean;
 };
 
+type ExecWaitResult<ExecOptions extends BaseExecOptions> = ExecOptions extends
+  | { captureOutput: true | "utf8" | "arraybuffer" }
+  | { failOnNonZeroStatus: false }
+  ? (ExecOptions["captureOutput"] extends true | "utf8"
+      ? { stdout: string; stderr: string }
+      : {}) &
+      (ExecOptions["captureOutput"] extends "arraybuffer"
+        ? { stdout: ArrayBuffer; stderr: ArrayBuffer }
+        : {}) &
+      (ExecOptions["failOnNonZeroStatus"] extends false
+        ?
+            | { status: number; signal: undefined }
+            | { status: undefined; signal: number }
+        : {})
+  : void;
+
 declare interface Exec {
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
+  <
+    ExecOptions extends BaseExecOptions = {
       failOnNonZeroStatus: true;
       captureOutput: false;
+      block: true;
     }
-  ): void;
-
-  (
+  >(
     args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      failOnNonZeroStatus: false;
-      captureOutput: false;
-    }
-  ):
-    | { status: number; signal: undefined }
-    | { status: undefined; signal: number };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      failOnNonZeroStatus: true;
-      captureOutput: true;
-    }
-  ): { stdout: string; stderr: string };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      failOnNonZeroStatus: true;
-      captureOutput: "utf8";
-    }
-  ): { stdout: string; stderr: string };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      failOnNonZeroStatus: true;
-      captureOutput: "arraybuffer";
-    }
-  ): { stdout: ArrayBuffer; stderr: ArrayBuffer };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      failOnNonZeroStatus: false;
-      captureOutput: true;
-    }
-  ):
-    | { stdout: string; stderr: string; status: number; signal: undefined }
-    | { stdout: string; stderr: string; status: undefined; signal: number };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      failOnNonZeroStatus: false;
-      captureOutput: "utf-8";
-    }
-  ):
-    | { stdout: string; stderr: string; status: number; signal: undefined }
-    | { stdout: string; stderr: string; status: undefined; signal: number };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      failOnNonZeroStatus: false;
-      captureOutput: "arraybuffer";
-    }
-  ):
-    | {
-        stdout: ArrayBuffer;
-        stderr: ArrayBuffer;
-        status: number;
-        signal: undefined;
-      }
-    | {
-        stdout: ArrayBuffer;
-        stderr: ArrayBuffer;
-        status: undefined;
-        signal: number;
-      };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      failOnNonZeroStatus: true;
-    }
-  ): void;
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      failOnNonZeroStatus: false;
-    }
-  ):
-    | { status: number; signal: undefined }
-    | { status: undefined; signal: number };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      captureOutput: true;
-    }
-  ): { stdout: string; stderr: string };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      captureOutput: "utf8";
-    }
-  ): { stdout: string; stderr: string };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      captureOutput: "arraybuffer";
-    }
-  ): { stdout: ArrayBuffer; stderr: ArrayBuffer };
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options: BaseExecOptions & {
-      captureOutput: false;
-    }
-  ): void;
-
-  (
-    args: Array<string | Path | number> | string | Path,
-    options?: BaseExecOptions
-  ): void;
+    options?: ExecOptions
+  ): ExecOptions["block"] extends false
+    ? { wait(): ExecWaitResult<ExecOptions> }
+    : ExecWaitResult<ExecOptions>;
 
   /**
    * Parse the provided value into an array of command-line argument strings,

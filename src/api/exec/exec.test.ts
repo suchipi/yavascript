@@ -192,8 +192,6 @@ test("exec with captureOutput true", async () => {
       "stdout": "{
       stdout: "hi there\\n"
       stderr: ""
-      status: 0
-      signal: undefined
     }
     ",
     }
@@ -213,8 +211,6 @@ test("exec with captureOutput 'utf8'", async () => {
       "stdout": "{
       stdout: "hi there\\n"
       stderr: ""
-      status: 0
-      signal: undefined
     }
     ",
     }
@@ -236,8 +232,6 @@ test("exec with captureOutput 'arraybuffer'", async () => {
         │0x00000000│ 68 69 20 74 68 65 72 65 0A
       }
       stderr: ArrayBuffer {}
-      status: 0
-      signal: undefined
     }
     ",
     }
@@ -294,8 +288,6 @@ test("$ echo hi - string", async () => {
       "stdout": "{
       stdout: "hi\\n"
       stderr: ""
-      status: 0
-      signal: undefined
     }
     ",
     }
@@ -313,8 +305,6 @@ test("$ echo hi - array", async () => {
       "stdout": "{
       stdout: "hi\\n"
       stderr: ""
-      status: 0
-      signal: undefined
     }
     ",
     }
@@ -332,8 +322,6 @@ test("$ echo hi - array with Path", async () => {
       "stdout": "{
       stdout: "hi\\n"
       stderr: ""
-      status: 0
-      signal: undefined
     }
     ",
     }
@@ -351,8 +339,6 @@ test("$ echo hi 2 - array with number", async () => {
       "stdout": "{
       stdout: "hi 2\\n"
       stderr: ""
-      status: 0
-      signal: undefined
     }
     ",
     }
@@ -423,18 +409,128 @@ test("exec's string parsing does not parse globs", async () => {
 });
 
 test("logging", async () => {
-  const result = await evaluate(
-    `exec('echo hi', { trace: console.error }); exec(['echo', '   hi'], { trace: console.error });`
-  );
+  const result = await evaluate(`
+    exec('echo hi', { logging: { trace: console.error } });
+    exec(['echo', '   hi'], { logging: { trace: console.error } });
+  `);
   expect(result).toMatchInlineSnapshot(`
     {
       "code": 0,
       "error": false,
       "stderr": "exec: echo hi
+    ChildProcess.start: [
+      "echo"
+      "hi"
+    ]
+    ChildProcess result: [
+      "echo"
+      "hi"
+    ] -> {
+      status: 0
+      signal: undefined
+    }
     exec: echo "   hi"
+    ChildProcess.start: [
+      "echo"
+      "   hi"
+    ]
+    ChildProcess result: [
+      "echo"
+      "   hi"
+    ] -> {
+      status: 0
+      signal: undefined
+    }
     ",
       "stdout": "hi
        hi
+    ",
+    }
+  `);
+});
+
+test("non-blocking", async () => {
+  const result = await evaluate(`
+    console.log("hi 1");
+    const proc = exec("true", { block: false, logging: { trace: console.log } });
+    console.log("hi 2");
+    proc.wait();
+    console.log("hi 3");
+  `);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "exec: true
+    ",
+      "stdout": "hi 1
+    ChildProcess.start: [
+      "true"
+    ]
+    hi 2
+    ChildProcess result: [
+      "true"
+    ] -> {
+      status: 0
+      signal: undefined
+    }
+    hi 3
+    ",
+    }
+  `);
+});
+
+test("non-blocking with return value", async () => {
+  const result = await evaluate(`
+    console.log("hi 1");
+    const proc = exec("printf yeah", { block: false, captureOutput: true });
+    console.log("hi 2");
+    const result = proc.wait();
+    console.log("hi 3", result);
+  `);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "exec: printf yeah
+    ",
+      "stdout": "hi 1
+    hi 2
+    hi 3 {
+      stdout: "yeah"
+      stderr: ""
+    }
+    ",
+    }
+  `);
+});
+
+test("non-blocking with full return value", async () => {
+  const result = await evaluate(`
+    console.log("hi 1");
+    const proc = exec("printf yeah", {
+      block: false,
+      captureOutput: true,
+      failOnNonZeroStatus: false,
+    });
+    console.log("hi 2");
+    const result = proc.wait();
+    console.log("hi 3", result);
+  `);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "exec: printf yeah
+    ",
+      "stdout": "hi 1
+    hi 2
+    hi 3 {
+      stdout: "yeah"
+      stderr: ""
+      status: 0
+      signal: undefined
+    }
     ",
     }
   `);
