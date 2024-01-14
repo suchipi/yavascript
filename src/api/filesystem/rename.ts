@@ -19,8 +19,8 @@ export function rename(from: string | Path, to: string | Path): void {
     "'to' argument must be either a string or a Path object"
   );
 
-  from = Path.resolve(from).toString();
-  to = Path.resolve(to).toString();
+  from = Path.normalize(from).toString();
+  to = Path.normalize(to).toString();
 
   from = appendSlashIfWindowsDriveLetter(from);
   to = appendSlashIfWindowsDriveLetter(to);

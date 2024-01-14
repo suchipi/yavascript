@@ -22,7 +22,7 @@ function nodeModulePaths(dir: string) {
   return dirs.reverse();
 }
 
-function potentialFilesForPath(path: string) {
+function potentialFilesForPath(path: string): Array<string> {
   const potentials = [
     path,
     ...ModuleDelegate.searchExtensions.map((ext) => path + ext),
@@ -35,8 +35,10 @@ function potentialFilesForPath(path: string) {
       const pkgStr = readFile(pkgJsonPath);
       const pkg = JSON.parse(pkgStr);
       if (typeof pkg.main === "string") {
-        const pkgMainFile = Path.resolve(path, pkg.main);
-        return [pkgMainFile];
+        const pkgMainFile = Path.normalize(path, pkg.main);
+        if (pkgMainFile.isAbsolute() && isFile(pkgMainFile)) {
+          return [pkgMainFile.toString()];
+        }
       }
     }
   } catch (err) {

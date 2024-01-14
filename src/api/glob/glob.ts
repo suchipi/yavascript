@@ -11,6 +11,7 @@ import { types } from "../types";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 import { setHelpText } from "../help";
 import globHelpText from "./glob.help.md";
+import { quote } from "../strings";
 
 function compile(pattern: string, startingDir: string) {
   let prefix = "";
@@ -23,7 +24,7 @@ function compile(pattern: string, startingDir: string) {
     prefix +
     (Path.isAbsolute(pattern)
       ? pattern
-      : Path.resolve(startingDir, "./" + pattern));
+      : Path.normalize(startingDir, "./" + pattern));
 
   const regexp = minimatch.makeRe(normalized);
   if (!regexp) {
@@ -166,7 +167,14 @@ export function glob(
     throw new Error(`No such directory: ${dir} (from ${pwd()})`);
   }
 
-  const startingDir = Path.resolve(dir).toString();
+  const normDir = Path.normalize(dir);
+  if (!normDir.isAbsolute()) {
+    throw new Error(
+      `'dir' option must be an absolute path, but received: ${quote(dir)}`
+    );
+  }
+
+  const startingDir = normDir.toString();
   const allPatterns = patternsArray.map((pattern) => {
     return {
       negated: pattern.startsWith("!"),

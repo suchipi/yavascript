@@ -12,7 +12,7 @@ import commitSHAHelpText from "./git-repo_commitSHA.help.md";
 import branchNameHelpText from "./git-repo_branchName.help.md";
 import isIgnoredHelpText from "./git-repo_isIgnored.help.md";
 import isWorkingTreeDirtyHelpText from "./git-repo_isWorkingTreeDirty.help.md";
-import { is } from "../is";
+import { quote } from "../strings";
 
 export class GitRepo {
   repoDir: Path;
@@ -24,7 +24,12 @@ export class GitRepo {
       "'fromPath' argument must be either a string or a Path object"
     );
 
-    const absFromPath = new Path(fromPath).resolve();
+    const absFromPath = Path.normalize(fromPath);
+    if (!absFromPath.isAbsolute()) {
+      throw new Error(
+        `Could not resolve ${quote(fromPath)} into an absolute path`
+      );
+    }
     const currentPath = absFromPath.clone();
 
     if (exists(currentPath) && !isDir(currentPath)) {
@@ -151,7 +156,12 @@ export class GitRepo {
       "'path' argument must be either a string or a Path object"
     );
 
-    const resolvedPath = Path.resolve(pwd(), path).toString();
+    let pathObj = new Path(path);
+    if (!pathObj.isAbsolute()) {
+      pathObj = pwd().concat(pathObj);
+    }
+
+    const resolvedPath = pathObj.toString();
     const repoDir = this.repoDir.toString();
 
     if (!resolvedPath.startsWith(repoDir)) {

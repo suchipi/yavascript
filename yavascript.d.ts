@@ -355,13 +355,6 @@ declare class Path {
   static join(...inputs: Array<string | Path | Array<string | Path>>): Path;
 
   /**
-   * Turns the input path(s) into an absolute path by resolving all `.` and `..`
-   * segments, using `pwd()` as a base dir to use when resolving leading `.` or
-   * `..` segments.
-   */
-  static resolve(...inputs: Array<string | Path | Array<string | Path>>): Path;
-
-  /**
    * Concatenates the input path(s) and then resolves all non-leading `.` and
    * `..` segments.
    */
@@ -400,13 +393,6 @@ declare class Path {
    * If unspecified, `separator` defaults to `Path.OS_SEGMENT_SEPARATOR`.
    */
   static from(segments: Array<string>, separator?: string): Path;
-
-  /**
-   * Create an absolute path by `concat`ting `subpaths` onto this Path (which is
-   * presumed to be an absolute path) and then using `normalize()` on the
-   * result. If the result is not an absolute path, an error will be thrown.
-   */
-  resolve(...subpaths: Array<string | Path>): Path;
 
   /**
    * Resolve all non-leading `.` and `..` segments in this path.

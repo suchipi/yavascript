@@ -101,22 +101,6 @@ class Path {
     return new Path(...inputs);
   }
 
-  // TODO: this is almost the same as normalize. We should find a way to not need both
-  static resolve(...inputs: Array<string | Path | Array<string | Path>>): Path {
-    assert.type(
-      inputs,
-      types.arrayOf(
-        types.or(
-          types.string,
-          types.Path,
-          types.arrayOf(types.or(types.string, types.Path))
-        )
-      )
-    );
-
-    return new Path(...inputs).resolve();
-  }
-
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
   ): Path {
@@ -180,24 +164,6 @@ class Path {
     path.segments = validateSegments(segments, separator);
     path.separator = separator;
     return path;
-  }
-
-  resolve(...subpaths: Array<string | Path>): Path {
-    assert.type(subpaths, types.arrayOf(types.or(types.string, types.Path)));
-
-    const result = this.concat(subpaths).normalize();
-    if (!result.isAbsolute()) {
-      throw makeErrorWithProperties(
-        `.resolve could not create an absolute path. If you're okay with non-absolute paths, use '.concat(others).normalize()' instead of '.resolve(...others)'.`,
-        {
-          this: this,
-          subpaths,
-          result,
-        }
-      );
-    }
-
-    return result;
   }
 
   normalize(): Path {
