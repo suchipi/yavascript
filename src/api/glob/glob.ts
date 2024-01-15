@@ -113,7 +113,7 @@ export function glob(
         leadingParts.push(part);
       }
 
-      const result = Path.from(
+      const result = Path.fromRaw(
         leadingParts,
         Path.detectSeparator(absolutePattern, "/")
       ).normalize();
@@ -147,7 +147,7 @@ export function glob(
         "No initial dir for the glob search was specified, and one or more patterns specify an absolute path, but the specified absolute paths have no common parent path. Not sure where to start the glob search. Please specify a starting path with option 'dir'."
       );
     } else {
-      dir = Path.from(commonParentDirParts).normalize();
+      dir = Path.fromRaw(commonParentDirParts).normalize();
 
       trace(
         `inferred starting dir from absolute pattern(s): ${dir.toString()}`

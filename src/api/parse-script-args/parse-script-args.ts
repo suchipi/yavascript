@@ -84,7 +84,7 @@ export function parseScriptArgs(
     {
       isAbsolute: Path.isAbsolute,
       resolvePath: (...args) =>
-        Path.from(args, Path.OS_SEGMENT_SEPARATOR).normalize().toString(),
+        Path.fromRaw(args, Path.OS_SEGMENT_SEPARATOR).normalize().toString(),
       getCwd: () => pwd().toString(),
     }
   );

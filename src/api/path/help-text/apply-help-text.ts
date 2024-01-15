@@ -17,4 +17,4 @@ setHelpText.lazy(Path.splitToSegments, () =>
 setHelpText.lazy(Path.detectSeparator, () =>
   require("./Path.detectSeparator.help.md")
 );
-setHelpText.lazy(Path.from, () => require("./Path.from.help.md"));
+setHelpText.lazy(Path.fromRaw, () => require("./Path.fromRaw.help.md"));

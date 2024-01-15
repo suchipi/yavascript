@@ -3,7 +3,6 @@ import { assert } from "../assert";
 import { types } from "../types";
 import { is } from "../is";
 import { env } from "../env";
-import { makeErrorWithProperties } from "../../error-with-properties";
 import { appendSlashIfWindowsDriveLetter } from "./_win32Helpers";
 import { extname } from "../commands/extname";
 
@@ -136,8 +135,7 @@ class Path {
     this.separator = Path.detectSeparator(parts);
   }
 
-  // TODO: Should `Path.from` have similar behavior to `Array.from`? Should this be renamed?
-  static from(
+  static fromRaw(
     segments: Array<string>,
     separator: string = Path.OS_SEGMENT_SEPARATOR
   ) {
@@ -184,7 +182,7 @@ class Path {
       }
     }
 
-    return Path.from(newSegments, this.separator);
+    return Path.fromRaw(newSegments, this.separator);
   }
 
   concat(...others: Array<string | Path | Array<string | Path>>): Path {
@@ -200,7 +198,7 @@ class Path {
     );
 
     const otherSegments = new Path(others.flat(1)).segments;
-    return Path.from(this.segments.concat(otherSegments), this.separator);
+    return Path.fromRaw(this.segments.concat(otherSegments), this.separator);
   }
 
   isAbsolute(): boolean {
@@ -242,13 +240,13 @@ class Path {
 
     if (dirSegments.length === 0) {
       if (options.noLeadingDot) {
-        return Path.from(ownSegments, this.separator);
+        return Path.fromRaw(ownSegments, this.separator);
       } else {
-        return Path.from([".", ...ownSegments], this.separator);
+        return Path.fromRaw([".", ...ownSegments], this.separator);
       }
     } else {
       const dotDots = dirSegments.map((_) => "..");
-      return Path.from([...dotDots, ...ownSegments]);
+      return Path.fromRaw([...dotDots, ...ownSegments]);
     }
   }
 
@@ -341,7 +339,7 @@ class Path {
         ...replacement.segments,
         ...this.segments.slice(matchIndex + value.segments.length),
       ];
-      return Path.from(newSegments, this.separator);
+      return Path.fromRaw(newSegments, this.separator);
     }
   }
 
@@ -376,7 +374,7 @@ class Path {
     segments.pop();
     segments.push(...replacement.segments);
 
-    return Path.from(segments, this.separator);
+    return Path.fromRaw(segments, this.separator);
   }
 
   [inspect.custom](inputs: InspectCustomInputs) {

@@ -389,7 +389,7 @@ declare class Path {
    *
    * If unspecified, `separator` defaults to `Path.OS_SEGMENT_SEPARATOR`.
    */
-  static from(segments: Array<string>, separator?: string): Path;
+  static fromRaw(segments: Array<string>, separator?: string): Path;
 
   /**
    * Resolve all non-leading `.` and `..` segments in this path.
