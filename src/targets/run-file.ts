@@ -41,7 +41,7 @@ export default async function runFileTarget(
     ? fileToRun
     : fileToRun.match(/^\.{1,2}\//)
     ? engine.resolveModule(fileToRun, "./<cwd>")
-    : Path.join(pwd(), fileToRun).toString();
+    : new Path(pwd(), fileToRun).toString();
 
   absFileToRun = realpath(absFileToRun).toString();
 

@@ -11,7 +11,7 @@ function nodeModulePaths(dir: string) {
 
   const dirs: Array<string> = [];
   parts.forEach((part, index, all) => {
-    const dir = Path.join(
+    const dir = new Path(
       ...parts.slice(0, index + 1),
       "node_modules"
     ).toString();
@@ -80,7 +80,7 @@ export function installModuleHooks() {
     const parts = Path.splitToSegments(name);
     if (parts[0] === "." || parts[0] === "..") {
       const paths = potentialFilesForPath(
-        Path.join(basedir, ...parts).toString()
+        new Path(basedir, ...parts).toString()
       );
       for (const path of paths) {
         if (isFile(path)) {
@@ -90,7 +90,7 @@ export function installModuleHooks() {
     } else {
       // find node module
       for (const nmPath of nodeModulePaths(basedir)) {
-        const paths = potentialFilesForPath(Path.join(nmPath, name).toString());
+        const paths = potentialFilesForPath(new Path(nmPath, name).toString());
         for (const path of paths) {
           if (isFile(path)) {
             return os.realpath(path.toString());

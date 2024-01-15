@@ -184,31 +184,6 @@ test("Path.detectSeparator", async () => {
   `);
 });
 
-test("Path.join", async () => {
-  const script = `
-    echo(Path.join("one", "two"));
-    echo(Path.join("", "one", "two", "three", "four"));
-    echo(Path.join("bla/blah", "hi"));
-    echo(Path.join("./bla/blah", "hi\\\\there"));
-    echo(Path.join(".\\\\bla\\\\blah", "hi/there"));
-  `;
-
-  const result = await evaluate(script);
-  expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { one/two }
-    Path { /one/two/three/four }
-    Path { bla/blah/hi }
-    Path { ./bla/blah/hi/there }
-    Path { .\\bla\\blah\\hi\\there }
-    ",
-    }
-  `);
-});
-
 test("Path.normalize with absolute path with . and ..s in it", async () => {
   const result = await evaluate(`Path.normalize("/hi/./there/yeah/../yup/./")`);
   expect(result).toMatchInlineSnapshot(`

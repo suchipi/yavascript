@@ -351,9 +351,6 @@ declare class Path {
     fallback: Fallback = Path.OS_SEGMENT_SEPARATOR
   ): string | Fallback;
 
-  /** Join together one or more paths. */
-  static join(...inputs: Array<string | Path | Array<string | Path>>): Path;
-
   /**
    * Concatenates the input path(s) and then resolves all non-leading `.` and
    * `..` segments.

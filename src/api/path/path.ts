@@ -85,22 +85,6 @@ class Path {
     return fallback;
   }
 
-  // TODO: this is equivalent to the constructor. We should remove this
-  static join(...inputs: Array<string | Path | Array<string | Path>>): Path {
-    assert.type(
-      inputs,
-      types.arrayOf(
-        types.or(
-          types.string,
-          types.Path,
-          types.arrayOf(types.or(types.string, types.Path))
-        )
-      )
-    );
-
-    return new Path(...inputs);
-  }
-
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
   ): Path {

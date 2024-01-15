@@ -188,7 +188,7 @@ export function copy(
     case "file -> dir": {
       // Copy file into dir
       const filename = basename(from);
-      const target = Path.join(to, filename).toString();
+      const target = new Path(to, filename).toString();
       info(`copy: ${formatPath(from)} -> ${formatPath(target)}`);
       copyRaw(from, target, trace);
       return;
@@ -226,7 +226,7 @@ export function copy(
       const children = ls(from);
       for (const child of children) {
         const filename = basename(child);
-        const target = Path.join(to, filename);
+        const target = new Path(to, filename);
         copy(child, target, options);
       }
       return;
@@ -234,14 +234,14 @@ export function copy(
     case "dir -> dir": {
       // Create new dir within target path and copy contents into it recursively
       const dirname = basename(from);
-      const targetDir = Path.join(to, dirname);
+      const targetDir = new Path(to, dirname);
       trace("ensuring dir", targetDir);
       mkdir(targetDir, { recursive: true, logging: { info: noop } });
 
       const children = ls(from);
       for (const child of children) {
         const filename = basename(child);
-        const target = Path.join(targetDir, filename);
+        const target = new Path(targetDir, filename);
         copy(child, target, options);
       }
       return;

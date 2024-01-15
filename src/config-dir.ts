@@ -7,24 +7,24 @@ export const getConfigDir = (): Path | null => {
 
   if (os.platform === "win32") {
     if (APPDATA) {
-      return Path.join(APPDATA, "yavascript");
+      return new Path(APPDATA, "yavascript");
     } else {
       return null;
     }
   } else if (os.platform === "darwin") {
     if (HOME) {
-      return Path.join(HOME, "Library", "Application Support", "yavascript");
+      return new Path(HOME, "Library", "Application Support", "yavascript");
     } else {
       return null;
     }
   }
 
   if (XDG_CONFIG_HOME) {
-    return Path.join(XDG_CONFIG_HOME, "yavascript");
+    return new Path(XDG_CONFIG_HOME, "yavascript");
   }
 
   if (HOME) {
-    return Path.join(HOME, ".config", "yavascript");
+    return new Path(HOME, ".config", "yavascript");
   } else {
     return null;
   }

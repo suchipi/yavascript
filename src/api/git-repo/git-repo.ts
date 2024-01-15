@@ -64,7 +64,7 @@ export class GitRepo {
       this.repoDir = repoDir.clone();
     }
 
-    const dotGitDir = Path.join(this.repoDir, ".git");
+    const dotGitDir = new Path(this.repoDir, ".git");
     if (!exists(dotGitDir)) {
       throw makeErrorWithProperties(
         `The 'repoPath' provided to the GitRepo constructor doesn't appear to refer to a git repository; namely, ${JSON.stringify(

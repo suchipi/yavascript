@@ -31,7 +31,7 @@ export function ls(dir: string | Path = pwd()): Array<Path> {
     .readdir(dir)
     .filter((child) => child !== "." && child !== "..")
     .map((child) => {
-      return Path.join(parent, child);
+      return new Path(parent, child);
     });
 
   return children;
