@@ -21,9 +21,10 @@ describe("non-recursive", () => {
 
     expect(fs.existsSync(target)).toBe(false);
 
-    const result = await evaluate(`mkdir(${JSON.stringify(target)})`, {
-      cwd: rootDir(),
-    });
+    const result = await evaluate(
+      `mkdir(${JSON.stringify(target)}, { logging: { info: console.error } })`,
+      { cwd: rootDir() }
+    );
     expect(cleanResult(result)).toMatchInlineSnapshot(`
       {
         "code": 0,
