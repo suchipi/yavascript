@@ -25,6 +25,7 @@
     "babel-jest": "^29.3.1",
     "chalk": "^4.1.2",
     "clef-parse": "^0.5.0",
+    "clefairy": "^1.1.0",
     "coffeescript": "^2.7.0",
     "first-base": "^0.2.0",
     "globby": "^11.1.0",

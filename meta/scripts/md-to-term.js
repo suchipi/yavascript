@@ -4,12 +4,88 @@ process.env.FORCE_COLOR = 3;
 
 const fs = require("fs");
 const child_process = require("child_process");
+const clefairy = require("clefairy");
 const tmp = require("tmp");
 const chalk = require("chalk");
 const { marked } = require("marked");
 const wrapAnsi = require("wrap-ansi");
 
 const PRINT_WIDTH = 100;
+
+clefairy.run(
+  {
+    input: clefairy.requiredPath,
+    output: clefairy.optionalPath,
+  },
+  async function main({ input, output }) {
+    const TerminalRenderer = require("@suchipi/marked-terminal");
+
+    const highlightersProxy = new Proxy(
+      {},
+      {
+        get(target, propertyKey, receiver) {
+          if (!propertyKey) {
+            return undefined;
+          }
+
+          return function syntaxHighlight(code) {
+            const lang = propertyKey;
+            return (
+              chalk.gray("```" + lang) +
+              "\n" +
+              printWithBat(code, lang) +
+              "\n" +
+              chalk.gray("```")
+            );
+          };
+        },
+      }
+    );
+
+    const nbsp = "\xA0";
+
+    marked.setOptions({
+      renderer: new TerminalRenderer({
+        codespan: (code) =>
+          chalk.bgHex("#eeeeee").hex("#a81488")(nbsp + code + nbsp),
+        code: (code) => code,
+        blockquote: (content) => {
+          const blockquoteBorder = "┃ ";
+          const wrapped = wrapAnsi(content, PRINT_WIDTH, { hard: true });
+          const lines = wrapped.split("\n");
+          const withBorder = lines
+            .map((line) => blockquoteBorder + line)
+            .join("\n");
+          return chalk.yellow(withBorder);
+        },
+
+        paragraph: (content) => wrapAnsi(content, PRINT_WIDTH),
+        listitem: (content) => wrapAnsi(content, PRINT_WIDTH - 4),
+
+        // This returns an empty string in order to omit HTML comments, which
+        // *should* be the only HTML appearing in our markdown docs.
+        html: (content) => "",
+
+        showSectionPrefix: true,
+        syntaxHighlighters: highlightersProxy,
+        width: PRINT_WIDTH,
+        tab: 2,
+      }),
+      mangle: false,
+      headerIds: false,
+    });
+
+    const content = fs.readFileSync(input, "utf-8");
+
+    const rendered = marked(content);
+
+    if (output) {
+      fs.writeFileSync(output, rendered, "utf-8");
+    } else {
+      console.log(rendered);
+    }
+  }
+);
 
 function printWithBat(content, lang) {
   const tmpFile = tmp.fileSync();
@@ -23,80 +99,4 @@ function printWithBat(content, lang) {
     { encoding: "utf-8" }
   );
   return stdout;
-}
-
-const TerminalRenderer = require("@suchipi/marked-terminal");
-
-const inputPath = process.argv[2];
-const outputPath = process.argv[3];
-
-if (!inputPath) {
-  throw new Error(
-    "This script requires 1-2 arguments: the input file path and (optionally) the output file path."
-  );
-}
-
-const highlightersProxy = new Proxy(
-  {},
-  {
-    get(target, propertyKey, receiver) {
-      if (!propertyKey) {
-        return undefined;
-      }
-
-      return function syntaxHighlight(code) {
-        const lang = propertyKey;
-        return (
-          chalk.gray("```" + lang) +
-          "\n" +
-          printWithBat(code, lang) +
-          "\n" +
-          chalk.gray("```")
-        );
-      };
-    },
-  }
-);
-
-const nbsp = "\xA0";
-
-marked.setOptions({
-  renderer: new TerminalRenderer({
-    codespan: (code) =>
-      chalk.bgHex("#eeeeee").hex("#a81488")(nbsp + code + nbsp),
-    code: (code) => code,
-    blockquote: (content) => {
-      const blockquoteBorder = "┃ ";
-      const wrapped = wrapAnsi(content, PRINT_WIDTH, { hard: true });
-      const lines = wrapped.split("\n");
-      const withBorder = lines
-        .map((line) => blockquoteBorder + line)
-        .join("\n");
-      return chalk.yellow(withBorder);
-    },
-
-    paragraph: (content) => wrapAnsi(content, PRINT_WIDTH),
-    listitem: (content) => wrapAnsi(content, PRINT_WIDTH - 4),
-
-    // This returns an empty string in order to omit HTML comments, which
-    // *should* be the only HTML appearing in our markdown docs.
-    html: (content) => "",
-
-    showSectionPrefix: true,
-    syntaxHighlighters: highlightersProxy,
-    width: PRINT_WIDTH,
-    tab: 2,
-  }),
-  mangle: false,
-  headerIds: false,
-});
-
-const content = fs.readFileSync(inputPath, "utf-8");
-
-const rendered = marked(content);
-
-if (outputPath) {
-  fs.writeFileSync(outputPath, rendered, "utf-8");
-} else {
-  console.log(rendered);
 }
