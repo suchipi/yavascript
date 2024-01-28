@@ -11,6 +11,6 @@ for (const helpDoc of helpDocs) {
   build({
     output: outputFile,
     inputs: [inputFile],
-    rule: "render-md",
+    rule: "md-to-term",
   });
 }

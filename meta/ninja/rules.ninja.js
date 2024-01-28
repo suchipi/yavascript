@@ -1,17 +1,38 @@
 /// <reference types="@suchipi/shinobi/globals.d.ts" />
 const path = require("path");
 const { walkJsDeps } = require("../scripts/lib/walk");
+const rootDir = require("../scripts/lib/root-dir");
 
 rule("copy", {
   command: "cp -R $in $out",
   description: "COPY $out",
 });
 
-rule("render-md", {
-  command: `node meta/scripts/render-md.js $in $out`,
-  description: "RENDER-MD $out",
-  implicitInputs: walkJsDeps("meta/scripts/render-md.js"),
+rule("md-to-term", {
+  command: `node meta/scripts/md-to-term.js $in $out`,
+  description: "MD-TO-TERM $out",
+  implicitInputs: walkJsDeps("meta/scripts/md-to-term.js"),
 });
+
+// website stuff
+{
+  rule("md-to-html", {
+    command: `npx --no-install mark-applier --raw --input $in --output $out`,
+    description: "MD-TO-HTML $out",
+    implicitInputs: [glob("node_modules/mark-applier/**/*")],
+  });
+
+  rule("wrap-html", {
+    command: `node meta/scripts/wrap-html.js $in $out`,
+    description: "WRAP-HTML $out",
+  });
+
+  rule("generate-css", {
+    command: `npx --no-install mark-applier --css --output $out`,
+    description: "GENERATE-CSS $out",
+    implicitInputs: [glob("node_modules/mark-applier/**/*")],
+  });
+}
 
 // NOTE: must define YAVASCRIPT_ARCH
 rule("kame", {
