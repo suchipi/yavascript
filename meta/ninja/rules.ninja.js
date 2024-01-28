@@ -9,7 +9,7 @@ rule("copy", {
 });
 
 rule("md-to-term", {
-  command: `node meta/scripts/md-to-term.js $in $out`,
+  command: `node meta/scripts/md-to-term.js --input $in --output $out`,
   description: "MD-TO-TERM $out",
   implicitInputs: walkJsDeps("meta/scripts/md-to-term.js"),
 });
@@ -23,7 +23,7 @@ rule("md-to-term", {
   });
 
   rule("wrap-html", {
-    command: `node meta/scripts/wrap-html.js $in $out`,
+    command: `node meta/scripts/wrap-html.js --input $in --output $out`,
     description: "WRAP-HTML $out",
   });
 

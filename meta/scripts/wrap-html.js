@@ -1,33 +1,33 @@
 #!/usr/bin/env node
 const fs = require("fs");
+const clefairy = require("clefairy");
 const Handlebars = require("handlebars");
 const rootDir = require("./lib/root-dir");
 
-const inputPath = process.argv[2];
-const outputPath = process.argv[3];
+clefairy.run(
+  {
+    input: clefairy.requiredPath,
+    output: clefairy.optionalPath,
+  },
+  async function main({ input, output }) {
+    const tmplContent = fs.readFileSync(
+      rootDir("meta/website/layout.tmpl.html"),
+      "utf-8"
+    );
+    const tmplFunction = Handlebars.compile(tmplContent);
 
-if (!inputPath) {
-  throw new Error(
-    "This script requires 1-2 arguments: the input file path and (optionally) the output file path."
-  );
-}
+    const inputContent = fs.readFileSync(input, "utf-8");
 
-const tmplContent = fs.readFileSync(
-  rootDir("meta/website/layout.tmpl.html"),
-  "utf-8"
+    const rendered = tmplFunction({
+      title: "placeholder title",
+      navContent: "placeholder nav content",
+      mainContent: inputContent,
+    });
+
+    if (output) {
+      fs.writeFileSync(output, rendered, "utf-8");
+    } else {
+      console.log(rendered);
+    }
+  }
 );
-const tmplFunction = Handlebars.compile(tmplContent);
-
-const inputContent = fs.readFileSync(inputPath, "utf-8");
-
-const rendered = tmplFunction({
-  title: "placeholder title",
-  navContent: "placeholder nav content",
-  mainContent: inputContent,
-});
-
-if (outputPath) {
-  fs.writeFileSync(outputPath, rendered, "utf-8");
-} else {
-  console.log(rendered);
-}
