@@ -28,7 +28,7 @@ TARGETS=(
 for TARGET in "${TARGETS[@]}"; do
   mkdir -p "./$TARGET/yavascript-$VERSION"
 
-  cp "$ROOTDIR"/bin/"$TARGET"/* "./$TARGET/yavascript-$VERSION"
+  cp "$ROOTDIR"/dist/bin/"$TARGET"/* "./$TARGET/yavascript-$VERSION"
   cp "$ROOTDIR"/dist/yavascript.d.ts "./$TARGET/yavascript-$VERSION/"
 
   pushd "$TARGET" > /dev/null
