@@ -1,5 +1,5 @@
 - build everything (meta/build.sh) with env var `YAVASCRIPT_VERSION` set to whatever (eg 0.0.8)
-  - this will update the files in bin/
+  - this will update the files in dist/bin/
 - run meta/scripts/set-package-version.js to set the package.json version to the same version string
 - run npm publish in the meta/npm dir
 - commit the changes and push to github
