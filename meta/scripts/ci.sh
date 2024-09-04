@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 # install ninja
 sudo apt-get install -y ninja-build bat
@@ -13,8 +13,6 @@ source "$NVM_DIR/nvm.sh"
 
 nvm install
 nvm use
-
-set -x
 
 env SKIP_FNM_USE=1 meta/build.sh
 npm run typecheck
