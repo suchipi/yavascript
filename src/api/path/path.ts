@@ -216,7 +216,7 @@ class Path {
 
   clone(): this {
     // @ts-ignore could be instantiated with different subtype
-    return (this.constructor as typeof Path).from(
+    return (this.constructor as typeof Path).fromRaw(
       this.segments,
       this.separator
     );
