@@ -1,8 +1,43 @@
 interface StringConstructor {
-  // From https://www.npmjs.com/package/string-dedent
-  dedent(str: string): string;
-  dedent(str: TemplateStringsArray, ...substitutions: unknown[]): string;
-  dedent<A extends unknown[], R, T>(
-    tag: (this: T, strings: TemplateStringsArray, ...substitutions: A) => R
-  ): (this: T, strings: TemplateStringsArray, ...substitutions: A) => R;
+  /**
+   * Remove leading minimum indentation from the string.
+   * The first line of the string must be empty.
+   *
+   * https://github.com/tc39/proposal-string-dedent
+   */
+  dedent: {
+    /**
+     * Remove leading minimum indentation from the string.
+     * The first line of the string must be empty.
+     *
+     * https://github.com/tc39/proposal-string-dedent
+     */
+    (input: string): string;
+
+    /**
+     * Remove leading minimum indentation from the template literal.
+     * The first line of the string must be empty.
+     *
+     * https://github.com/tc39/proposal-string-dedent
+     */
+    (
+      strings: readonly string[] | ArrayLike<string>,
+      ...substitutions: unknown[]
+    ): string;
+
+    /**
+     * Wrap another template tag function such that tagged literals
+     * become dedented before being passed to the wrapped function.
+     *
+     * https://www.npmjs.com/package/string-dedent#usage
+     */
+    <
+      Func extends (
+        strings: readonly string[] | ArrayLike<string>,
+        ...substitutions: any[]
+      ) => string
+    >(
+      input: Func
+    ): Func;
+  };
 }

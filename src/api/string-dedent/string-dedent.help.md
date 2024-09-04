@@ -6,9 +6,21 @@ The function `String.dedent` can be used to remove leading indentation from a st
 
 ```ts
 // Defined in yavascript/src/api/string-dedent
-declare function String.dedent(str: string): string;
-declare function String.dedent(str: TemplateStringsArray, ...substitutions: unknown[]): string;
-declare function String.dedent<A extends unknown[], R, T>(
-  tag: (this: T, strings: TemplateStringsArray, ...substitutions: A) => R
-): (this: T, strings: TemplateStringsArray, ...substitutions: A) => R;
+interface StringConstructor {
+  dedent: {
+    (input: string): string;
+    (
+      strings: readonly string[] | ArrayLike<string>,
+      ...substitutions: unknown[]
+    ): string;
+    <
+      Func extends (
+        strings: readonly string[] | ArrayLike<string>,
+        ...substitutions: any[]
+      ) => string
+    >(
+      input: Func
+    ): Func;
+  };
+}
 ```
