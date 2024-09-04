@@ -9,7 +9,7 @@ ln -s /usr/bin/batcat /usr/local/bin/bat
 
 # ugh, the gh actions image claims to have nvm, but they don't do this for you
 export NVM_DIR="$HOME/.nvm"
-source "$NVM_DIR/nvm.sh"
+source "$NVM_DIR/nvm.sh" --no-use
 
 nvm install
 nvm use
