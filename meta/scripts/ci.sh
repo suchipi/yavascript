@@ -7,9 +7,12 @@ sudo apt-get install -y ninja-build bat
 # ubuntu package names bat binary "batcat" instead of bat...
 ln -s /usr/bin/batcat /usr/local/bin/bat
 
-# ugh, the gh actions image claims to have nvm, but they don't do this for you
 export NVM_DIR="$HOME/.nvm"
-source "$NVM_DIR/nvm.sh" --no-use
+# this is really chatty...
+echo "+ source "$NVM_DIR/nvm.sh" --no-use"
+set +x
+  source "$NVM_DIR/nvm.sh" --no-use
+set -x
 
 nvm install
 nvm use
