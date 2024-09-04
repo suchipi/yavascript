@@ -4,8 +4,13 @@ import { makeGetterPropertyDescriptorMap } from "../lazy-load";
 
 // TODO: query cpu count, max memory, free memory?
 
-import { grepFile, grepString, installToStringProto } from "./grep";
+import {
+  grepFile,
+  grepString,
+  installToStringProto as installGrepToStringProto,
+} from "./grep";
 import { install as installRegexpEscape } from "./regexp-escape";
+import { install as installStringDedent } from "./string-dedent";
 import { installModuleHooks } from "../module-hooks";
 import { installNodeCompat } from "./node-compat/node-compat";
 import { patchRequire } from "../cjs-interop";
@@ -213,8 +218,9 @@ export default function installApi(target: typeof globalThis) {
     grepString,
   });
 
-  installToStringProto(target.String.prototype);
+  installGrepToStringProto(target.String.prototype);
   installRegexpEscape(target.RegExp);
+  installStringDedent(target.String);
   installModuleHooks();
   installNodeCompat(target);
   patchRequire(target);

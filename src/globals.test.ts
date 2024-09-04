@@ -85,14 +85,14 @@ test("globals", async () => {
     [x] BigDecimal: function
     [x] Operators: function
     [x] inspect: function
-    [ ] __qjsbootstrap_offset: number
-    [x] console: object
     [x] print: function
+    [x] console: object
+    [ ] setInterval: function
+    [ ] clearInterval: function
+    [ ] __qjsbootstrap_offset: number
     [x] scriptArgs: object
     [ ] setTimeout: function
     [ ] clearTimeout: function
-    [ ] setInterval: function
-    [ ] clearInterval: function
     [ ] require: function
     [ ] std: object
     [ ] os: object
