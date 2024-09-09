@@ -20,7 +20,10 @@ exports.resolve = (id, fromFilePath) => {
     // these but don't actually need them)
     case "fs":
     case "path":
+    case "node:path":
+    case "node:module":
     case "vm":
+    case "node:vm":
     case "stream": {
       return stubPath;
     }

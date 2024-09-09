@@ -92,7 +92,7 @@ export function parseScriptArgs(
   const optionsClone = { ...options };
   for (const key of pathKeys) {
     if (Object.hasOwn(optionsClone, key)) {
-      optionsClone[key] = new Path(optionsClone[key]);
+      optionsClone[key] = new Path(optionsClone[key].toString());
     }
   }
 

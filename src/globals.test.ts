@@ -94,6 +94,7 @@ test("globals", async () => {
     [ ] setTimeout: function
     [ ] clearTimeout: function
     [ ] require: function
+    [ ] __kame_instances__: object
     [ ] std: object
     [ ] os: object
     [x] basename: function

@@ -36,7 +36,7 @@ test("assert.type - global constructor, fail", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Expected value of type string, but received 2
+      "stderr": "TypeError: Expected value of type string, but received 2
       at somewhere
     ",
       "stdout": "",
@@ -52,7 +52,7 @@ test("assert.type - types.namespace, fail", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Expected value of type string, but received 2
+      "stderr": "TypeError: Expected value of type string, but received 2
       at somewhere
     ",
       "stdout": "",
@@ -86,7 +86,7 @@ test("assert.type - custom class, fail", async () => {
     {
       "code": 1,
       "error": false,
-      "stderr": "Error: Expected value of type instanceOf("Something"), but received null
+      "stderr": "TypeError: Expected value of type instanceOf(Something), but received null
       at somewhere
     ",
       "stdout": "",

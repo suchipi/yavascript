@@ -125,6 +125,7 @@ const compilers = {
     const compiled = getCivet().compile(code, {
       js: true,
       filename: options?.filename,
+      sync: true,
     });
     return compilers.jsx(compiled, options);
   },
