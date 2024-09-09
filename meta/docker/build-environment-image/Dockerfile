@@ -1,4 +1,4 @@
-FROM node:18.12.1-bullseye
+FROM node:22.8.0-bookworm
 
 RUN apt-get update && apt-get -y install ninja-build bat
 
