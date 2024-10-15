@@ -15,7 +15,7 @@ export const CSV = {
       const messageParts = [
         "CSV parse failed:",
         ...errors.map((error) => {
-          return `Row ${error.row + 1}: ${error.code}: ${error.message}`;
+          return `Row ${(error.row ?? 0) + 1}: ${error.code}: ${error.message}`;
         }),
       ];
 

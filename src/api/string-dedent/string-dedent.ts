@@ -5,5 +5,6 @@ import stringDedentHelpText from "./string-dedent.help.md";
 setHelpText(dedent, stringDedentHelpText);
 
 export function install(stringConstructor: StringConstructor) {
+  // @ts-ignore
   stringConstructor.dedent = dedent;
 }
