@@ -5,8 +5,8 @@ set -euo pipefail
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 cd "$SCRIPT_DIR"
 
-cp ../../bin/x86_64-unknown-linux-static/yavascript ./yavascript-x86_64
-cp ../../bin/aarch64-unknown-linux-static/yavascript ./yavascript-aarch64
+cp ../../dist/bin/x86_64-unknown-linux-static/yavascript ./yavascript-x86_64
+cp ../../dist/bin/aarch64-unknown-linux-static/yavascript ./yavascript-aarch64
 
 mkdir -p empty
 
