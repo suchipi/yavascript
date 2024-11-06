@@ -1,27 +1,16 @@
 /// <reference types="@suchipi/shinobi/globals.d.ts" />
 
-const index_arm64_bin = build({
+const index_bin = build({
   rule: "to-bytecode",
-  inputs: [builddir("bundles/index-arm64.js")],
-  output: builddir("bytecode/index-arm64.bin"),
+  inputs: [builddir("bundles/index.js")],
+  output: builddir("bytecode/index.bin"),
 });
 
-const index_x86_64_bin = build({
-  rule: "to-bytecode",
-  inputs: [builddir("bundles/index-x86_64.js")],
-  output: builddir("bytecode/index-x86_64.bin"),
+build({
+  rule: "binary-to-c-array",
+  inputs: [index_bin],
+  ruleVariables: {
+    NAME: "yavascript_bytecode",
+  },
+  output: builddir("bytecode/index.c"),
 });
-
-if (process.arch === "arm64") {
-  build({
-    rule: "copy",
-    inputs: [index_arm64_bin],
-    output: builddir("bytecode/index.bin"),
-  });
-} else {
-  build({
-    rule: "copy",
-    inputs: [index_x86_64_bin],
-    output: builddir("bytecode/index.bin"),
-  });
-}

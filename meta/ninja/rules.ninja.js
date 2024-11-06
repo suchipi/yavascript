@@ -62,6 +62,20 @@ rule("kame", {
   });
 }
 
+// NOTE: must define NAME
+rule("binary-to-c-array", {
+  command: `xxd -i -n $NAME $in > $out`,
+  description: "BIN2C $out",
+});
+
+// cc rule
+{
+  rule("cc", {
+    command: `cc -Inode_modules/@suchipi/quickjs/build/aarch64-apple-darwin/include $in -o $out`,
+    description: "CC $out",
+  });
+}
+
 // NOTE: must define TARGET and BASE
 rule("make-program", {
   command: [

@@ -17,6 +17,7 @@
 - [x] make string color/style functions accept Path objects (convert them to strings internally)
 - [ ] InteractivePrompt: screen contents can get messed up when hitting backspace repeatedly
 - [ ] InteractivePrompt: spawning one InteractivePrompt from within another results in both running at once. Problem? idk, but it makes it hard to use InteractivePrompt from a repl
+- [ ] IMPORTANT BLOCKS RELEASE: need to cross-compile stuff with docker
 - [ ] support source maps for compiled languages
 - [ ] pager for long help text (when using repl)
 - [-] create solution for tracing `exec` and friends without it being crazy chatty. maybe log levels

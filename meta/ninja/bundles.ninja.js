@@ -3,63 +3,34 @@ const { walkJsDeps } = require("../scripts/lib/walk");
 
 const moduleFilenames = walkJsDeps("src/index.ts", { useKameResolver: true });
 
-const index_arm64_js = build({
-  rule: "kame",
-  inputs: "src/index.ts",
-  implicitInputs: moduleFilenames,
-  output: builddir("bundles/index-arm64.js"),
-  ruleVariables: {
-    YAVASCRIPT_ARCH: "arm64",
-  },
-});
-
-build({
-  rule: "kame",
-  inputs: "src/primordials.ts",
-  implicitInputs: moduleFilenames,
-  output: builddir("bundles/primordials-arm64.js"),
-  ruleVariables: {
-    YAVASCRIPT_ARCH: "arm64",
-  },
-});
-
-const index_x86_64_js = build({
-  rule: "kame",
-  inputs: "src/index.ts",
-  implicitInputs: moduleFilenames,
-  output: builddir("bundles/index-x86_64.js"),
-  ruleVariables: {
-    YAVASCRIPT_ARCH: "x86_64",
-  },
-});
-
-build({
-  rule: "kame",
-  inputs: "src/primordials.ts",
-  implicitInputs: moduleFilenames,
-  output: builddir("bundles/primordials-x86_64.js"),
-  ruleVariables: {
-    YAVASCRIPT_ARCH: "x86_64",
-  },
-});
-
-if (process.arch === "arm64") {
-  build({
-    rule: "copy",
-    inputs: [index_arm64_js],
-    output: builddir("bundles/index.js"),
-  });
-} else {
-  build({
-    rule: "copy",
-    inputs: [index_x86_64_js],
-    output: builddir("bundles/index.js"),
-  });
+let ysArch;
+switch (process.arch) {
+  case "arm64": {
+    ysArch = "arm64";
+    break;
+  }
+  case "x64": {
+    ysArch = "x86_64";
+    break;
+  }
+  default: {
+    throw new Error("Unhandled architecture: " + process.arch);
+  }
 }
+
+const index_js = build({
+  rule: "kame",
+  inputs: "src/index.ts",
+  implicitInputs: moduleFilenames,
+  output: builddir("bundles/index.js"),
+  ruleVariables: {
+    YAVASCRIPT_ARCH: ysArch,
+  },
+});
 
 // so you can click-to-position in stack traces
 build({
   rule: "copy",
-  inputs: [builddir("bundles/index.js")],
+  inputs: [index_js],
   output: "yavascript-internal.js",
 });
