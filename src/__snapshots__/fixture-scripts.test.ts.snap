@@ -69,21 +69,21 @@ exports[`importing-from-npm-protocol.js 1`] = `
   Null prototype
   Sealed
   
-  Component: Function "b" {}
+  Component: Function "x" {}
   Fragment: Function "k" {}
-  cloneElement: Function "E" {}
-  createContext: Function "G" {}
-  createElement: Function "_" {}
-  createRef: Function "m" {}
+  cloneElement: Function "G" {}
+  createContext: Function "J" {}
+  createElement: Function "g" {}
+  createRef: Function "b" {}
   default: null
   h: -> {root}.createElement
-  hydrate: Function "D" {}
+  hydrate: Function "E" {}
   isValidElement: Function "t" {}
   options: {
     __e: Function "__e" {}
   }
-  render: Function "B" {}
-  toChildArray: Function "H" {}
+  render: Function "D" {}
+  toChildArray: Function "L" {}
 }
 ",
 }
