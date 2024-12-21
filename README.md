@@ -47,33 +47,74 @@ You'll also find analogues to familiar CLI tools, like:
 
 ...and more.
 
-To view the APIs, consult the file yavascript.d.ts which was distributed with
-this program, or online at https://github.com/suchipi/yavascript/blob/main/yavascript.d.ts.
-This file contains TypeScript type definitions which can be given to your IDE
-to assist you when writing scripts, even if you aren't writing your scripts in TypeScript.
+To view the APIs, read them online at https://github.com/suchipi/yavascript/blob/main/yavascript.d.ts,
+or, if you already have yavascript installed, run `yavascript --print-types` to
+print the yavascript.d.ts file for your release.
+This file contains documented TypeScript type definitions which can be given to
+your IDE to assist you when writing scripts, even if you aren't writing your
+scripts in TypeScript.
+
+You can also use the `help()` function in YavaScript's interactive repl to read formatted markdown documentation offline in your terminal.
 
 Here's an example of a script using YavaScript:
 
 ```js
 #!/usr/bin/env yavascript
 
-// This comment is optional; it tells VS Code to load the specified TypeScript definitions.
+// This <reference> comment is optional; it tells VS Code to load the
+// specified TypeScript definitions, which it can use for Intellisense,
+// linting, and autocomplete, even if you aren't using TypeScript.
 /// <reference path="./yavascript.d.ts" />
 
-let isWorkingTreeDirty;
-try {
-  exec(`git diff --quiet`);
-  isWorkingTreeDirty = false;
-} catch (error) {
-  isWorkingTreeDirty = true;
+// Searches upwards from this file to find the root of the Git repository
+const repoRoot = GitRepo.findRoot(__dirname);
+// or, one could use hardcoded location relative to this file:
+// const repoRoot = new Path(__dirname, "../..");
+
+cd(repoRoot);
+
+// Check if there are changes to the repo
+const diffResult = exec("git diff --quiet", { failOnNonZeroStatus: false });
+const isWorkingTreeDirty = diffResult.status !== 0;
+
+// If there are, check whether .js files in lib/ have a matching .d.ts file.
+if (isWorkingTreeDirty) {
+  const jsFiles = glob("lib/**/*.js");
+  for (const filePath of jsFiles) {
+    const dtsFilePath = filePath.replaceLast(
+      filePath.basename().replace(/\.js$/, ".d.ts")
+    );
+    if (!exists(dtsFilePath)) {
+      const displayPath = quote(dtsFilePath.relativeTo(repoRoot));
+      let message = `Expected ${displayPath} to exist, but it didn't. Please add .d.ts files for all .js files under 'lib/'.`;
+
+      // ANSI escape sequence helpers
+      message = bold(yellow(message));
+
+      // Writes to stderr
+      console.error(messsage);
+    }
+  }
 }
 
+// Prepare some info for a deployment automation tool...
 const branchName = $(`git rev-parse --abbrev-ref HEAD`).stdout.trim();
-
 const gitInfo = { branchName, isWorkingTreeDirty };
+
+// `echo` and `print` are aliases for `console.log`, for discoverability. All
+// three support any number of arguments, which don't have to be strings.
 echo(gitInfo);
 
+// YAML.stringify works like JSON.stringify. We also have CSV and TOML!
 writeFile("git-info.yml", YAML.stringify(gitInfo));
+
+// Need something lower-level? Use builtin POSIX APIs from QuickJS.
+import * as std from "quickjs:std";
+import * as os from "quickjs:os";
+
+console.log(`Finished at ${std.strftime(64, "%Y-%m-%dT%H:%M:%S", Date.now())}`);
+console.log(os.lstat(".gitignore").size);
+console.log("Is tty?", os.isatty(std.in));
 ```
 
 YavaScript is powered by a fork of the QuickJS JavaScript Engine, originally
@@ -83,13 +124,23 @@ supporting the ES2020 specification.
 - Original QuickJS engine: https://bellard.org/quickjs/
 - The fork we use: https://github.com/suchipi/quickjs/
 
+## Installation
+
+You can find the binary for your platform on [the releases page](https://github.com/suchipi/yavascript/releases). As YavaScript is fully self-contained in one small file, it's trivial to install and uninstall; simply place it somewhere specified in your [`PATH`](https://superuser.com/a/284351). Supported platforms are:
+
+- macOS 10.16 or higher, either Intel or Apple Silicon (M1, M2, etc)
+- Linux (gnu), either aarch64 or x86_64
+- Linux (musl), either aarch64 or x86_64
+- Linux (with musl libc statically linked into the binary), either aarch64 or x86_64
+- Windows (MinGW), x86_64
+
 ## Compiling
 
 You'll need to install these prerequisites:
 
 - [node.js](https://nodejs.org/en)
 - [ninja](https://ninja-build.org/)
-- [bat](https://github.com/sharkdp/bat)
+- [bat](https://github.com/sharkdp/bat) (for rendering code blocks in docs)
 
 Then run `meta/build.sh` to build binaries for the current platform (will be output in `dist`), or `meta/build-all.sh` to build binaries for all platforms (will be output in `bin`).
 
