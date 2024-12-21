@@ -47,14 +47,23 @@ You'll also find analogues to familiar CLI tools, like:
 
 ...and more.
 
-To view the APIs, read them online at https://github.com/suchipi/yavascript/blob/main/yavascript.d.ts,
-or, if you already have yavascript installed, run `yavascript --print-types` to
-print the yavascript.d.ts file for your release.
-This file contains documented TypeScript type definitions which can be given to
-your IDE to assist you when writing scripts, even if you aren't writing your
-scripts in TypeScript.
+## APIs
+
+To view the APIs online:
+
+- An overview is available [here](./src/api/help/help.index.help.md)
+- more details can be found [in the `.d.ts` file](./yavascript.d.ts)
+
+Or, if you already have YavaScript installed:
+
+- Run `help()` from the REPL
+- Use `yavascript --print-types` to obtain the `.d.ts` file for your release
+
+The `.d.ts` file contains documented TypeScript type definitions which can be given to your IDE to assist you when writing scripts, even if you aren't writing your scripts in TypeScript.
 
 You can also use the `help()` function in YavaScript's interactive repl to read formatted markdown documentation offline in your terminal.
+
+## Example
 
 Here's an example of a script using YavaScript:
 
@@ -117,6 +126,8 @@ console.log(os.lstat(".gitignore").size);
 console.log("Is tty?", os.isatty(std.in));
 ```
 
+## QuickJS
+
 YavaScript is powered by a fork of the QuickJS JavaScript Engine, originally
 written by Fabrice Bellard. QuickJS is a small, fast JavaScript engine
 supporting the ES2020 specification.
@@ -138,11 +149,15 @@ You can find the binary for your platform on [the releases page](https://github.
 
 You'll need to install these prerequisites:
 
-- [node.js](https://nodejs.org/en)
-- [ninja](https://ninja-build.org/)
-- [bat](https://github.com/sharkdp/bat) (for rendering code blocks in docs)
+- [Node.js](https://nodejs.org/en)
+- [Ninja](https://ninja-build.org/)
+- [bat](https://github.com/sharkdp/bat)
 
-Then run `meta/build.sh` to build binaries for the current platform (will be output in `dist`), or `meta/build-all.sh` to build binaries for all platforms (will be output in `bin`).
+Then run `meta/build.sh`. The compiled output will be in the `dist` folder:
+
+- `dist/yavascript`: The binary for your platform
+- `dist/bin/*`: Binaries for all supported platforms
+- Other files in `dist/`: Intermediate build artifacts
 
 ### Building the Docker image
 

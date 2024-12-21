@@ -30,3 +30,4 @@
 - [ ] fix chmod so it has add/remove semantics and respects existing perms
 - [ ] yavascript globals aren't set up in workers
 - [ ] add `.on("exit")` support to node-compat `process` shim
+- [ ] make assert have nice messages when one isn't specified

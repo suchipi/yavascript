@@ -5,6 +5,7 @@ import helpHelpText from "./help.help.md";
 import getHelpTextHelpText from "./help.getHelpText.help.md";
 import setHelpTextHelpText from "./help.setHelpText.help.md";
 import setHelpTextLazyHelpText from "./help.setHelpText.lazy.help.md";
+import helpIndexHelpText from "./help.index.help.md";
 
 const helpTextMap = new WeakMap<any, string>();
 const primitiveHelpTextMap = new Map<any, string>();
@@ -78,7 +79,7 @@ export function getHelpText(value: any): string | null {
 
 function helpInternal(value?: any): string {
   if (arguments.length === 0) {
-    return helpHelpText.trimEnd();
+    return helpIndexHelpText.trimEnd();
   } else {
     const registered = getHelpText(value);
 
