@@ -29,3 +29,4 @@
 - [ ] repl sometimes needs you to press Ctrl+C more times than it should
 - [ ] fix chmod so it has add/remove semantics and respects existing perms
 - [ ] yavascript globals aren't set up in workers
+- [ ] add `.on("exit")` support to node-compat `process` shim

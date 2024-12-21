@@ -53,7 +53,6 @@ export function parseScriptArgs(
       }
 
       case Path: {
-        // TODO: Path hint should return Path object in flags object instead of string
         hintsForClef[key] = clefParse.Path;
         pathKeys.add(key);
         break;

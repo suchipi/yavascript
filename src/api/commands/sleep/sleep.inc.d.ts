@@ -1,13 +1,13 @@
 /**
  * Blocks the current thread for at least the specified number of milliseconds,
- * or maybe a tiny bit longer.
+ * but maybe a tiny bit longer.
  *
  * alias for `sleep.sync`.
  */
 declare var sleep: {
   /**
    * Blocks the current thread for at least the specified number of milliseconds,
-   * or maybe a tiny bit longer.
+   * but maybe a tiny bit longer.
    *
    * alias for `sleep.sync`.
    *
@@ -17,7 +17,7 @@ declare var sleep: {
 
   /**
    * Blocks the current thread for at least the specified number of milliseconds,
-   * or maybe a tiny bit longer.
+   * but maybe a tiny bit longer.
    *
    * @param milliseconds - The number of milliseconds to block for.
    */

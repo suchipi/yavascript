@@ -13,3 +13,5 @@ declare function extname(
   options?: { full?: boolean }
 ): string;
 ```
+
+See also `help(basename)`.

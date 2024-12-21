@@ -1,8 +1,8 @@
 # `sleep` - Wait the specified number of milliseconds
 
-`sleep` and `sleep.sync` block the current thread for at least the specified number of milliseconds, or maybe a tiny bit longer.
+`sleep` and `sleep.sync` block the current thread for at least the specified number of milliseconds, but maybe a tiny bit longer.
 
-`sleep.async` returns a Promise which resolves in at least the specified number of milliseconds, or maybe a tiny bit longer.
+`sleep.async` returns a Promise which resolves in at least the specified number of milliseconds, but maybe a tiny bit longer.
 
 `sleep` and `sleep.sync` block the current thread. `sleep.async` doesn't block the current thread.
 

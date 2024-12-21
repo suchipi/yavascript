@@ -11,13 +11,6 @@ export function pwd(): Path {
 const initialPwd = pwd();
 Object.freeze(initialPwd);
 Object.freeze(initialPwd.segments);
-Object.defineProperty(initialPwd, "separator", {
-  configurable: false,
-  writable: false,
-  enumerable: true,
-
-  value: initialPwd.separator,
-});
 
 Object.defineProperty(pwd, "initial", {
   configurable: false,
