@@ -37,13 +37,20 @@ export type EvaluateResult = {
   error: boolean;
 };
 
+export async function runYavascript(
+  args: Array<string>,
+  options: SpawnOptions = {}
+) {
+  const runContext = spawn(binaryPath, args, options);
+  await runContext.completion;
+  return runContext.result;
+}
+
 export async function evaluate(
   code: string,
   options: SpawnOptions = {}
 ): Promise<EvaluateResult> {
-  const runContext = spawn(binaryPath, ["-e", code], options);
-  await runContext.completion;
-  return runContext.result;
+  return runYavascript(["-e", code], options);
 }
 
 export function inspect(value: any): string {

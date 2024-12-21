@@ -10,6 +10,7 @@
 - [x] add something to make "this path but with a different extension" and "this path but swap the basedir from this to this" easier
 - [ ] finish all the help docs!!!
 - [ ] spicy: override types for string-receiving methods to accept anything that can be converted to a string (if quickjs converts it)
+  - this is to make Paths easier to work with
 - [x] add frozen "initial pwd" somewhere
 - [x] expose "makeErrorWithProperties" somehow. new error constructor? overload base error constructor?
   - changed base Error constructor in QuickJS
@@ -25,3 +26,6 @@
 - [ ] in windows powershell, numbers printed in the repl (ie from running `2 + 2`) aren't visible
   - works fine in windows Terminal git bash though
 - [ ] in windows terminal git bash, in repl, pressing up for history doesn't work past the first item
+- [ ] repl sometimes needs you to press Ctrl+C more times than it should
+- [ ] fix chmod so it has add/remove semantics and respects existing perms
+- [ ] yavascript globals aren't set up in workers
