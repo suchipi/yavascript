@@ -10,3 +10,5 @@ Provides the same functionality as the shell builtin of the same name.
 // Defined in yavascript/src/api/commands/echo
 declare function echo(...args: Array<any>): void;
 ```
+
+`echo` is functionally identical to `console.log`.

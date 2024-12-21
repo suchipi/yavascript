@@ -10,4 +10,4 @@ Accepts two arguments: `value`, and (optionally) `message`.
 declare function assert(value: any, message?: string): void;
 ```
 
-See also `help(assert.type)`.
+`assert` also has a property on it called `type`. See `help(assert.type)` for more info.

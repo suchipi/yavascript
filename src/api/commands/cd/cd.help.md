@@ -8,3 +8,5 @@ Provides the same functionality as the shell builtin of the same name.
 // Defined in yavascript/src/api/commands/cd
 declare function cd(path?: string | Path): void;
 ```
+
+See also `help(pwd)`.

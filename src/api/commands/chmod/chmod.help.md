@@ -10,6 +10,8 @@ The `permissions` argument can be either:
 - a string (which will be interpreted as an octal number, eg `'777'`),
 - or an object (see info below).
 
+> NOTE: At this time there are no "add"/"remove" semantics; the existing permissions will be completely overwritten with your specified permissions. This will be changed later as this is not intuitive.
+
 ```ts
 // Defined in yavascript/src/api/commands/chmod
 declare function chmod(
@@ -19,6 +21,34 @@ declare function chmod(
     | Record<ChmodPermissionsWho, ChmodPermissionsWhat>,
   path: string | Path
 ): void;
+
+declare type ChmodPermissionsWho =
+  | "user"
+  | "group"
+  | "others"
+  | "all"
+  | "u"
+  | "g"
+  | "o"
+  | "a"
+  | "ug"
+  | "go"
+  | "uo";
+
+declare type ChmodPermissionsWhat =
+  | "read"
+  | "write"
+  | "execute"
+  | "readwrite"
+  | "none"
+  | "full"
+  | "r"
+  | "w"
+  | "x"
+  | "rw"
+  | "rx"
+  | "wx"
+  | "rwx";
 ```
 
 When permissions is an object, each of the object's own properties' keys must be one of these strings:
