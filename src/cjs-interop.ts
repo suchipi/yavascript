@@ -39,6 +39,11 @@ export function patchRequire(theGlobal: typeof globalThis) {
       // treat it like ESM.
     }
 
+    // skypack creates named exports like these
+    if (hasOwn(exps, "__moduleExports")) {
+      return exps.__moduleExports;
+    }
+
     return exps;
   };
 

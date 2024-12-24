@@ -392,6 +392,115 @@ exports[`npm-proto-import-error.js 1`] = `
 }
 `;
 
+exports[`requiring-with-npm-proto.js 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  get $ApiFunctions: Function "$ApiFunctions" {}
+  get $BasicTypes: Function "$BasicTypes" {}
+  get $TypeConstructors: Function "$TypeConstructors" {}
+  get asType: Function "get" {}
+  get assertType: Function "get" {}
+  get isOfType: Function "get" {}
+  get stringifyValue: Function "get" {}
+  get Array: Function "get" {}
+  get ArrayBuffer: Function "get" {}
+  get BigInt: Function "get" {}
+  get Boolean: Function "get" {}
+  get DataView: Function "get" {}
+  get Date: Function "get" {}
+  get Error: Function "get" {}
+  get Float32Array: Function "get" {}
+  get Float64Array: Function "get" {}
+  get Function: Function "get" {}
+  get Infinity: Function "get" {}
+  get Int16Array: Function "get" {}
+  get Int32Array: Function "get" {}
+  get Int8Array: Function "get" {}
+  get Map: Function "get" {}
+  get NaN: Function "get" {}
+  get NegativeInfinity: Function "get" {}
+  get Number: Function "get" {}
+  get Object: Function "get" {}
+  get RegExp: Function "get" {}
+  get Set: Function "get" {}
+  get SharedArrayBuffer: Function "get" {}
+  get String: Function "get" {}
+  get Symbol: Function "get" {}
+  get TypedArray: Function "get" {}
+  get Uint16Array: Function "get" {}
+  get Uint32Array: Function "get" {}
+  get Uint8Array: Function "get" {}
+  get Uint8ClampedArray: Function "get" {}
+  get any: Function "get" {}
+  get anyArray: Function "get" {}
+  get anyFunction: Function "get" {}
+  get anyMap: Function "get" {}
+  get anyObject: Function "get" {}
+  get anySet: Function "get" {}
+  get anyTypeValidator: Function "get" {}
+  get array: Function "get" {}
+  get arrayOfAny: Function "get" {}
+  get arrayOfUnknown: Function "get" {}
+  get bigint: Function "get" {}
+  get boolean: Function "get" {}
+  get false: Function "get" {}
+  get falsy: Function "get" {}
+  get integer: Function "get" {}
+  get map: Function "get" {}
+  get never: Function "get" {}
+  get nonNullOrUndefined: Function "get" {}
+  get null: Function "get" {}
+  get nullish: Function "get" {}
+  get number: Function "get" {}
+  get numberIncludingNanAndInfinities: Function "get" {}
+  get object: Function "get" {}
+  get objectOrNull: Function "get" {}
+  get set: Function "get" {}
+  get string: Function "get" {}
+  get symbol: Function "get" {}
+  get true: Function "get" {}
+  get truthy: Function "get" {}
+  get undefined: Function "get" {}
+  get unknown: Function "get" {}
+  get unknownFunction: Function "get" {}
+  get unknownMap: Function "get" {}
+  get unknownObject: Function "get" {}
+  get unknownSet: Function "get" {}
+  get unknownTypeValidator: Function "get" {}
+  get void: Function "get" {}
+  get and: Function "get" {}
+  get arrayOf: Function "get" {}
+  get exactBigInt: Function "get" {}
+  get exactNumber: Function "get" {}
+  get exactString: Function "get" {}
+  get exactSymbol: Function "get" {}
+  get hasClassName: Function "get" {}
+  get hasToStringTag: Function "get" {}
+  get instanceOf: Function "get" {}
+  get intersection: Function "get" {}
+  get mapOf: Function "get" {}
+  get mappingObjectOf: Function "get" {}
+  get maybe: Function "get" {}
+  get objectStr: Function "get" {}
+  get objectWithOnlyTheseProperties: Function "get" {}
+  get objectWithProperties: Function "get" {}
+  get optional: Function "get" {}
+  get or: Function "get" {}
+  get partialObjectWithProperties: Function "get" {}
+  get record: Function "get" {}
+  get setOf: Function "get" {}
+  get stringMatching: Function "get" {}
+  get symbolFor: Function "get" {}
+  get tuple: Function "get" {}
+  get union: Function "get" {}
+}
+",
+}
+`;
+
 exports[`some-civet.civet 1`] = `
 {
   "code": 0,
