@@ -69,21 +69,295 @@ exports[`importing-from-npm-protocol.js 1`] = `
   Null prototype
   Sealed
   
-  Component: Function "x" {}
-  Fragment: Function "k" {}
-  cloneElement: Function "G" {}
-  createContext: Function "J" {}
-  createElement: Function "g" {}
-  createRef: Function "b" {}
-  default: null
-  h: -> {root}.createElement
-  hydrate: Function "E" {}
-  isValidElement: Function "t" {}
-  options: {
-    __e: Function "__e" {}
+  $ApiFunctions: {
+    get asType: Function "asType" {}
+    get assertType: Function "assertType" {}
+    get isOfType: Function "isOfType" {}
+    get stringifyValue: Function "stringifyValue" {}
   }
-  render: Function "D" {}
-  toChildArray: Function "L" {}
+  $BasicTypes: {
+    get Array: Function "Array" {}
+    get ArrayBuffer: Function "ArrayBuffer" {}
+    get BigInt: Function "BigInt" {}
+    get Boolean: Function "Boolean" {}
+    get DataView: Function "DataView" {}
+    get Date: Function "Date" {}
+    get Error: Function "Error" {}
+    get Float32Array: Function "Float32Array" {}
+    get Float64Array: Function "Float64Array" {}
+    get Function: Function "Function" {}
+    get Infinity: Function "Infinity" {}
+    get Int16Array: Function "Int16Array" {}
+    get Int32Array: Function "Int32Array" {}
+    get Int8Array: Function "Int8Array" {}
+    get Map: Function "Map" {}
+    get NaN: Function "NaN" {}
+    get NegativeInfinity: Function "NegativeInfinity" {}
+    get Number: Function "Number" {}
+    get Object: Function "Object" {}
+    get RegExp: Function "RegExp" {}
+    get Set: Function "Set" {}
+    get SharedArrayBuffer: Function "SharedArrayBuffer" {}
+    get String: Function "String" {}
+    get Symbol: Function "Symbol" {}
+    get TypedArray: Function "TypedArray" {}
+    get Uint16Array: Function "Uint16Array" {}
+    get Uint32Array: Function "Uint32Array" {}
+    get Uint8Array: Function "Uint8Array" {}
+    get Uint8ClampedArray: Function "Uint8ClampedArray" {}
+    get any: Function "any" {}
+    get anyArray: Function "anyArray" {}
+    get anyFunction: Function "anyFunction" {}
+    get anyMap: Function "anyMap" {}
+    get anyObject: Function "anyObject" {}
+    get anySet: Function "anySet" {}
+    get anyTypeValidator: Function "anyTypeValidator" {}
+    get array: Function "array" {}
+    get arrayOfAny: Function "arrayOfAny" {}
+    get arrayOfUnknown: Function "arrayOfUnknown" {}
+    get bigint: Function "bigint" {}
+    get boolean: Function "boolean" {}
+    get false: Function "false" {}
+    get falsy: Function "falsy" {}
+    get integer: Function "integer" {}
+    get map: Function "map" {}
+    get never: Function "never" {}
+    get nonNullOrUndefined: Function "nonNullOrUndefined" {}
+    get null: Function "null" {}
+    get nullish: Function "nullish" {}
+    get number: Function "number" {}
+    get numberIncludingNanAndInfinities: Function "numberIncludingNanAndInfinities" {}
+    get object: Function "object" {}
+    get objectOrNull: Function "objectOrNull" {}
+    get set: Function "set" {}
+    get string: Function "string" {}
+    get symbol: Function "symbol" {}
+    get true: Function "true" {}
+    get truthy: Function "truthy" {}
+    get undefined: Function "undefined" {}
+    get unknown: Function "unknown" {}
+    get unknownFunction: Function "unknownFunction" {}
+    get unknownMap: Function "unknownMap" {}
+    get unknownObject: Function "unknownObject" {}
+    get unknownSet: Function "unknownSet" {}
+    get unknownTypeValidator: Function "unknownTypeValidator" {}
+    get void: Function "void" {}
+  }
+  $TypeConstructors: {
+    get and: Function "and" {}
+    get arrayOf: Function "arrayOf" {}
+    get exactBigInt: Function "exactBigInt" {}
+    get exactNumber: Function "exactNumber" {}
+    get exactString: Function "exactString" {}
+    get exactSymbol: Function "exactSymbol" {}
+    get hasClassName: Function "hasClassName" {}
+    get hasToStringTag: Function "hasToStringTag" {}
+    get instanceOf: Function "instanceOf" {}
+    get intersection: Function "intersection" {}
+    get mapOf: Function "mapOf" {}
+    get mappingObjectOf: Function "mappingObjectOf" {}
+    get maybe: Function "maybe" {}
+    get objectStr: Function "objectStr" {}
+    get objectWithOnlyTheseProperties: Function "objectWithOnlyTheseProperties" {}
+    get objectWithProperties: Function "objectWithProperties" {}
+    get optional: Function "optional" {}
+    get or: Function "or" {}
+    get partialObjectWithProperties: Function "partialObjectWithProperties" {}
+    get record: Function "record" {}
+    get setOf: Function "setOf" {}
+    get stringMatching: Function "stringMatching" {}
+    get symbolFor: Function "symbolFor" {}
+    get tuple: Function "tuple" {}
+    get union: Function "union" {}
+  }
+  Array: Function "array" {}
+  ArrayBuffer: Function "ArrayBuffer" {}
+  BigInt: Function "bigint" {}
+  Boolean: Function "boolean" {}
+  DataView: Function "DataView" {}
+  Date: Function "Date" {}
+  Error: Function "Error" {}
+  Float32Array: Function "Float32Array" {}
+  Float64Array: Function "Float64Array" {}
+  Function: Function "unknownFunction" {}
+  Int16Array: Function "Int16Array" {}
+  Int32Array: Function "Int32Array" {}
+  Int8Array: Function "Int8Array" {}
+  Map: Function "map" {}
+  NegativeInfinity: Function "NegativeInfinity" {}
+  Number: Function "number" {}
+  Object: Function "object" {}
+  RegExp: Function "RegExp" {}
+  Set: Function "set" {}
+  SharedArrayBuffer: Function "SharedArrayBuffer" {}
+  String: Function "string" {}
+  Symbol: Function "Symbol" {}
+  TypedArray: Function "TypedArray" {}
+  Uint16Array: Function "Uint16Array" {}
+  Uint32Array: Function "Uint32Array" {}
+  Uint8Array: Function "Uint8Array" {}
+  Uint8ClampedArray: Function "Uint8ClampedArray" {}
+  __moduleExports: {
+    get $ApiFunctions: Function "$ApiFunctions" {}
+    get $BasicTypes: Function "$BasicTypes" {}
+    get $TypeConstructors: Function "$TypeConstructors" {}
+    get asType: Function "get" {}
+    get assertType: Function "get" {}
+    get isOfType: Function "get" {}
+    get stringifyValue: Function "get" {}
+    get Array: Function "get" {}
+    get ArrayBuffer: Function "get" {}
+    get BigInt: Function "get" {}
+    get Boolean: Function "get" {}
+    get DataView: Function "get" {}
+    get Date: Function "get" {}
+    get Error: Function "get" {}
+    get Float32Array: Function "get" {}
+    get Float64Array: Function "get" {}
+    get Function: Function "get" {}
+    get Infinity: Function "get" {}
+    get Int16Array: Function "get" {}
+    get Int32Array: Function "get" {}
+    get Int8Array: Function "get" {}
+    get Map: Function "get" {}
+    get NaN: Function "get" {}
+    get NegativeInfinity: Function "get" {}
+    get Number: Function "get" {}
+    get Object: Function "get" {}
+    get RegExp: Function "get" {}
+    get Set: Function "get" {}
+    get SharedArrayBuffer: Function "get" {}
+    get String: Function "get" {}
+    get Symbol: Function "get" {}
+    get TypedArray: Function "get" {}
+    get Uint16Array: Function "get" {}
+    get Uint32Array: Function "get" {}
+    get Uint8Array: Function "get" {}
+    get Uint8ClampedArray: Function "get" {}
+    get any: Function "get" {}
+    get anyArray: Function "get" {}
+    get anyFunction: Function "get" {}
+    get anyMap: Function "get" {}
+    get anyObject: Function "get" {}
+    get anySet: Function "get" {}
+    get anyTypeValidator: Function "get" {}
+    get array: Function "get" {}
+    get arrayOfAny: Function "get" {}
+    get arrayOfUnknown: Function "get" {}
+    get bigint: Function "get" {}
+    get boolean: Function "get" {}
+    get false: Function "get" {}
+    get falsy: Function "get" {}
+    get integer: Function "get" {}
+    get map: Function "get" {}
+    get never: Function "get" {}
+    get nonNullOrUndefined: Function "get" {}
+    get null: Function "get" {}
+    get nullish: Function "get" {}
+    get number: Function "get" {}
+    get numberIncludingNanAndInfinities: Function "get" {}
+    get object: Function "get" {}
+    get objectOrNull: Function "get" {}
+    get set: Function "get" {}
+    get string: Function "get" {}
+    get symbol: Function "get" {}
+    get true: Function "get" {}
+    get truthy: Function "get" {}
+    get undefined: Function "get" {}
+    get unknown: Function "get" {}
+    get unknownFunction: Function "get" {}
+    get unknownMap: Function "get" {}
+    get unknownObject: Function "get" {}
+    get unknownSet: Function "get" {}
+    get unknownTypeValidator: Function "get" {}
+    get void: Function "get" {}
+    get and: Function "get" {}
+    get arrayOf: Function "get" {}
+    get exactBigInt: Function "get" {}
+    get exactNumber: Function "get" {}
+    get exactString: Function "get" {}
+    get exactSymbol: Function "get" {}
+    get hasClassName: Function "get" {}
+    get hasToStringTag: Function "get" {}
+    get instanceOf: Function "get" {}
+    get intersection: Function "get" {}
+    get mapOf: Function "get" {}
+    get mappingObjectOf: Function "get" {}
+    get maybe: Function "get" {}
+    get objectStr: Function "get" {}
+    get objectWithOnlyTheseProperties: Function "get" {}
+    get objectWithProperties: Function "get" {}
+    get optional: Function "get" {}
+    get or: Function "get" {}
+    get partialObjectWithProperties: Function "get" {}
+    get record: Function "get" {}
+    get setOf: Function "get" {}
+    get stringMatching: Function "get" {}
+    get symbolFor: Function "get" {}
+    get tuple: Function "get" {}
+    get union: Function "get" {}
+  }
+  and: Function "O" {}
+  any: Function "unknown" {}
+  anyArray: Function "anyArray" {}
+  anyFunction: Function "anyFunction" {}
+  anyMap: Function "anyMap" {}
+  anyObject: Function "anyObject" {}
+  anySet: Function "anySet" {}
+  anyTypeValidator: Function "anyTypeValidator" {}
+  array: -> {root}.Array
+  arrayOf: Function "m" {}
+  arrayOfAny: Function "arrayOfAny" {}
+  arrayOfUnknown: Function "arrayOfUnknown" {}
+  asType: Function "d" {}
+  assertType: Function "assertType" {}
+  bigint: -> {root}.BigInt
+  default: -> {root}.__moduleExports
+  exactBigInt: Function "b" {}
+  exactNumber: Function "v" {}
+  exactString: Function "_" {}
+  exactSymbol: Function "g" {}
+  falsy: Function "falsy" {}
+  hasClassName: Function "j" {}
+  hasToStringTag: Function "N" {}
+  instanceOf: Function "I" {}
+  integer: Function "integer" {}
+  intersection: -> {root}.and
+  isOfType: Function "p" {}
+  map: -> {root}.Map
+  mapOf: Function "x" {}
+  mappingObjectOf: Function "V" {}
+  maybe: Function "P" {}
+  never: Function "never" {}
+  nonNullOrUndefined: Function "nonNullOrUndefined" {}
+  nullish: Function "nullish" {}
+  number: -> {root}.Number
+  numberIncludingNanAndInfinities: Function "numberIncludingNanAndInfinities" {}
+  object: -> {root}.Object
+  objectOrNull: Function "objectOrNull" {}
+  objectStr: Function "d" {}
+  objectWithOnlyTheseProperties: Function "U" {}
+  objectWithProperties: Function "k" {}
+  optional: Function "M" {}
+  or: Function "A" {}
+  partialObjectWithProperties: Function "B" {}
+  record: -> {root}.mappingObjectOf
+  set: -> {root}.Set
+  setOf: Function "E" {}
+  string: -> {root}.String
+  stringMatching: Function "D" {}
+  stringifyValue: Function "c" {}
+  symbol: -> {root}.Symbol
+  symbolFor: Function "W" {}
+  truthy: Function "truthy" {}
+  tuple: Function "C" {}
+  union: -> {root}.or
+  unknown: Function "f" {}
+  unknownFunction: -> {root}.Function
+  unknownMap: Function "unknownMap" {}
+  unknownObject: Function "unknownObject" {}
+  unknownSet: Function "unknownSet" {}
+  unknownTypeValidator: Function "unknownTypeValidator" {}
 }
 ",
 }

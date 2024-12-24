@@ -1,6 +1,6 @@
 #!/usr/bin/env yavascript
 /// <reference path="../../../yavascript.d.ts" />
 
-import * as Preact from "npm:preact@^10.5.0";
+import * as pheno from "npm:pheno@0.12.0";
 
-console.log(Preact);
+console.log(pheno);
