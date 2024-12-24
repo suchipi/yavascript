@@ -12,6 +12,7 @@ import { _getPathInfo } from "./_getPathInfo";
 import { mkdir } from "../commands/mkdir";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 import { setHelpText } from "../help";
+import { pwd } from "../commands/pwd";
 import copyHelpText from "./copy.help.md";
 
 const noop = () => {};
