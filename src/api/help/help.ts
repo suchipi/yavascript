@@ -123,3 +123,22 @@ setHelpText(getHelpText, getHelpTextHelpText);
 setHelpText(setLazyHelpText, setHelpTextLazyHelpText);
 
 export { help_ as help };
+
+// internal only
+export function wrappedString(str: string, helpText: string): string {
+  const ret = new String(str) as any;
+  ret[Symbol.typeofValue] = () => "string";
+  setHelpText(ret, helpText);
+  return ret;
+}
+
+// internal only
+export function wrappedStringLazy(
+  str: string,
+  getHelpText: () => string
+): string {
+  const ret = new String(str) as any;
+  ret[Symbol.typeofValue] = () => "string";
+  setLazyHelpText(ret, getHelpText);
+  return ret;
+}
