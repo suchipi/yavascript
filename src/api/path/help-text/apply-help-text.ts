@@ -1,12 +1,12 @@
 import { Path } from "../path";
-import { setHelpText, wrappedStringLazy } from "../../help";
+import { setHelpText } from "../../help";
 
 setHelpText.lazy(Path, () => require("./path.help.md"));
 
-Path.OS_SEGMENT_SEPARATOR = wrappedStringLazy(Path.OS_SEGMENT_SEPARATOR, () =>
+setHelpText.lazy(Path.OS_SEGMENT_SEPARATOR, () =>
   require("./Path.OS_SEGMENT_SEPARATOR.help.md")
 );
-Path.OS_ENV_VAR_SEPARATOR = wrappedStringLazy(Path.OS_ENV_VAR_SEPARATOR, () =>
+setHelpText.lazy(Path.OS_ENV_VAR_SEPARATOR, () =>
   require("./Path.OS_ENV_VAR_SEPARATOR.help.md")
 );
 setHelpText.lazy(Path.OS_PROGRAM_EXTENSIONS, () =>
