@@ -32,4 +32,4 @@
 - [ ] add `.on("exit")` support to node-compat `process` shim
 - [ ] make assert have nice messages when one isn't specified
 - [ ] Path normalize handles `../../a` wrong; gives `a`, but should give `../../a`
-
+- [ ] `inspect(Path.prototype)` fails due to `[inspect.custom]` handling
