@@ -378,6 +378,14 @@ class Path {
   }
 
   [inspect.custom](inputs: InspectCustomInputs) {
+    if (
+      typeof this.segments === "undefined" ||
+      typeof this.separator === "undefined"
+    ) {
+      // inspecting Path.prototype, or a Path someone messed up
+      return;
+    }
+
     const isEmpty = this.segments.length === 0;
     if (isEmpty) {
       return;
