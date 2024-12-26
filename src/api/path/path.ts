@@ -89,7 +89,7 @@ class Path {
     return fallback;
   }
 
-  // [ ] helpdocs done
+  // [x] helpdocs done
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
   ): Path {
