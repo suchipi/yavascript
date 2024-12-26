@@ -32,8 +32,20 @@ export function setHelpText(
   }
 
   if (Object.isPrimitive(value)) {
+    if (primitiveHelpTextMap.has(value)) {
+      throw makeErrorWithProperties(
+        "Attempting to overwrite existing help text",
+        { info: "primitive set", value }
+      );
+    }
     primitiveHelpTextMap.set(value, text);
   } else {
+    if (helpTextMap.has(value)) {
+      throw makeErrorWithProperties(
+        "Attempting to overwrite existing help text",
+        { info: "set", value }
+      );
+    }
     helpTextMap.set(value, text);
   }
 }
@@ -48,8 +60,32 @@ function setLazyHelpText(value: any, getText: () => string) {
   }
 
   if (Object.isPrimitive(value)) {
+    if (primitiveHelpTextMap.has(value)) {
+      throw makeErrorWithProperties(
+        "Attempting to overwrite existing help text",
+        { target: "primitive setLazy", value }
+      );
+    }
+    if (primitiveLazyHelpTextMap.has(value)) {
+      throw makeErrorWithProperties(
+        "Attempting to overwrite existing help text",
+        { target: "primitiveLazy setLazy", value }
+      );
+    }
     primitiveLazyHelpTextMap.set(value, getText);
   } else {
+    if (helpTextMap.has(value)) {
+      throw makeErrorWithProperties(
+        "Attempting to overwrite existing help text",
+        { target: "setLazy", value }
+      );
+    }
+    if (lazyHelpTextMap.has(value)) {
+      throw makeErrorWithProperties(
+        "Attempting to overwrite existing help text",
+        { target: "lazy setLazy", value }
+      );
+    }
     lazyHelpTextMap.set(value, getText);
   }
 }
