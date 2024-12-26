@@ -34,18 +34,14 @@ const windowsDefaultPathExt =
   ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC";
 
 class Path {
-  // [x] helpdocs done
   static OS_SEGMENT_SEPARATOR = os.platform === "win32" ? "\\" : "/";
-  // [x] helpdocs done
   static OS_ENV_VAR_SEPARATOR = os.platform === "win32" ? ";" : ":";
-  // [x] helpdocs done
   static OS_PROGRAM_EXTENSIONS = new Set(
     os.platform === "win32"
       ? (env.PATHEXT || windowsDefaultPathExt).split(";")
       : []
   );
 
-  // [x] helpdocs done
   static splitToSegments(inputParts: Array<string> | string): Array<string> {
     assert.type(
       inputParts,
@@ -64,7 +60,6 @@ class Path {
     );
   }
 
-  // [x] helpdocs done
   static detectSeparator<Fallback extends string | null = string>(
     input: Array<string> | string,
     // @ts-ignore might be instantiated with a different subtype
@@ -89,7 +84,6 @@ class Path {
     return fallback;
   }
 
-  // [x] helpdocs done
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
   ): Path {
@@ -107,7 +101,6 @@ class Path {
     return new Path(...inputs).normalize();
   }
 
-  // [ ] helpdocs done
   static isAbsolute(path: string | Path): boolean {
     assert.type(path, types.or(types.string, types.Path));
 
@@ -118,12 +111,9 @@ class Path {
     }
   }
 
-  // [x] helpdocs done
   segments: Array<string>;
-  // [x] helpdocs done
   separator: string;
 
-  // [-] helpdocs done (sorta)
   constructor(...inputs: Array<string | Path | Array<string | Path>>) {
     assert.type(
       inputs,
@@ -145,7 +135,6 @@ class Path {
     this.separator = Path.detectSeparator(parts);
   }
 
-  // [x] helpdocs done
   static fromRaw(
     segments: Array<string>,
     separator: string = Path.OS_SEGMENT_SEPARATOR
@@ -159,7 +148,6 @@ class Path {
     return path;
   }
 
-  // [ ] helpdocs done
   normalize(): Path {
     // we clone this cause we're gonna mutate it
     const segments = [...this.segments];
@@ -197,7 +185,6 @@ class Path {
     return Path.fromRaw(newSegments, this.separator);
   }
 
-  // [ ] helpdocs done
   concat(...others: Array<string | Path | Array<string | Path>>): Path {
     assert.type(
       others,
@@ -214,7 +201,6 @@ class Path {
     return Path.fromRaw(this.segments.concat(otherSegments), this.separator);
   }
 
-  // [ ] helpdocs done
   isAbsolute(): boolean {
     const firstPart = this.segments[0];
 
@@ -228,7 +214,6 @@ class Path {
     return false;
   }
 
-  // [ ] helpdocs done
   clone(): this {
     // @ts-ignore could be instantiated with different subtype
     return (this.constructor as typeof Path).fromRaw(
@@ -237,7 +222,6 @@ class Path {
     );
   }
 
-  // [ ] helpdocs done
   relativeTo(
     dir: Path | string,
     options: { noLeadingDot?: boolean } = {}
@@ -266,7 +250,6 @@ class Path {
     }
   }
 
-  // [ ] helpdocs done
   toString(): string {
     let result = this.segments.join(this.separator);
     if (result == "") {
@@ -277,27 +260,22 @@ class Path {
     }
   }
 
-  // [ ] helpdocs done
   toJSON(): string {
     return this.toString();
   }
 
-  // [ ] helpdocs done
   basename(): string {
     return this.segments.at(-1) || "";
   }
 
-  // [ ] helpdocs done
   extname(options: { full?: boolean } = {}): string {
     return extname(this, options);
   }
 
-  // [ ] helpdocs done
   dirname(): Path {
     return this.replaceLast([]);
   }
 
-  // [ ] helpdocs done
   startsWith(value: string | Path | Array<string | Path>): boolean {
     value = new Path(value);
 
@@ -306,7 +284,6 @@ class Path {
     );
   }
 
-  // [ ] helpdocs done
   endsWith(value: string | Path | Array<string | Path>): boolean {
     value = new Path(value);
 
@@ -318,7 +295,6 @@ class Path {
     );
   }
 
-  // [ ] helpdocs done
   indexOf(
     value: string | Path | Array<string | Path>,
     fromIndex: number = 0
@@ -339,7 +315,6 @@ class Path {
     return -1;
   }
 
-  // [ ] helpdocs done
   includes(
     value: string | Path | Array<string | Path>,
     fromIndex: number = 0
@@ -347,7 +322,6 @@ class Path {
     return this.indexOf(value, fromIndex) !== -1;
   }
 
-  // [ ] helpdocs done
   replace(
     value: string | Path | Array<string | Path>,
     replacement: string | Path | Array<string | Path>
@@ -369,7 +343,6 @@ class Path {
     }
   }
 
-  // [ ] helpdocs done
   replaceAll(
     value: string | Path | Array<string | Path>,
     replacement: string | Path | Array<string | Path>
@@ -394,7 +367,6 @@ class Path {
     return currentPath;
   }
 
-  // [ ] helpdocs done
   replaceLast(replacement: string | Path | Array<string | Path>): Path {
     replacement = new Path(replacement);
 
