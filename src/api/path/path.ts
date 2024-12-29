@@ -153,19 +153,26 @@ class Path {
     const segments = [...this.segments];
 
     const newSegments: Array<string> = [];
+    function isNewSegmentsEmptyExcludingDots() {
+      return (
+        newSegments.filter((segment) => segment !== "." && segment !== "..")
+          .length === 0
+      );
+    }
+
     let currentSegment: string | undefined;
     while (segments.length > 0) {
       currentSegment = segments.shift();
 
       switch (currentSegment) {
         case ".": {
-          if (newSegments.length === 0) {
+          if (isNewSegmentsEmptyExcludingDots()) {
             newSegments.push(currentSegment);
           }
           break;
         }
         case "..": {
-          if (newSegments.length === 0) {
+          if (isNewSegmentsEmptyExcludingDots()) {
             newSegments.push(currentSegment);
           } else {
             newSegments.pop();

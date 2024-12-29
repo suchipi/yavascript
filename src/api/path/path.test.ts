@@ -262,6 +262,19 @@ test("Path.normalize with non-absolute path with leading ..", async () => {
   `);
 });
 
+test("Path.normalize with non-absolute path with two leading ..", async () => {
+  const result = await evaluate(`Path.normalize("../../hi/there/yeah")`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path { ../../hi/there/yeah }
+    ",
+    }
+  `);
+});
+
 test("Path.relativeTo", async () => {
   const result = await evaluate(`
     [
