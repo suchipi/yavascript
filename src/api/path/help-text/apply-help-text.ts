@@ -22,3 +22,6 @@ setHelpText.lazy(Path.detectSeparator, () =>
 setHelpText.lazy(Path.normalize, () => require("./Path.normalize.help.md"));
 setHelpText.lazy(Path.isAbsolute, () => require("./Path.isAbsolute.help.md"));
 setHelpText.lazy(Path.fromRaw, () => require("./Path.fromRaw.help.md"));
+setHelpText.lazy(Path.prototype.normalize, () =>
+  require("./Path.prototype.normalize.help.md")
+);

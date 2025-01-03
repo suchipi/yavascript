@@ -45,7 +45,7 @@ test("help text coverage of 'Path' class", async () => {
     [x] Path.OS_ENV_VAR_SEPARATOR: string
     [x] Path.OS_PROGRAM_EXTENSIONS: object
     [x] Path.prototype.constructor: function
-    [ ] Path.prototype.normalize: function
+    [x] Path.prototype.normalize: function
     [ ] Path.prototype.concat: function
     [ ] Path.prototype.isAbsolute: function
     [ ] Path.prototype.clone: function
@@ -63,7 +63,7 @@ test("help text coverage of 'Path' class", async () => {
     [ ] Path.prototype.replaceAll: function
     [ ] Path.prototype.replaceLast: function
     [ ] pathInstance.segments: object
-    [ ] pathInstance.separator: string
+    [x] pathInstance.separator: string
     ",
     }
   `);
