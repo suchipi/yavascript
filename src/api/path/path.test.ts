@@ -756,3 +756,31 @@ test("Path.dirname", async () => {
     }
   `);
 });
+
+test("Path.clone", async () => {
+  const result = await evaluate(
+    `
+      const p = new Path("/one/two/three/two/one/zero.help.txt");
+      const p2 = p.clone();
+      console.log("p", p);
+      console.log("p2", p2);
+      console.log("p === p2", p === p2);
+      console.log("p.segments === p2.segments", p.segments === p2.segments);
+      console.log("p.separator === p2.separator", p.separator === p2.separator);
+    `,
+    { cwd: rootDir() }
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "p Path { /one/two/three/two/one/zero.help.txt }
+    p2 Path { /one/two/three/two/one/zero.help.txt }
+    p === p2 false
+    p.segments === p2.segments false
+    p.separator === p2.separator true
+    ",
+    }
+  `);
+});

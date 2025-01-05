@@ -413,6 +413,9 @@ declare class Path {
   /**
    * Make a second Path object containing the same segments and separator as
    * this one.
+   *
+   * Note that although it contains the same segments, the new Path does not use
+   * the same Array instance for segments as this one.
    */
   clone(): this;
 
