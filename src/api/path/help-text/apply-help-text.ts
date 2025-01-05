@@ -25,3 +25,12 @@ setHelpText.lazy(Path.fromRaw, () => require("./Path.fromRaw.help.md"));
 setHelpText.lazy(Path.prototype.normalize, () =>
   require("./Path.prototype.normalize.help.md")
 );
+setHelpText.lazy(Path.prototype.concat, () =>
+  require("./Path.prototype.concat.help.md")
+);
+setHelpText.lazy(Path.prototype.isAbsolute, () =>
+  require("./Path.prototype.isAbsolute.help.md")
+);
+setHelpText.lazy(Path.prototype.clone, () =>
+  require("./Path.prototype.clone.help.md")
+);

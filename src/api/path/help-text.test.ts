@@ -46,9 +46,9 @@ test("help text coverage of 'Path' class", async () => {
     [x] Path.OS_PROGRAM_EXTENSIONS: object
     [x] Path.prototype.constructor: function
     [x] Path.prototype.normalize: function
-    [ ] Path.prototype.concat: function
-    [ ] Path.prototype.isAbsolute: function
-    [ ] Path.prototype.clone: function
+    [x] Path.prototype.concat: function
+    [x] Path.prototype.isAbsolute: function
+    [x] Path.prototype.clone: function
     [ ] Path.prototype.relativeTo: function
     [ ] Path.prototype.toString: function
     [ ] Path.prototype.toJSON: function
