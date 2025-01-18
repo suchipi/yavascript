@@ -49,9 +49,9 @@ test("help text coverage of 'Path' class", async () => {
     [x] Path.prototype.concat: function
     [x] Path.prototype.isAbsolute: function
     [x] Path.prototype.clone: function
-    [ ] Path.prototype.relativeTo: function
-    [ ] Path.prototype.toString: function
-    [ ] Path.prototype.toJSON: function
+    [x] Path.prototype.relativeTo: function
+    [x] Path.prototype.toString: function
+    [x] Path.prototype.toJSON: function
     [ ] Path.prototype.basename: function
     [ ] Path.prototype.extname: function
     [ ] Path.prototype.dirname: function

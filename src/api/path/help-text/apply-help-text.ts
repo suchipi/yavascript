@@ -34,3 +34,12 @@ setHelpText.lazy(Path.prototype.isAbsolute, () =>
 setHelpText.lazy(Path.prototype.clone, () =>
   require("./Path.prototype.clone.help.md")
 );
+setHelpText.lazy(Path.prototype.relativeTo, () =>
+  require("./Path.prototype.relativeTo.help.md")
+);
+setHelpText.lazy(Path.prototype.toString, () =>
+  require("./Path.prototype.toString.help.md")
+);
+setHelpText.lazy(Path.prototype.toJSON, () =>
+  require("./Path.prototype.toJSON.help.md")
+);
