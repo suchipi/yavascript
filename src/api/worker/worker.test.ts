@@ -1,13 +1,11 @@
-import { pathMarker } from "path-less-traveled";
-import { runYavascript, cleanResult } from "../../test-helpers";
+import { runYavascript, cleanResult, rootDir } from "../../test-helpers";
 
-const hereDir = pathMarker(__dirname);
-const textFixturesDir = hereDir.concat("test-fixtures");
+const workerFixturesDir = rootDir.concat("src/test_fixtures/worker");
 
 // TODO: Change to use yavascript `exit` instead of quickjs `std.exit`, once
 // workers get the yavascript globals
 test("worker cannot call std.exit", async () => {
-  const result = await runYavascript([textFixturesDir("main.js")]);
+  const result = await runYavascript([workerFixturesDir("main.js")]);
 
   // Note that the Error in the worker doesn't cause the main thread to exit
   // with a nonzero status code.
