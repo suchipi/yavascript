@@ -8,7 +8,7 @@ for (const dtsFile of [...dtsIncFiles, ...quickjsDtsFiles]) {
   const inputFile = dtsFile;
   const outputFile = rel(
     "../generated-docs/" +
-      path.basename(inputFile).replace(/\.inc\.d\.ts$/, ".md")
+      path.basename(inputFile).replace(/(?:\.inc)?\.d\.ts$/, ".md")
   );
 
   build({
