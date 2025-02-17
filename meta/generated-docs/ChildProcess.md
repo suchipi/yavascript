@@ -214,7 +214,7 @@ logging?: {
 Optional trace function which, if present, will be called at various
 times to provide information about the lifecycle of the process.
 
-Defaults to the current value of [logger.trace](#). `logger.trace`
+Defaults to the current value of [logger.trace](/meta/generated-docs/logger.md#loggertrace-function-property). `logger.trace`
 defaults to a function which writes to stderr.
 
 ```ts

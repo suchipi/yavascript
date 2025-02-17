@@ -1,1 +1,17 @@
-{}
+{
+  ChildProcess: "/meta/generated-docs/ChildProcess.md#childprocess-interface",
+  clear: "/meta/generated-docs/console.md#clear-function",
+  copy: "/meta/generated-docs/filesystem.md#copy-function",
+  exec: "/meta/generated-docs/exec.md#exec-interface",
+  glob: "/meta/generated-docs/glob.md#glob-function",
+  is: "/meta/generated-docs/is.md#is-function",
+  "JSX.pragma": "/meta/generated-docs/jsx.md#jsxpragma-exported-string",
+  "JSX.pragmaFrag": "/meta/generated-docs/jsx.md#jsxpragmafrag-exported-string",
+  "logger.info": "/meta/generated-docs/logger.md#loggerinfo-function-property",
+  "logger.trace": "/meta/generated-docs/logger.md#loggertrace-function-property",
+  "types.coerce": "/meta/generated-docs/types.md#typescoerce-function-property",
+  "types.JSX.Element": "/meta/generated-docs/types.md#typesjsxelement-property",
+  "types.JSX.Fragment": "/meta/generated-docs/types.md#typesjsxfragment-property",
+  TypeValidator: "/meta/generated-docs/types.md#typevalidator-type",
+  which: "/meta/generated-docs/which.md#which-function",
+}

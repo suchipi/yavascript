@@ -1,6 +1,6 @@
 # GlobOptions (type)
 
-Options for [glob](#).
+Options for [glob](/meta/generated-docs/glob.md#glob-function).
 
 ```ts
 declare type GlobOptions = {
@@ -48,7 +48,7 @@ glob(["./*.js"], {
 });
 ```
 
-Defaults to the current value of [logger.trace](#). `logger.trace`
+Defaults to the current value of [logger.trace](/meta/generated-docs/logger.md#loggertrace-function-property). `logger.trace`
 defaults to a no-op function.
 
 ```ts
@@ -60,7 +60,7 @@ trace?: (...args: Array<any>) => void;
 An optional, user-provided logging function to be used for informational
 messages. Less verbose than `logging.trace`.
 
-Defaults to the current value of [logger.info](#). `logger.info`
+Defaults to the current value of [logger.info](/meta/generated-docs/logger.md#loggerinfo-function-property). `logger.info`
 defaults to a function which writes to stderr.
 
 ```ts

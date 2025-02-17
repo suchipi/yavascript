@@ -74,8 +74,8 @@ If changed, any JSX code loaded afterwards will use a different
 expression.
 
 Note that if you change this, you need to verify that the following
-expression always evaluates to `true` (by changing [types.JSX.Element](#)
-and [types.JSX.Fragment](#)):
+expression always evaluates to `true` (by changing [types.JSX.Element](/meta/generated-docs/types.md#typesjsxelement-property)
+and [types.JSX.Fragment](/meta/generated-docs/types.md#typesjsxfragment-property)):
 
 ```jsx
 types.JSX.Element(<a />) && types.JSX.Fragment(<></>);
@@ -99,8 +99,8 @@ If changed, any JSX code loaded afterwards will use a different
 expression.
 
 Note that if you change this, you need to verify that the following
-expression always evaluates to `true` (by changing [types.JSX.Element](#)
-and [types.JSX.Fragment](#)):
+expression always evaluates to `true` (by changing [types.JSX.Element](/meta/generated-docs/types.md#typesjsxelement-property)
+and [types.JSX.Fragment](/meta/generated-docs/types.md#typesjsxfragment-property)):
 
 ```jsx
 types.JSX.Element(<a />) && types.JSX.Fragment(<></>);
@@ -161,8 +161,8 @@ key: string | number | null;
 ## JSX.Fragment (exported value)
 
 The value which gets passed into the JSX element constructor (as
-determined by [JSX.pragma](#)) when JSX fragment syntax is used (unless
-[JSX.pragmaFrag](#) is changed).
+determined by [JSX.pragma](/meta/generated-docs/jsx.md#jsxpragma-exported-string)) when JSX fragment syntax is used (unless
+[JSX.pragmaFrag](/meta/generated-docs/jsx.md#jsxpragmafrag-exported-string) is changed).
 
 ```ts
 const Fragment: unique symbol;
@@ -177,11 +177,11 @@ type Fragment = Element<{}, typeof Fragment>;
 ## JSX.createElement (exported function)
 
 The JSX element builder function, which gets invoked whenever JSX syntax is
-used (unless [JSX.pragma](#) is changed).
+used (unless [JSX.pragma](/meta/generated-docs/jsx.md#jsxpragma-exported-string) is changed).
 
 Note that if you change this, you need to verify that the following
-expression always evaluates to `true` (by changing [types.JSX.Element](#)
-and [types.JSX.Fragment](#)):
+expression always evaluates to `true` (by changing [types.JSX.Element](/meta/generated-docs/types.md#typesjsxelement-property)
+and [types.JSX.Fragment](/meta/generated-docs/types.md#typesjsxfragment-property)):
 
 ```jsx
 types.JSX.Element(<a />) && types.JSX.Fragment(<></>);

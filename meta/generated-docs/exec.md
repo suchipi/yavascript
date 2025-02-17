@@ -58,7 +58,7 @@ exec(["echo", "hi"], {
 });
 ```
 
-Defaults to the current value of [logger.trace](#). `logger.trace`
+Defaults to the current value of [logger.trace](/meta/generated-docs/logger.md#loggertrace-function-property). `logger.trace`
 defaults to a no-op function.
 
 ```ts
@@ -70,7 +70,7 @@ trace?: (...args: Array<any>) => void;
 An optional, user-provided logging function to be used for informational
 messages. Less verbose than `logging.trace`.
 
-Defaults to the current value of [logger.info](#). `logger.info`
+Defaults to the current value of [logger.info](/meta/generated-docs/logger.md#loggerinfo-function-property). `logger.info`
 defaults to a function which logs to stderr.
 
 ```ts
@@ -184,7 +184,7 @@ declare interface Exec {
 ## Exec.toArgv (method)
 
 Parse the provided value into an array of command-line argument strings,
-using the same logic that [exec](#) and [ChildProcess](#) use.
+using the same logic that [exec](/meta/generated-docs/exec.md#exec-interface) and [ChildProcess](/meta/generated-docs/ChildProcess.md#childprocess-interface) use.
 
 ```ts
 toArgv(args: Array<string | Path | number> | string | Path): Array<string>;

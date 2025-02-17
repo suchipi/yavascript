@@ -16,7 +16,7 @@ interface Console {
 
 ## Console.clear (property)
 
-Same as [clear](#)().
+Same as [clear](/meta/generated-docs/console.md#clear-function)().
 
 ```ts
 clear: typeof clear;

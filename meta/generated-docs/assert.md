@@ -31,7 +31,7 @@ Throws an error if `value` is not truthy.
 
 Throws an error if `value` is not of the type `type`.
 
-`type` should be either a [TypeValidator](#), or a value which can be coerced into one via [types.coerce](#).
+`type` should be either a [TypeValidator](/meta/generated-docs/types.md#typevalidator-type), or a value which can be coerced into one via [types.coerce](/meta/generated-docs/types.md#typescoerce-function-property).
 
 ```ts
 type: <T extends TypeValidator<any> | CoerceableToTypeValidator>(value: any, type: T, optionalMessage?: string) => asserts value is UnwrapTypeFromCoerceableOrValidator<T>;

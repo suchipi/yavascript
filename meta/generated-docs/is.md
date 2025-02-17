@@ -13,7 +13,7 @@ const is: <T extends TypeValidator<any> | CoerceableToTypeValidator>(
 
 # \_is (value)
 
-Alias to [is](#), for Civet, because `is` is a reserved keyword in Civet.
+Alias to [is](/meta/generated-docs/is.md#is-function), for Civet, because `is` is a reserved keyword in Civet.
 
 ```ts
 const _is: typeof is;
