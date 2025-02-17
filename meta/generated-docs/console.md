@@ -10,14 +10,56 @@ declare function clear(): void;
 
 ```ts
 interface Console {
-  clear: typeof clear;
+  log(message?: any, ...optionalParams: any[]): void;
+  info(message?: any, ...optionalParams: any[]): void;
+  warn(message?: any, ...optionalParams: any[]): void;
+  error(message?: any, ...optionalParams: any[]): void;
+  clear(): void;
 }
 ```
 
-## Console.clear (property)
+## Console.log (method)
+
+Writes to stdout, with newline appended.
+
+```ts
+log(message?: any, ...optionalParams: any[]): void;
+```
+
+## Console.info (method)
+
+Writes to stdout, with newline appended.
+
+```ts
+info(message?: any, ...optionalParams: any[]): void;
+```
+
+## Console.warn (method)
+
+Writes to stderr, with newline appended.
+
+```ts
+warn(message?: any, ...optionalParams: any[]): void;
+```
+
+## Console.error (method)
+
+Writes to stderr, with newline appended.
+
+```ts
+error(message?: any, ...optionalParams: any[]): void;
+```
+
+## Console.clear (method)
 
 Same as [clear](/meta/generated-docs/console.md#clear-function)().
 
 ```ts
-clear: typeof clear;
+clear(): void;
+```
+
+# console (Console)
+
+```ts
+var console: Console;
 ```

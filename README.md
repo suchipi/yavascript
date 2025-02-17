@@ -51,8 +51,8 @@ You'll also find analogues to familiar CLI tools, like:
 
 To view the APIs online:
 
-- An overview is available [here](./src/api/help/help.index.help.md)
-- more details can be found [in the `.d.ts` file](./yavascript.d.ts)
+- An overview is available [here](/meta/generated-docs/README.md)
+- Or you can view [the `.d.ts` file](./yavascript.d.ts), if you prefer.
 
 Or, if you already have YavaScript installed:
 
@@ -61,7 +61,7 @@ Or, if you already have YavaScript installed:
 
 The `.d.ts` file contains documented TypeScript type definitions which can be given to your IDE to assist you when writing scripts, even if you aren't writing your scripts in TypeScript.
 
-You can also use the `help()` function in YavaScript's interactive repl to read formatted markdown documentation offline in your terminal.
+YavaScript's `help()` function can be used in YavaScript's interactive repl to read formatted markdown documentation offline in your terminal.
 
 ## Example
 

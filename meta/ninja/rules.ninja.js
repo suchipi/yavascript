@@ -95,3 +95,14 @@ rule("dtsmd", {
   description: "DTSMD $out",
   implicitInputs: [`node_modules/@suchipi/dtsmd/dist/cli.js`, docLinksFile],
 });
+
+rule("md-links-from-json5", {
+  command: `node meta/scripts/md-links-from-json5.js $in $out`,
+  description: "MD-LINKS-FROM-JSON5 $out",
+  implicitInputs: walkJsDeps("meta/scripts/md-links-from-json5.js"),
+});
+
+rule("combine", {
+  command: `cat $in > $out`,
+  description: "COMBINE $out",
+});
