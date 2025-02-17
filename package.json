@@ -11,6 +11,7 @@
     "@danielx/civet": "^0.9.0",
     "@iarna/toml": "^2.2.5",
     "@suchipi/babel-highlight": "^7.22.6",
+    "@suchipi/dtsmd": "^1.0.0",
     "@suchipi/macaroni": "^0.3.0",
     "@suchipi/marked-terminal": "^5.2.0",
     "@suchipi/print": "^2.5.0",

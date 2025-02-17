@@ -86,3 +86,12 @@ rule("prettier", {
   description: "PRETTIER $out",
   implicitInputs: [`node_modules/prettier/bin-prettier.js`],
 });
+
+const docLinksFile = rel("../scripts/lib/generated-doc-links.json5");
+rule("dtsmd", {
+  command: `npx --no-install dtsmd --links-file ${JSON.stringify(
+    docLinksFile
+  )} $in > $out`,
+  description: "DTSMD $out",
+  implicitInputs: [`node_modules/@suchipi/dtsmd/dist/cli.js`, docLinksFile],
+});
