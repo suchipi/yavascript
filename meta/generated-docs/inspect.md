@@ -2,7 +2,7 @@
 
 npm: @suchipi/print@2.5.0. License: ISC
 
-Options for [inspect](#).
+Options for [inspect](/meta/generated-docs/inspect.md#inspect-inspectfunction).
 
 ```ts
 declare interface InspectOptions {

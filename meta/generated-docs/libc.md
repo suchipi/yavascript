@@ -356,7 +356,7 @@ function setExitCode(statusCode: number): void;
 
 ## "quickjs:std".getExitCode (exported function)
 
-Return the exit code that was previously set by [setExitCode](#), or 0 if
+Return the exit code that was previously set by [setExitCode](/meta/generated-docs/libc.md#quickjsstdsetexitcode-exported-function), or 0 if
 it hasn't yet been set.
 
 Can only be called from the main thread.
@@ -372,7 +372,7 @@ Exit the process with the provided status code.
 Can only be called from the main thread.
 
 If `statusCode` is not provided, a value previously passed into
-[setExitCode](#) will be used. If no value was previously passed into
+[setExitCode](/meta/generated-docs/libc.md#quickjsstdsetexitcode-exported-function) will be used. If no value was previously passed into
 setExitCode, `0` will be used.
 
 - `@param` _statusCode_ — The exit code; 0 for success, nonzero for failure.
@@ -502,7 +502,7 @@ var err: FILE;
 
 ## "quickjs:std".SEEK_SET (exported number)
 
-Constant for [FILE.seek](#). Declares that pointer offset should be relative to the beginning of the file. See also libc `fseek()`.
+Constant for [FILE.seek](/meta/generated-docs/libc.md#fileseek-method). Declares that pointer offset should be relative to the beginning of the file. See also libc `fseek()`.
 
 ```ts
 var SEEK_SET: number;
@@ -510,7 +510,7 @@ var SEEK_SET: number;
 
 ## "quickjs:std".SEEK_CUR (exported number)
 
-Constant for [FILE.seek](#). Declares that the offset should be relative to the current position of the FILE handle. See also libc `fseek()`.
+Constant for [FILE.seek](/meta/generated-docs/libc.md#fileseek-method). Declares that the offset should be relative to the current position of the FILE handle. See also libc `fseek()`.
 
 ```ts
 var SEEK_CUR: number;
@@ -518,7 +518,7 @@ var SEEK_CUR: number;
 
 ## "quickjs:std".SEEK_END (exported number)
 
-Constant for [FILE.seek](#). Declares that the offset should be relative to the end of the file. See also libc `fseek()`.
+Constant for [FILE.seek](/meta/generated-docs/libc.md#fileseek-method). Declares that the offset should be relative to the end of the file. See also libc `fseek()`.
 
 ```ts
 var SEEK_END: number;
@@ -526,7 +526,7 @@ var SEEK_END: number;
 
 ## "quickjs:std".\_IOFBF (exported number)
 
-Constant for [FILE.setvbuf](#). Declares that the buffer mode should be 'full buffering'.
+Constant for [FILE.setvbuf](/meta/generated-docs/libc.md#filesetvbuf-method). Declares that the buffer mode should be 'full buffering'.
 
 ```ts
 var _IOFBF: number;
@@ -534,7 +534,7 @@ var _IOFBF: number;
 
 ## "quickjs:std".\_IOLBF (exported number)
 
-Constant for [FILE.setvbuf](#). Declares that the buffer mode should be 'line buffering'.
+Constant for [FILE.setvbuf](/meta/generated-docs/libc.md#filesetvbuf-method). Declares that the buffer mode should be 'line buffering'.
 
 ```ts
 var _IOLBF: number;
@@ -542,7 +542,7 @@ var _IOLBF: number;
 
 ## "quickjs:std".\_IONBF (exported number)
 
-Constant for [FILE.setvbuf](#). Declares that the buffer mode should be 'no buffering'.
+Constant for [FILE.setvbuf](/meta/generated-docs/libc.md#filesetvbuf-method). Declares that the buffer mode should be 'no buffering'.
 
 ```ts
 var _IONBF: number;
@@ -1088,7 +1088,7 @@ function open(filename: string, flags: number, mode?: number): number;
 
 ## "quickjs:os".O_RDONLY (exported number)
 
-POSIX open flag, used in [open](#).
+POSIX open flag, used in [open](/meta/generated-docs/libc.md#quickjsosopen-exported-function).
 
 ```ts
 var O_RDONLY: number;
@@ -1096,7 +1096,7 @@ var O_RDONLY: number;
 
 ## "quickjs:os".O_WRONLY (exported number)
 
-POSIX open flag, used in [open](#).
+POSIX open flag, used in [open](/meta/generated-docs/libc.md#quickjsosopen-exported-function).
 
 ```ts
 var O_WRONLY: number;
@@ -1104,7 +1104,7 @@ var O_WRONLY: number;
 
 ## "quickjs:os".O_RDWR (exported number)
 
-POSIX open flag, used in [open](#).
+POSIX open flag, used in [open](/meta/generated-docs/libc.md#quickjsosopen-exported-function).
 
 ```ts
 var O_RDWR: number;
@@ -1112,7 +1112,7 @@ var O_RDWR: number;
 
 ## "quickjs:os".O_APPEND (exported number)
 
-POSIX open flag, used in [open](#).
+POSIX open flag, used in [open](/meta/generated-docs/libc.md#quickjsosopen-exported-function).
 
 ```ts
 var O_APPEND: number;
@@ -1120,7 +1120,7 @@ var O_APPEND: number;
 
 ## "quickjs:os".O_CREAT (exported number)
 
-POSIX open flag, used in [open](#).
+POSIX open flag, used in [open](/meta/generated-docs/libc.md#quickjsosopen-exported-function).
 
 ```ts
 var O_CREAT: number;
@@ -1128,7 +1128,7 @@ var O_CREAT: number;
 
 ## "quickjs:os".O_EXCL (exported number)
 
-POSIX open flag, used in [open](#).
+POSIX open flag, used in [open](/meta/generated-docs/libc.md#quickjsosopen-exported-function).
 
 ```ts
 var O_EXCL: number;
@@ -1136,7 +1136,7 @@ var O_EXCL: number;
 
 ## "quickjs:os".O_TRUNC (exported number)
 
-POSIX open flag, used in [open](#).
+POSIX open flag, used in [open](/meta/generated-docs/libc.md#quickjsosopen-exported-function).
 
 ```ts
 var O_TRUNC: number;
@@ -1144,7 +1144,7 @@ var O_TRUNC: number;
 
 ## "quickjs:os".O_BINARY (exported value)
 
-Windows-specific open flag: open the file in binary mode (which is the default). Used in [open](#).
+Windows-specific open flag: open the file in binary mode (which is the default). Used in [open](/meta/generated-docs/libc.md#quickjsosopen-exported-function).
 
 NOTE: this property is only present on windows
 
@@ -1154,7 +1154,7 @@ var O_BINARY: number | undefined;
 
 ## "quickjs:os".O_TEXT (exported value)
 
-Windows-specific open flag: open the file in text mode. The default is binary mode. Used in [open](#).
+Windows-specific open flag: open the file in text mode. The default is binary mode. Used in [open](/meta/generated-docs/libc.md#quickjsosopen-exported-function).
 
 NOTE: this property is only present on windows
 
@@ -2224,7 +2224,7 @@ onmessage: null | ((event: {
 
 ## "quickjs:os".R_OK (exported number)
 
-constant for [access](#)(); test for read permission.
+constant for [access](/meta/generated-docs/libc.md#quickjsosaccess-exported-function)(); test for read permission.
 
 ```ts
 var R_OK: number;
@@ -2232,7 +2232,7 @@ var R_OK: number;
 
 ## "quickjs:os".W_OK (exported number)
 
-constant for [access](#)(); test for write permission.
+constant for [access](/meta/generated-docs/libc.md#quickjsosaccess-exported-function)(); test for write permission.
 
 ```ts
 var W_OK: number;
@@ -2240,7 +2240,7 @@ var W_OK: number;
 
 ## "quickjs:os".X_OK (exported number)
 
-constant for [access](#)(); test for execute (search) permission.
+constant for [access](/meta/generated-docs/libc.md#quickjsosaccess-exported-function)(); test for execute (search) permission.
 
 ```ts
 var X_OK: number;
@@ -2248,7 +2248,7 @@ var X_OK: number;
 
 ## "quickjs:os".F_OK (exported number)
 
-constant for [access](#)(); test for existence of file.
+constant for [access](/meta/generated-docs/libc.md#quickjsosaccess-exported-function)(); test for existence of file.
 
 ```ts
 var F_OK: number;
@@ -2256,7 +2256,7 @@ var F_OK: number;
 
 ## "quickjs:os".access (exported function)
 
-`access` Unix system call; checks if a file is readable, writable, executable, and/or exists (use [R_OK](#), [W_OK](#), [X_OK](#), and/or [F_OK](#) for `accessMode`). Throws a descriptive error (with errno property) if the requested access is not available; otherwise, returns undefined.
+`access` Unix system call; checks if a file is readable, writable, executable, and/or exists (use [R_OK](/meta/generated-docs/libc.md#quickjsosr_ok-exported-number), [W_OK](/meta/generated-docs/libc.md#quickjsosw_ok-exported-number), [X_OK](/meta/generated-docs/libc.md#quickjsosx_ok-exported-number), and/or [F_OK](/meta/generated-docs/libc.md#quickjsosf_ok-exported-number) for `accessMode`). Throws a descriptive error (with errno property) if the requested access is not available; otherwise, returns undefined.
 
 ```ts
 function access(path: string, accessMode: number): void;

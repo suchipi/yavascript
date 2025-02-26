@@ -122,15 +122,15 @@ Each of these has a `stringify` and `parse` method, which can be used to convert
 ## APIs Relating to Compile-to-JS Languages
 
 - [`JSX`]: Used when compiling JSX syntax. User overrides for JSX handling can go here.
-- [`yavascript.]compilers`: The internal compiler functions used by YavaScript to handle compile-to-JS languages. You can use these yourself with strings, if desired.
+- [`yavascript.compilers`]: The internal compiler functions used by YavaScript to handle compile-to-JS languages. You can use these yourself with strings, if desired.
 
 ## ECMAScript Extensions
 
 Additions/extensions to the standard ECMAScript objects found in the runtime.
 
-- [`String.]prototype.grep`: Alias for `grepString`
-- [`RegExp.]escape`: Escape special RegExp characters in a string
-- [`String.]dedent`: Remove leading indentation from template strings
+- [`String.prototype.grep`]: Alias for `grepString`
+- [`RegExp.escape`]: Escape special RegExp characters in a string
+- [`String.dedent`]: Remove leading indentation from template strings
 
 ## Constructor Aliases
 
@@ -222,7 +222,32 @@ For convenience, two builtin modules from QuickJS are also available as globals.
 [`strikethrough`]: /meta/generated-docs/strings.md#strikethrough-function
 [`underline`]: /meta/generated-docs/strings.md#underline-function
 [`console`]: /meta/generated-docs/console.md
+[`print`]: /meta/generated-docs/print.md#print-function
 [`clear`]: /meta/generated-docs/console.md#clear-function
+[`inspect`]: /meta/generated-docs/inspect.md#inspect-inspectfunction
+[`logger`]: /meta/generated-docs/logger.md#logger-object
+[`scriptArgs`]: /meta/generated-docs/libc.md#scriptargs-value
+[`parseScriptArgs`]: /meta/generated-docs/parse-script-args.md#parsescriptargs-function
+[`startRepl`]: /meta/generated-docs/start-repl.md#startrepl-function
+[`InteractivePrompt`]: /meta/generated-docs/interactive-prompt.md#interactiveprompt-interactivepromptconstructor
+[`__filename`]: /meta/generated-docs/__filename-and-__dirname.md#__filename-string
+[`__dirname`]: /meta/generated-docs/__filename-and-__dirname.md#__dirname-string
+[`CSV`]: /meta/generated-docs/csv.md#csv-object
+[`YAML`]: /meta/generated-docs/yaml.md#yaml-object
+[`TOML`]: /meta/generated-docs/toml.md#toml-object
+[`JSON`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON
+[`JSX`]: /meta/generated-docs/jsx.md#jsx-namespace
+[`yavascript.compilers`]: /meta/generated-docs/yavascript.md#yavascriptcompilers-object-property
+[`String.prototype.grep`]: /meta/generated-docs/grep.md#stringgrep-function-property
+[`RegExp.escape`]: /meta/generated-docs/regexp-escape.md#regexpconstructorescape-method
+[`String.dedent`]: /meta/generated-docs/string-dedent.md#stringconstructordedent-function-property
+[`bigint`]: /meta/generated-docs/others.md#bigint-bigintconstructor
+[`boolean`]: /meta/generated-docs/others.md#boolean-booleanconstructor
+[`number`]: /meta/generated-docs/others.md#number-numberconstructor
+[`string`]: /meta/generated-docs/others.md#string-stringconstructor
+[`symbol`]: /meta/generated-docs/others.md#symbol-symbolconstructor
+[`std`]: /meta/generated-docs/libc.md#quickjsstd-namespace
+[`os`]: /meta/generated-docs/libc.md#quickjsos-namespace
 [`JSX.pragmaFrag`]: /meta/generated-docs/jsx.md#jsxpragmafrag-exported-string
 [`logger.info`]: /meta/generated-docs/logger.md#loggerinfo-function-property
 [`logger.trace`]: /meta/generated-docs/logger.md#loggertrace-function-property
@@ -231,3 +256,28 @@ For convenience, two builtin modules from QuickJS are also available as globals.
 [`types.JSX.Fragment`]: /meta/generated-docs/types.md#typesjsxfragment-property
 [`TypeValidator`]: /meta/generated-docs/types.md#typevalidator-type
 [`JSX.pragma`]: /meta/generated-docs/jsx.md#jsxpragma-exported-string
+[`setMainModule`]: /meta/generated-docs/engine.md#quickjsenginesetmainmodule-exported-function
+[`setExitCode`]: /meta/generated-docs/libc.md#quickjsstdsetexitcode-exported-function
+[`FILE.seek`]: /meta/generated-docs/libc.md#fileseek-method
+[`FILE.setvbuf`]: /meta/generated-docs/libc.md#filesetvbuf-method
+[`open`]: /meta/generated-docs/libc.md#quickjsosopen-exported-function
+[`access`]: /meta/generated-docs/libc.md#quickjsosaccess-exported-function
+[`R_OK`]: /meta/generated-docs/libc.md#quickjsosr_ok-exported-number
+[`W_OK`]: /meta/generated-docs/libc.md#quickjsosw_ok-exported-number
+[`X_OK`]: /meta/generated-docs/libc.md#quickjsosx_ok-exported-number
+[`F_OK`]: /meta/generated-docs/libc.md#quickjsosf_ok-exported-number
+[`require`]: /meta/generated-docs/modulesys.md#requirefunction-call-signature
+[`compilers`]: /meta/generated-docs/modulesys.md#moduledelegatecompilers-object-property
+[`searchExtensions`]: /meta/generated-docs/modulesys.md#moduledelegatesearchextensions-property
+[`ModuleDelegate.searchExtensions`]: /meta/generated-docs/modulesys.md#moduledelegatesearchextensions-property
+[`ModuleDelegate.resolve`]: /meta/generated-docs/modulesys.md#moduledelegateresolve-method
+[`BigFloatEnv.expBitsMax`]: /meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorexpbitsmax-number-property
+[`BigFloatEnv.prec`]: /meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorprec-getter
+[`BigFloatEnv.expBits`]: /meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorexpbits-getter
+[`BigFloatEnv.RNDN`]: /meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorrndn-bigfloatroundingmode-property
+[`Math.LN2`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/LN2
+[`Math.PI`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/PI
+[`Number.MIN_VALUE`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MIN_VALUE
+[`Number.MAX_VALUE`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_VALUE
+[`Number.EPSILON`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON
+[`BigFloatEnv.RNDNA`]: /meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorrndna-bigfloatroundingmode-property

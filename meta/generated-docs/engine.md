@@ -39,7 +39,7 @@ Return whether the provided resolved module path is set as the main module.
 In other words, return what the value of `import.meta.main` would be within
 the module.
 
-The main module can be set via [setMainModule](#).
+The main module can be set via [setMainModule](/meta/generated-docs/engine.md#quickjsenginesetmainmodule-exported-function).
 
 ```ts
 function isMainModule(resolvedFilepath: string): boolean;

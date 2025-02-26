@@ -525,11 +525,11 @@ Then the precision and exponent size are reset to their previous values
 and the return value of `func` is returned (or an exception is raised if
 `func` raised an exception).
 
-If expBits is undefined, it is set to [BigFloatEnv.expBitsMax](#).
+If expBits is undefined, it is set to [BigFloatEnv.expBitsMax](/meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorexpbitsmax-number-property).
 
 - `@param` _func_ — The function to call within the modified environment
 - `@param` _prec_ — The mantissa precision (in bits) to use in the modified environment
-- `@param` _expBits_ — The exponent size (in bits) to use in the modified environment. Defaults to [BigFloatEnv.expBitsMax](#).
+- `@param` _expBits_ — The exponent size (in bits) to use in the modified environment. Defaults to [BigFloatEnv.expBitsMax](/meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorexpbitsmax-number-property).
 
 ```ts
 setPrec<Ret>(func: () => Ret, prec: number, expBits?: number): Ret;
@@ -679,7 +679,7 @@ The mantissa precision, in bits.
 
 If precision was not specified as an argument to the BigFloatEnv
 constructor, defaults to the precision value of the global floating-point
-environment ([BigFloatEnv.prec](#)).
+environment ([BigFloatEnv.prec](/meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorprec-getter)).
 
 ```ts
 get prec(): number;
@@ -696,7 +696,7 @@ set prec(newValue: number);
 The exponent size in bits assuming an IEEE 754 representation.
 
 Defaults to the exponent size of the global floating-point environment
-([BigFloatEnv.expBits](#)).
+([BigFloatEnv.expBits](/meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorexpbits-getter)).
 
 ```ts
 get expBits(): number;
@@ -713,7 +713,7 @@ set expBits(newValue: number);
 The rounding mode.
 
 If the rounding mode was not specified as an argument to the BigFloatEnv
-constructor, defaults to [BigFloatEnv.RNDN](#).
+constructor, defaults to [BigFloatEnv.RNDN](/meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorrndn-bigfloatroundingmode-property).
 
 ```ts
 get rndMode(): BigFloatRoundingMode;
@@ -862,7 +862,7 @@ interface BigFloatConstructor {
 
 If `value` is a numeric type, it is converted to BigFloat without rounding.
 
-If `value`` is a string, it is converted to BigFloat using the precision of the global floating point environment ([BigFloatEnv.prec](#)).
+If `value`` is a string, it is converted to BigFloat using the precision of the global floating point environment ([BigFloatEnv.prec](/meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorprec-getter)).
 
 ```ts
 (value: number | string | BigInt | BigFloat): BigFloat;
@@ -876,7 +876,7 @@ prototype: BigFloat;
 
 ## BigFloatConstructor.LN2 (getter)
 
-The value of [Math.LN2](#) rounded to nearest, ties to even with the
+The value of [Math.LN2](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/LN2) rounded to nearest, ties to even with the
 current global precision.
 
 The constant values are cached for small precisions.
@@ -887,7 +887,7 @@ get LN2(): BigFloat;
 
 ## BigFloatConstructor.PI (getter)
 
-The value of [Math.PI](#) rounded to nearest, ties to even with
+The value of [Math.PI](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/PI) rounded to nearest, ties to even with
 the current global precision.
 
 The constant values are cached for small precisions.
@@ -898,7 +898,7 @@ get PI(): BigFloat;
 
 ## BigFloatConstructor.MIN_VALUE (getter)
 
-The value of [Number.MIN_VALUE](#) as a BigFloat.
+The value of [Number.MIN_VALUE](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MIN_VALUE) as a BigFloat.
 
 ```ts
 get MIN_VALUE(): BigFloat;
@@ -906,7 +906,7 @@ get MIN_VALUE(): BigFloat;
 
 ## BigFloatConstructor.MAX_VALUE (getter)
 
-The value of [Number.MAX_VALUE](#) as a BigFloat.
+The value of [Number.MAX_VALUE](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_VALUE) as a BigFloat.
 
 ```ts
 get MAX_VALUE(): BigFloat;
@@ -914,7 +914,7 @@ get MAX_VALUE(): BigFloat;
 
 ## BigFloatConstructor.EPSILON (getter)
 
-The value of [Number.EPSILON](#) as a BigFloat.
+The value of [Number.EPSILON](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON) as a BigFloat.
 
 ```ts
 get EPSILON(): BigFloat;
@@ -1247,7 +1247,7 @@ Returns a string containing a number represented either in exponential or
 fixed-point notation with a specified number of digits.
 
 - `@param` _precision_ — Number of significant digits. There is no range limit on this number.
-- `@param` _roundingMode_ — The rounding mode to use when representing the value. Defaults to [BigFloatEnv.RNDNA](#).
+- `@param` _roundingMode_ — The rounding mode to use when representing the value. Defaults to [BigFloatEnv.RNDNA](/meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorrndna-bigfloatroundingmode-property).
 - `@param` _radix_ — The base to use when representing the value. Must be an integer between 2 and 36. Defaults to 10.
 
 ```ts
@@ -1259,7 +1259,7 @@ toPrecision(precision: number, roundingMode?: BigFloatRoundingMode, radix?: numb
 Returns a string representing a number in fixed-point notation.
 
 - `@param` _fractionDigits_ — Number of digits after the decimal point. There is no range limit on this number.
-- `@param` _roundingMode_ — The rounding mode to use when representing the value. Defaults to [BigFloatEnv.RNDNA](#).
+- `@param` _roundingMode_ — The rounding mode to use when representing the value. Defaults to [BigFloatEnv.RNDNA](/meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorrndna-bigfloatroundingmode-property).
 - `@param` _radix_ — The base to use when representing the value. Must be an integer between 2 and 36. Defaults to 10.
 
 ```ts
@@ -1271,7 +1271,7 @@ toFixed(fractionDigits: number, roundingMode?: BigFloatRoundingMode, radix?: num
 Returns a string containing a number represented in exponential notation.
 
 - `@param` _fractionDigits_ — Number of digits after the decimal point. Must be in the range 0 - 20, inclusive.
-- `@param` _roundingMode_ — The rounding mode to use when representing the value. Defaults to [BigFloatEnv.RNDNA](#).
+- `@param` _roundingMode_ — The rounding mode to use when representing the value. Defaults to [BigFloatEnv.RNDNA](/meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorrndna-bigfloatroundingmode-property).
 - `@param` _radix_ — The base to use when representing the value. Must be an integer between 2 and 36. Defaults to 10.
 
 ```ts

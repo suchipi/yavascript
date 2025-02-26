@@ -23,10 +23,10 @@ Defaults to `[".js"]`. You can add more strings to this array to
 make the engine search for additional files when resolving a
 require/import.
 
-See the doc comment on [require](#) for more information.
+See the doc comment on [require](/meta/generated-docs/modulesys.md#requirefunction-call-signature) for more information.
 
 NOTE: If you add a new extension to this array, you will likely also want
-to add to [compilers](#).
+to add to [compilers](/meta/generated-docs/modulesys.md#moduledelegatecompilers-object-property).
 
 ```ts
 searchExtensions: Array<string>;
@@ -73,7 +73,7 @@ import names from "./names.txt";
 And `names` will be a string containing the contents of names.txt.
 
 NOTE: When adding to this object, you may also wish to add to
-[searchExtensions](#).
+[searchExtensions](/meta/generated-docs/modulesys.md#moduledelegatesearchextensions-property).
 
 ```ts
 compilers: {
@@ -124,7 +124,7 @@ Synchronously import a module.
 
 If `source` does not have a file extension, and a file without an extension
 cannot be found, the engine will check for files with the extensions in
-[ModuleDelegate.searchExtensions](#), and use one of those if present.
+[ModuleDelegate.searchExtensions](/meta/generated-docs/modulesys.md#moduledelegatesearchextensions-property), and use one of those if present.
 This behavior also happens when using normal `import` statements.
 
 For example, if you write:
@@ -216,7 +216,7 @@ Equivalent to `globalThis.require.resolve`.
 Behaves similarly to [the browser
 import.meta.resolve](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta/resolve),
 but it does not ensure that the returned string is a valid URL, because it
-delegates directly to [ModuleDelegate.resolve](#) to resolve the name.
+delegates directly to [ModuleDelegate.resolve](/meta/generated-docs/modulesys.md#moduledelegateresolve-method) to resolve the name.
 If you want this to return URL strings, change `ModuleDelegate.resolve` and
 `ModuleDelegate.read` to work with URL strings.
 

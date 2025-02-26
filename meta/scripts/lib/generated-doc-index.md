@@ -122,15 +122,15 @@ Each of these has a `stringify` and `parse` method, which can be used to convert
 ## APIs Relating to Compile-to-JS Languages
 
 - [`JSX`]: Used when compiling JSX syntax. User overrides for JSX handling can go here.
-- [`yavascript.]compilers`: The internal compiler functions used by YavaScript to handle compile-to-JS languages. You can use these yourself with strings, if desired.
+- [`yavascript.compilers`]: The internal compiler functions used by YavaScript to handle compile-to-JS languages. You can use these yourself with strings, if desired.
 
 ## ECMAScript Extensions
 
 Additions/extensions to the standard ECMAScript objects found in the runtime.
 
-- [`String.]prototype.grep`: Alias for `grepString`
-- [`RegExp.]escape`: Escape special RegExp characters in a string
-- [`String.]dedent`: Remove leading indentation from template strings
+- [`String.prototype.grep`]: Alias for `grepString`
+- [`RegExp.escape`]: Escape special RegExp characters in a string
+- [`String.dedent`]: Remove leading indentation from template strings
 
 ## Constructor Aliases
 
