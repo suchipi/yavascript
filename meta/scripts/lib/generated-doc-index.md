@@ -55,7 +55,7 @@ Here is a list of all of YavaScript's builtin APIs, aside from those normally fo
 - [`glob`]: Search the filesystem using globs. Returns an array of paths.
 - [`assert`]: Throw an error if a value isn't truthy
 - [`is`]: Check the runtime type of any value
-- [`assert.]type`: Throw an error if a value doesn't have the expected type
+- [`assert.type`]: Throw an error if a value doesn't have the expected type
 - [`types`]: Runtime types and type builders for use with `is` and `assert.type`
 - [`help`]: Print help docs for (almost) any runtime value
 
