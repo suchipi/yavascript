@@ -151,7 +151,7 @@ You'll need to install these prerequisites:
 
 - [Node.js](https://nodejs.org/en)
 - [Ninja](https://ninja-build.org/)
-- [bat](https://github.com/sharkdp/bat)
+- [bat](https://github.com/sharkdp/bat) (for syntax-highlighting code blocks in help markdown)
 
 Then run `meta/build.sh`. The compiled output will be in the `dist` folder:
 
