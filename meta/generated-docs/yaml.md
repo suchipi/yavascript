@@ -1,10 +1,14 @@
+- [YAML (object)](#yaml-object)
+  - [YAML.parse (method)](#yamlparse-method)
+  - [YAML.stringify (method)](#yamlstringify-method)
+
 # YAML (object)
 
 ```ts
 const YAML: {
   parse(
     input: string,
-    reviver?: (this: any, key: string, value: any) => any,
+    reviver?: (this: any, key: string, value: any) => any
   ): any;
   stringify(
     input: any,
@@ -12,7 +16,7 @@ const YAML: {
       | ((this: any, key: string, value: any) => any)
       | (number | string)[]
       | null,
-    indent?: number,
+    indent?: number
   ): string;
 };
 ```

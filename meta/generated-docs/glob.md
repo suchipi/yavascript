@@ -1,3 +1,11 @@
+- [GlobOptions (type)](#globoptions-type)
+  - [GlobOptions.followSymlinks (boolean property)](#globoptionsfollowsymlinks-boolean-property)
+  - [GlobOptions.logging (object property)](#globoptionslogging-object-property)
+    - [GlobOptions.logging.trace (function property)](#globoptionsloggingtrace-function-property)
+    - [GlobOptions.logging.info (function property)](#globoptionslogginginfo-function-property)
+  - [GlobOptions.dir (property)](#globoptionsdir-property)
+- [glob (function)](#glob-function)
+
 # GlobOptions (type)
 
 Options for [glob](/meta/generated-docs/glob.md#glob-function).
@@ -85,6 +93,6 @@ options.
 ```ts
 declare function glob(
   patterns: string | Array<string>,
-  options?: GlobOptions,
+  options?: GlobOptions
 ): Array<Path>;
 ```

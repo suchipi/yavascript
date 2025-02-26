@@ -1,3 +1,7 @@
+- [CSV (object)](#csv-object)
+  - [CSV.parse (method)](#csvparse-method)
+  - [CSV.stringify (method)](#csvstringify-method)
+
 # CSV (object)
 
 ```ts

@@ -1,3 +1,5 @@
+- [ls (function)](#ls-function)
+
 # ls (function)
 
 Returns the contents of a directory, as absolute paths. `.` and `..` are

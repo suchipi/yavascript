@@ -1,3 +1,7 @@
+- [startRepl (function)](#startrepl-function)
+  - [startRepl(...) (call signature)](#startrepl-call-signature)
+  - [startRepl.NOTHING (symbol property)](#startreplnothing-symbol-property)
+
 # startRepl (function)
 
 Launch the Yavascript REPL (read-eval-print-loop).
@@ -20,7 +24,7 @@ const startRepl: {
       | "tsx"
       | "coffee"
       | "coffeescript"
-      | "civet",
+      | "civet"
   ): void;
   NOTHING: symbol;
 };

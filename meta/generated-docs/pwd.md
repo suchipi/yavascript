@@ -1,3 +1,7 @@
+- [pwd (function)](#pwd-function)
+  - [pwd(...) (call signature)](#pwd-call-signature)
+  - [pwd.initial (Path property)](#pwdinitial-path-property)
+
 # pwd (function)
 
 Returns the process's current working directory.

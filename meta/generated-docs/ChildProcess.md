@@ -1,3 +1,28 @@
+- [ChildProcess (interface)](#childprocess-interface)
+  - [ChildProcess.args (property)](#childprocessargs-property)
+  - [ChildProcess.cwd (Path property)](#childprocesscwd-path-property)
+  - [ChildProcess.env (object property)](#childprocessenv-object-property)
+  - [ChildProcess.stdio (object property)](#childprocessstdio-object-property)
+    - [ChildProcess.stdio.in (FILE property)](#childprocessstdioin-file-property)
+    - [ChildProcess.stdio.out (FILE property)](#childprocessstdioout-file-property)
+    - [ChildProcess.stdio.err (FILE property)](#childprocessstdioerr-file-property)
+  - [ChildProcess.pid (property)](#childprocesspid-property)
+  - [ChildProcess.start (method)](#childprocessstart-method)
+  - [ChildProcess.waitUntilComplete (method)](#childprocesswaituntilcomplete-method)
+- [ChildProcessOptions (type)](#childprocessoptions-type)
+  - [ChildProcessOptions.cwd (property)](#childprocessoptionscwd-property)
+  - [ChildProcessOptions.env (object property)](#childprocessoptionsenv-object-property)
+  - [ChildProcessOptions.stdio (object property)](#childprocessoptionsstdio-object-property)
+    - [ChildProcessOptions.stdio.in (FILE property)](#childprocessoptionsstdioin-file-property)
+    - [ChildProcessOptions.stdio.out (FILE property)](#childprocessoptionsstdioout-file-property)
+    - [ChildProcessOptions.stdio.err (FILE property)](#childprocessoptionsstdioerr-file-property)
+  - [ChildProcessOptions.logging (object property)](#childprocessoptionslogging-object-property)
+    - [ChildProcessOptions.logging.trace (function property)](#childprocessoptionsloggingtrace-function-property)
+- [ChildProcessConstructor (interface)](#childprocessconstructor-interface)
+  - [ChildProcessConstructor new(...) (construct signature)](#childprocessconstructor-new-construct-signature)
+  - [ChildProcessConstructor.prototype (ChildProcess property)](#childprocessconstructorprototype-childprocess-property)
+- [ChildProcess (ChildProcessConstructor)](#childprocess-childprocessconstructor)
+
 # ChildProcess (interface)
 
 A class which represents a child process. The process may or may not be running.
@@ -227,7 +252,7 @@ trace?: (...args: Array<any>) => void;
 declare interface ChildProcessConstructor {
   new (
     args: string | Path | Array<string | number | Path>,
-    options?: ChildProcessOptions,
+    options?: ChildProcessOptions
   ): ChildProcess;
   readonly prototype: ChildProcess;
 }

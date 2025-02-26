@@ -1,3 +1,5 @@
+- [dirname (function)](#dirname-function)
+
 # dirname (function)
 
 Removes the final component from a path string.

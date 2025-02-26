@@ -1,3 +1,25 @@
+- [readFile (function)](#readfile-function)
+  - [readFile(...) (call signature)](#readfile-call-signature)
+  - [readFile(...) (call signature)](#readfile-call-signature-1)
+  - [readFile(...) (call signature)](#readfile-call-signature-2)
+  - [readFile(...) (call signature)](#readfile-call-signature-3)
+- [writeFile (function)](#writefile-function)
+- [isFile (function)](#isfile-function)
+- [isDir (function)](#isdir-function)
+- [isLink (function)](#islink-function)
+- [isExecutable (function)](#isexecutable-function)
+- [isReadable (function)](#isreadable-function)
+- [isWritable (function)](#iswritable-function)
+- [remove (function)](#remove-function)
+- [exists (function)](#exists-function)
+- [CopyOptions (type)](#copyoptions-type)
+  - [CopyOptions.whenTargetExists (property)](#copyoptionswhentargetexists-property)
+  - [CopyOptions.logging (object property)](#copyoptionslogging-object-property)
+    - [CopyOptions.logging.trace (function property)](#copyoptionsloggingtrace-function-property)
+    - [CopyOptions.logging.info (function property)](#copyoptionslogginginfo-function-property)
+- [copy (function)](#copy-function)
+- [rename (function)](#rename-function)
+
 # readFile (function)
 
 Read the contents of a file from disk.
@@ -10,13 +32,13 @@ const readFile: {
     path: string | Path,
     options: {
       binary: false;
-    },
+    }
   ): string;
   (
     path: string | Path,
     options: {
       binary: true;
-    },
+    }
   ): ArrayBuffer;
 };
 ```
@@ -66,7 +88,7 @@ Strings are written using the UTF-8 encoding.
 ```ts
 declare function writeFile(
   path: string | Path,
-  data: string | ArrayBuffer,
+  data: string | ArrayBuffer
 ): void;
 ```
 
@@ -228,7 +250,7 @@ Provides the same functionality as the command `cp -R`.
 declare function copy(
   from: string | Path,
   to: string | Path,
-  options?: CopyOptions,
+  options?: CopyOptions
 ): void;
 ```
 

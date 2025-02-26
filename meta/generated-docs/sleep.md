@@ -1,3 +1,8 @@
+- [sleep (function)](#sleep-function)
+  - [sleep(...) (call signature)](#sleep-call-signature)
+  - [sleep.sync (method)](#sleepsync-method)
+  - [sleep.async (method)](#sleepasync-method)
+
 # sleep (function)
 
 Blocks the current thread for at least the specified number of milliseconds,

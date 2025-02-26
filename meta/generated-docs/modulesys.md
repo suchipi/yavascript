@@ -1,3 +1,18 @@
+- [ModuleDelegate (interface)](#moduledelegate-interface)
+  - [ModuleDelegate.searchExtensions (property)](#moduledelegatesearchextensions-property)
+  - [ModuleDelegate.compilers (object property)](#moduledelegatecompilers-object-property)
+  - [ModuleDelegate.resolve (method)](#moduledelegateresolve-method)
+  - [ModuleDelegate.read (method)](#moduledelegateread-method)
+- [RequireFunction (interface)](#requirefunction-interface)
+  - [RequireFunction(...) (call signature)](#requirefunction-call-signature)
+  - [RequireFunction.resolve (function property)](#requirefunctionresolve-function-property)
+- [require (RequireFunction)](#require-requirefunction)
+- [ImportMeta (interface)](#importmeta-interface)
+  - [ImportMeta.url (string property)](#importmetaurl-string-property)
+  - [ImportMeta.main (boolean property)](#importmetamain-boolean-property)
+  - [ImportMeta.require (RequireFunction property)](#importmetarequire-requirefunction-property)
+  - [ImportMeta.resolve (`RequireFunction["resolve"]` property)](#importmetaresolve-requirefunctionresolve-property)
+
 # ModuleDelegate (interface)
 
 An object which lets you configure the module loader (import/export/require).

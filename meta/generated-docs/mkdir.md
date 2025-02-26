@@ -1,3 +1,5 @@
+- [mkdir (function)](#mkdir-function)
+
 # mkdir (function)
 
 Create a directory (folder).
@@ -14,6 +16,6 @@ declare function mkdir(
       trace?: (...args: Array<any>) => void;
       info?: (...args: Array<any>) => void;
     };
-  },
+  }
 ): void;
 ```

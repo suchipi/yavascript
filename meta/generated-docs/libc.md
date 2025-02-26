@@ -1,3 +1,202 @@
+- [scriptArgs (value)](#scriptargs-value)
+- [FILE (interface)](#file-interface)
+  - [FILE.target (property)](#filetarget-property)
+  - [FILE.close (method)](#fileclose-method)
+  - [FILE.puts (method)](#fileputs-method)
+  - [FILE.printf (method)](#fileprintf-method)
+  - [FILE.flush (method)](#fileflush-method)
+  - [FILE.sync (method)](#filesync-method)
+  - [FILE.seek (method)](#fileseek-method)
+  - [FILE.tell (method)](#filetell-method)
+  - [FILE.tello (method)](#filetello-method)
+  - [FILE.eof (method)](#fileeof-method)
+  - [FILE.fileno (method)](#filefileno-method)
+  - [FILE.read (method)](#fileread-method)
+  - [FILE.write (method)](#filewrite-method)
+  - [FILE.writeTo (method)](#filewriteto-method)
+  - [FILE.getline (method)](#filegetline-method)
+  - [FILE.readAsString (method)](#filereadasstring-method)
+  - [FILE.getByte (method)](#filegetbyte-method)
+  - [FILE.putByte (method)](#fileputbyte-method)
+  - [FILE.setvbuf (method)](#filesetvbuf-method)
+- ["quickjs:std" (namespace)](#quickjsstd-namespace)
+  - ["quickjs:std".setExitCode (exported function)](#quickjsstdsetexitcode-exported-function)
+  - ["quickjs:std".getExitCode (exported function)](#quickjsstdgetexitcode-exported-function)
+  - ["quickjs:std".exit (exported function)](#quickjsstdexit-exported-function)
+  - ["quickjs:std".loadFile (exported function)](#quickjsstdloadfile-exported-function)
+  - ["quickjs:std".isFILE (exported function)](#quickjsstdisfile-exported-function)
+  - ["quickjs:std".open (exported function)](#quickjsstdopen-exported-function)
+  - ["quickjs:std".popen (exported function)](#quickjsstdpopen-exported-function)
+  - ["quickjs:std".fdopen (exported function)](#quickjsstdfdopen-exported-function)
+  - ["quickjs:std".tmpfile (exported function)](#quickjsstdtmpfile-exported-function)
+  - ["quickjs:std".puts (exported function)](#quickjsstdputs-exported-function)
+  - ["quickjs:std".printf (exported function)](#quickjsstdprintf-exported-function)
+  - ["quickjs:std".sprintf (exported function)](#quickjsstdsprintf-exported-function)
+  - ["quickjs:std".in\_ (FILE)](#quickjsstdin_-file)
+  - ["quickjs:std".out (exported FILE)](#quickjsstdout-exported-file)
+  - ["quickjs:std".err (exported FILE)](#quickjsstderr-exported-file)
+  - ["quickjs:std".SEEK_SET (exported number)](#quickjsstdseek_set-exported-number)
+  - ["quickjs:std".SEEK_CUR (exported number)](#quickjsstdseek_cur-exported-number)
+  - ["quickjs:std".SEEK_END (exported number)](#quickjsstdseek_end-exported-number)
+  - ["quickjs:std".\_IOFBF (exported number)](#quickjsstd_iofbf-exported-number)
+  - ["quickjs:std".\_IOLBF (exported number)](#quickjsstd_iolbf-exported-number)
+  - ["quickjs:std".\_IONBF (exported number)](#quickjsstd_ionbf-exported-number)
+  - ["quickjs:std".getenv (exported function)](#quickjsstdgetenv-exported-function)
+  - ["quickjs:std".setenv (exported function)](#quickjsstdsetenv-exported-function)
+  - ["quickjs:std".unsetenv (exported function)](#quickjsstdunsetenv-exported-function)
+  - ["quickjs:std".getenviron (exported function)](#quickjsstdgetenviron-exported-function)
+  - ["quickjs:std".getuid (exported function)](#quickjsstdgetuid-exported-function)
+  - ["quickjs:std".geteuid (exported function)](#quickjsstdgeteuid-exported-function)
+  - ["quickjs:std".getgid (exported function)](#quickjsstdgetgid-exported-function)
+  - ["quickjs:std".getegid (exported function)](#quickjsstdgetegid-exported-function)
+  - ["quickjs:std".UrlGet (interface)](#quickjsstdurlget-interface)
+    - [UrlGet(...) (call signature)](#urlget-call-signature)
+    - [UrlGet(...) (call signature)](#urlget-call-signature-1)
+    - [UrlGet(...) (call signature)](#urlget-call-signature-2)
+    - [UrlGet(...) (call signature)](#urlget-call-signature-3)
+    - [UrlGet(...) (call signature)](#urlget-call-signature-4)
+    - [UrlGet(...) (call signature)](#urlget-call-signature-5)
+    - [UrlGet(...) (call signature)](#urlget-call-signature-6)
+    - [UrlGet(...) (call signature)](#urlget-call-signature-7)
+    - [UrlGet(...) (call signature)](#urlget-call-signature-8)
+  - ["quickjs:std".urlGet (exported UrlGet)](#quickjsstdurlget-exported-urlget)
+  - ["quickjs:std".parseExtJSON (exported function)](#quickjsstdparseextjson-exported-function)
+  - ["quickjs:std".strftime (exported function)](#quickjsstdstrftime-exported-function)
+- ["quickjs:os" (namespace)](#quickjsos-namespace)
+  - ["quickjs:os".open (exported function)](#quickjsosopen-exported-function)
+  - ["quickjs:os".O_RDONLY (exported number)](#quickjsoso_rdonly-exported-number)
+  - ["quickjs:os".O_WRONLY (exported number)](#quickjsoso_wronly-exported-number)
+  - ["quickjs:os".O_RDWR (exported number)](#quickjsoso_rdwr-exported-number)
+  - ["quickjs:os".O_APPEND (exported number)](#quickjsoso_append-exported-number)
+  - ["quickjs:os".O_CREAT (exported number)](#quickjsoso_creat-exported-number)
+  - ["quickjs:os".O_EXCL (exported number)](#quickjsoso_excl-exported-number)
+  - ["quickjs:os".O_TRUNC (exported number)](#quickjsoso_trunc-exported-number)
+  - ["quickjs:os".O_BINARY (exported value)](#quickjsoso_binary-exported-value)
+  - ["quickjs:os".O_TEXT (exported value)](#quickjsoso_text-exported-value)
+  - ["quickjs:os".close (exported function)](#quickjsosclose-exported-function)
+  - ["quickjs:os".OsSeek (interface)](#quickjsososseek-interface)
+    - [OsSeek(...) (call signature)](#osseek-call-signature)
+    - [OsSeek(...) (call signature)](#osseek-call-signature-1)
+  - ["quickjs:os".seek (exported OsSeek)](#quickjsosseek-exported-osseek)
+  - ["quickjs:os".read (exported function)](#quickjsosread-exported-function)
+  - ["quickjs:os".write (exported function)](#quickjsoswrite-exported-function)
+  - ["quickjs:os".isatty (exported function)](#quickjsosisatty-exported-function)
+  - ["quickjs:os".ttyGetWinSize (exported function)](#quickjsosttygetwinsize-exported-function)
+  - ["quickjs:os".ttySetRaw (exported function)](#quickjsosttysetraw-exported-function)
+  - ["quickjs:os".remove (exported function)](#quickjsosremove-exported-function)
+  - ["quickjs:os".rename (exported function)](#quickjsosrename-exported-function)
+  - ["quickjs:os".realpath (exported function)](#quickjsosrealpath-exported-function)
+  - ["quickjs:os".getcwd (exported function)](#quickjsosgetcwd-exported-function)
+  - ["quickjs:os".chdir (exported function)](#quickjsoschdir-exported-function)
+  - ["quickjs:os".mkdir (exported function)](#quickjsosmkdir-exported-function)
+  - ["quickjs:os".Stats (exported type)](#quickjsosstats-exported-type)
+    - [Stats.dev (number property)](#statsdev-number-property)
+    - [Stats.ino (number property)](#statsino-number-property)
+    - [Stats.mode (number property)](#statsmode-number-property)
+    - [Stats.nlink (number property)](#statsnlink-number-property)
+    - [Stats.uid (number property)](#statsuid-number-property)
+    - [Stats.gid (number property)](#statsgid-number-property)
+    - [Stats.rdev (number property)](#statsrdev-number-property)
+    - [Stats.size (number property)](#statssize-number-property)
+    - [Stats.blocks (number property)](#statsblocks-number-property)
+    - [Stats.atime (number property)](#statsatime-number-property)
+    - [Stats.mtime (number property)](#statsmtime-number-property)
+    - [Stats.ctime (number property)](#statsctime-number-property)
+  - ["quickjs:os".stat (exported function)](#quickjsosstat-exported-function)
+  - ["quickjs:os".lstat (exported function)](#quickjsoslstat-exported-function)
+  - ["quickjs:os".S_IFMT (exported number)](#quickjsoss_ifmt-exported-number)
+  - ["quickjs:os".S_IFIFO (exported number)](#quickjsoss_ififo-exported-number)
+  - ["quickjs:os".S_IFCHR (exported number)](#quickjsoss_ifchr-exported-number)
+  - ["quickjs:os".S_IFDIR (exported number)](#quickjsoss_ifdir-exported-number)
+  - ["quickjs:os".S_IFBLK (exported number)](#quickjsoss_ifblk-exported-number)
+  - ["quickjs:os".S_IFREG (exported number)](#quickjsoss_ifreg-exported-number)
+  - ["quickjs:os".S_IFSOCK (exported value)](#quickjsoss_ifsock-exported-value)
+  - ["quickjs:os".S_IFLNK (exported value)](#quickjsoss_iflnk-exported-value)
+  - ["quickjs:os".S_ISGID (exported value)](#quickjsoss_isgid-exported-value)
+  - ["quickjs:os".S_ISUID (exported value)](#quickjsoss_isuid-exported-value)
+  - ["quickjs:os".S_IRWXU (exported number)](#quickjsoss_irwxu-exported-number)
+  - ["quickjs:os".S_IRUSR (exported number)](#quickjsoss_irusr-exported-number)
+  - ["quickjs:os".S_IWUSR (exported number)](#quickjsoss_iwusr-exported-number)
+  - ["quickjs:os".S_IXUSR (exported number)](#quickjsoss_ixusr-exported-number)
+  - ["quickjs:os".S_IRWXG (exported number)](#quickjsoss_irwxg-exported-number)
+  - ["quickjs:os".S_IRGRP (exported number)](#quickjsoss_irgrp-exported-number)
+  - ["quickjs:os".S_IWGRP (exported number)](#quickjsoss_iwgrp-exported-number)
+  - ["quickjs:os".S_IXGRP (exported number)](#quickjsoss_ixgrp-exported-number)
+  - ["quickjs:os".S_IRWXO (exported number)](#quickjsoss_irwxo-exported-number)
+  - ["quickjs:os".S_IROTH (exported number)](#quickjsoss_iroth-exported-number)
+  - ["quickjs:os".S_IWOTH (exported number)](#quickjsoss_iwoth-exported-number)
+  - ["quickjs:os".S_IXOTH (exported number)](#quickjsoss_ixoth-exported-number)
+  - ["quickjs:os".utimes (exported function)](#quickjsosutimes-exported-function)
+  - ["quickjs:os".symlink (exported function)](#quickjsossymlink-exported-function)
+  - ["quickjs:os".readlink (exported function)](#quickjsosreadlink-exported-function)
+  - ["quickjs:os".readdir (exported function)](#quickjsosreaddir-exported-function)
+  - ["quickjs:os".setReadHandler (exported function)](#quickjsossetreadhandler-exported-function)
+  - ["quickjs:os".setWriteHandler (exported function)](#quickjsossetwritehandler-exported-function)
+  - ["quickjs:os".signal (exported function)](#quickjsossignal-exported-function)
+  - ["quickjs:os".SIGINT (exported number)](#quickjsossigint-exported-number)
+  - ["quickjs:os".SIGABRT (exported number)](#quickjsossigabrt-exported-number)
+  - ["quickjs:os".SIGFPE (exported number)](#quickjsossigfpe-exported-number)
+  - ["quickjs:os".SIGILL (exported number)](#quickjsossigill-exported-number)
+  - ["quickjs:os".SIGSEGV (exported number)](#quickjsossigsegv-exported-number)
+  - ["quickjs:os".SIGTERM (exported number)](#quickjsossigterm-exported-number)
+  - ["quickjs:os".SIGQUIT (exported value)](#quickjsossigquit-exported-value)
+  - ["quickjs:os".SIGPIPE (exported value)](#quickjsossigpipe-exported-value)
+  - ["quickjs:os".SIGALRM (exported value)](#quickjsossigalrm-exported-value)
+  - ["quickjs:os".SIGUSR1 (exported value)](#quickjsossigusr1-exported-value)
+  - ["quickjs:os".SIGUSR2 (exported value)](#quickjsossigusr2-exported-value)
+  - ["quickjs:os".SIGCHLD (exported value)](#quickjsossigchld-exported-value)
+  - ["quickjs:os".SIGCONT (exported value)](#quickjsossigcont-exported-value)
+  - ["quickjs:os".SIGSTOP (exported value)](#quickjsossigstop-exported-value)
+  - ["quickjs:os".SIGTSTP (exported value)](#quickjsossigtstp-exported-value)
+  - ["quickjs:os".SIGTTIN (exported value)](#quickjsossigttin-exported-value)
+  - ["quickjs:os".SIGTTOU (exported value)](#quickjsossigttou-exported-value)
+  - ["quickjs:os".kill (exported function)](#quickjsoskill-exported-function)
+  - ["quickjs:os".ExecOptions (exported type)](#quickjsosexecoptions-exported-type)
+    - [ExecOptions.block (boolean property)](#execoptionsblock-boolean-property)
+    - [ExecOptions.usePath (boolean property)](#execoptionsusepath-boolean-property)
+    - [ExecOptions.file (string property)](#execoptionsfile-string-property)
+    - [ExecOptions.cwd (string property)](#execoptionscwd-string-property)
+    - [ExecOptions.stdin (number property)](#execoptionsstdin-number-property)
+    - [ExecOptions.stdout (number property)](#execoptionsstdout-number-property)
+    - [ExecOptions.stderr (number property)](#execoptionsstderr-number-property)
+    - [ExecOptions.env (object property)](#execoptionsenv-object-property)
+    - [ExecOptions.uid (number property)](#execoptionsuid-number-property)
+    - [ExecOptions.gid (number property)](#execoptionsgid-number-property)
+  - ["quickjs:os".exec (exported function)](#quickjsosexec-exported-function)
+  - ["quickjs:os".waitpid (exported function)](#quickjsoswaitpid-exported-function)
+  - ["quickjs:os".WNOHANG (exported number)](#quickjsoswnohang-exported-number)
+  - ["quickjs:os".WUNTRACED (exported number)](#quickjsoswuntraced-exported-number)
+  - ["quickjs:os".WEXITSTATUS (exported function)](#quickjsoswexitstatus-exported-function)
+  - ["quickjs:os".WTERMSIG (exported function)](#quickjsoswtermsig-exported-function)
+  - ["quickjs:os".WSTOPSIG (exported function)](#quickjsoswstopsig-exported-function)
+  - ["quickjs:os".WIFEXITED (exported function)](#quickjsoswifexited-exported-function)
+  - ["quickjs:os".WIFSIGNALED (exported function)](#quickjsoswifsignaled-exported-function)
+  - ["quickjs:os".WIFSTOPPED (exported function)](#quickjsoswifstopped-exported-function)
+  - ["quickjs:os".WIFCONTINUED (exported function)](#quickjsoswifcontinued-exported-function)
+  - ["quickjs:os".dup (exported function)](#quickjsosdup-exported-function)
+  - ["quickjs:os".dup2 (exported function)](#quickjsosdup2-exported-function)
+  - ["quickjs:os".pipe (exported function)](#quickjsospipe-exported-function)
+  - ["quickjs:os".sleep (exported function)](#quickjsossleep-exported-function)
+  - ["quickjs:os".OSTimer (exported type)](#quickjsosostimer-exported-type)
+  - ["quickjs:os".setTimeout (exported function)](#quickjsossettimeout-exported-function)
+  - ["quickjs:os".clearTimeout (exported function)](#quickjsoscleartimeout-exported-function)
+  - ["quickjs:os".platform (exported value)](#quickjsosplatform-exported-value)
+  - ["quickjs:os".StructuredClonable (exported type)](#quickjsosstructuredclonable-exported-type)
+  - ["quickjs:os".Worker (exported class)](#quickjsosworker-exported-class)
+    - [Worker (constructor)](#worker-constructor)
+    - [Worker.parent (static Worker property)](#workerparent-static-worker-property)
+    - [Worker.prototype.postMessage (method)](#workerprototypepostmessage-method)
+    - [Worker.prototype.onmessage (property)](#workerprototypeonmessage-property)
+  - ["quickjs:os".R_OK (exported number)](#quickjsosr_ok-exported-number)
+  - ["quickjs:os".W_OK (exported number)](#quickjsosw_ok-exported-number)
+  - ["quickjs:os".X_OK (exported number)](#quickjsosx_ok-exported-number)
+  - ["quickjs:os".F_OK (exported number)](#quickjsosf_ok-exported-number)
+  - ["quickjs:os".access (exported function)](#quickjsosaccess-exported-function)
+  - ["quickjs:os".execPath (exported function)](#quickjsosexecpath-exported-function)
+  - ["quickjs:os".chmod (exported function)](#quickjsoschmod-exported-function)
+- [setTimeout (value)](#settimeout-value)
+- [clearTimeout (value)](#cleartimeout-value)
+
 # scriptArgs (value)
 
 Provides the command line arguments. The first argument is the script name.
@@ -263,39 +462,39 @@ declare module "quickjs:std" {
       url: string,
       options: {
         binary: false;
-      },
+      }
     ): string;
     (
       url: string,
       options: {
         full: false;
-      },
+      }
     ): string;
     (
       url: string,
       options: {
         binary: false;
         full: false;
-      },
+      }
     ): string;
     (
       url: string,
       options: {
         binary: true;
-      },
+      }
     ): ArrayBuffer;
     (
       url: string,
       options: {
         binary: true;
         full: false;
-      },
+      }
     ): ArrayBuffer;
     (
       url: string,
       options: {
         full: true;
-      },
+      }
     ): {
       status: number;
       response: string;
@@ -306,7 +505,7 @@ declare module "quickjs:std" {
       options: {
         full: true;
         binary: false;
-      },
+      }
     ): {
       status: number;
       response: string;
@@ -317,7 +516,7 @@ declare module "quickjs:std" {
       options: {
         full: true;
         binary: true;
-      },
+      }
     ): {
       status: number;
       response: ArrayBuffer;
@@ -329,7 +528,7 @@ declare module "quickjs:std" {
   export function strftime(
     maxBytes: number,
     format: string,
-    time: Date | number,
+    time: Date | number
   ): string;
 }
 ```
@@ -635,39 +834,39 @@ interface UrlGet {
     url: string,
     options: {
       binary: false;
-    },
+    }
   ): string;
   (
     url: string,
     options: {
       full: false;
-    },
+    }
   ): string;
   (
     url: string,
     options: {
       binary: false;
       full: false;
-    },
+    }
   ): string;
   (
     url: string,
     options: {
       binary: true;
-    },
+    }
   ): ArrayBuffer;
   (
     url: string,
     options: {
       binary: true;
       full: false;
-    },
+    }
   ): ArrayBuffer;
   (
     url: string,
     options: {
       full: true;
-    },
+    }
   ): {
     status: number;
     response: string;
@@ -678,7 +877,7 @@ interface UrlGet {
     options: {
       full: true;
       binary: false;
-    },
+    }
   ): {
     status: number;
     response: string;
@@ -689,7 +888,7 @@ interface UrlGet {
     options: {
       full: true;
       binary: true;
-    },
+    }
   ): {
     status: number;
     response: ArrayBuffer;
@@ -881,7 +1080,7 @@ Formats a time/date into a format as specified by the user.
 function strftime(
   maxBytes: number,
   format: string,
-  time: Date | number,
+  time: Date | number
 ): string;
 ```
 
@@ -909,13 +1108,13 @@ declare module "quickjs:os" {
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
-    length: number,
+    length: number
   ): number;
   export function write(
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
-    length: number,
+    length: number
   ): number;
   export function isatty(fd: number): boolean;
   export function ttyGetWinSize(fd: number): null | [number, number];
@@ -972,7 +1171,7 @@ declare module "quickjs:os" {
   export function setWriteHandler(fd: number, func: null | (() => void)): void;
   export function signal(
     signal: number,
-    func: null | undefined | (() => void),
+    func: null | undefined | (() => void)
   ): void;
   export var SIGINT: number;
   export var SIGABRT: number;
@@ -1026,7 +1225,7 @@ declare module "quickjs:os" {
   };
   export function setTimeout(
     func: (...args: any) => any,
-    delay: number,
+    delay: number
   ): OSTimer;
   export function clearTimeout(handle: OSTimer): void;
   export var platform: "linux" | "darwin" | "win32" | "freebsd" | "js";
@@ -1212,7 +1411,7 @@ function read(
   fd: number,
   buffer: ArrayBuffer,
   offset: number,
-  length: number,
+  length: number
 ): number;
 ```
 
@@ -1225,7 +1424,7 @@ function write(
   fd: number,
   buffer: ArrayBuffer,
   offset: number,
-  length: number,
+  length: number
 ): number;
 ```
 

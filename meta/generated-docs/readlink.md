@@ -1,3 +1,5 @@
+- [readlink (function)](#readlink-function)
+
 # readlink (function)
 
 Reads a symlink.

@@ -1,3 +1,19 @@
+- [BaseExecOptions (type)](#baseexecoptions-type)
+  - [BaseExecOptions.cwd (property)](#baseexecoptionscwd-property)
+  - [BaseExecOptions.env (object property)](#baseexecoptionsenv-object-property)
+  - [BaseExecOptions.logging (object property)](#baseexecoptionslogging-object-property)
+    - [BaseExecOptions.logging.trace (function property)](#baseexecoptionsloggingtrace-function-property)
+    - [BaseExecOptions.logging.info (function property)](#baseexecoptionslogginginfo-function-property)
+  - [BaseExecOptions.failOnNonZeroStatus (boolean property)](#baseexecoptionsfailonnonzerostatus-boolean-property)
+  - [BaseExecOptions.captureOutput (property)](#baseexecoptionscaptureoutput-property)
+  - [BaseExecOptions.block (boolean property)](#baseexecoptionsblock-boolean-property)
+- [ExecWaitResult (type)](#execwaitresult-type)
+- [Exec (interface)](#exec-interface)
+  - [Exec(...) (call signature)](#exec-call-signature)
+  - [Exec.toArgv (method)](#exectoargv-method)
+- [exec (Exec)](#exec-exec)
+- [$ (function)](#-function)
+
 # BaseExecOptions (type)
 
 ```ts
@@ -156,10 +172,10 @@ declare interface Exec {
       failOnNonZeroStatus: true;
       captureOutput: false;
       block: true;
-    },
+    }
   >(
     args: Array<string | Path | number> | string | Path,
-    options?: ExecOptions,
+    options?: ExecOptions
   ): ExecOptions["block"] extends false
     ? {
         wait(): ExecWaitResult<ExecOptions>;

@@ -1,3 +1,9 @@
+- [help (function)](#help-function)
+  - [help(...) (call signature)](#help-call-signature)
+  - [help.setHelpText (function property)](#helpsethelptext-function-property)
+    - [help.setHelpText(...) (call signature)](#helpsethelptext-call-signature)
+    - [help.setHelpText.lazy (method)](#helpsethelptextlazy-method)
+
 # help (function)
 
 Prints help and usage text about the provided value, if any is available.

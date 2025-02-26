@@ -1,3 +1,5 @@
+- [touch (function)](#touch-function)
+
 # touch (function)
 
 If the file at `path` exists, update its creation/modification timestamps.

@@ -1,3 +1,9 @@
+- [cat (function)](#cat-function)
+  - [cat(...) (call signature)](#cat-call-signature)
+  - [cat(...) (call signature)](#cat-call-signature-1)
+  - [cat(...) (call signature)](#cat-call-signature-2)
+  - [cat(...) (call signature)](#cat-call-signature-3)
+
 # cat (function)
 
 Reads the contents of one or more files from disk as either one UTF-8 string
@@ -11,13 +17,13 @@ const cat: {
     paths: string | Path | Array<string | Path>,
     options: {
       binary: false;
-    },
+    }
   ): string;
   (
     paths: string | Path | Array<string | Path>,
     options: {
       binary: true;
-    },
+    }
   ): ArrayBuffer;
 };
 ```

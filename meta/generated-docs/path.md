@@ -1,3 +1,33 @@
+- [Path (class)](#path-class)
+  - [Path.OS_SEGMENT_SEPARATOR (static property)](#pathos_segment_separator-static-property)
+  - [Path.OS_ENV_VAR_SEPARATOR (static property)](#pathos_env_var_separator-static-property)
+  - [Path.OS_PROGRAM_EXTENSIONS (static property)](#pathos_program_extensions-static-property)
+  - [Path.splitToSegments (static method)](#pathsplittosegments-static-method)
+  - [Path.detectSeparator (static method)](#pathdetectseparator-static-method)
+  - [Path.normalize (static method)](#pathnormalize-static-method)
+  - [Path.isAbsolute (static method)](#pathisabsolute-static-method)
+  - [Path.prototype.segments (property)](#pathprototypesegments-property)
+  - [Path.prototype.separator (string property)](#pathprototypeseparator-string-property)
+  - [Path (constructor)](#path-constructor)
+  - [Path.fromRaw (static method)](#pathfromraw-static-method)
+  - [Path.prototype.normalize (method)](#pathprototypenormalize-method)
+  - [Path.prototype.concat (method)](#pathprototypeconcat-method)
+  - [Path.prototype.isAbsolute (method)](#pathprototypeisabsolute-method)
+  - [Path.prototype.clone (method)](#pathprototypeclone-method)
+  - [Path.prototype.relativeTo (method)](#pathprototyperelativeto-method)
+  - [Path.prototype.toString (method)](#pathprototypetostring-method)
+  - [Path.prototype.toJSON (method)](#pathprototypetojson-method)
+  - [Path.prototype.basename (method)](#pathprototypebasename-method)
+  - [Path.prototype.extname (method)](#pathprototypeextname-method)
+  - [Path.prototype.dirname (method)](#pathprototypedirname-method)
+  - [Path.prototype.startsWith (method)](#pathprototypestartswith-method)
+  - [Path.prototype.endsWith (method)](#pathprototypeendswith-method)
+  - [Path.prototype.indexOf (method)](#pathprototypeindexof-method)
+  - [Path.prototype.includes (method)](#pathprototypeincludes-method)
+  - [Path.prototype.replace (method)](#pathprototypereplace-method)
+  - [Path.prototype.replaceAll (method)](#pathprototypereplaceall-method)
+  - [Path.prototype.replaceLast (method)](#pathprototypereplacelast-method)
+
 # Path (class)
 
 An object that represents a filesystem path.
@@ -10,7 +40,7 @@ declare class Path {
   static splitToSegments(inputParts: Array<string> | string): Array<string>;
   static detectSeparator<Fallback extends string | null = string>(
     input: Array<string> | string,
-    fallback: Fallback = Path.OS_SEGMENT_SEPARATOR,
+    fallback: Fallback = Path.OS_SEGMENT_SEPARATOR
   ): string | Fallback;
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
@@ -28,7 +58,7 @@ declare class Path {
     dir: Path | string,
     options?: {
       noLeadingDot?: boolean;
-    },
+    }
   ): Path;
   toString(): string;
   toJSON(): string;
@@ -39,19 +69,19 @@ declare class Path {
   endsWith(value: string | Path | Array<string | Path>): boolean;
   indexOf(
     value: string | Path | Array<string | Path>,
-    fromIndex?: number | undefined,
+    fromIndex?: number | undefined
   ): number;
   includes(
     value: string | Path | Array<string | Path>,
-    fromIndex?: number | undefined,
+    fromIndex?: number | undefined
   ): boolean;
   replace(
     value: string | Path | Array<string | Path>,
-    replacement: string | Path | Array<string | Path>,
+    replacement: string | Path | Array<string | Path>
   ): Path;
   replaceAll(
     value: string | Path | Array<string | Path>,
-    replacement: string | Path | Array<string | Path>,
+    replacement: string | Path | Array<string | Path>
   ): Path;
   replaceLast(replacement: string | Path | Array<string | Path>): Path;
 }

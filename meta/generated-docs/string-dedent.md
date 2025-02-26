@@ -1,3 +1,9 @@
+- [StringConstructor (interface)](#stringconstructor-interface)
+  - [StringConstructor.dedent (function property)](#stringconstructordedent-function-property)
+    - [StringConstructor.dedent(...) (call signature)](#stringconstructordedent-call-signature)
+    - [StringConstructor.dedent(...) (call signature)](#stringconstructordedent-call-signature-1)
+    - [StringConstructor.dedent(...) (call signature)](#stringconstructordedent-call-signature-2)
+
 # StringConstructor (interface)
 
 ```ts
@@ -12,9 +18,9 @@ interface StringConstructor {
       Func extends (
         strings: readonly string[] | ArrayLike<string>,
         ...substitutions: any[]
-      ) => string,
+      ) => string
     >(
-      input: Func,
+      input: Func
     ): Func;
   };
 }

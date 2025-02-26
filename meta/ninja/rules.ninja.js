@@ -82,7 +82,7 @@ rule("macaroni", {
 });
 
 rule("prettier", {
-  command: "npx --no-install prettier $in > $out",
+  command: "npx --no-install prettier $PRETTIER_FLAGS $in > $out",
   description: "PRETTIER $out",
   implicitInputs: [`node_modules/prettier/bin-prettier.js`],
 });
@@ -100,6 +100,15 @@ rule("md-links-from-json5", {
   command: `node meta/scripts/md-links-from-json5.js $in $out`,
   description: "MD-LINKS-FROM-JSON5 $out",
   implicitInputs: walkJsDeps("meta/scripts/md-links-from-json5.js"),
+});
+
+rule("markdown-toc", {
+  command: `npx --no-install markdown-toc $in > $out`,
+  description: "MD-TOC $out",
+  implicitInputs: [
+    "node_modules/markdown-toc/cli.js",
+    "node_modules/markdown-toc/package.json",
+  ],
 });
 
 rule("combine", {

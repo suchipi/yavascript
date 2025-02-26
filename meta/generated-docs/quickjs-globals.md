@@ -1,3 +1,7 @@
+- [std (value)](#std-value)
+- [os (value)](#os-value)
+- [\_\_date_clock (function)](#__date_clock-function)
+
 # std (value)
 
 ```ts

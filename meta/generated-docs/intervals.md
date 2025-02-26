@@ -1,3 +1,7 @@
+- [Interval (type)](#interval-type)
+- [setInterval (function)](#setinterval-function)
+- [clearInterval (function)](#clearinterval-function)
+
 # Interval (type)
 
 ```ts

@@ -1,3 +1,7 @@
+- [exit (function)](#exit-function)
+  - [exit(...) (call signature)](#exit-call-signature)
+  - [exit.code (number property)](#exitcode-number-property)
+
 # exit (function)
 
 Exit the yavascript process.

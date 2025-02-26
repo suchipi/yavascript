@@ -1,3 +1,5 @@
+- [extname (function)](#extname-function)
+
 # extname (function)
 
 Returns the file extension of the file at a given path.
@@ -11,6 +13,6 @@ declare function extname(
   pathOrFilename: string | Path,
   options?: {
     full?: boolean;
-  },
+  }
 ): string;
 ```

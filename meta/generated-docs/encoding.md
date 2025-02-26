@@ -1,3 +1,7 @@
+- ["quickjs:encoding" (namespace)](#quickjsencoding-namespace)
+  - ["quickjs:encoding".toUtf8 (exported function)](#quickjsencodingtoutf8-exported-function)
+  - ["quickjs:encoding".fromUtf8 (exported function)](#quickjsencodingfromutf8-exported-function)
+
 # "quickjs:encoding" (namespace)
 
 ```ts

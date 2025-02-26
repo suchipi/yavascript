@@ -1,3 +1,5 @@
+- [mkdirp (function)](#mkdirp-function)
+
 # mkdirp (function)
 
 Create a directory (folder) and all parents, recursively
@@ -15,6 +17,6 @@ declare function mkdirp(
       trace?: (...args: Array<any>) => void;
       info?: (...args: Array<any>) => void;
     };
-  },
+  }
 ): void;
 ```

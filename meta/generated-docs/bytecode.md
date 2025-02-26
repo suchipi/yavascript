@@ -1,3 +1,8 @@
+- ["quickjs:bytecode" (namespace)](#quickjsbytecode-namespace)
+  - ["quickjs:bytecode".fromFile (exported function)](#quickjsbytecodefromfile-exported-function)
+  - ["quickjs:bytecode".fromValue (exported function)](#quickjsbytecodefromvalue-exported-function)
+  - ["quickjs:bytecode".toValue (exported function)](#quickjsbytecodetovalue-exported-function)
+
 # "quickjs:bytecode" (namespace)
 
 ```ts
@@ -8,13 +13,13 @@ declare module "quickjs:bytecode" {
       byteSwap?: boolean;
       sourceType?: "module" | "script";
       encodedFileName?: string;
-    },
+    }
   ): ArrayBuffer;
   export function fromValue(
     value: any,
     options?: {
       byteSwap?: boolean;
-    },
+    }
   ): ArrayBuffer;
   export function toValue(bytecode: ArrayBuffer): any;
 }
@@ -33,7 +38,7 @@ function fromFile(
     byteSwap?: boolean;
     sourceType?: "module" | "script";
     encodedFileName?: string;
-  },
+  }
 ): ArrayBuffer;
 ```
 
@@ -46,7 +51,7 @@ function fromValue(
   value: any,
   options?: {
     byteSwap?: boolean;
-  },
+  }
 ): ArrayBuffer;
 ```
 

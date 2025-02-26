@@ -1,3 +1,12 @@
+- [clear (function)](#clear-function)
+- [Console (interface)](#console-interface)
+  - [Console.log (method)](#consolelog-method)
+  - [Console.info (method)](#consoleinfo-method)
+  - [Console.warn (method)](#consolewarn-method)
+  - [Console.error (method)](#consoleerror-method)
+  - [Console.clear (method)](#consoleclear-method)
+- [console (Console)](#console-console)
+
 # clear (function)
 
 Clear the contents and scrollback buffer of the tty by printing special characters into stdout.

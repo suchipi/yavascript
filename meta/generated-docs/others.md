@@ -1,3 +1,13 @@
+- [byte (type)](#byte-type)
+- [number (NumberConstructor)](#number-numberconstructor)
+- [string (StringConstructor)](#string-stringconstructor)
+- [boolean (BooleanConstructor)](#boolean-booleanconstructor)
+- [bigint (BigIntConstructor)](#bigint-bigintconstructor)
+- [symbol (SymbolConstructor)](#symbol-symbolconstructor)
+- [TypedArray (type)](#typedarray-type)
+- [TypedArrayConstructor (type)](#typedarrayconstructor-type)
+- [ErrorOptions (interface)](#erroroptions-interface)
+
 # byte (type)
 
 Any integer in the range [0, 255].

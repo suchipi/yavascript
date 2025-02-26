@@ -1,3 +1,5 @@
+- [realpath (function)](#realpath-function)
+
 # realpath (function)
 
 Get the absolute path given a relative path. Symlinks are also resolved.

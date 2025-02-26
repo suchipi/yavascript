@@ -1,10 +1,155 @@
+- [ObjectConstructor (interface)](#objectconstructor-interface)
+  - [ObjectConstructor.toPrimitive (method)](#objectconstructortoprimitive-method)
+  - [ObjectConstructor.isPrimitive (method)](#objectconstructorisprimitive-method)
+- [StringConstructor (interface)](#stringconstructor-interface)
+  - [StringConstructor.cooked (method)](#stringconstructorcooked-method)
+- [SymbolConstructor (interface)](#symbolconstructor-interface)
+  - [SymbolConstructor.typeofValue (property)](#symbolconstructortypeofvalue-property)
+  - [SymbolConstructor.operatorSet (property)](#symbolconstructoroperatorset-property)
+- [OperatorSet (type)](#operatorset-type)
+  - [OperatorSet.**is** (`"OperatorSet"` property)](#operatorsetis-operatorset-property)
+- [OperatorFunctions (interface)](#operatorfunctions-interface)
+  - [OperatorFunctions.pos (function property)](#operatorfunctionspos-function-property)
+  - [OperatorFunctions.neg (function property)](#operatorfunctionsneg-function-property)
+- [SelfOperators (interface)](#selfoperators-interface)
+  - [SelfOperators.left (undefined property)](#selfoperatorsleft-undefined-property)
+  - [SelfOperators.right (undefined property)](#selfoperatorsright-undefined-property)
+- [LeftOperators (interface)](#leftoperators-interface)
+  - [LeftOperators.left (object property)](#leftoperatorsleft-object-property)
+  - [LeftOperators.right (undefined property)](#leftoperatorsright-undefined-property)
+- [RightOperators (interface)](#rightoperators-interface)
+  - [RightOperators.left (undefined property)](#rightoperatorsleft-undefined-property)
+  - [RightOperators.right (object property)](#rightoperatorsright-object-property)
+- [OperatorsConstructor (interface)](#operatorsconstructor-interface)
+  - [OperatorsConstructor(...) (call signature)](#operatorsconstructor-call-signature)
+  - [OperatorsConstructor.create (function property)](#operatorsconstructorcreate-function-property)
+  - [OperatorsConstructor.updateBigIntOperators (method)](#operatorsconstructorupdatebigintoperators-method)
+- [Operators (OperatorsConstructor)](#operators-operatorsconstructor)
+- [Number (interface)](#number-interface)
+- [Boolean (interface)](#boolean-interface)
+- [String (interface)](#string-interface)
+- [BigInt (interface)](#bigint-interface)
+- [BigIntConstructor (interface)](#bigintconstructor-interface)
+  - [BigIntConstructor.tdiv (method)](#bigintconstructortdiv-method)
+  - [BigIntConstructor.fdiv (method)](#bigintconstructorfdiv-method)
+  - [BigIntConstructor.cdiv (method)](#bigintconstructorcdiv-method)
+  - [BigIntConstructor.ediv (method)](#bigintconstructorediv-method)
+  - [BigIntConstructor.tdivrem (method)](#bigintconstructortdivrem-method)
+  - [BigIntConstructor.fdivrem (method)](#bigintconstructorfdivrem-method)
+  - [BigIntConstructor.cdivrem (method)](#bigintconstructorcdivrem-method)
+  - [BigIntConstructor.edivrem (method)](#bigintconstructoredivrem-method)
+  - [BigIntConstructor.sqrt (method)](#bigintconstructorsqrt-method)
+  - [BigIntConstructor.sqrtrem (method)](#bigintconstructorsqrtrem-method)
+  - [BigIntConstructor.floorLog2 (method)](#bigintconstructorfloorlog2-method)
+  - [BigIntConstructor.ctz (method)](#bigintconstructorctz-method)
+- [BigFloatRoundingMode (type)](#bigfloatroundingmode-type)
+- [BigFloatEnvConstructor (interface)](#bigfloatenvconstructor-interface)
+  - [BigFloatEnvConstructor new(...) (construct signature)](#bigfloatenvconstructor-new-construct-signature)
+  - [BigFloatEnvConstructor.prec (getter)](#bigfloatenvconstructorprec-getter)
+  - [BigFloatEnvConstructor.expBits (getter)](#bigfloatenvconstructorexpbits-getter)
+  - [BigFloatEnvConstructor.setPrec (method)](#bigfloatenvconstructorsetprec-method)
+  - [BigFloatEnvConstructor.precMin (number property)](#bigfloatenvconstructorprecmin-number-property)
+  - [BigFloatEnvConstructor.precMax (number property)](#bigfloatenvconstructorprecmax-number-property)
+  - [BigFloatEnvConstructor.expBitsMin (number property)](#bigfloatenvconstructorexpbitsmin-number-property)
+  - [BigFloatEnvConstructor.expBitsMax (number property)](#bigfloatenvconstructorexpbitsmax-number-property)
+  - [BigFloatEnvConstructor.RNDN (BigFloatRoundingMode property)](#bigfloatenvconstructorrndn-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDZ (BigFloatRoundingMode property)](#bigfloatenvconstructorrndz-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDD (BigFloatRoundingMode property)](#bigfloatenvconstructorrndd-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDU (BigFloatRoundingMode property)](#bigfloatenvconstructorrndu-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDNA (BigFloatRoundingMode property)](#bigfloatenvconstructorrndna-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDA (BigFloatRoundingMode property)](#bigfloatenvconstructorrnda-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDF (BigFloatRoundingMode property)](#bigfloatenvconstructorrndf-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.prototype (BigFloatEnv property)](#bigfloatenvconstructorprototype-bigfloatenv-property)
+- [BigFloatEnv (BigFloatEnvConstructor)](#bigfloatenv-bigfloatenvconstructor)
+- [BigFloatEnv (interface)](#bigfloatenv-interface)
+  - [BigFloatEnv.prec (getter)](#bigfloatenvprec-getter)
+  - [BigFloatEnv.prec (setter)](#bigfloatenvprec-setter)
+  - [BigFloatEnv.expBits (getter)](#bigfloatenvexpbits-getter)
+  - [BigFloatEnv.expBits (setter)](#bigfloatenvexpbits-setter)
+  - [BigFloatEnv.rndMode (getter)](#bigfloatenvrndmode-getter)
+  - [BigFloatEnv.rndMode (setter)](#bigfloatenvrndmode-setter)
+  - [BigFloatEnv.subnormal (getter)](#bigfloatenvsubnormal-getter)
+  - [BigFloatEnv.subnormal (setter)](#bigfloatenvsubnormal-setter)
+  - [BigFloatEnv.invalidOperation (getter)](#bigfloatenvinvalidoperation-getter)
+  - [BigFloatEnv.invalidOperation (setter)](#bigfloatenvinvalidoperation-setter)
+  - [BigFloatEnv.divideByZero (getter)](#bigfloatenvdividebyzero-getter)
+  - [BigFloatEnv.divideByZero (setter)](#bigfloatenvdividebyzero-setter)
+  - [BigFloatEnv.overflow (getter)](#bigfloatenvoverflow-getter)
+  - [BigFloatEnv.overflow (setter)](#bigfloatenvoverflow-setter)
+  - [BigFloatEnv.underflow (getter)](#bigfloatenvunderflow-getter)
+  - [BigFloatEnv.underflow (setter)](#bigfloatenvunderflow-setter)
+  - [BigFloatEnv.inexact (getter)](#bigfloatenvinexact-getter)
+  - [BigFloatEnv.inexact (setter)](#bigfloatenvinexact-setter)
+  - [BigFloatEnv.clearStatus (method)](#bigfloatenvclearstatus-method)
+- [BigFloatConstructor (interface)](#bigfloatconstructor-interface)
+  - [BigFloatConstructor(...) (call signature)](#bigfloatconstructor-call-signature)
+  - [BigFloatConstructor.prototype (BigFloat property)](#bigfloatconstructorprototype-bigfloat-property)
+  - [BigFloatConstructor.LN2 (getter)](#bigfloatconstructorln2-getter)
+  - [BigFloatConstructor.PI (getter)](#bigfloatconstructorpi-getter)
+  - [BigFloatConstructor.MIN_VALUE (getter)](#bigfloatconstructormin_value-getter)
+  - [BigFloatConstructor.MAX_VALUE (getter)](#bigfloatconstructormax_value-getter)
+  - [BigFloatConstructor.EPSILON (getter)](#bigfloatconstructorepsilon-getter)
+  - [BigFloatConstructor.fpRound (method)](#bigfloatconstructorfpround-method)
+  - [BigFloatConstructor.parseFloat (method)](#bigfloatconstructorparsefloat-method)
+  - [BigFloatConstructor.isFinite (method)](#bigfloatconstructorisfinite-method)
+  - [BigFloatConstructor.isNaN (method)](#bigfloatconstructorisnan-method)
+  - [BigFloatConstructor.add (method)](#bigfloatconstructoradd-method)
+  - [BigFloatConstructor.sub (method)](#bigfloatconstructorsub-method)
+  - [BigFloatConstructor.mul (method)](#bigfloatconstructormul-method)
+  - [BigFloatConstructor.div (method)](#bigfloatconstructordiv-method)
+  - [BigFloatConstructor.floor (method)](#bigfloatconstructorfloor-method)
+  - [BigFloatConstructor.ceil (method)](#bigfloatconstructorceil-method)
+  - [BigFloatConstructor.round (method)](#bigfloatconstructorround-method)
+  - [BigFloatConstructor.trunc (method)](#bigfloatconstructortrunc-method)
+  - [BigFloatConstructor.abs (method)](#bigfloatconstructorabs-method)
+  - [BigFloatConstructor.fmod (method)](#bigfloatconstructorfmod-method)
+  - [BigFloatConstructor.remainder (method)](#bigfloatconstructorremainder-method)
+  - [BigFloatConstructor.sqrt (method)](#bigfloatconstructorsqrt-method)
+  - [BigFloatConstructor.sin (method)](#bigfloatconstructorsin-method)
+  - [BigFloatConstructor.cos (method)](#bigfloatconstructorcos-method)
+  - [BigFloatConstructor.tan (method)](#bigfloatconstructortan-method)
+  - [BigFloatConstructor.asin (method)](#bigfloatconstructorasin-method)
+  - [BigFloatConstructor.acos (method)](#bigfloatconstructoracos-method)
+  - [BigFloatConstructor.atan (method)](#bigfloatconstructoratan-method)
+  - [BigFloatConstructor.atan2 (method)](#bigfloatconstructoratan2-method)
+  - [BigFloatConstructor.exp (method)](#bigfloatconstructorexp-method)
+  - [BigFloatConstructor.log (method)](#bigfloatconstructorlog-method)
+  - [BigFloatConstructor.pow (method)](#bigfloatconstructorpow-method)
+- [BigFloat (BigFloatConstructor)](#bigfloat-bigfloatconstructor)
+- [BigFloat (interface)](#bigfloat-interface)
+  - [BigFloat.valueOf (method)](#bigfloatvalueof-method)
+  - [BigFloat.toString (method)](#bigfloattostring-method)
+  - [BigFloat.toPrecision (method)](#bigfloattoprecision-method)
+  - [BigFloat.toFixed (method)](#bigfloattofixed-method)
+  - [BigFloat.toExponential (method)](#bigfloattoexponential-method)
+- [BigDecimalRoundingMode (type)](#bigdecimalroundingmode-type)
+- [BigDecimalRoundingObject (type)](#bigdecimalroundingobject-type)
+- [BigDecimalConstructor (interface)](#bigdecimalconstructor-interface)
+  - [BigDecimalConstructor(...) (call signature)](#bigdecimalconstructor-call-signature)
+  - [BigDecimalConstructor(...) (call signature)](#bigdecimalconstructor-call-signature-1)
+  - [BigDecimalConstructor.add (method)](#bigdecimalconstructoradd-method)
+  - [BigDecimalConstructor.sub (method)](#bigdecimalconstructorsub-method)
+  - [BigDecimalConstructor.mul (method)](#bigdecimalconstructormul-method)
+  - [BigDecimalConstructor.div (method)](#bigdecimalconstructordiv-method)
+  - [BigDecimalConstructor.mod (method)](#bigdecimalconstructormod-method)
+  - [BigDecimalConstructor.sqrt (method)](#bigdecimalconstructorsqrt-method)
+  - [BigDecimalConstructor.round (method)](#bigdecimalconstructorround-method)
+  - [BigDecimalConstructor.prototype (BigDecimal property)](#bigdecimalconstructorprototype-bigdecimal-property)
+- [BigDecimal (BigDecimalConstructor)](#bigdecimal-bigdecimalconstructor)
+- [BigDecimal (interface)](#bigdecimal-interface)
+  - [BigDecimal.valueOf (method)](#bigdecimalvalueof-method)
+  - [BigDecimal.toString (method)](#bigdecimaltostring-method)
+  - [BigDecimal.toPrecision (method)](#bigdecimaltoprecision-method)
+  - [BigDecimal.toFixed (method)](#bigdecimaltofixed-method)
+  - [BigDecimal.toExponential (method)](#bigdecimaltoexponential-method)
+
 # ObjectConstructor (interface)
 
 ```ts
 interface ObjectConstructor {
   toPrimitive(
     input: any,
-    hint: "string" | "number" | "default",
+    hint: "string" | "number" | "default"
   ): string | number | bigint | boolean | undefined | symbol | null;
   isPrimitive(input: any): boolean;
 }
@@ -237,7 +382,7 @@ interface OperatorsConstructor {
     ...otherOperators: Array<LeftOperators<T, any> | RightOperators<T, any>>
   ) => OperatorSet;
   updateBigIntOperators(
-    ops: Pick<OperatorFunctions<BigInt, BigInt>, "/" | "**">,
+    ops: Pick<OperatorFunctions<BigInt, BigInt>, "/" | "**">
   ): void;
 }
 ```
@@ -1211,17 +1356,17 @@ interface BigFloat {
   toPrecision(
     precision: number,
     roundingMode?: BigFloatRoundingMode,
-    radix?: number,
+    radix?: number
   ): string;
   toFixed(
     fractionDigits: number,
     roundingMode?: BigFloatRoundingMode,
-    radix?: number,
+    radix?: number
   ): string;
   toExponential(
     fractionDigits: number,
     roundingMode?: BigFloatRoundingMode,
-    radix?: number,
+    radix?: number
   ): string;
   [Symbol.typeofValue]: () => "bigfloat";
 }
@@ -1443,11 +1588,11 @@ interface BigDecimal {
   toPrecision(precision: number, roundingMode?: BigDecimalRoundingMode): string;
   toFixed(
     fractionDigits: number,
-    roundingMode?: BigDecimalRoundingMode,
+    roundingMode?: BigDecimalRoundingMode
   ): string;
   toExponential(
     fractionDigits: number,
-    roundingMode?: BigDecimalRoundingMode,
+    roundingMode?: BigDecimalRoundingMode
   ): string;
 }
 ```

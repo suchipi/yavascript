@@ -1,3 +1,5 @@
+- [print (function)](#print-function)
+
 # print (function)
 
 `print` is an alias for `console.log`, which prints values to stdout. Any

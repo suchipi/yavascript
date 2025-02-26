@@ -3,6 +3,41 @@ const path = require("path");
 
 const dtsIncFiles = glob("src/**/*.inc.d.ts");
 
+const newlineFile = rel("../scripts/lib/newline.txt");
+
+function dtsToMd(
+  inputFile,
+  outputFile,
+  name = path.basename(inputFile).replace(/(?:\.inc)?\.d\.ts$/, "")
+) {
+  const mdWithoutToc = build({
+    rule: "dtsmd",
+    inputs: [inputFile],
+    output: builddir(`docs/${name}-no-toc.md`),
+  });
+
+  const toc = build({
+    rule: "markdown-toc",
+    inputs: [mdWithoutToc],
+    output: builddir(`docs/${name}-toc.md`),
+  });
+
+  const combined = build({
+    rule: "combine",
+    inputs: [toc, newlineFile, mdWithoutToc],
+    output: builddir(`docs/${name}-combined.md`),
+  });
+
+  build({
+    rule: "prettier",
+    ruleVariables: {
+      PRETTIER_FLAGS: "--parser markdown",
+    },
+    inputs: [combined],
+    output: outputFile,
+  });
+}
+
 for (const dtsFile of dtsIncFiles) {
   const inputFile = dtsFile;
   const outputFile = rel(
@@ -10,11 +45,7 @@ for (const dtsFile of dtsIncFiles) {
       path.basename(inputFile).replace(/\.inc\.d\.ts$/, ".md")
   );
 
-  build({
-    rule: "dtsmd",
-    inputs: [inputFile],
-    output: outputFile,
-  });
+  dtsToMd(inputFile, outputFile);
 }
 
 const quickjsDtsFilesMap = {
@@ -33,13 +64,9 @@ const quickjsDtsFilesMap = {
 
 for (const [outputName, quickjsDtsPath] of Object.entries(quickjsDtsFilesMap)) {
   const inputFile = quickjsDtsPath;
-  const outputFile = rel("../generated-docs/" + outputName + ".md");
+  const outputFile = rel(`../generated-docs/${outputName}.md`);
 
-  build({
-    rule: "dtsmd",
-    inputs: [inputFile],
-    output: outputFile,
-  });
+  dtsToMd(inputFile, outputFile, outputName);
 }
 
 const linkFooter = build({

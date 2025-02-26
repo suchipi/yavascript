@@ -1,3 +1,5 @@
+- [printf (function)](#printf-function)
+
 # printf (function)
 
 Print data to stdout using C-style format specifiers.

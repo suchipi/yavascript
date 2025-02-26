@@ -1,3 +1,16 @@
+- [yavascript (object)](#yavascript-object)
+  - [yavascript.version (string property)](#yavascriptversion-string-property)
+  - [yavascript.arch (property)](#yavascriptarch-property)
+  - [yavascript.ecmaVersion (string property)](#yavascriptecmaversion-string-property)
+  - [yavascript.compilers (object property)](#yavascriptcompilers-object-property)
+    - [yavascript.compilers.js (method)](#yavascriptcompilersjs-method)
+    - [yavascript.compilers.tsx (method)](#yavascriptcompilerstsx-method)
+    - [yavascript.compilers.ts (method)](#yavascriptcompilersts-method)
+    - [yavascript.compilers.jsx (method)](#yavascriptcompilersjsx-method)
+    - [yavascript.compilers.coffee (method)](#yavascriptcompilerscoffee-method)
+    - [yavascript.compilers.civet (method)](#yavascriptcompilerscivet-method)
+    - [yavascript.compilers.autodetect (method)](#yavascriptcompilersautodetect-method)
+
 # yavascript (object)
 
 Info about the currently-running yavascript binary
@@ -13,49 +26,49 @@ const yavascript: {
       options?: {
         filename?: string;
         expression?: boolean;
-      },
+      }
     ): string;
     tsx(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      },
+      }
     ): string;
     ts(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      },
+      }
     ): string;
     jsx(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      },
+      }
     ): string;
     coffee(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      },
+      }
     ): string;
     civet(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      },
+      }
     ): string;
     autodetect(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      },
+      }
     ): string;
   };
 };

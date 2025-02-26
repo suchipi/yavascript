@@ -1,3 +1,16 @@
+- ["quickjs:engine" (namespace)](#quickjsengine-namespace)
+  - ["quickjs:engine".isMainModule (exported function)](#quickjsengineismainmodule-exported-function)
+  - ["quickjs:engine".setMainModule (exported function)](#quickjsenginesetmainmodule-exported-function)
+  - ["quickjs:engine".evalScript (exported function)](#quickjsengineevalscript-exported-function)
+  - ["quickjs:engine".runScript (exported function)](#quickjsenginerunscript-exported-function)
+  - ["quickjs:engine".importModule (exported function)](#quickjsengineimportmodule-exported-function)
+  - ["quickjs:engine".resolveModule (exported function)](#quickjsengineresolvemodule-exported-function)
+  - ["quickjs:engine".getFileNameFromStack (exported function)](#quickjsenginegetfilenamefromstack-exported-function)
+  - ["quickjs:engine".isModuleNamespace (exported function)](#quickjsengineismodulenamespace-exported-function)
+  - ["quickjs:engine".defineBuiltinModule (exported function)](#quickjsenginedefinebuiltinmodule-exported-function)
+  - ["quickjs:engine".ModuleDelegate (exported ModuleDelegate)](#quickjsenginemoduledelegate-exported-moduledelegate)
+  - ["quickjs:engine".gc (exported function)](#quickjsenginegc-exported-function)
+
 # "quickjs:engine" (namespace)
 
 ```ts
@@ -9,12 +22,12 @@ declare module "quickjs:engine" {
     options?: {
       backtraceBarrier?: boolean;
       filename?: string;
-    },
+    }
   ): any;
   export function runScript(filename: string): any;
   export function importModule(
     filename: string,
-    basename?: string,
+    basename?: string
   ): {
     [key: string]: any;
   };
@@ -25,7 +38,7 @@ declare module "quickjs:engine" {
     name: string,
     obj: {
       [key: string]: any;
-    },
+    }
   ): void;
   export const ModuleDelegate: ModuleDelegate;
   export function gc(): void;
@@ -73,7 +86,7 @@ function evalScript(
   options?: {
     backtraceBarrier?: boolean;
     filename?: string;
-  },
+  }
 ): any;
 ```
 
@@ -99,7 +112,7 @@ Evaluate the file `filename` as a module. Effectively a synchronous dynamic `imp
 ```ts
 function importModule(
   filename: string,
-  basename?: string,
+  basename?: string
 ): {
   [key: string]: any;
 };
@@ -147,7 +160,7 @@ function defineBuiltinModule(
   name: string,
   obj: {
     [key: string]: any;
-  },
+  }
 ): void;
 ```
 

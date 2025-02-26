@@ -1,3 +1,6 @@
+- [\_\_filename (string)](#__filename-string)
+- [\_\_dirname (string)](#__dirname-string)
+
 # \_\_filename (string)
 
 The absolute path to the currently-executing file (whether script or module).

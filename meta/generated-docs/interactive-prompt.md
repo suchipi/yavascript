@@ -1,3 +1,15 @@
+- [InteractivePrompt (interface)](#interactiveprompt-interface)
+  - [InteractivePrompt.prompt (function property)](#interactivepromptprompt-function-property)
+  - [InteractivePrompt.printInput (function property)](#interactivepromptprintinput-function-property)
+  - [InteractivePrompt.historyFileName (string property)](#interactiveprompthistoryfilename-string-property)
+  - [InteractivePrompt.getCompletions (function property)](#interactivepromptgetcompletions-function-property)
+  - [InteractivePrompt.handleInput (function property)](#interactiveprompthandleinput-function-property)
+  - [InteractivePrompt.start (method)](#interactivepromptstart-method)
+- [InteractivePromptConstructor (interface)](#interactivepromptconstructor-interface)
+  - [InteractivePromptConstructor new(...) (construct signature)](#interactivepromptconstructor-new-construct-signature)
+  - [InteractivePromptConstructor.prototype (InteractivePrompt property)](#interactivepromptconstructorprototype-interactiveprompt-property)
+- [InteractivePrompt (InteractivePromptConstructor)](#interactiveprompt-interactivepromptconstructor)
+
 # InteractivePrompt (interface)
 
 ```ts
@@ -7,7 +19,7 @@ interface InteractivePrompt {
   historyFileName?: string;
   getCompletions?: (
     line: string,
-    pos: number,
+    pos: number
   ) => {
     tab: Array<string>;
     pos: number;
@@ -74,7 +86,7 @@ interface InteractivePromptConstructor {
       historyFileName?: string;
       getCompletions?: (
         line: string,
-        pos: number,
+        pos: number
       ) => {
         tab: Array<string>;
         pos: number;
@@ -82,7 +94,7 @@ interface InteractivePromptConstructor {
           [key: string | number | symbol]: any;
         };
       };
-    },
+    }
   ): InteractivePrompt;
   prototype: InteractivePrompt;
 }

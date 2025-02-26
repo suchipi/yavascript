@@ -1,17 +1,21 @@
+- [assert (function)](#assert-function)
+  - [assert(...) (call signature)](#assert-call-signature)
+  - [assert.type (function property)](#asserttype-function-property)
+
 # assert (function)
 
 ```ts
 const assert: {
   <ValueType>(
     value: ValueType,
-    message?: string,
+    message?: string
   ): asserts value is ValueType extends null | undefined | false | 0 | ""
     ? never
     : ValueType;
   type: <T extends TypeValidator<any> | CoerceableToTypeValidator>(
     value: any,
     type: T,
-    optionalMessage?: string,
+    optionalMessage?: string
   ) => asserts value is UnwrapTypeFromCoerceableOrValidator<T>;
 };
 ```

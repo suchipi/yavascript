@@ -1,3 +1,5 @@
+- [parseScriptArgs (function)](#parsescriptargs-function)
+
 # parseScriptArgs (function)
 
 Parse command line --flags into an object of flags and an array of
@@ -23,7 +25,7 @@ declare function parseScriptArgs(
   hints?: {
     [key: string]: typeof String | typeof Boolean | typeof Number | typeof Path;
   },
-  args?: Array<string>,
+  args?: Array<string>
 ): {
   flags: {
     [key: string]: any;

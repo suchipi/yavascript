@@ -1,3 +1,7 @@
+- [logger (object)](#logger-object)
+  - [logger.trace (function property)](#loggertrace-function-property)
+  - [logger.info (function property)](#loggerinfo-function-property)
+
 # logger (object)
 
 The logger used internally by yavascript API functions such as [which](/meta/generated-docs/which.md#which-function),

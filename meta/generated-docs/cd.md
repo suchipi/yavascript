@@ -1,3 +1,5 @@
+- [cd (function)](#cd-function)
+
 # cd (function)
 
 Change the process's current working directory to the specified path. If no

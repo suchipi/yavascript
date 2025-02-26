@@ -1,3 +1,5 @@
+- [basename (function)](#basename-function)
+
 # basename (function)
 
 Return the last component of a path string.

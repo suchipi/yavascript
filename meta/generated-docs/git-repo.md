@@ -1,3 +1,12 @@
+- [GitRepo (class)](#gitrepo-class)
+  - [GitRepo.findRoot (static method)](#gitrepofindroot-static-method)
+  - [GitRepo (constructor)](#gitrepo-constructor)
+  - [GitRepo.prototype.repoDir (Path property)](#gitrepoprototyperepodir-path-property)
+  - [GitRepo.prototype.commitSHA (method)](#gitrepoprototypecommitsha-method)
+  - [GitRepo.prototype.branchName (method)](#gitrepoprototypebranchname-method)
+  - [GitRepo.prototype.isWorkingTreeDirty (method)](#gitrepoprototypeisworkingtreedirty-method)
+  - [GitRepo.prototype.isIgnored (method)](#gitrepoprototypeisignored-method)
+
 # GitRepo (class)
 
 An object that points to a git repository on disk and provides utility

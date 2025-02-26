@@ -1,3 +1,5 @@
+- [which (function)](#which-function)
+
 # which (function)
 
 Searches the system for the path to a program named `binaryName`.
@@ -19,6 +21,6 @@ declare function which(
     logging?: {
       trace?: (...args: Array<any>) => void;
     };
-  },
+  }
 ): Path | null;
 ```

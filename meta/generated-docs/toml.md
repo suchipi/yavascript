@@ -1,3 +1,7 @@
+- [TOML (object)](#toml-object)
+  - [TOML.parse (method)](#tomlparse-method)
+  - [TOML.stringify (method)](#tomlstringify-method)
+
 # TOML (object)
 
 ```ts

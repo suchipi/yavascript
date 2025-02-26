@@ -1,3 +1,7 @@
+- [ChmodPermissionsWho (type)](#chmodpermissionswho-type)
+- [ChmodPermissionsWhat (type)](#chmodpermissionswhat-type)
+- [chmod (function)](#chmod-function)
+
 # ChmodPermissionsWho (type)
 
 A string representing who a permission applies to.
@@ -51,6 +55,6 @@ declare function chmod(
     | number
     | string
     | Record<ChmodPermissionsWho, ChmodPermissionsWhat>,
-  path: string | Path,
+  path: string | Path
 ): void;
 ```

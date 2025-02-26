@@ -1,3 +1,5 @@
+- [echo (value)](#echo-value)
+
 # echo (value)
 
 Print one or more values to stdout.

@@ -1,3 +1,6 @@
+- [RegExpConstructor (interface)](#regexpconstructor-interface)
+  - [RegExpConstructor.escape (method)](#regexpconstructorescape-method)
+
 # RegExpConstructor (interface)
 
 ```ts
