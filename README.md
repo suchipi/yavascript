@@ -21,7 +21,7 @@ a bash script, such as:
 
 Additionally, you can do other things that are either not present in bash or are cumbersome to use in bash, namely:
 
-- Serialize and deserialize JSON, CSV, and YAML
+- Serialize and deserialize JSON, CSV, YAML, and TOML
 - Removing ANSI control characters from a string
 - Split path strings into a list of segments and rejoin them into a string
 - Check if a path is absolute and resolve relative paths
