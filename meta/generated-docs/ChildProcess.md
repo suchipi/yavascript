@@ -25,7 +25,16 @@
 
 # ChildProcess (interface)
 
-A class which represents a child process. The process may or may not be running.
+A class which represents a child process. The process may or may not be
+running.
+
+This class is the API used internally by the [exec](/meta/generated-docs/exec.md#exec-interface) function to spawn child
+processes.
+
+Generally, you should not need to use the `ChildProcess` class directly, and
+should use [exec](/meta/generated-docs/exec.md#exec-interface) or [$](/meta/generated-docs/exec.md#-function) instead. However, you may need to use it in some
+special cases, like when specifying custom stdio for a process, or spawning a
+non-blocking long-running process.
 
 ```ts
 declare interface ChildProcess {

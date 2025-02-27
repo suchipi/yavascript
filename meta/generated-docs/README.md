@@ -281,3 +281,10 @@ For convenience, two builtin modules from QuickJS are also available as globals.
 [`Number.MAX_VALUE`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_VALUE
 [`Number.EPSILON`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON
 [`BigFloatEnv.RNDNA`]: /meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorrndna-bigfloatroundingmode-property
+[`console.log`]: /meta/generated-docs/console.md#consolelog-method
+[`console.clear`]: /meta/generated-docs/console.md#consoleclear-method
+[`console.info`]: /meta/generated-docs/console.md#consoleinfo-method
+[`console.error`]: /meta/generated-docs/console.md#consoleerror-method
+[`console.warn`]: /meta/generated-docs/console.md#consolewarn-method
+[`BaseExecOptions`]: /meta/generated-docs/exec.md#baseexecoptions-type
+[`Path.normalize`]: /meta/generated-docs/path.md#pathnormalize-static-method

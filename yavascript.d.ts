@@ -169,6 +169,28 @@ declare function parseScriptArgs(
 
 /**
  * Read the contents of a file from disk.
+ *
+ * With no options specified, it reads the file as UTF-8 and returns a string:
+ *
+ * ```ts
+ * const contents = readFile("README.md");
+ * console.log(contents);
+ * // "# yavascript\n\nYavaScript is a cross-platform bash-like script runner and repl which is distributed as a single\nstatically-linked binary..."
+ * ```
+ *
+ * But, if you pass `{ binary: true }` as the second argument, it returns an
+ * ArrayBuffer containing the raw bytes from the file:
+ *
+ * ```ts
+ * const contents = readFile("README.md", { binary: true });
+ * console.log(contents);
+ * // ArrayBuffer {
+ * //   │0x00000000│ 23 20 79 61 76 61 73 63 72 69 70 74 0A 0A 59 61
+ * //   │0x00000010│ 76 61 53 63 72 69 70 74 20 69 73 20 61 20 63 72
+ * //   │0x00000020│ 6F 73 73 2D 70 6C 61 74 66 6F 72 6D 20 62 61 73
+ * //   │0x00000030│ 68 2D 6C 69 6B 65 20 73 63 72 69 70 74 20 72 75
+ * // ...
+ * ```
  */
 declare const readFile: {
   /**
@@ -584,12 +606,20 @@ declare var __dirname: string;
  * Return the last component of a path string.
  *
  * Provides the same functionality as the unix binary of the same name.
+ *
+ * > Example: `basename("/home/suchipi/something")` returns `"something"`, the last part.
  */
 declare function basename(path: string | Path): string;
 
 /**
  * Reads the contents of one or more files from disk as either one UTF-8 string
  * or one ArrayBuffer.
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ *
+ * > Example: If you have a file called `hi.txt` in the current working
+ * > directory, and it contains the text "hello", running `cat("hi.txt")`
+ * > returns `"hello"`.
  */
 declare const cat: {
   /**
@@ -620,12 +650,78 @@ declare const cat: {
 };
 
 /**
- * Change the process's current working directory to the specified path. If no
+ * Changes the process's current working directory to the specified path. If no
  * path is specified, moves to the user's home directory.
  *
  * Provides the same functionality as the shell builtin of the same name.
  */
 declare function cd(path?: string | Path): void;
+
+/**
+ * Set the permission bits for the specified file.
+ *
+ * @param permissions The permission bits to set. This can be a number, a string
+ * containing an octal number, or an object.
+ * @param path The path to the file.
+ *
+ * Provides the same functionality as the unix binary of the same name.
+ *
+ * The `permissions` argument can be either:
+ *
+ * - a number (best expressed using octal, eg `0o655`)
+ * - a string (which will be interpreted as an octal number, eg `'777'`)
+ * - or an object (see below).
+ *
+ * > NOTE: At this time there are no "add"/"remove" semantics; the existing
+ * > permissions will be completely overwritten with your specified permissions.
+ * > This will be changed later as this is not intuitive.
+ *
+ * When permissions is an object, each of the object's own properties' keys must
+ * be one of these strings:
+ *
+ * - `"user"`
+ * - `"group"`
+ * - `"others"`
+ * - `"all"` (meaning "user", "group", and "others")
+ * - `"u"` (alias for "user")
+ * - `"g"` (alias for "group")
+ * - `"o"` (alias for "others")
+ * - `"a"` (alias for "all")
+ * - `"ug"` ("user" plus "group")
+ * - `"go"` ("group" plus "others")
+ * - `"uo"` ("user" plus "others")
+ *
+ * and their values must be one of these strings:
+ *
+ * - `"read"` (permission to read the contents of the file)
+ * - `"write"` (permission to write to the file's contents)
+ * - `"execute"` (permission to run the file as an executable)
+ * - `"readwrite"` (both "read" and "write")
+ * - `"none"` (no permissions)
+ * - `"full"` ("read", "write", and "execute")
+ * - `"r"` (alias for "read")
+ * - `"w"` (alias for "write")
+ * - `"x"` (alias for "execute")
+ * - `"rw"` (alias for "readwrite")
+ * - `"rx"` ("read" and "execute")
+ * - `"wx"` ("write" and "execute")
+ * - `"rwx"` (alias for "full")
+ *
+ * Some example objects:
+ *
+ * ```ts
+ * chmod({ user: "readwrite", group: "read", others: "none" });
+ * chmod({ ug: "rw", o: "w" });
+ * chmod({ all: "full" });
+ * ```
+ */
+declare function chmod(
+  permissions:
+    | number
+    | string
+    | Record<ChmodPermissionsWho, ChmodPermissionsWhat>,
+  path: string | Path
+): void;
 
 /** A string representing who a permission applies to. */
 declare type ChmodPermissionsWho =
@@ -658,28 +754,23 @@ declare type ChmodPermissionsWhat =
   | "rwx";
 
 /**
- * Set the permission bits for the specified file.
- *
- * @param permissions The permission bits to set. This can be a number, a string containing an octal number, or an object.
- * @param path The path to the file.
- */
-declare function chmod(
-  permissions:
-    | number
-    | string
-    | Record<ChmodPermissionsWho, ChmodPermissionsWhat>,
-  path: string | Path
-): void;
-
-/**
  * Removes the final component from a path string.
  *
  * Provides the same functionality as the unix binary of the same name.
+ *
+ * > Example: `dirname("/home/suchipi/something")` returns
+ * > `"/home/suchipi"`, everything except the last part.
  */
 declare function dirname(path: string | Path): Path;
 
 /**
  * Print one or more values to stdout.
+ *
+ * Provides the same functionality as the shell builtin of the same name.
+ *
+ * > NOTE: This can print any value, not just strings.
+ *
+ * `echo` is functionally identical to `console.log`.
  */
 declare const echo: typeof console.log;
 
@@ -693,6 +784,9 @@ declare const echo: typeof console.log;
  *
  * `exit.code` will also be used as the exit status code for the yavascript
  * process if the process exits normally.
+ *
+ * > Attempting to call `exit` or set `exit.code` within a Worker will fail and
+ * > throw an error.
  */
 declare const exit: {
   (code?: number): never;
@@ -702,9 +796,11 @@ declare const exit: {
 /**
  * Returns the file extension of the file at a given path.
  *
- * If the file has no extension (eg `Makefile`, etc), then `''` will be returned.
+ * If the file has no extension (eg `Makefile`, etc), then `''` will be
+ * returned.
  *
- * Pass `{ full: true }` to get compound extensions, eg `.d.ts` or `.test.js` instead of just `.ts`/`.js`.
+ * Pass `{ full: true }` to get compound extensions, eg `.d.ts` or `.test.js`
+ * instead of just `.ts`/`.js`.
  */
 declare function extname(
   pathOrFilename: string | Path,
@@ -714,6 +810,9 @@ declare function extname(
 /**
  * Returns the contents of a directory, as absolute paths. `.` and `..` are
  * omitted.
+ *
+ * If `ls()` is called with no directory, the present working directory
+ * (`pwd()`) is used.
  */
 declare function ls(dir?: string | Path): Array<Path>;
 
@@ -755,9 +854,10 @@ declare function mkdirp(
 /**
  * Print data to stdout using C-style format specifiers.
  *
- * The same formats as the standard C library printf are supported. Integer
- * format types (e.g. `%d`) truncate the Numbers or BigInts to 32 bits. Use the l
- * modifier (e.g. `%ld`) to truncate to 64 bits.
+ * The same formats as the [standard C library
+ * printf](https://en.cppreference.com/w/c/io/fprintf) are supported. Integer
+ * format types (e.g. `%d`) truncate the Numbers or BigInts to 32 bits. Use the
+ * l modifier (e.g. `%ld`) to truncate to 64 bits.
  */
 declare function printf(format: string, ...args: Array<any>): void;
 
@@ -796,31 +896,48 @@ declare function readlink(path: string | Path): Path;
  * The path's target file/directory must exist.
  *
  * Provides the same functionality as the unix binary of the same name.
+ *
+ * > If you want to convert a relative path to an absolute path, but the path's
+ * > target might NOT exist, use {@link Path.normalize}.
  */
 declare function realpath(path: string | Path): Path;
 
 /**
- * Blocks the current thread for at least the specified number of milliseconds,
- * but maybe a tiny bit longer.
+ * `sleep` and `sleep.sync` block the current thread for at least the specified
+ * number of milliseconds, but maybe a tiny bit longer.
  *
- * alias for `sleep.sync`.
+ * `sleep.async` returns a Promise which resolves in at least the specified
+ * number of milliseconds, but maybe a tiny bit longer.
+ *
+ * `sleep` and `sleep.sync` block the current thread. `sleep.async` doesn't
+ * block the current thread.
+ *
+ * "Blocking the thread" means no other JavaScript code can run while `sleep` or
+ * `sleep.sync` is running. If this is not the behavior you want, use
+ * `sleep.async` instead.
  */
 declare var sleep: {
   /**
-   * Blocks the current thread for at least the specified number of milliseconds,
-   * but maybe a tiny bit longer.
+   * Blocks the current thread for at least the specified number of
+   * milliseconds, but maybe a tiny bit longer.
    *
    * alias for `sleep.sync`.
    *
    * @param milliseconds - The number of milliseconds to block for.
+   *
+   * No other JavaScript code can run while `sleep()` is running. If this is
+   * not the behavior you want, use `sleep.async` instead.
    */
   (milliseconds: number): void;
 
   /**
-   * Blocks the current thread for at least the specified number of milliseconds,
-   * but maybe a tiny bit longer.
+   * Blocks the current thread for at least the specified number of
+   * milliseconds, but maybe a tiny bit longer.
    *
    * @param milliseconds - The number of milliseconds to block for.
+   *
+   * No other JavaScript code can run while `sleep.sync` is running. If this is
+   * not the behavior you want, use `sleep.async` instead.
    */
   sync(milliseconds: number): void;
 
@@ -829,6 +946,14 @@ declare var sleep: {
    * milliseconds, maybe a little longer.
    *
    * @param milliseconds - The number of milliseconds to wait before the returned Promise should be resolved.
+   *
+   * `sleep.async` doesn't block the current thread, so other JavaScript code
+   * (registered event handlers, async functions, timers, etc) can run while
+   * `sleep.async`'s return Promise is waiting to resolve. If this is not the
+   * behavior you want, use `sleep.sync` instead.
+   *
+   * The Promise returned by `sleep.async` will never get rejected. It will only
+   * ever get resolved.
    */
   async(milliseconds: number): Promise<void>;
 };
@@ -889,6 +1014,78 @@ declare function which(
     };
   }
 ): Path | null;
+
+/**
+ * Runs a child process and blocks until it exits. You can call it with either a
+ * string or an array of strings.
+ *
+ * When calling `exec` with an array of strings, the first string in the array
+ * is the program to run, and the rest of the strings in the array are arguments
+ * to the program, eg:
+ *
+ * ```ts
+ * exec(["echo", "hi", "there"]);
+ * exec(["printf", "something with spaces\n"]);
+ * ```
+ *
+ * When calling with a string instead of an array, the string will be split into
+ * separate arguments using the following rules:
+ *
+ * - The program and its arguments will be determined by splitting the input
+ *   string on whitespace, except:
+ *   - Stuff in single or double-quotes will be preserved as a single argument
+ *   - Double and single quotes can be "glued" together (eg `"bla"'bla'` becomes
+ *     `blabla`)
+ *   - The escape sequences `\n`, `\r`, `\t`, `\v`, `\0`, and `\\` can be used
+ *     inside of quotes get replaced with newline, carriage return, tab,
+ *     vertical tab, nul, and `\` characters, respectively
+ *
+ * For example:
+ *
+ * ```ts
+ * exec(`echo hi there`);
+ * exec(`printf "something with spaces\n"`);
+ * ```
+ *
+ * The intent is that it behaves similarly to what you would expect from a UNIX
+ * shell, but only the "safe" features. "Unsafe" features like environment
+ * variable expansion (`$VAR` or `${VAR}`), subshells (\`echo hi\` or `$(echo
+ * hi)`), and redirection (`> /dev/null` or `2>&1 `) are not supported. To use
+ * those features, shell out to `bash` or `sh` directly via eg `exec(['bash',
+ * '-c', 'your command string'])`, but be aware of the security implications of
+ * doing so.
+ *
+ * `exec` also supports a second argument, an options object which supports the
+ * following keys (all are optional):
+ *
+ * | Property                       | Purpose                                             |
+ * | ------------------------------ | --------------------------------------------------- |
+ * | cwd (string)                   | current working directory for the child process     |
+ * | env (object)                   | environment variables for the process               |
+ * | failOnNonZeroStatus (boolean)  | whether to throw error on nonzero exit status       |
+ * | captureOutput (boolean/string) | controls how stdout/stderr is directed              |
+ * | logging (object)               | controls how/whether info messages are logged       |
+ * | block (boolean)                | whether to wait for child process exit now or later |
+ *
+ * The return value of `exec` varies depending on the options passed:
+ *
+ * - When `captureOutput` is true or "utf-8", an object will be returned with
+ *   `stdout` and `stderr` properties, both strings.
+ * - When `captureOutput` is "arraybuffer", an object will be returned with
+ *   `stdout` and `stderr` properties, both `ArrayBuffer`s.
+ * - When `failOnNonZeroStatus` is false, an object will be returned with
+ *   `status` (the exit code; number or undefined) and `signal` (the signal that
+ *   killed the process; number or undefined).
+ * - When `captureOutput` is non-false and `failOnNonZeroStatus` is false, an
+ *   object will be returned with four properties (the two associated with
+ *   `failOnNonZeroStatus`, and the two associated with `captureOutput`).
+ * - When `captureOutput` is false or unspecified, and `failOnNonZeroStatus` is
+ *   true or unspecified, undefined will be returned.
+ * - If `block` is false, an object with a "wait" method is returned instead,
+ *   which blocks the calling thread until the process exits, and then returns
+ *   one of the values described above.
+ */
+declare const exec: Exec;
 
 declare type BaseExecOptions = {
   /** Sets the current working directory for the child process. */
@@ -952,23 +1149,16 @@ declare type BaseExecOptions = {
   block?: boolean;
 };
 
-type ExecWaitResult<ExecOptions extends BaseExecOptions> = ExecOptions extends
-  | { captureOutput: true | "utf8" | "arraybuffer" }
-  | { failOnNonZeroStatus: false }
-  ? (ExecOptions["captureOutput"] extends true | "utf8"
-      ? { stdout: string; stderr: string }
-      : {}) &
-      (ExecOptions["captureOutput"] extends "arraybuffer"
-        ? { stdout: ArrayBuffer; stderr: ArrayBuffer }
-        : {}) &
-      (ExecOptions["failOnNonZeroStatus"] extends false
-        ?
-            | { status: number; signal: undefined }
-            | { status: undefined; signal: number }
-        : {})
-  : void;
-
 declare interface Exec {
+  /**
+   * Runs a child process using the provided arguments.
+   *
+   * When `args` is an Array, the first value in the Array is the program to
+   * run.
+   *
+   * @param args - The command to run.
+   * @param options - Options; see {@link BaseExecOptions}
+   */
   <
     ExecOptions extends BaseExecOptions = {
       failOnNonZeroStatus: true;
@@ -990,19 +1180,50 @@ declare interface Exec {
 }
 
 /**
- * Runs a child process using the provided arguments.
+ * `$(...)` is an alias for `exec(..., { captureOutput: true, failOnNonZeroStatus: true })`.
  *
- * The first value in the arguments array is the program to run.
+ * It's often used to capture the output of a program:
+ *
+ * ```ts
+ * const result = $(`echo hi`).stdout;
+ * // result is 'hi\n'
+ * ```
+ *
+ * For more info, see {@link exec}.
  */
-declare const exec: Exec;
-
-/** Alias for `exec(args, { captureOutput: true })` */
 declare function $(args: Array<string | Path | number> | string | Path): {
   stdout: string;
   stderr: string;
 };
 
-/** A class which represents a child process. The process may or may not be running. */
+type ExecWaitResult<ExecOptions extends BaseExecOptions> = ExecOptions extends
+  | { captureOutput: true | "utf8" | "arraybuffer" }
+  | { failOnNonZeroStatus: false }
+  ? (ExecOptions["captureOutput"] extends true | "utf8"
+      ? { stdout: string; stderr: string }
+      : {}) &
+      (ExecOptions["captureOutput"] extends "arraybuffer"
+        ? { stdout: ArrayBuffer; stderr: ArrayBuffer }
+        : {}) &
+      (ExecOptions["failOnNonZeroStatus"] extends false
+        ?
+            | { status: number; signal: undefined }
+            | { status: undefined; signal: number }
+        : {})
+  : void;
+
+/**
+ * A class which represents a child process. The process may or may not be
+ * running.
+ *
+ * This class is the API used internally by the {@link exec} function to spawn child
+ * processes.
+ *
+ * Generally, you should not need to use the `ChildProcess` class directly, and
+ * should use {@link exec} or {@link $} instead. However, you may need to use it in some
+ * special cases, like when specifying custom stdio for a process, or spawning a
+ * non-blocking long-running process.
+ */
 declare interface ChildProcess {
   /**
    * The argv for the process. The first entry in this array is the program to
@@ -1155,29 +1376,76 @@ declare function glob(
 ): Array<Path>;
 
 /**
- * Clear the contents and scrollback buffer of the tty by printing special characters into stdout.
+ * Prints special ANSI escape characters to stdout which instruct your terminal
+ * emulator to clear the screen and clear your terminal scrollback.
+ *
+ * Identical to {@link console.clear}.
  */
 declare function clear(): void;
 
 interface Console {
-  /** Writes to stdout, with newline appended. */
+  /**
+   * Logs its arguments to stdout, with a newline appended.
+   *
+   * Any value can be logged, not just strings. Non-string values will be
+   * formatted using {@link inspect}.
+   *
+   * Functionally identical to {@link console.info}, {@link echo}, and
+   * {@link print}. Contrast with {@link console.error}, which prints to stderr
+   * instead of stdout.
+   */
   log(message?: any, ...optionalParams: any[]): void;
-  /** Writes to stdout, with newline appended. */
+
+  /**
+   * Logs its arguments to stdout, with a newline appended.
+   *
+   * Any value can be logged, not just strings. Non-string values will be
+   * formatted using {@link inspect}.
+   *
+   * Functionally identical to {@link console.log}, {@link echo}, and
+   * {@link print}. Contrast with {@link console.error}, which prints to stderr
+   * instead of stdout.
+   */
   info(message?: any, ...optionalParams: any[]): void;
-  /** Writes to stderr, with newline appended. */
+
+  /**
+   * Logs its arguments to stderr, with a newline appended.
+   *
+   * Any value can be logged, not just strings. Non-string values will be
+   * formatted using {@link inspect}.
+   *
+   * Functionally identical to {@link console.error}. Contrast with
+   * {@link console.log}, which prints to stdout instead of stderr.
+   */
   warn(message?: any, ...optionalParams: any[]): void;
-  /** Writes to stderr, with newline appended. */
+
+  /**
+   * Logs its arguments to stderr, with a newline appended.
+   *
+   * Any value can be logged, not just strings. Non-string values will be
+   * formatted using {@link inspect}.
+   *
+   * Functionally identical to {@link console.warn}. Contrast with
+   * {@link console.log}, which prints to stdout instead of stderr.
+   */
   error(message?: any, ...optionalParams: any[]): void;
-  /** Same as {@link clear}(). */
+
+  /**
+   * Prints special ANSI escape characters to stdout which instruct your terminal
+   * emulator to clear the screen and clear your terminal scrollback.
+   *
+   * Identical to {@link clear}.
+   */
   clear(): void;
 }
 
 declare var console: Console;
 
 /**
- * `print` is an alias for `console.log`, which prints values to stdout. Any
- * value can be logged, not just strings. Non-string values will be formatted
- * using the global {@link inspect} function.
+ * `print` is an alias for {@link console.log}, which prints values to stdout.
+ *
+ * Any value can be logged, not just strings. Non-string values will be
+ * formatted using {@link inspect}.
  */
 declare function print(...args: any): void;
 
@@ -2809,9 +3077,11 @@ declare const assert: {
     : ValueType;
 
   /**
-   * Throws an error if `value` is not of the type `type`.
+   * Throws an error if its argument isn't the correct type.
    *
-   * `type` should be either a {@link TypeValidator}, or a value which can be coerced into one via {@link types.coerce}.
+   * @param value - The value to test the type of
+   * @param type - The type that `value` should be, as either a `TypeValidator` (from the `types.*` namespace) or a value which can be coerced into a `TypeValidator` via the `types.coerce` function, like `String`, `Boolean`, etc.
+   * @param message - An optional error message to use. If unspecified, a generic-but-descriptive message will be used.
    */
   type: <T extends TypeValidator<any> | CoerceableToTypeValidator>(
     value: any,
@@ -3107,6 +3377,18 @@ declare const YAML: {
   ): string;
 };
 
+/**
+ * Serializes or deserializes CSV data.
+ *
+ * The `CSV` object contains a `parse` function and a `stringify` function which
+ * can be used to parse strings of CSV (comma-separated values) data into
+ * arrays-of-arrays-of-strings and serialize arrays-of-arrays-of-strings into
+ * strings of CSV data.
+ *
+ * Its interface is similar to `JSON.parse` and `JSON.stringify`, but CSV does
+ * not support the spacing/replacer/reviver options that `JSON.parse` and
+ * `JSON.stringify` have.
+ */
 declare const CSV: {
   /**
    * Parse a CSV string into an Array of Arrays of strings.

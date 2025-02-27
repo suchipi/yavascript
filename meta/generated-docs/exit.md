@@ -14,6 +14,9 @@ Otherwise, `exit.code` is used, which defaults to 0.
 `exit.code` will also be used as the exit status code for the yavascript
 process if the process exits normally.
 
+> Attempting to call `exit` or set `exit.code` within a Worker will fail and
+> throw an error.
+
 ```ts
 const exit: {
   (code?: number): never;

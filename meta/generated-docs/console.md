@@ -9,7 +9,10 @@
 
 # clear (function)
 
-Clear the contents and scrollback buffer of the tty by printing special characters into stdout.
+Prints special ANSI escape characters to stdout which instruct your terminal
+emulator to clear the screen and clear your terminal scrollback.
+
+Identical to [console.clear](/meta/generated-docs/console.md#consoleclear-method).
 
 ```ts
 declare function clear(): void;
@@ -29,7 +32,14 @@ interface Console {
 
 ## Console.log (method)
 
-Writes to stdout, with newline appended.
+Logs its arguments to stdout, with a newline appended.
+
+Any value can be logged, not just strings. Non-string values will be
+formatted using [inspect](/meta/generated-docs/inspect.md#inspect-inspectfunction).
+
+Functionally identical to [console.info](/meta/generated-docs/console.md#consoleinfo-method), [echo](/meta/generated-docs/echo.md#echo-value), and
+[print](/meta/generated-docs/print.md#print-function). Contrast with [console.error](/meta/generated-docs/console.md#consoleerror-method), which prints to stderr
+instead of stdout.
 
 ```ts
 log(message?: any, ...optionalParams: any[]): void;
@@ -37,7 +47,14 @@ log(message?: any, ...optionalParams: any[]): void;
 
 ## Console.info (method)
 
-Writes to stdout, with newline appended.
+Logs its arguments to stdout, with a newline appended.
+
+Any value can be logged, not just strings. Non-string values will be
+formatted using [inspect](/meta/generated-docs/inspect.md#inspect-inspectfunction).
+
+Functionally identical to [console.log](/meta/generated-docs/console.md#consolelog-method), [echo](/meta/generated-docs/echo.md#echo-value), and
+[print](/meta/generated-docs/print.md#print-function). Contrast with [console.error](/meta/generated-docs/console.md#consoleerror-method), which prints to stderr
+instead of stdout.
 
 ```ts
 info(message?: any, ...optionalParams: any[]): void;
@@ -45,7 +62,13 @@ info(message?: any, ...optionalParams: any[]): void;
 
 ## Console.warn (method)
 
-Writes to stderr, with newline appended.
+Logs its arguments to stderr, with a newline appended.
+
+Any value can be logged, not just strings. Non-string values will be
+formatted using [inspect](/meta/generated-docs/inspect.md#inspect-inspectfunction).
+
+Functionally identical to [console.error](/meta/generated-docs/console.md#consoleerror-method). Contrast with
+[console.log](/meta/generated-docs/console.md#consolelog-method), which prints to stdout instead of stderr.
 
 ```ts
 warn(message?: any, ...optionalParams: any[]): void;
@@ -53,7 +76,13 @@ warn(message?: any, ...optionalParams: any[]): void;
 
 ## Console.error (method)
 
-Writes to stderr, with newline appended.
+Logs its arguments to stderr, with a newline appended.
+
+Any value can be logged, not just strings. Non-string values will be
+formatted using [inspect](/meta/generated-docs/inspect.md#inspect-inspectfunction).
+
+Functionally identical to [console.warn](/meta/generated-docs/console.md#consolewarn-method). Contrast with
+[console.log](/meta/generated-docs/console.md#consolelog-method), which prints to stdout instead of stderr.
 
 ```ts
 error(message?: any, ...optionalParams: any[]): void;
@@ -61,7 +90,10 @@ error(message?: any, ...optionalParams: any[]): void;
 
 ## Console.clear (method)
 
-Same as [clear](/meta/generated-docs/console.md#clear-function)().
+Prints special ANSI escape characters to stdout which instruct your terminal
+emulator to clear the screen and clear your terminal scrollback.
+
+Identical to [clear](/meta/generated-docs/console.md#clear-function).
 
 ```ts
 clear(): void;
