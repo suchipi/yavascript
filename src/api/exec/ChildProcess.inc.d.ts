@@ -1,4 +1,15 @@
-/** A class which represents a child process. The process may or may not be running. */
+/**
+ * A class which represents a child process. The process may or may not be
+ * running.
+ *
+ * This class is the API used internally by the {@link exec} function to spawn child
+ * processes.
+ *
+ * Generally, you should not need to use the `ChildProcess` class directly, and
+ * should use {@link exec} or {@link $} instead. However, you may need to use it in some
+ * special cases, like when specifying custom stdio for a process, or spawning a
+ * non-blocking long-running process.
+ */
 declare interface ChildProcess {
   /**
    * The argv for the process. The first entry in this array is the program to

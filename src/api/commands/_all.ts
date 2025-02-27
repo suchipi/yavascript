@@ -2,8 +2,6 @@
 // the top of the list in the text editor's sidebar
 import { makeGetterPropertyDescriptorMap } from "../../lazy-load";
 
-// TODO: whoami, open/xdg-open, hostname
-
 export default makeGetterPropertyDescriptorMap({
   basename: () =>
     (require("./basename") as typeof import("./basename")).basename,

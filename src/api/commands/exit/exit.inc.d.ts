@@ -8,6 +8,9 @@
  *
  * `exit.code` will also be used as the exit status code for the yavascript
  * process if the process exits normally.
+ *
+ * > Attempting to call `exit` or set `exit.code` within a Worker will fail and
+ * > throw an error.
  */
 declare const exit: {
   (code?: number): never;
