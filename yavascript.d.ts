@@ -280,6 +280,18 @@ declare function remove(path: string | Path): void;
 declare function exists(path: string | Path): boolean;
 
 /**
+ * Copies a file or folder from one location to another.
+ * Folders are copied recursively.
+ *
+ * Provides the same functionality as the command `cp -R`.
+ */
+declare function copy(
+  from: string | Path,
+  to: string | Path,
+  options?: CopyOptions
+): void;
+
+/**
  * Options for {@link copy}.
  */
 declare type CopyOptions = {
@@ -320,18 +332,6 @@ declare type CopyOptions = {
     info?: (...args: Array<any>) => void;
   };
 };
-
-/**
- * Copies a file or folder from one location to another.
- * Folders are copied recursively.
- *
- * Provides the same functionality as the command `cp -R`.
- */
-declare function copy(
-  from: string | Path,
-  to: string | Path,
-  options?: CopyOptions
-): void;
 
 /**
  * Rename the file or directory at the specified path.
@@ -978,42 +978,41 @@ declare function touch(path: string | Path): void;
  * @param options.suffixes A list of filename extension suffixes to include in the search, ie [".exe"]. Defaults to `Path.OS_PROGRAM_EXTENSIONS`.
  * @param options.trace A logging function that will be called at various times during the execution of `which`. Defaults to {@link logger.trace}.
  */
-declare function which(
-  binaryName: string,
-  options?: {
-    /**
-     * A list of folders where programs may be found. Defaults to
-     * `env.PATH?.split(Path.OS_ENV_VAR_SEPARATOR) || []`.
-     */
-    searchPaths?: Array<Path | string>;
+declare function which(binaryName: string, options?: WhichOptions): Path | null;
 
-    /**
-     * A list of filename extension suffixes to include in the search, ie
-     * `[".exe"]`. Defaults to {@link Path.OS_PROGRAM_EXTENSIONS}.
-     */
-    suffixes?: Array<string>;
+declare type WhichOptions = {
+  /**
+   * A list of folders where programs may be found. Defaults to
+   * `env.PATH?.split(Path.OS_ENV_VAR_SEPARATOR) || []`.
+   */
+  searchPaths?: Array<Path | string>;
 
-    /** Options which control logging. */
-    logging?: {
-      /**
-       * If provided, this logging function will be called multiple times as
-       * `which` runs, to help you understand what's going on and/or troubleshoot
-       * things. In most cases, it makes sense to use a function from `console`
-       * here, like so:
-       *
-       * ```js
-       * which("bash", {
-       *   logging: { trace: console.log }
-       * });
-       * ```
-       *
-       * Defaults to the current value of {@link logger.trace}. `logger.trace`
-       * defaults to a no-op function.
-       */
-      trace?: (...args: Array<any>) => void;
-    };
-  }
-): Path | null;
+  /**
+   * A list of filename extension suffixes to include in the search, ie
+   * `[".exe"]`. Defaults to {@link Path.OS_PROGRAM_EXTENSIONS}.
+   */
+  suffixes?: Array<string>;
+
+  /** Options which control logging. */
+  logging?: {
+    /**
+     * If provided, this logging function will be called multiple times as
+     * `which` runs, to help you understand what's going on and/or troubleshoot
+     * things. In most cases, it makes sense to use a function from `console`
+     * here, like so:
+     *
+     * ```js
+     * which("bash", {
+     *   logging: { trace: console.log }
+     * });
+     * ```
+     *
+     * Defaults to the current value of {@link logger.trace}. `logger.trace`
+     * defaults to a no-op function.
+     */
+    trace?: (...args: Array<any>) => void;
+  };
+};
 
 /**
  * Runs a child process and blocks until it exits. You can call it with either a
@@ -1318,6 +1317,17 @@ declare interface ChildProcessConstructor {
 declare var ChildProcess: ChildProcessConstructor;
 
 /**
+ * Search the filesystem for files matching the specified glob patterns.
+ *
+ * Uses [minimatch](https://www.npmjs.com/package/minimatch) with its default
+ * options.
+ */
+declare function glob(
+  patterns: string | Array<string>,
+  options?: GlobOptions
+): Array<Path>;
+
+/**
  * Options for {@link glob}.
  */
 declare type GlobOptions = {
@@ -1363,17 +1373,6 @@ declare type GlobOptions = {
    */
   dir?: string | Path;
 };
-
-/**
- * Search the filesystem for files matching the specified glob patterns.
- *
- * Uses [minimatch](https://www.npmjs.com/package/minimatch) with its default
- * options.
- */
-declare function glob(
-  patterns: string | Array<string>,
-  options?: GlobOptions
-): Array<Path>;
 
 /**
  * Prints special ANSI escape characters to stdout which instruct your terminal
@@ -1707,127 +1706,6 @@ interface String {
     }>;
   };
 }
-
-declare type TypeValidator<T> = (value: any) => value is T;
-
-declare type CoerceToTypeValidator<V extends CoerceableToTypeValidator> =
-  V extends StringConstructor
-    ? TypeValidator<string>
-    : V extends NumberConstructor
-    ? TypeValidator<number>
-    : V extends BooleanConstructor
-    ? TypeValidator<boolean>
-    : V extends BigIntConstructor
-    ? TypeValidator<BigInt>
-    : V extends SymbolConstructor
-    ? TypeValidator<Symbol>
-    : V extends RegExpConstructor
-    ? TypeValidator<RegExp>
-    : V extends ArrayConstructor
-    ? TypeValidator<Array<unknown>>
-    : V extends SetConstructor
-    ? TypeValidator<Set<unknown>>
-    : V extends MapConstructor
-    ? TypeValidator<Map<unknown, unknown>>
-    : V extends ObjectConstructor
-    ? TypeValidator<{
-        [key: string | number | symbol]: unknown;
-      }>
-    : V extends DateConstructor
-    ? TypeValidator<Date>
-    : V extends FunctionConstructor
-    ? TypeValidator<Function>
-    : V extends ArrayBufferConstructor
-    ? TypeValidator<ArrayBuffer>
-    : V extends SharedArrayBufferConstructor
-    ? TypeValidator<SharedArrayBuffer>
-    : V extends DataViewConstructor
-    ? TypeValidator<DataView>
-    : V extends Int8ArrayConstructor
-    ? TypeValidator<Int8Array>
-    : V extends Uint8ArrayConstructor
-    ? TypeValidator<Uint8Array>
-    : V extends Uint8ClampedArrayConstructor
-    ? TypeValidator<Uint8ClampedArray>
-    : V extends Int16ArrayConstructor
-    ? TypeValidator<Int16Array>
-    : V extends Uint16ArrayConstructor
-    ? TypeValidator<Uint16Array>
-    : V extends Int32ArrayConstructor
-    ? TypeValidator<Int32Array>
-    : V extends Uint32ArrayConstructor
-    ? TypeValidator<Uint32Array>
-    : V extends Float32ArrayConstructor
-    ? TypeValidator<Float32Array>
-    : V extends Float64ArrayConstructor
-    ? TypeValidator<Float64Array>
-    : V extends RegExp
-    ? TypeValidator<string>
-    : V extends {}
-    ? TypeValidator<{
-        [key in keyof V]: CoerceToTypeValidator<V[key]>;
-      }>
-    : V extends []
-    ? TypeValidator<[]>
-    : V extends [any]
-    ? TypeValidator<Array<CoerceToTypeValidator<V[0]>>>
-    : V extends Array<any>
-    ? TypeValidator<Array<unknown>>
-    : V extends {
-        new (...args: any): any;
-      }
-    ? TypeValidator<InstanceType<V>>
-    : TypeValidator<V>;
-
-declare type CoerceableToTypeValidator =
-  | boolean
-  | number
-  | string
-  | bigint
-  | undefined
-  | null
-  | RegExp
-  | StringConstructor
-  | NumberConstructor
-  | BooleanConstructor
-  | BigIntConstructor
-  | SymbolConstructor
-  | RegExpConstructor
-  | ArrayConstructor
-  | SetConstructor
-  | MapConstructor
-  | ObjectConstructor
-  | DateConstructor
-  | FunctionConstructor
-  | ArrayBufferConstructor
-  | SharedArrayBufferConstructor
-  | DataViewConstructor
-  | Int8ArrayConstructor
-  | Uint8ArrayConstructor
-  | Uint8ClampedArrayConstructor
-  | Int16ArrayConstructor
-  | Uint16ArrayConstructor
-  | Int32ArrayConstructor
-  | Uint32ArrayConstructor
-  | Float32ArrayConstructor
-  | Float64ArrayConstructor
-  | {}
-  | []
-  | [any]
-  | Array<any>
-  | {
-      new (...args: any): any;
-    };
-
-declare type UnwrapTypeFromCoerceableOrValidator<
-  V extends CoerceableToTypeValidator | TypeValidator<any> | unknown
-> = V extends TypeValidator<infer T>
-  ? T
-  : V extends CoerceableToTypeValidator
-  ? CoerceToTypeValidator<V> extends TypeValidator<infer T>
-    ? T
-    : never
-  : unknown;
 
 declare const types: {
   // basic types
@@ -3046,6 +2924,127 @@ declare const types: {
     Fragment: TypeValidator<JSX.Fragment>;
   };
 };
+
+declare type TypeValidator<T> = (value: any) => value is T;
+
+declare type CoerceToTypeValidator<V extends CoerceableToTypeValidator> =
+  V extends StringConstructor
+    ? TypeValidator<string>
+    : V extends NumberConstructor
+    ? TypeValidator<number>
+    : V extends BooleanConstructor
+    ? TypeValidator<boolean>
+    : V extends BigIntConstructor
+    ? TypeValidator<BigInt>
+    : V extends SymbolConstructor
+    ? TypeValidator<Symbol>
+    : V extends RegExpConstructor
+    ? TypeValidator<RegExp>
+    : V extends ArrayConstructor
+    ? TypeValidator<Array<unknown>>
+    : V extends SetConstructor
+    ? TypeValidator<Set<unknown>>
+    : V extends MapConstructor
+    ? TypeValidator<Map<unknown, unknown>>
+    : V extends ObjectConstructor
+    ? TypeValidator<{
+        [key: string | number | symbol]: unknown;
+      }>
+    : V extends DateConstructor
+    ? TypeValidator<Date>
+    : V extends FunctionConstructor
+    ? TypeValidator<Function>
+    : V extends ArrayBufferConstructor
+    ? TypeValidator<ArrayBuffer>
+    : V extends SharedArrayBufferConstructor
+    ? TypeValidator<SharedArrayBuffer>
+    : V extends DataViewConstructor
+    ? TypeValidator<DataView>
+    : V extends Int8ArrayConstructor
+    ? TypeValidator<Int8Array>
+    : V extends Uint8ArrayConstructor
+    ? TypeValidator<Uint8Array>
+    : V extends Uint8ClampedArrayConstructor
+    ? TypeValidator<Uint8ClampedArray>
+    : V extends Int16ArrayConstructor
+    ? TypeValidator<Int16Array>
+    : V extends Uint16ArrayConstructor
+    ? TypeValidator<Uint16Array>
+    : V extends Int32ArrayConstructor
+    ? TypeValidator<Int32Array>
+    : V extends Uint32ArrayConstructor
+    ? TypeValidator<Uint32Array>
+    : V extends Float32ArrayConstructor
+    ? TypeValidator<Float32Array>
+    : V extends Float64ArrayConstructor
+    ? TypeValidator<Float64Array>
+    : V extends RegExp
+    ? TypeValidator<string>
+    : V extends {}
+    ? TypeValidator<{
+        [key in keyof V]: CoerceToTypeValidator<V[key]>;
+      }>
+    : V extends []
+    ? TypeValidator<[]>
+    : V extends [any]
+    ? TypeValidator<Array<CoerceToTypeValidator<V[0]>>>
+    : V extends Array<any>
+    ? TypeValidator<Array<unknown>>
+    : V extends {
+        new (...args: any): any;
+      }
+    ? TypeValidator<InstanceType<V>>
+    : TypeValidator<V>;
+
+declare type CoerceableToTypeValidator =
+  | boolean
+  | number
+  | string
+  | bigint
+  | undefined
+  | null
+  | RegExp
+  | StringConstructor
+  | NumberConstructor
+  | BooleanConstructor
+  | BigIntConstructor
+  | SymbolConstructor
+  | RegExpConstructor
+  | ArrayConstructor
+  | SetConstructor
+  | MapConstructor
+  | ObjectConstructor
+  | DateConstructor
+  | FunctionConstructor
+  | ArrayBufferConstructor
+  | SharedArrayBufferConstructor
+  | DataViewConstructor
+  | Int8ArrayConstructor
+  | Uint8ArrayConstructor
+  | Uint8ClampedArrayConstructor
+  | Int16ArrayConstructor
+  | Uint16ArrayConstructor
+  | Int32ArrayConstructor
+  | Uint32ArrayConstructor
+  | Float32ArrayConstructor
+  | Float64ArrayConstructor
+  | {}
+  | []
+  | [any]
+  | Array<any>
+  | {
+      new (...args: any): any;
+    };
+
+declare type UnwrapTypeFromCoerceableOrValidator<
+  V extends CoerceableToTypeValidator | TypeValidator<any> | unknown
+> = V extends TypeValidator<infer T>
+  ? T
+  : V extends CoerceableToTypeValidator
+  ? CoerceToTypeValidator<V> extends TypeValidator<infer T>
+    ? T
+    : never
+  : unknown;
 
 /**
  * Returns whether `value` is of type `type`. Useful for validating that values have the correct type at runtime, in library functions or etc.

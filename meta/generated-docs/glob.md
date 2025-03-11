@@ -1,10 +1,24 @@
+- [glob (function)](#glob-function)
 - [GlobOptions (type)](#globoptions-type)
   - [GlobOptions.followSymlinks (boolean property)](#globoptionsfollowsymlinks-boolean-property)
   - [GlobOptions.logging (object property)](#globoptionslogging-object-property)
     - [GlobOptions.logging.trace (function property)](#globoptionsloggingtrace-function-property)
     - [GlobOptions.logging.info (function property)](#globoptionslogginginfo-function-property)
   - [GlobOptions.dir (property)](#globoptionsdir-property)
-- [glob (function)](#glob-function)
+
+# glob (function)
+
+Search the filesystem for files matching the specified glob patterns.
+
+Uses [minimatch](https://www.npmjs.com/package/minimatch) with its default
+options.
+
+```ts
+declare function glob(
+  patterns: string | Array<string>,
+  options?: GlobOptions
+): Array<Path>;
+```
 
 # GlobOptions (type)
 
@@ -81,18 +95,4 @@ Directory to interpret glob patterns relative to. Defaults to `pwd()`.
 
 ```ts
 dir?: string | Path;
-```
-
-# glob (function)
-
-Search the filesystem for files matching the specified glob patterns.
-
-Uses [minimatch](https://www.npmjs.com/package/minimatch) with its default
-options.
-
-```ts
-declare function glob(
-  patterns: string | Array<string>,
-  options?: GlobOptions
-): Array<Path>;
 ```

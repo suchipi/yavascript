@@ -1,124 +1,3 @@
-declare type TypeValidator<T> = (value: any) => value is T;
-
-declare type CoerceToTypeValidator<V extends CoerceableToTypeValidator> =
-  V extends StringConstructor
-    ? TypeValidator<string>
-    : V extends NumberConstructor
-    ? TypeValidator<number>
-    : V extends BooleanConstructor
-    ? TypeValidator<boolean>
-    : V extends BigIntConstructor
-    ? TypeValidator<BigInt>
-    : V extends SymbolConstructor
-    ? TypeValidator<Symbol>
-    : V extends RegExpConstructor
-    ? TypeValidator<RegExp>
-    : V extends ArrayConstructor
-    ? TypeValidator<Array<unknown>>
-    : V extends SetConstructor
-    ? TypeValidator<Set<unknown>>
-    : V extends MapConstructor
-    ? TypeValidator<Map<unknown, unknown>>
-    : V extends ObjectConstructor
-    ? TypeValidator<{
-        [key: string | number | symbol]: unknown;
-      }>
-    : V extends DateConstructor
-    ? TypeValidator<Date>
-    : V extends FunctionConstructor
-    ? TypeValidator<Function>
-    : V extends ArrayBufferConstructor
-    ? TypeValidator<ArrayBuffer>
-    : V extends SharedArrayBufferConstructor
-    ? TypeValidator<SharedArrayBuffer>
-    : V extends DataViewConstructor
-    ? TypeValidator<DataView>
-    : V extends Int8ArrayConstructor
-    ? TypeValidator<Int8Array>
-    : V extends Uint8ArrayConstructor
-    ? TypeValidator<Uint8Array>
-    : V extends Uint8ClampedArrayConstructor
-    ? TypeValidator<Uint8ClampedArray>
-    : V extends Int16ArrayConstructor
-    ? TypeValidator<Int16Array>
-    : V extends Uint16ArrayConstructor
-    ? TypeValidator<Uint16Array>
-    : V extends Int32ArrayConstructor
-    ? TypeValidator<Int32Array>
-    : V extends Uint32ArrayConstructor
-    ? TypeValidator<Uint32Array>
-    : V extends Float32ArrayConstructor
-    ? TypeValidator<Float32Array>
-    : V extends Float64ArrayConstructor
-    ? TypeValidator<Float64Array>
-    : V extends RegExp
-    ? TypeValidator<string>
-    : V extends {}
-    ? TypeValidator<{
-        [key in keyof V]: CoerceToTypeValidator<V[key]>;
-      }>
-    : V extends []
-    ? TypeValidator<[]>
-    : V extends [any]
-    ? TypeValidator<Array<CoerceToTypeValidator<V[0]>>>
-    : V extends Array<any>
-    ? TypeValidator<Array<unknown>>
-    : V extends {
-        new (...args: any): any;
-      }
-    ? TypeValidator<InstanceType<V>>
-    : TypeValidator<V>;
-
-declare type CoerceableToTypeValidator =
-  | boolean
-  | number
-  | string
-  | bigint
-  | undefined
-  | null
-  | RegExp
-  | StringConstructor
-  | NumberConstructor
-  | BooleanConstructor
-  | BigIntConstructor
-  | SymbolConstructor
-  | RegExpConstructor
-  | ArrayConstructor
-  | SetConstructor
-  | MapConstructor
-  | ObjectConstructor
-  | DateConstructor
-  | FunctionConstructor
-  | ArrayBufferConstructor
-  | SharedArrayBufferConstructor
-  | DataViewConstructor
-  | Int8ArrayConstructor
-  | Uint8ArrayConstructor
-  | Uint8ClampedArrayConstructor
-  | Int16ArrayConstructor
-  | Uint16ArrayConstructor
-  | Int32ArrayConstructor
-  | Uint32ArrayConstructor
-  | Float32ArrayConstructor
-  | Float64ArrayConstructor
-  | {}
-  | []
-  | [any]
-  | Array<any>
-  | {
-      new (...args: any): any;
-    };
-
-declare type UnwrapTypeFromCoerceableOrValidator<
-  V extends CoerceableToTypeValidator | TypeValidator<any> | unknown
-> = V extends TypeValidator<infer T>
-  ? T
-  : V extends CoerceableToTypeValidator
-  ? CoerceToTypeValidator<V> extends TypeValidator<infer T>
-    ? T
-    : never
-  : unknown;
-
 declare const types: {
   // basic types
   any: TypeValidator<any>;
@@ -1336,3 +1215,124 @@ declare const types: {
     Fragment: TypeValidator<JSX.Fragment>;
   };
 };
+
+declare type TypeValidator<T> = (value: any) => value is T;
+
+declare type CoerceToTypeValidator<V extends CoerceableToTypeValidator> =
+  V extends StringConstructor
+    ? TypeValidator<string>
+    : V extends NumberConstructor
+    ? TypeValidator<number>
+    : V extends BooleanConstructor
+    ? TypeValidator<boolean>
+    : V extends BigIntConstructor
+    ? TypeValidator<BigInt>
+    : V extends SymbolConstructor
+    ? TypeValidator<Symbol>
+    : V extends RegExpConstructor
+    ? TypeValidator<RegExp>
+    : V extends ArrayConstructor
+    ? TypeValidator<Array<unknown>>
+    : V extends SetConstructor
+    ? TypeValidator<Set<unknown>>
+    : V extends MapConstructor
+    ? TypeValidator<Map<unknown, unknown>>
+    : V extends ObjectConstructor
+    ? TypeValidator<{
+        [key: string | number | symbol]: unknown;
+      }>
+    : V extends DateConstructor
+    ? TypeValidator<Date>
+    : V extends FunctionConstructor
+    ? TypeValidator<Function>
+    : V extends ArrayBufferConstructor
+    ? TypeValidator<ArrayBuffer>
+    : V extends SharedArrayBufferConstructor
+    ? TypeValidator<SharedArrayBuffer>
+    : V extends DataViewConstructor
+    ? TypeValidator<DataView>
+    : V extends Int8ArrayConstructor
+    ? TypeValidator<Int8Array>
+    : V extends Uint8ArrayConstructor
+    ? TypeValidator<Uint8Array>
+    : V extends Uint8ClampedArrayConstructor
+    ? TypeValidator<Uint8ClampedArray>
+    : V extends Int16ArrayConstructor
+    ? TypeValidator<Int16Array>
+    : V extends Uint16ArrayConstructor
+    ? TypeValidator<Uint16Array>
+    : V extends Int32ArrayConstructor
+    ? TypeValidator<Int32Array>
+    : V extends Uint32ArrayConstructor
+    ? TypeValidator<Uint32Array>
+    : V extends Float32ArrayConstructor
+    ? TypeValidator<Float32Array>
+    : V extends Float64ArrayConstructor
+    ? TypeValidator<Float64Array>
+    : V extends RegExp
+    ? TypeValidator<string>
+    : V extends {}
+    ? TypeValidator<{
+        [key in keyof V]: CoerceToTypeValidator<V[key]>;
+      }>
+    : V extends []
+    ? TypeValidator<[]>
+    : V extends [any]
+    ? TypeValidator<Array<CoerceToTypeValidator<V[0]>>>
+    : V extends Array<any>
+    ? TypeValidator<Array<unknown>>
+    : V extends {
+        new (...args: any): any;
+      }
+    ? TypeValidator<InstanceType<V>>
+    : TypeValidator<V>;
+
+declare type CoerceableToTypeValidator =
+  | boolean
+  | number
+  | string
+  | bigint
+  | undefined
+  | null
+  | RegExp
+  | StringConstructor
+  | NumberConstructor
+  | BooleanConstructor
+  | BigIntConstructor
+  | SymbolConstructor
+  | RegExpConstructor
+  | ArrayConstructor
+  | SetConstructor
+  | MapConstructor
+  | ObjectConstructor
+  | DateConstructor
+  | FunctionConstructor
+  | ArrayBufferConstructor
+  | SharedArrayBufferConstructor
+  | DataViewConstructor
+  | Int8ArrayConstructor
+  | Uint8ArrayConstructor
+  | Uint8ClampedArrayConstructor
+  | Int16ArrayConstructor
+  | Uint16ArrayConstructor
+  | Int32ArrayConstructor
+  | Uint32ArrayConstructor
+  | Float32ArrayConstructor
+  | Float64ArrayConstructor
+  | {}
+  | []
+  | [any]
+  | Array<any>
+  | {
+      new (...args: any): any;
+    };
+
+declare type UnwrapTypeFromCoerceableOrValidator<
+  V extends CoerceableToTypeValidator | TypeValidator<any> | unknown
+> = V extends TypeValidator<infer T>
+  ? T
+  : V extends CoerceableToTypeValidator
+  ? CoerceToTypeValidator<V> extends TypeValidator<infer T>
+    ? T
+    : never
+  : unknown;

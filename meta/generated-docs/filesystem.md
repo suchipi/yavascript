@@ -12,12 +12,12 @@
 - [isWritable (function)](#iswritable-function)
 - [remove (function)](#remove-function)
 - [exists (function)](#exists-function)
+- [copy (function)](#copy-function)
 - [CopyOptions (type)](#copyoptions-type)
   - [CopyOptions.whenTargetExists (property)](#copyoptionswhentargetexists-property)
   - [CopyOptions.logging (object property)](#copyoptionslogging-object-property)
     - [CopyOptions.logging.trace (function property)](#copyoptionsloggingtrace-function-property)
     - [CopyOptions.logging.info (function property)](#copyoptionslogginginfo-function-property)
-- [copy (function)](#copy-function)
 - [rename (function)](#rename-function)
 
 # readFile (function)
@@ -193,6 +193,21 @@ Provides the same functionality as the command `test -e`.
 declare function exists(path: string | Path): boolean;
 ```
 
+# copy (function)
+
+Copies a file or folder from one location to another.
+Folders are copied recursively.
+
+Provides the same functionality as the command `cp -R`.
+
+```ts
+declare function copy(
+  from: string | Path,
+  to: string | Path,
+  options?: CopyOptions
+): void;
+```
+
 # CopyOptions (type)
 
 Options for [copy](/meta/generated-docs/filesystem.md#copy-function).
@@ -259,21 +274,6 @@ defaults to a function which writes to stderr.
 
 ```ts
 info?: (...args: Array<any>) => void;
-```
-
-# copy (function)
-
-Copies a file or folder from one location to another.
-Folders are copied recursively.
-
-Provides the same functionality as the command `cp -R`.
-
-```ts
-declare function copy(
-  from: string | Path,
-  to: string | Path,
-  options?: CopyOptions
-): void;
 ```
 
 # rename (function)

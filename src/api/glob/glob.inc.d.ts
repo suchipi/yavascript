@@ -1,4 +1,15 @@
 /**
+ * Search the filesystem for files matching the specified glob patterns.
+ *
+ * Uses [minimatch](https://www.npmjs.com/package/minimatch) with its default
+ * options.
+ */
+declare function glob(
+  patterns: string | Array<string>,
+  options?: GlobOptions
+): Array<Path>;
+
+/**
  * Options for {@link glob}.
  */
 declare type GlobOptions = {
@@ -44,14 +55,3 @@ declare type GlobOptions = {
    */
   dir?: string | Path;
 };
-
-/**
- * Search the filesystem for files matching the specified glob patterns.
- *
- * Uses [minimatch](https://www.npmjs.com/package/minimatch) with its default
- * options.
- */
-declare function glob(
-  patterns: string | Array<string>,
-  options?: GlobOptions
-): Array<Path>;

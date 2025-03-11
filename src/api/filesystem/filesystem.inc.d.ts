@@ -111,6 +111,18 @@ declare function remove(path: string | Path): void;
 declare function exists(path: string | Path): boolean;
 
 /**
+ * Copies a file or folder from one location to another.
+ * Folders are copied recursively.
+ *
+ * Provides the same functionality as the command `cp -R`.
+ */
+declare function copy(
+  from: string | Path,
+  to: string | Path,
+  options?: CopyOptions
+): void;
+
+/**
  * Options for {@link copy}.
  */
 declare type CopyOptions = {
@@ -151,18 +163,6 @@ declare type CopyOptions = {
     info?: (...args: Array<any>) => void;
   };
 };
-
-/**
- * Copies a file or folder from one location to another.
- * Folders are copied recursively.
- *
- * Provides the same functionality as the command `cp -R`.
- */
-declare function copy(
-  from: string | Path,
-  to: string | Path,
-  options?: CopyOptions
-): void;
 
 /**
  * Rename the file or directory at the specified path.
