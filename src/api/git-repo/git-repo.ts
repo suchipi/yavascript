@@ -59,9 +59,16 @@ export class GitRepo {
     );
 
     if (typeof repoDir === "string") {
-      this.repoDir = new Path(repoDir);
+      this.repoDir = new Path(repoDir).normalize();
     } else {
-      this.repoDir = repoDir.clone();
+      this.repoDir = repoDir.normalize();
+    }
+
+    if (!this.repoDir.isAbsolute()) {
+      throw makeErrorWithProperties(
+        "Couldn't resolve absolute path to repo dir.",
+        { repoDir, cwd: pwd() }
+      );
     }
 
     const dotGitDir = new Path(this.repoDir, ".git");
@@ -158,7 +165,7 @@ export class GitRepo {
 
     let pathObj = new Path(path);
     if (!pathObj.isAbsolute()) {
-      pathObj = pwd().concat(pathObj);
+      pathObj = this.repoDir.concat(pathObj);
     }
 
     const resolvedPath = pathObj.toString();
@@ -166,7 +173,7 @@ export class GitRepo {
 
     if (!resolvedPath.startsWith(repoDir)) {
       throw makeErrorWithProperties(
-        "Path passed to GitRepo.isIgnored is outside of the GitRepo object's repoDir. When passing a relative path, it will be resolved relative to the current `pwd()`.",
+        "Path passed to GitRepo.isIgnored is outside of the GitRepo object's repoDir.",
         {
           path: path.toString(),
           resolvedPath,
@@ -179,6 +186,7 @@ export class GitRepo {
     const result = exec(["git", "check-ignore", resolvedPath], {
       failOnNonZeroStatus: false,
       captureOutput: true,
+      cwd: this.repoDir.toString(),
     });
     if (result.status !== 0 && result.status !== 1) {
       throw makeErrorWithProperties(
