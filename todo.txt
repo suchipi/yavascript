@@ -40,3 +40,4 @@
 - [ ] whoami
 - [ ] open/xdg-open
 - [ ] hostname
+- [ ] make the readme more "first-reader-friendly" (ie. reorder some of the info, add a logo, etc)
