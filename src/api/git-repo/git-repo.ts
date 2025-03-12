@@ -169,16 +169,27 @@ export class GitRepo {
     }
 
     const resolvedPath = pathObj.toString();
-    const repoDir = this.repoDir.toString();
 
-    if (!resolvedPath.startsWith(repoDir)) {
+    if (/[\r\n]/.test(resolvedPath)) {
+      throw makeErrorWithProperties(
+        "GitRepo.isIgnored does not support paths with line breaks in them. GitRepo.isIgnored cannot be used to check multiple paths.",
+        {
+          path: path.toString(),
+          resolvedPath,
+          cwd: pwd(),
+          repoDir: this.repoDir.toString(),
+        }
+      );
+    }
+
+    if (!pathObj.startsWith(this.repoDir)) {
       throw makeErrorWithProperties(
         "Path passed to GitRepo.isIgnored is outside of the GitRepo object's repoDir.",
         {
           path: path.toString(),
           resolvedPath,
-          pwd: pwd(),
-          repoDir,
+          cwd: pwd(),
+          repoDir: this.repoDir.toString(),
         }
       );
     }
