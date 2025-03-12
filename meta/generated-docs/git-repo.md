@@ -122,7 +122,7 @@ cat("README.md");
 
 Depending on how you anticipate your codebase changing over time, and how
 you expect others to use your scripts, it might make sense to use
-`cd(__dirname)`, `cd(GitRepo.findRoot())`, or no `cd` at all. Pick what
+`cd(__dirname)`, `cd(GitRepo.findRoot(__dirname))`, or no `cd` at all. Pick what
 makes the most sense for your situation.
 
 ```ts
