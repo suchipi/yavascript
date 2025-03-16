@@ -167,7 +167,7 @@ inverse?: boolean;
 ## GrepOptions.details (boolean property)
 
 When `details` is true, the grep function returns an array of
-[GrepMatchDetail](#) objects instead of an array of strings. Defaults to
+[GrepMatchDetail](/meta/generated-docs/grep.md#grepmatchdetail-interface) objects instead of an array of strings. Defaults to
 `false`.
 
 ```ts

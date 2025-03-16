@@ -45,7 +45,7 @@ searchPaths?: Array<Path | string>;
 ## WhichOptions.suffixes (property)
 
 A list of filename extension suffixes to include in the search, ie
-`[".exe"]`. Defaults to [Path.OS_PROGRAM_EXTENSIONS](#).
+`[".exe"]`. Defaults to [Path.OS_PROGRAM_EXTENSIONS](/meta/generated-docs/path.md#pathos_program_extensions-static-property).
 
 ```ts
 suffixes?: Array<string>;

@@ -288,3 +288,5 @@ For convenience, two builtin modules from QuickJS are also available as globals.
 [`console.warn`]: /meta/generated-docs/console.md#consolewarn-method
 [`BaseExecOptions`]: /meta/generated-docs/exec.md#baseexecoptions-type
 [`Path.normalize`]: /meta/generated-docs/path.md#pathnormalize-static-method
+[`Path.OS_PROGRAM_EXTENSIONS`]: /meta/generated-docs/path.md#pathos_program_extensions-static-property
+[`GrepMatchDetail`]: /meta/generated-docs/grep.md#grepmatchdetail-interface
