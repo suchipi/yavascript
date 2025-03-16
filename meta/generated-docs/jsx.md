@@ -17,6 +17,58 @@
 
 # JSX (namespace)
 
+The properties of the `JSX` global can be modified to change how JSX syntax
+gets compiled by yavascript. Those properties are:
+
+- `pragma` (string): The JavaScript expression that should be called to
+  create JSX elements. Defaults to "JSX.createElement".
+- `pragmaFrag` (string): The JavaScript expression that should be used when
+  creating JSX fragments. Defaults to "JSX.Fragment".
+- `createElement` (function): The function used to create JSX elements,
+  unless `JSX.pragma` has been changed.
+- `Element` (symbol): used by the default `JSX.createElement` function to
+  identify JSX elements.
+- `Fragment` (symbol): used by the default `JSX.createElement` function to
+  identify JSX fragments. Referenced by the default value for
+  `JSX.pragmaFrag`.
+
+Modifying these properties will change how JSX syntax gets compiled.
+
+For instance, to use React for JSX, you could either replace
+`JSX.createElement` and `JSX.Fragment` with React's versions:
+
+```ts
+import * as React from "npm:react";
+
+JSX.createElement = React.createElement;
+JSX.Fragment = React.Fragment;
+```
+
+Or, you could change `JSX.pragma` and `JSX.pragmaFrag` to reference React
+directly:
+
+```ts
+JSX.pragma = "React.createElement";
+JSX.pragmaFrag = "React.Fragment";
+```
+
+Note however, that changes to `pragma` and `pragmaFrag` will only affect JSX
+appearing in files which are loaded _after_ the change, but changing
+`createElement` and `Fragment` will affect all JSX syntax appearing after the
+change, even within the same file.
+
+Whichever approach you take, you should also update `types.JSX.Element` and
+`types.JSX.Fragment` such that the expression `types.JSX.Element(<a />) &&
+types.JSX.Fragment(<></>)` is always `true`. To do that for React, you would
+do:
+
+```ts
+types.JSX.Element = React.isValidElement;
+types.JSX.Fragment = (value) => {
+  return React.isValidElement(value) && value.type === React.Fragment;
+};
+```
+
 ```ts
 declare namespace JSX {
   export let pragma: string;
@@ -85,20 +137,22 @@ declare namespace JSX {
 A string containing the expression that should be called to create JSX
 elements. yavascript's internals use this string to transpile JSX syntax.
 
-Defaults to "JSX.createElement".
+The default value is "JSX.createElement".
 
-If changed, any JSX code loaded afterwards will use a different
-expression.
+If changed, any JSX code loaded afterwards will use a different expression.
 
 Note that if you change this, you need to verify that the following
-expression always evaluates to `true` (by changing [types.JSX.Element](/meta/generated-docs/types.md#typesjsxelement-property)
-and [types.JSX.Fragment](/meta/generated-docs/types.md#typesjsxfragment-property)):
+expression always evaluates to `true` (by changing `types.JSX.Element` and
+`types.JSX.Fragment`):
 
 ```jsx
 types.JSX.Element(<a />) && types.JSX.Fragment(<></>);
 ```
 
 Failure to uphold this guarantee indicates a bug.
+
+For more info, including info on how to change how JSX is compiled, see
+[JSX](/meta/generated-docs/jsx.md#jsx-namespace).
 
 ```ts
 let pragma: string;
@@ -112,12 +166,11 @@ this string to transpile JSX syntax.
 
 Defaults to "JSX.Fragment".
 
-If changed, any JSX code loaded afterwards will use a different
-expression.
+If changed, any JSX code loaded afterwards will use a different expression.
 
 Note that if you change this, you need to verify that the following
-expression always evaluates to `true` (by changing [types.JSX.Element](/meta/generated-docs/types.md#typesjsxelement-property)
-and [types.JSX.Fragment](/meta/generated-docs/types.md#typesjsxfragment-property)):
+expression always evaluates to `true` (by changing `types.JSX.Element` and
+`types.JSX.Fragment`):
 
 ```jsx
 types.JSX.Element(<a />) && types.JSX.Fragment(<></>);
@@ -125,17 +178,58 @@ types.JSX.Element(<a />) && types.JSX.Fragment(<></>);
 
 Failure to uphold this guarantee indicates a bug.
 
+For more info, including info on how to change how JSX is compiled, see
+[JSX](/meta/generated-docs/jsx.md#jsx-namespace).
+
 ```ts
 let pragmaFrag: string;
 ```
 
 ## JSX.Element (exported value)
 
+`JSX.Element` is a Symbol. The default implementation of
+`JSX.createElement` creates objects whose `$$typeof` property is set to
+`JSX.Element`, and type validator functions under the `types.JSX.*`
+namespace look for this property in order to determine whether an object is
+a JSX element, as created via `JSX.createElement` or JSX syntax.
+
+```jsx
+// This gets compiled internally by yavascript into:
+// const a = JSX.createElement('a', null);
+const a = <a />;
+
+console.log(a);
+// {
+//   $$typeof: Symbol(JSX.Element)
+//   type: "a"
+//   props: null
+//   key: null
+// }
+
+console.log(a.$$typeof === JSX.Element);
+// true
+```
+
+There is also a TypeScript type called `JSX.Element` which is a type for
+the JSX element objects as created by `JSX.createElement` or JSX syntax.
+
+If you modify properties on the JSX global such that the default
+implementation of `JSX.createElement` is no longer used (eg. by replacing
+it with `React.createElement`), this value may no longer be relevant.
+However, the default JSX element object shape is designed to match
+React/Preact/etc.
+
+For more info, including info on how to change how JSX is compiled, see
+[JSX](/meta/generated-docs/jsx.md#jsx-namespace).
+
 ```ts
 const Element: unique symbol;
 ```
 
 ## JSX.Element (exported interface)
+
+The TypeScript type for JSX Element objects created by the default
+implementation of `JSX.createElement`.
 
 ```ts
 interface Element<
@@ -177,9 +271,36 @@ key: string | number | null;
 
 ## JSX.Fragment (exported value)
 
-The value which gets passed into the JSX element constructor (as
-determined by [JSX.pragma](/meta/generated-docs/jsx.md#jsxpragma-exported-string)) when JSX fragment syntax is used (unless
-[JSX.pragmaFrag](/meta/generated-docs/jsx.md#jsxpragmafrag-exported-string) is changed).
+`JSX.Fragment` is a Symbol which is used to indicate whether a JSX element
+is a JSX fragment.
+
+```jsx
+// This gets compiled internally by yavascript into:
+// const a = JSX.createElement(JSX.Fragment, null);
+const frag = <></>;
+
+console.log(frag);
+// {
+//   $$typeof: Symbol(JSX.Element)
+//   type: Symbol(JSX.Fragment)
+//   props: null
+//   key: null
+// }
+
+console.log(a.type === JSX.Fragment);
+// true
+```
+
+There is also a TypeScript type called `JSX.Fragment` which is a type for
+the JSX fragment element objects as created by `JSX.createElement` or JSX
+syntax.
+
+If you modify properties on the JSX global such that `JSX.Fragment` is no
+longer used (eg. by replacing it with `React.Fragment`), this value may no
+longer be relevant.
+
+For more info, including info on how to change how JSX is compiled, see
+[JSX](/meta/generated-docs/jsx.md#jsx-namespace).
 
 ```ts
 const Fragment: unique symbol;
@@ -187,24 +308,36 @@ const Fragment: unique symbol;
 
 ## JSX.Fragment (exported type)
 
+The TypeScript type for JSX Element objects whose type is `JSX.Fragment`,
+which is what yavascript creates internally when JSX fragment syntax
+(`<></>`) is used.
+
+If you modify properties on the JSX global such that `JSX.Fragment` is no
+longer used (eg. by replacing it with `React.Fragment`), this type may no
+longer be relevant.
+
 ```ts
 type Fragment = Element<{}, typeof Fragment>;
 ```
 
 ## JSX.createElement (exported function)
 
-The JSX element builder function, which gets invoked whenever JSX syntax is
-used (unless [JSX.pragma](/meta/generated-docs/jsx.md#jsxpragma-exported-string) is changed).
+The JSX element builder function, which gets invoked internally by
+yavascript whenever JSX syntax is used (unless `JSX.pragma` gets changed by
+the user).
 
 Note that if you change this, you need to verify that the following
-expression always evaluates to `true` (by changing [types.JSX.Element](/meta/generated-docs/types.md#typesjsxelement-property)
-and [types.JSX.Fragment](/meta/generated-docs/types.md#typesjsxfragment-property)):
+expression always evaluates to `true` (by changing `types.JSX.Element` and
+`types.JSX.Fragment`):
 
 ```jsx
 types.JSX.Element(<a />) && types.JSX.Fragment(<></>);
 ```
 
 Failure to uphold this guarantee indicates a bug.
+
+For more info, including info on how to change how JSX is compiled, see
+[JSX](/meta/generated-docs/jsx.md#jsx-namespace).
 
 ```ts
 let createElement: {
