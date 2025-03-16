@@ -1,0 +1,4 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["../yavascript.d.ts", "./**/*.ts"]
+}

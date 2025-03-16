@@ -1,389 +1,99 @@
 - [grepString (function)](#grepstring-function)
   - [grepString(...) (call signature)](#grepstring-call-signature)
   - [grepString(...) (call signature)](#grepstring-call-signature-1)
-  - [grepString(...) (call signature)](#grepstring-call-signature-2)
-  - [grepString(...) (call signature)](#grepstring-call-signature-3)
-  - [grepString(...) (call signature)](#grepstring-call-signature-4)
-  - [grepString(...) (call signature)](#grepstring-call-signature-5)
-  - [grepString(...) (call signature)](#grepstring-call-signature-6)
-  - [grepString(...) (call signature)](#grepstring-call-signature-7)
-  - [grepString(...) (call signature)](#grepstring-call-signature-8)
 - [grepFile (function)](#grepfile-function)
   - [grepFile(...) (call signature)](#grepfile-call-signature)
   - [grepFile(...) (call signature)](#grepfile-call-signature-1)
-  - [grepFile(...) (call signature)](#grepfile-call-signature-2)
-  - [grepFile(...) (call signature)](#grepfile-call-signature-3)
-  - [grepFile(...) (call signature)](#grepfile-call-signature-4)
-  - [grepFile(...) (call signature)](#grepfile-call-signature-5)
-  - [grepFile(...) (call signature)](#grepfile-call-signature-6)
-  - [grepFile(...) (call signature)](#grepfile-call-signature-7)
-  - [grepFile(...) (call signature)](#grepfile-call-signature-8)
 - [String (interface)](#string-interface)
   - [String.grep (function property)](#stringgrep-function-property)
     - [String.grep(...) (call signature)](#stringgrep-call-signature)
     - [String.grep(...) (call signature)](#stringgrep-call-signature-1)
-    - [String.grep(...) (call signature)](#stringgrep-call-signature-2)
-    - [String.grep(...) (call signature)](#stringgrep-call-signature-3)
-    - [String.grep(...) (call signature)](#stringgrep-call-signature-4)
-    - [String.grep(...) (call signature)](#stringgrep-call-signature-5)
-    - [String.grep(...) (call signature)](#stringgrep-call-signature-6)
-    - [String.grep(...) (call signature)](#stringgrep-call-signature-7)
-    - [String.grep(...) (call signature)](#stringgrep-call-signature-8)
+- [GrepOptions (interface)](#grepoptions-interface)
+  - [GrepOptions.inverse (boolean property)](#grepoptionsinverse-boolean-property)
+  - [GrepOptions.details (boolean property)](#grepoptionsdetails-boolean-property)
+- [GrepMatchDetail (interface)](#grepmatchdetail-interface)
+  - [GrepMatchDetail.lineNumber (number property)](#grepmatchdetaillinenumber-number-property)
+  - [GrepMatchDetail.lineContent (string property)](#grepmatchdetaillinecontent-string-property)
+  - [GrepMatchDetail.matches (RegExpMatchArray property)](#grepmatchdetailmatches-regexpmatcharray-property)
 
 # grepString (function)
 
-Split `str` on newline and then return lines matching `pattern`.
+Splits the string passed into it on `\n` and then returns the lines matching
+the specified pattern, as an array of strings or detail objects.
+
+- `@param` _str_ — The string to search through.
+- `@param` _pattern_ — The pattern to find. Can be a string or a RegExp.
+- `@param` _options_ — Options which control matching behavior.
+
+See also [grepFile](/meta/generated-docs/grep.md#grepfile-function) and [String.prototype.grep](/meta/generated-docs/grep.md#stringgrep-function-property).
 
 ```ts
 const grepString: {
-  (str: string, pattern: string | RegExp): Array<string>;
   (
     str: string,
     pattern: string | RegExp,
-    options: {
-      inverse: false;
-    }
-  ): Array<string>;
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: {
-      inverse: true;
-    }
-  ): Array<string>;
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: {
-      details: false;
-    }
-  ): Array<string>;
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: {
-      inverse: false;
-      details: false;
-    }
-  ): Array<string>;
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: {
-      inverse: true;
-      details: false;
-    }
-  ): Array<string>;
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: {
+    options: GrepOptions & {
       details: true;
     }
-  ): Array<{
-    lineNumber: number;
-    lineContent: string;
-    matches: RegExpMatchArray;
-  }>;
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: {
-      inverse: false;
-      details: true;
-    }
-  ): Array<string>;
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: {
-      inverse: true;
-      details: true;
-    }
-  ): Array<{
-    lineNumber: number;
-    lineContent: string;
-    matches: RegExpMatchArray;
-  }>;
+  ): Array<GrepMatchDetail>;
+  (str: string, pattern: string | RegExp, options?: GrepOptions): Array<string>;
 };
 ```
 
 ## grepString(...) (call signature)
 
-Split `str` on newline and then return lines matching `pattern`.
-
 ```ts
-(str: string, pattern: string | RegExp): Array<string>;
-```
-
-## grepString(...) (call signature)
-
-Split `str` on newline and then return lines matching `pattern`.
-
-```ts
-(str: string, pattern: string | RegExp, options: {
-  inverse: false;
-}): Array<string>;
-```
-
-## grepString(...) (call signature)
-
-Split `str` on newline and then return lines NOT matching `pattern`.
-
-```ts
-(str: string, pattern: string | RegExp, options: {
-  inverse: true;
-}): Array<string>;
-```
-
-## grepString(...) (call signature)
-
-Split `str` on newline and then return lines matching `pattern`.
-
-```ts
-(str: string, pattern: string | RegExp, options: {
-  details: false;
-}): Array<string>;
-```
-
-## grepString(...) (call signature)
-
-Split `str` on newline and then return lines matching `pattern`.
-
-```ts
-(str: string, pattern: string | RegExp, options: {
-  inverse: false;
-  details: false;
-}): Array<string>;
-```
-
-## grepString(...) (call signature)
-
-Split `str` on newline and then return lines NOT matching `pattern`.
-
-```ts
-(str: string, pattern: string | RegExp, options: {
-  inverse: true;
-  details: false;
-}): Array<string>;
-```
-
-## grepString(...) (call signature)
-
-Split `str` on newline and then return info about lines matching `pattern`.
-
-```ts
-(str: string, pattern: string | RegExp, options: {
+(str: string, pattern: string | RegExp, options: GrepOptions & {
   details: true;
-}): Array<{
-  lineNumber: number;
-  lineContent: string;
-  matches: RegExpMatchArray;
-}>;
+}): Array<GrepMatchDetail>;
 ```
 
 ## grepString(...) (call signature)
 
-Split `str` on newline and then return info about lines matching `pattern`.
-
 ```ts
-(str: string, pattern: string | RegExp, options: {
-  inverse: false;
-  details: true;
-}): Array<string>;
-```
-
-## grepString(...) (call signature)
-
-Split `str` on newline and then return info about lines NOT matching `pattern`.
-
-```ts
-(str: string, pattern: string | RegExp, options: {
-  inverse: true;
-  details: true;
-}): Array<{
-  lineNumber: number;
-  lineContent: string;
-  matches: RegExpMatchArray;
-}>;
+(str: string, pattern: string | RegExp, options?: GrepOptions): Array<string>;
 ```
 
 # grepFile (function)
 
-Read the content at `path`, split it on newline, and then return lines matching `pattern`.
+Reads the file content at `path`, splits it on `\n`, and then returns the
+lines matching the specified pattern, as an array of strings or detail objects.
+
+- `@param` _str_ — The string to search through.
+- `@param` _pattern_ — The pattern to find. Can be a string or a RegExp.
+- `@param` _options_ — Options which control matching behavior.
+
+See also [grepString](/meta/generated-docs/grep.md#grepstring-function) and [String.prototype.grep](/meta/generated-docs/grep.md#stringgrep-function-property).
 
 ```ts
 const grepFile: {
-  (path: string | Path, pattern: string | RegExp): Array<string>;
   (
     path: string | Path,
     pattern: string | RegExp,
-    options: {
-      inverse: false;
-    }
-  ): Array<string>;
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: {
-      inverse: true;
-    }
-  ): Array<string>;
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: {
-      details: false;
-    }
-  ): Array<string>;
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: {
-      inverse: false;
-      details: false;
-    }
-  ): Array<string>;
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: {
-      inverse: true;
-      details: false;
-    }
-  ): Array<string>;
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: {
+    options: GrepOptions & {
       details: true;
     }
-  ): Array<{
-    lineNumber: number;
-    lineContent: string;
-    matches: RegExpMatchArray;
-  }>;
+  ): Array<GrepMatchDetail>;
   (
     path: string | Path,
     pattern: string | RegExp,
-    options: {
-      inverse: false;
-      details: true;
-    }
+    options?: GrepOptions
   ): Array<string>;
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: {
-      inverse: true;
-      details: true;
-    }
-  ): Array<{
-    lineNumber: number;
-    lineContent: string;
-    matches: RegExpMatchArray;
-  }>;
 };
 ```
 
 ## grepFile(...) (call signature)
 
-Read the content at `path`, split it on newline, and then return lines matching `pattern`.
-
 ```ts
-(path: string | Path, pattern: string | RegExp): Array<string>;
-```
-
-## grepFile(...) (call signature)
-
-Read the content at `path`, split it on newline, and then return lines matching `pattern`.
-
-```ts
-(path: string | Path, pattern: string | RegExp, options: {
-  inverse: false;
-}): Array<string>;
-```
-
-## grepFile(...) (call signature)
-
-Read the content at `path`, split it on newline, and then return lines NOT matching `pattern`.
-
-```ts
-(path: string | Path, pattern: string | RegExp, options: {
-  inverse: true;
-}): Array<string>;
-```
-
-## grepFile(...) (call signature)
-
-Read the content at `path`, split it on newline, and then return lines matching `pattern`.
-
-```ts
-(path: string | Path, pattern: string | RegExp, options: {
-  details: false;
-}): Array<string>;
-```
-
-## grepFile(...) (call signature)
-
-Read the content at `path`, split it on newline, and then return lines matching `pattern`.
-
-```ts
-(path: string | Path, pattern: string | RegExp, options: {
-  inverse: false;
-  details: false;
-}): Array<string>;
-```
-
-## grepFile(...) (call signature)
-
-Read the content at `path`, split it on newline, and then return lines NOT matching `pattern`.
-
-```ts
-(path: string | Path, pattern: string | RegExp, options: {
-  inverse: true;
-  details: false;
-}): Array<string>;
-```
-
-## grepFile(...) (call signature)
-
-Read the content at `path`, split it on newline, and then return info about lines matching `pattern`.
-
-```ts
-(path: string | Path, pattern: string | RegExp, options: {
+(path: string | Path, pattern: string | RegExp, options: GrepOptions & {
   details: true;
-}): Array<{
-  lineNumber: number;
-  lineContent: string;
-  matches: RegExpMatchArray;
-}>;
+}): Array<GrepMatchDetail>;
 ```
 
 ## grepFile(...) (call signature)
 
-Read the content at `path`, split it on newline, and then return info about lines matching `pattern`.
-
 ```ts
-(path: string | Path, pattern: string | RegExp, options: {
-  inverse: false;
-  details: true;
-}): Array<string>;
-```
-
-## grepFile(...) (call signature)
-
-Read the content at `path`, split it on newline, and then return info about lines NOT matching `pattern`.
-
-```ts
-(path: string | Path, pattern: string | RegExp, options: {
-  inverse: true;
-  details: true;
-}): Array<{
-  lineNumber: number;
-  lineContent: string;
-  matches: RegExpMatchArray;
-}>;
+(path: string | Path, pattern: string | RegExp, options?: GrepOptions): Array<string>;
 ```
 
 # String (interface)
@@ -391,211 +101,107 @@ Read the content at `path`, split it on newline, and then return info about line
 ```ts
 interface String {
   grep: {
-    (pattern: string | RegExp): Array<string>;
     (
       pattern: string | RegExp,
-      options: {
-        inverse: false;
-      }
-    ): Array<string>;
-    (
-      pattern: string | RegExp,
-      options: {
-        inverse: true;
-      }
-    ): Array<string>;
-    (
-      pattern: string | RegExp,
-      options: {
-        details: false;
-      }
-    ): Array<string>;
-    (
-      pattern: string | RegExp,
-      options: {
-        inverse: false;
-        details: false;
-      }
-    ): Array<string>;
-    (
-      pattern: string | RegExp,
-      options: {
-        inverse: true;
-        details: false;
-      }
-    ): Array<string>;
-    (
-      pattern: string | RegExp,
-      options: {
+      options: GrepOptions & {
         details: true;
       }
-    ): Array<{
-      lineNumber: number;
-      lineContent: string;
-      matches: RegExpMatchArray;
-    }>;
-    (
-      pattern: string | RegExp,
-      options: {
-        inverse: false;
-        details: true;
-      }
-    ): Array<string>;
-    (
-      pattern: string | RegExp,
-      options: {
-        inverse: true;
-        details: true;
-      }
-    ): Array<{
-      lineNumber: number;
-      lineContent: string;
-      matches: RegExpMatchArray;
-    }>;
+    ): Array<GrepMatchDetail>;
+    (pattern: string | RegExp, options?: GrepOptions): Array<string>;
   };
 }
 ```
 
 ## String.grep (function property)
 
+Splits the target string on `\n` and then returns the lines matching the
+specified pattern, as an array of strings or detail objects.
+
+- `@param` _str_ — The string to search through.
+- `@param` _pattern_ — The pattern to find. Can be a string or a RegExp.
+- `@param` _options_ — Options which control matching behavior.
+
+See also [grepString](/meta/generated-docs/grep.md#grepstring-function) and [grepFile](/meta/generated-docs/grep.md#grepfile-function).
+
 ```ts
 grep: {
-  (pattern: string | RegExp): Array<string>;
-  (pattern: string | RegExp, options: {
-    inverse: false;
-  }): Array<string>;
-  (pattern: string | RegExp, options: {
-    inverse: true;
-  }): Array<string>;
-  (pattern: string | RegExp, options: {
-    details: false;
-  }): Array<string>;
-  (pattern: string | RegExp, options: {
-    inverse: false;
-    details: false;
-  }): Array<string>;
-  (pattern: string | RegExp, options: {
-    inverse: true;
-    details: false;
-  }): Array<string>;
-  (pattern: string | RegExp, options: {
+  (pattern: string | RegExp, options: GrepOptions & {
     details: true;
-  }): Array<{
-    lineNumber: number;
-    lineContent: string;
-    matches: RegExpMatchArray;
-  }>;
-  (pattern: string | RegExp, options: {
-    inverse: false;
-    details: true;
-  }): Array<string>;
-  (pattern: string | RegExp, options: {
-    inverse: true;
-    details: true;
-  }): Array<{
-    lineNumber: number;
-    lineContent: string;
-    matches: RegExpMatchArray;
-  }>;
+  }): Array<GrepMatchDetail>;
+  (pattern: string | RegExp, options?: GrepOptions): Array<string>;
 };
 ```
 
 ### String.grep(...) (call signature)
 
-Split the string on newline and then return lines matching `pattern`.
-
 ```ts
-(pattern: string | RegExp): Array<string>;
-```
-
-### String.grep(...) (call signature)
-
-Split the string on newline and then return lines matching `pattern`.
-
-```ts
-(pattern: string | RegExp, options: {
-  inverse: false;
-}): Array<string>;
-```
-
-### String.grep(...) (call signature)
-
-Split the string on newline and then return lines NOT matching `pattern`.
-
-```ts
-(pattern: string | RegExp, options: {
-  inverse: true;
-}): Array<string>;
-```
-
-### String.grep(...) (call signature)
-
-Split the string on newline and then return lines matching `pattern`.
-
-```ts
-(pattern: string | RegExp, options: {
-  details: false;
-}): Array<string>;
-```
-
-### String.grep(...) (call signature)
-
-Split the string on newline and then return lines matching `pattern`.
-
-```ts
-(pattern: string | RegExp, options: {
-  inverse: false;
-  details: false;
-}): Array<string>;
-```
-
-### String.grep(...) (call signature)
-
-Split the string on newline and then return lines NOT matching `pattern`.
-
-```ts
-(pattern: string | RegExp, options: {
-  inverse: true;
-  details: false;
-}): Array<string>;
-```
-
-### String.grep(...) (call signature)
-
-Split the string on newline and then return info about lines matching `pattern`.
-
-```ts
-(pattern: string | RegExp, options: {
+(pattern: string | RegExp, options: GrepOptions & {
   details: true;
-}): Array<{
+}): Array<GrepMatchDetail>;
+```
+
+### String.grep(...) (call signature)
+
+```ts
+(pattern: string | RegExp, options?: GrepOptions): Array<string>;
+```
+
+# GrepOptions (interface)
+
+```ts
+declare interface GrepOptions {
+  inverse?: boolean;
+  details?: boolean;
+}
+```
+
+## GrepOptions.inverse (boolean property)
+
+When `inverse` is true, the grep function returns those lines which DON'T
+match the pattern, instead of those which do. Defaults to `false`.
+
+```ts
+inverse?: boolean;
+```
+
+## GrepOptions.details (boolean property)
+
+When `details` is true, the grep function returns an array of
+[GrepMatchDetail](#) objects instead of an array of strings. Defaults to
+`false`.
+
+```ts
+details?: boolean;
+```
+
+# GrepMatchDetail (interface)
+
+When `grepString`, `grepFile`, or `String.prototype.grep` are called with the
+`{ details: true }` option set, an Array of `GrepMatchDetail` objects is
+returned.
+
+```ts
+declare interface GrepMatchDetail {
   lineNumber: number;
   lineContent: string;
   matches: RegExpMatchArray;
-}>;
+}
 ```
 
-### String.grep(...) (call signature)
-
-Split the string on newline and then return info about lines matching `pattern`.
+## GrepMatchDetail.lineNumber (number property)
 
 ```ts
-(pattern: string | RegExp, options: {
-  inverse: false;
-  details: true;
-}): Array<string>;
+lineNumber: number;
 ```
 
-### String.grep(...) (call signature)
-
-Split the string on newline and then return info about lines NOT matching `pattern`.
+## GrepMatchDetail.lineContent (string property)
 
 ```ts
-(pattern: string | RegExp, options: {
-  inverse: true;
-  details: true;
-}): Array<{
-  lineNumber: number;
-  lineContent: string;
-  matches: RegExpMatchArray;
-}>;
+lineContent: string;
+```
+
+## GrepMatchDetail.matches (RegExpMatchArray property)
+
+```ts
+matches: RegExpMatchArray;
 ```

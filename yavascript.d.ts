@@ -1534,192 +1534,96 @@ declare function hidden(input: string | number | Path): string;
 /** Wrap a string with the ANSI control characters that will make it print with a horizontal line through its center. */
 declare function strikethrough(input: string | number | Path): string;
 
-/** Split `str` on newline and then return lines matching `pattern`. */
+/**
+ * Splits the string passed into it on `\n` and then returns the lines matching
+ * the specified pattern, as an array of strings or detail objects.
+ *
+ * @param str - The string to search through.
+ * @param pattern - The pattern to find. Can be a string or a RegExp.
+ * @param options - Options which control matching behavior.
+ *
+ * See also {@link grepFile} and {@link String.prototype.grep}.
+ */
 declare const grepString: {
-  /** Split `str` on newline and then return lines matching `pattern`. */
-  (str: string, pattern: string | RegExp): Array<string>;
-
-  /** Split `str` on newline and then return lines matching `pattern`. */
   (
     str: string,
     pattern: string | RegExp,
-    options: { inverse: false }
-  ): Array<string>;
+    options: GrepOptions & { details: true }
+  ): Array<GrepMatchDetail>;
 
-  /** Split `str` on newline and then return lines NOT matching `pattern`. */
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: { inverse: true }
-  ): Array<string>;
-
-  /** Split `str` on newline and then return lines matching `pattern`. */
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: { details: false }
-  ): Array<string>;
-
-  /** Split `str` on newline and then return lines matching `pattern`. */
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: { inverse: false; details: false }
-  ): Array<string>;
-
-  /** Split `str` on newline and then return lines NOT matching `pattern`. */
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: { inverse: true; details: false }
-  ): Array<string>;
-
-  /** Split `str` on newline and then return info about lines matching `pattern`. */
-  (str: string, pattern: string | RegExp, options: { details: true }): Array<{
-    lineNumber: number;
-    lineContent: string;
-    matches: RegExpMatchArray;
-  }>;
-
-  /** Split `str` on newline and then return info about lines matching `pattern`. */
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: { inverse: false; details: true }
-  ): Array<string>;
-
-  /** Split `str` on newline and then return info about lines NOT matching `pattern`. */
-  (
-    str: string,
-    pattern: string | RegExp,
-    options: { inverse: true; details: true }
-  ): Array<{
-    lineNumber: number;
-    lineContent: string;
-    matches: RegExpMatchArray;
-  }>;
+  (str: string, pattern: string | RegExp, options?: GrepOptions): Array<string>;
 };
 
-/** Read the content at `path`, split it on newline, and then return lines matching `pattern`. */
+/**
+ * Reads the file content at `path`, splits it on `\n`, and then returns the
+ * lines matching the specified pattern, as an array of strings or detail objects.
+ *
+ * @param str - The string to search through.
+ * @param pattern - The pattern to find. Can be a string or a RegExp.
+ * @param options - Options which control matching behavior.
+ *
+ * See also {@link grepString} and {@link String.prototype.grep}.
+ */
 declare const grepFile: {
-  /** Read the content at `path`, split it on newline,  and then return lines matching `pattern`. */
-  (path: string | Path, pattern: string | RegExp): Array<string>;
-
-  /** Read the content at `path`, split it on newline,  and then return lines matching `pattern`. */
   (
     path: string | Path,
     pattern: string | RegExp,
-    options: { inverse: false }
+    options: GrepOptions & { details: true }
+  ): Array<GrepMatchDetail>;
+
+  (
+    path: string | Path,
+    pattern: string | RegExp,
+    options?: GrepOptions
   ): Array<string>;
-
-  /** Read the content at `path`, split it on newline,  and then return lines NOT matching `pattern`. */
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: { inverse: true }
-  ): Array<string>;
-
-  /** Read the content at `path`, split it on newline,  and then return lines matching `pattern`. */
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: { details: false }
-  ): Array<string>;
-
-  /** Read the content at `path`, split it on newline,  and then return lines matching `pattern`. */
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: { inverse: false; details: false }
-  ): Array<string>;
-
-  /** Read the content at `path`, split it on newline,  and then return lines NOT matching `pattern`. */
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: { inverse: true; details: false }
-  ): Array<string>;
-
-  /** Read the content at `path`, split it on newline,  and then return info about lines matching `pattern`. */
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: { details: true }
-  ): Array<{
-    lineNumber: number;
-    lineContent: string;
-    matches: RegExpMatchArray;
-  }>;
-
-  /** Read the content at `path`, split it on newline,  and then return info about lines matching `pattern`. */
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: { inverse: false; details: true }
-  ): Array<string>;
-
-  /** Read the content at `path`, split it on newline,  and then return info about lines NOT matching `pattern`. */
-  (
-    path: string | Path,
-    pattern: string | RegExp,
-    options: { inverse: true; details: true }
-  ): Array<{
-    lineNumber: number;
-    lineContent: string;
-    matches: RegExpMatchArray;
-  }>;
 };
 
 interface String {
   // Same as grepString but without the first argument.
+  /**
+   * Splits the target string on `\n` and then returns the lines matching the
+   * specified pattern, as an array of strings or detail objects.
+   *
+   * @param str - The string to search through.
+   * @param pattern - The pattern to find. Can be a string or a RegExp.
+   * @param options - Options which control matching behavior.
+   *
+   * See also {@link grepString} and {@link grepFile}.
+   */
   grep: {
-    /** Split the string on newline and then return lines matching `pattern`. */
-    (pattern: string | RegExp): Array<string>;
-
-    /** Split the string on newline and then return lines matching `pattern`. */
-    (pattern: string | RegExp, options: { inverse: false }): Array<string>;
-
-    /** Split the string on newline and then return lines NOT matching `pattern`. */
-    (pattern: string | RegExp, options: { inverse: true }): Array<string>;
-
-    /** Split the string on newline and then return lines matching `pattern`. */
-    (pattern: string | RegExp, options: { details: false }): Array<string>;
-
-    /** Split the string on newline and then return lines matching `pattern`. */
     (
       pattern: string | RegExp,
-      options: { inverse: false; details: false }
-    ): Array<string>;
+      options: GrepOptions & { details: true }
+    ): Array<GrepMatchDetail>;
 
-    /** Split the string on newline and then return lines NOT matching `pattern`. */
-    (
-      pattern: string | RegExp,
-      options: { inverse: true; details: false }
-    ): Array<string>;
-
-    /** Split the string on newline and then return info about lines matching `pattern`. */
-    (pattern: string | RegExp, options: { details: true }): Array<{
-      lineNumber: number;
-      lineContent: string;
-      matches: RegExpMatchArray;
-    }>;
-
-    /** Split the string on newline and then return info about lines matching `pattern`. */
-    (
-      pattern: string | RegExp,
-      options: { inverse: false; details: true }
-    ): Array<string>;
-
-    /** Split the string on newline and then return info about lines NOT matching `pattern`. */
-    (
-      pattern: string | RegExp,
-      options: { inverse: true; details: true }
-    ): Array<{
-      lineNumber: number;
-      lineContent: string;
-      matches: RegExpMatchArray;
-    }>;
+    (pattern: string | RegExp, options?: GrepOptions): Array<string>;
   };
+}
+
+declare interface GrepOptions {
+  /**
+   * When `inverse` is true, the grep function returns those lines which DON'T
+   * match the pattern, instead of those which do. Defaults to `false`.
+   */
+  inverse?: boolean;
+
+  /**
+   * When `details` is true, the grep function returns an array of
+   * {@link GrepMatchDetail} objects instead of an array of strings. Defaults to
+   * `false`.
+   */
+  details?: boolean;
+}
+
+/**
+ * When `grepString`, `grepFile`, or `String.prototype.grep` are called with the
+ * `{ details: true }` option set, an Array of `GrepMatchDetail` objects is
+ * returned.
+ */
+declare interface GrepMatchDetail {
+  lineNumber: number;
+  lineContent: string;
+  matches: RegExpMatchArray;
 }
 
 declare const types: {
