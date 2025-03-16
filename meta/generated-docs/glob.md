@@ -8,10 +8,25 @@
 
 # glob (function)
 
-Search the filesystem for files matching the specified glob patterns.
+Searches the filesystem in order to resolve [UNIX-style glob
+strings](https://man7.org/linux/man-pages/man7/glob.7.html) into an array of
+matching filesystem paths.
 
-Uses [minimatch](https://www.npmjs.com/package/minimatch) with its default
-options.
+Glob strings assist in succinctly finding and describing a set of files on
+disk. For instance, to find the path of every `.js` file in the `src` folder,
+one might write `src/*.js`.
+
+The function `glob` can be used to turn one or more of these "glob strings" into an array of
+`Path` objects.
+
+`glob` uses [minimatch](https://www.npmjs.com/package/minimatch) with its
+default options, which means it supports features like brace expanstion,
+"globstar" (\*\*) matching, and other features you would expect from a modern
+globbing solution.
+
+> When specifying more than one pattern string, paths must match ALL of the
+> patterns to be included in the returned Array. In other words, it uses
+> "logical AND" behavior when you give it more than one pattern.
 
 ```ts
 declare function glob(

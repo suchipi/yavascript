@@ -1,6 +1,6 @@
 # `glob` - Turn a glob string into an array of paths
 
-The `glob` function is used to resolve [UNIX-style glob strings][man-glob-7] into an array of matching filesystem paths.
+The `glob` function is used to resolve [UNIX-style glob strings](https://man7.org/linux/man-pages/man7/glob.7.html) into an array of matching filesystem paths.
 
 Glob strings assist in succinctly finding and describing a set of files on disk. For instance, to find the path of every `.js` file in the `src` folder, one might write:
 
@@ -14,9 +14,9 @@ Or, if they'd like to recurse into subfolders:
 src/**/*.js
 ```
 
-`glob` can be used to turn one or more of these glob strings into an array of `Path` objects.
+The function `glob` can be used to turn one or more of these "glob strings" into an array of `Path` objects.
 
-> When specifying more than one pattern string, paths must match ALL of the patterns to be included in the returned Array. In other words, it uses logical AND logic when using more than one pattern.
+> When specifying more than one pattern string, paths must match ALL of the patterns to be included in the returned Array. In other words, it uses "logical AND" behavior when you give it more than one pattern.
 
 ````ts
 // Defined in yavascript/src/api/glob
@@ -73,5 +73,3 @@ declare function glob(
   }
 ): Array<Path>;
 ````
-
-[man-glob-7]: https://man7.org/linux/man-pages/man7/glob.7.html
