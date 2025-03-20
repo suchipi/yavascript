@@ -150,7 +150,7 @@ declare class Path {
 
   /**
    * Creates a new Path by resolving all non-leading `.` and `..` segments in
-   * this Path. In other words:
+   * the target Path. In other words:
    *
    * - Segments containing `.` are removed
    * - Segments containing `..` are removed, along with the segment preceding
@@ -162,30 +162,34 @@ declare class Path {
   normalize(): Path;
 
   /**
-   * Create a new Path by appending additional path segments onto the end of
-   * this Path's segments.
+   * Creates a new Path by appending additional path segments onto the end of
+   * the target Path's segments.
    *
-   * The returned path will use this path's separator.
+   * The returned Path will use the same separator as the target Path.
    */
   concat(...other: Array<string | Path | Array<string | Path>>): Path;
 
   /**
-   * Return whether this path is absolute; that is, whether it starts with
-   * either `/`, `\`, or a drive letter (ie `C:`).
+   * Returns a boolean indicating whether the target Path is absolute; that
+   * is, whether it starts with either a slash (`/` or `\`) or a drive letter
+   * (ie `C:`).
+   *
+   * Note that Windows UNC Paths (eg. `\\MYSERVER\share$\`) are considered
+   * absolute.
    */
   isAbsolute(): boolean;
 
   /**
-   * Make a second Path object containing the same segments and separator as
-   * this one.
+   * Creates a new Path object containing the same segments and separator as
+   * the target Path.
    *
    * Note that although it contains the same segments, the new Path does not use
-   * the same Array instance for segments as this one.
+   * the same Array instance for segments as the target Path is was cloned from.
    */
   clone(): this;
 
   /**
-   * Express this path relative to `dir`.
+   * Creates a new Path which expresses the target Path relative to `dir`.
    *
    * @param dir - The directory to create a new path relative to.
    * @param options - Options that affect the resulting path.
@@ -202,39 +206,41 @@ declare class Path {
   ): Path;
 
   /**
-   * Turn this path into a string by joining its segments using its separator.
+   * Turns the target Path into a string by joining its segments using its
+   * separator as the delimiter.
    */
   toString(): string;
 
   /**
-   * Alias for `toString`; causes Path objects to be serialized as strings when
-   * they (or an object referencing them) are passed into JSON.stringify.
+   * Alias for `toString`. The presence of this method causes Path objects to be
+   * serialized as strings when they (or an object referencing them) get(s) passed
+   * into JSON.stringify.
    */
   toJSON(): string;
 
   /**
-   * Return the final path segment of this path. If this path has no path
-   * segments, the empty string is returned.
+   * Returns the final segment of the target Path. If the target Path has no
+   * segments, an empty string (`""`) is returned.
    */
   basename(): string;
 
   /**
-   * Return the trailing extension of this path. The `options` parameter works
-   * the same as the global `extname`'s `options` parameter.
+   * Returns the trailing file extension of this path. The `options` parameter
+   * works the same as the global {@link extname}'s `options` parameter.
    */
   extname(options?: { full?: boolean }): string;
 
   /**
-   * Return a new Path containing all of the path segments in this one except
-   * for the last one; ie. the path to the directory that contains this path.
+   * Creates a new Path containing all of the segments in the target Path except
+   * for the last one; ie. the path to the directory that contains the target Path.
    */
   dirname(): Path;
 
   /**
-   * Return whether this path starts with the provided value, by comparing one
-   * path segment at a time.
+   * Returns a boolean indicating whether the target Path starts with the
+   * provided value, by comparing one path segment at a time.
    *
-   * The starting segments of this path must *exactly* match the segments in the
+   * The starting segments of the target Path must *exactly* match the segments in the
    * provided value.
    *
    * This means that, given two Paths A and B:
@@ -249,10 +255,10 @@ declare class Path {
   startsWith(value: string | Path | Array<string | Path>): boolean;
 
   /**
-   * Return whether this path ends with the provided value, by comparing one
-   * path segment at a time.
+   * Returns a boolean indicating whether the target Path ends with the provided
+   * value, by comparing one path segment at a time.
    *
-   * The ending segments of this path must *exactly* match the segments in the
+   * The ending segments of the target Path must *exactly* match the segments in the
    * provided value.
    *
    * This means that, given two Paths A and B:
@@ -267,11 +273,11 @@ declare class Path {
   endsWith(value: string | Path | Array<string | Path>): boolean;
 
   /**
-   * Return the path segment index at which `value` appears in this path, or
-   * `-1` if it doesn't appear in this path.
+   * Returns the index at which `value` appears in the target Path's segments,
+   * or `-1` if `value` doesn't appear in the target Path.
    *
    * @param value - The value to search for. If the value contains more than one path segment, the returned index will refer to the location of the value's first path segment.
-   * @param fromIndex - The index into this path's segments to begin searching at. Defaults to `0`.
+   * @param fromIndex - The index into the target Path's segments to begin searching at. Defaults to `0`.
    */
   indexOf(
     value: string | Path | Array<string | Path>,
@@ -279,10 +285,10 @@ declare class Path {
   ): number;
 
   /**
-   * Return whether `value` appears in this path.
+   * Returns a boolean indicating whether `value` appears in the target Path.
    *
    * @param value - The value to search for.
-   * @param fromIndex - The index into this path's segments to begin searching at. Defaults to `0`.
+   * @param fromIndex - The index into the target Path's segments to begin searching at. Defaults to `0`.
    */
   includes(
     value: string | Path | Array<string | Path>,
@@ -290,14 +296,18 @@ declare class Path {
   ): boolean;
 
   /**
-   * Return a new Path wherein the segments in `value` have been replaced with
-   * the segments in `replacement`. If the segments in `value` are not present
-   * in this path, a clone of this path is returned.
+   * Creates a new Path based on the target Path wherein the segments in `value`
+   * have been replaced with the segments in `replacement`. If the segments in
+   * `value` are not present in the target Path, a clone of the target Path is
+   * returned.
    *
-   * Note that only the first match is replaced.
+   * Note that only the first match is replaced. To replace more than one match,
+   * use {@link Path.prototype.replaceAll}.
    *
    * @param value - What should be replaced
    * @param replacement - What it should be replaced with
+   *
+   * See also {@link Path.prototype.replaceLast}.
    */
   replace(
     value: string | Path | Array<string | Path>,
@@ -305,12 +315,18 @@ declare class Path {
   ): Path;
 
   /**
-   * Return a new Path wherein all occurrences of the segments in `value` have
-   * been replaced with the segments in `replacement`. If the segments in
-   * `value` are not present in this path, a clone of this path is returned.
+   * Creates a new Path based on the target Path wherein all occurrences of the
+   * segments in `value` have been replaced with the segments in `replacement`.
+   * If the segments in `value` are not present in the target Path, a clone of
+   * the target Path is returned.
+   *
+   * Note that all matches are replaced. To replace only the first match,
+   * use {@link Path.prototype.replace}.
    *
    * @param value - What should be replaced
    * @param replacement - What it should be replaced with
+   *
+   * See also {@link Path.prototype.replaceLast}.
    */
   replaceAll(
     value: string | Path | Array<string | Path>,
@@ -318,7 +334,11 @@ declare class Path {
   ): Path;
 
   /**
-   * Return a copy of this path but with the final segment replaced with `replacement`
+   * Creates a new Path based on the target Path but with the final segment
+   * replaced with `replacement`.
+   *
+   * If the target Path has no segments, the newly created Path will be the same
+   * as `new Path(replacement)`; ie. non-empty.
    *
    * @param replacement - The new final segment(s) for the returned Path
    */
