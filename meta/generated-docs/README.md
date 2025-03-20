@@ -291,3 +291,6 @@ For convenience, two builtin modules from QuickJS are also available as globals.
 [`Path.OS_PROGRAM_EXTENSIONS`]: /meta/generated-docs/path.md#pathos_program_extensions-static-property
 [`GrepMatchDetail`]: /meta/generated-docs/grep.md#grepmatchdetail-interface
 [`ParseScriptArgsResult`]: /meta/generated-docs/parse-script-args.md#parsescriptargsresult-interface
+[`Path.prototype.replace`]: /meta/generated-docs/path.md#pathprototypereplace-method
+[`Path.prototype.replaceAll`]: /meta/generated-docs/path.md#pathprototypereplaceall-method
+[`Path.prototype.replaceLast`]: /meta/generated-docs/path.md#pathprototypereplacelast-method
