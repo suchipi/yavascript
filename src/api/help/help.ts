@@ -12,7 +12,7 @@ export function help() {
   const ver = yavascript.version;
 
   let matches: RegExpMatchArray | null = null;
-  if ((matches = ver.match(/^git-([A-Fa-f0-9]+)(?:-dirty)$/))) {
+  if ((matches = ver.match(/^git-([A-Fa-f0-9]+)(?:-dirty)?$/))) {
     const sha = matches[1];
     url = docsUrlForRef(sha);
   } else if ((matches = ver.match(/^(v[0-9.]+)/))) {
