@@ -4,8 +4,13 @@ function run(cmd) {
   return child_process.execSync(cmd, { encoding: "utf-8" }).trim();
 }
 
+// If you change the version string format, update help.ts and
+// yavascript.inc.d.ts
 function getVersion() {
   if (process.env.YAVASCRIPT_VERSION) {
+    if (!process.env.YAVASCRIPT_VERSION.startsWith("v")) {
+      throw new Error(`env var YAVASCRIPT_VERSION must start with 'v'!`);
+    }
     return process.env.YAVASCRIPT_VERSION;
   }
 
