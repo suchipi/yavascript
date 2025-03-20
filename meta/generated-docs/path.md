@@ -27,6 +27,8 @@
   - [Path.prototype.replace (method)](#pathprototypereplace-method)
   - [Path.prototype.replaceAll (method)](#pathprototypereplaceall-method)
   - [Path.prototype.replaceLast (method)](#pathprototypereplacelast-method)
+- [PathRelativeToOptions (exported interface)](#pathrelativetooptions-exported-interface)
+  - [PathRelativeToOptions.noLeadingDot (boolean property)](#pathrelativetooptionsnoleadingdot-boolean-property)
 
 # Path (class)
 
@@ -73,16 +75,11 @@ declare class Path {
   concat(...other: Array<string | Path | Array<string | Path>>): Path;
   isAbsolute(): boolean;
   clone(): this;
-  relativeTo(
-    dir: Path | string,
-    options?: {
-      noLeadingDot?: boolean;
-    }
-  ): Path;
+  relativeTo(dir: Path | string, options?: PathRelativeToOptions): Path;
   toString(): string;
   toJSON(): string;
   basename(): string;
-  extname(options?: { full?: boolean }): string;
+  extname(options?: ExtnameOptions): string;
   dirname(): Path;
   startsWith(value: string | Path | Array<string | Path>): boolean;
   endsWith(value: string | Path | Array<string | Path>): boolean;
@@ -317,12 +314,10 @@ clone(): this;
 Creates a new Path which expresses the target Path relative to `dir`.
 
 - `@param` _dir_ — The directory to create a new path relative to.
-- `@param` _options_ — Options that affect the resulting path.
+- `@param` _options_ — Options that affect the resulting path (see [PathRelativeToOptions](/meta/generated-docs/path.md#pathrelativetooptions-interface)).
 
 ```ts
-relativeTo(dir: Path | string, options?: {
-  noLeadingDot?: boolean;
-}): Path;
+relativeTo(dir: Path | string, options?: PathRelativeToOptions): Path;
 ```
 
 ## Path.prototype.toString (method)
@@ -355,13 +350,12 @@ basename(): string;
 
 ## Path.prototype.extname (method)
 
-Returns the trailing file extension of this path. The `options` parameter
-works the same as the global [extname](/meta/generated-docs/extname.md#extname-function)'s `options` parameter.
+Returns the trailing file extension of this path.
+
+- `@param` _options_ — Works the same as the options parameter for the global [extname](/meta/generated-docs/extname.md#extname-function) (see [ExtnameOptions](/meta/generated-docs/extname.md#extnameoptions-interface)).
 
 ```ts
-extname(options?: {
-  full?: boolean;
-}): string;
+extname(options?: ExtnameOptions): string;
 ```
 
 ## Path.prototype.dirname (method)
@@ -488,4 +482,23 @@ as `new Path(replacement)`; ie. non-empty.
 
 ```ts
 replaceLast(replacement: string | Path | Array<string | Path>): Path;
+```
+
+# PathRelativeToOptions (exported interface)
+
+Options for [Path.prototype.relativeTo](/meta/generated-docs/path.md#pathprototyperelativeto-method).
+
+```ts
+interface PathRelativeToOptions {
+  noLeadingDot?: boolean;
+}
+```
+
+## PathRelativeToOptions.noLeadingDot (boolean property)
+
+Defaults to false. When true, a leading `./` will be omitted from the
+path, if present. Note that a leading `../` will never be omitted.
+
+```ts
+noLeadingDot?: boolean;
 ```

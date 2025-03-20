@@ -623,18 +623,9 @@ declare class Path {
    * Creates a new Path which expresses the target Path relative to `dir`.
    *
    * @param dir - The directory to create a new path relative to.
-   * @param options - Options that affect the resulting path.
+   * @param options - Options that affect the resulting path (see {@link PathRelativeToOptions}).
    */
-  relativeTo(
-    dir: Path | string,
-    options?: {
-      /**
-       * Defaults to false. When true, a leading `./` will be omitted from the
-       * path, if present. Note that a leading `../` will never be omitted.
-       */
-      noLeadingDot?: boolean;
-    }
-  ): Path;
+  relativeTo(dir: Path | string, options?: PathRelativeToOptions): Path;
 
   /**
    * Turns the target Path into a string by joining its segments using its
@@ -656,10 +647,11 @@ declare class Path {
   basename(): string;
 
   /**
-   * Returns the trailing file extension of this path. The `options` parameter
-   * works the same as the global {@link extname}'s `options` parameter.
+   * Returns the trailing file extension of this path.
+   *
+   * @param options - Works the same as the options parameter for the global {@link extname} (see {@link ExtnameOptions}).
    */
-  extname(options?: { full?: boolean }): string;
+  extname(options?: ExtnameOptions): string;
 
   /**
    * Creates a new Path containing all of the segments in the target Path except
@@ -774,6 +766,17 @@ declare class Path {
    * @param replacement - The new final segment(s) for the returned Path
    */
   replaceLast(replacement: string | Path | Array<string | Path>): Path;
+}
+
+/**
+ * Options for {@link Path.prototype.relativeTo}.
+ */
+export interface PathRelativeToOptions {
+  /**
+   * Defaults to false. When true, a leading `./` will be omitted from the
+   * path, if present. Note that a leading `../` will never be omitted.
+   */
+  noLeadingDot?: boolean;
 }
 
 /**
@@ -993,13 +996,24 @@ declare const exit: {
  * If the file has no extension (eg `Makefile`, etc), then `''` will be
  * returned.
  *
- * Pass `{ full: true }` to get compound extensions, eg `.d.ts` or `.test.js`
- * instead of just `.ts`/`.js`.
+ * @param pathOrFilename The input path
+ * @param options Options which affect the return value. See {@link ExtnameOptions}.
  */
 declare function extname(
   pathOrFilename: string | Path,
-  options?: { full?: boolean }
+  options?: ExtnameOptions
 ): string;
+
+/**
+ * Options for {@link extname} and {@link Path.prototype.extname}.
+ */
+declare interface ExtnameOptions {
+  /**
+   * Whether to get compound extensions, like `.d.ts` or `.test.js`, instead of
+   * just the final extension (`.ts` or `.js` in this example).
+   */
+  full?: boolean;
+}
 
 /**
  * Returns the contents of a directory, as absolute paths. `.` and `..` are

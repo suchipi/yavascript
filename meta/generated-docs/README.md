@@ -294,3 +294,7 @@ For convenience, two builtin modules from QuickJS are also available as globals.
 [`Path.prototype.replace`]: /meta/generated-docs/path.md#pathprototypereplace-method
 [`Path.prototype.replaceAll`]: /meta/generated-docs/path.md#pathprototypereplaceall-method
 [`Path.prototype.replaceLast`]: /meta/generated-docs/path.md#pathprototypereplacelast-method
+[`PathRelativeToOptions`]: /meta/generated-docs/path.md#pathrelativetooptions-interface
+[`ExtnameOptions`]: /meta/generated-docs/extname.md#extnameoptions-interface
+[`Path.prototype.relativeTo`]: /meta/generated-docs/path.md#pathprototyperelativeto-method
+[`Path.prototype.extname`]: /meta/generated-docs/path.md#pathprototypeextname-method

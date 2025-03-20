@@ -4,10 +4,21 @@
  * If the file has no extension (eg `Makefile`, etc), then `''` will be
  * returned.
  *
- * Pass `{ full: true }` to get compound extensions, eg `.d.ts` or `.test.js`
- * instead of just `.ts`/`.js`.
+ * @param pathOrFilename The input path
+ * @param options Options which affect the return value. See {@link ExtnameOptions}.
  */
 declare function extname(
   pathOrFilename: string | Path,
-  options?: { full?: boolean }
+  options?: ExtnameOptions
 ): string;
+
+/**
+ * Options for {@link extname} and {@link Path.prototype.extname}.
+ */
+declare interface ExtnameOptions {
+  /**
+   * Whether to get compound extensions, like `.d.ts` or `.test.js`, instead of
+   * just the final extension (`.ts` or `.js` in this example).
+   */
+  full?: boolean;
+}
