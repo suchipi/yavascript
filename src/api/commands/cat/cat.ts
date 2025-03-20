@@ -4,8 +4,6 @@ import { assert } from "../../assert";
 import { is } from "../../is";
 import { TypeValidator, types } from "../../types";
 import type { Path } from "../../path";
-import { setHelpText } from "../../help";
-import catHelp from "./cat.help.md";
 import { ResizableBuffer } from "../../../resizable-buffer";
 
 let pathsArgType: TypeValidator<string | Path | Array<string | Path>> | null =
@@ -71,5 +69,3 @@ export function cat(
     return encoding.toUtf8(content.buffer);
   }
 }
-
-setHelpText(cat, catHelp);

@@ -1,6 +1,4 @@
 import { mkdir } from "./mkdir";
-import { setHelpText } from "../../help";
-import mkdirpHelpText from "./mkdirp.help.md";
 import type { Path } from "../../path";
 
 export function mkdirp(
@@ -15,5 +13,3 @@ export function mkdirp(
 ): void {
   mkdir(path, { ...options, recursive: true });
 }
-
-setHelpText(mkdirp, mkdirpHelpText);

@@ -1,10 +1,6 @@
 import Papa from "papaparse";
 import { assert } from "../assert";
 import { types } from "../types";
-import { setHelpText } from "../help";
-import csvHelpText from "./csv.help.md";
-import csvParseHelpText from "./csv.parse.help.md";
-import csvStringifyHelpText from "./csv.stringify.help.md";
 
 export const CSV = {
   parse(input: string): Array<Array<string>> {
@@ -44,7 +40,3 @@ export const CSV = {
     return Papa.unparse(input);
   },
 };
-
-setHelpText(CSV, csvHelpText);
-setHelpText(CSV.parse, csvParseHelpText);
-setHelpText(CSV.stringify, csvStringifyHelpText);

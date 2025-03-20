@@ -1,8 +1,6 @@
 import { Path } from "../../path";
 import { assert } from "../../assert";
 import { is } from "../../is";
-import { setHelpText } from "../../help";
-import basenameHelp from "./basename.help.md";
 
 export function basename(path: string | Path): string {
   if (is(path, types.Path)) {
@@ -18,5 +16,3 @@ export function basename(path: string | Path): string {
   const parts = Path.splitToSegments(path);
   return parts[parts.length - 1];
 }
-
-setHelpText(basename, basenameHelp);

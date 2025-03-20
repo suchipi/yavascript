@@ -3,8 +3,6 @@ import { is } from "../../is";
 import { assert } from "../../assert";
 import { makeErrorWithProperties } from "../../../error-with-properties";
 import type { Path } from "../../path";
-import { setHelpText } from "../../help";
-import chmodHelp from "./chmod.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
 type ChmodPermissionsWho =
@@ -176,5 +174,3 @@ export function chmod(
 
   os.chmod(path, permNum);
 }
-
-setHelpText(chmod, chmodHelp);

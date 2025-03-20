@@ -1,8 +1,6 @@
 import { env } from "../../env";
 import { Path } from "../../path";
 import { exists, isExecutable } from "../../filesystem";
-import { setHelpText } from "../../help";
-import whichHelpText from "./which.help.md";
 import { assert } from "../../assert";
 import { types } from "../../types";
 import { is } from "../../is";
@@ -93,5 +91,3 @@ export function which(
   trace(`which: Failed to find ${quote(binaryName)}...`);
   return null;
 }
-
-setHelpText(which, whichHelpText);

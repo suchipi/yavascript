@@ -3,8 +3,6 @@ import { Path } from "../path";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
-import { setHelpText } from "../help";
-import removeHelpText from "./remove.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 export function remove(path: string | Path): void {
@@ -33,5 +31,3 @@ export function remove(path: string | Path): void {
 
   os.remove(path);
 }
-
-setHelpText(remove, removeHelpText);

@@ -14,7 +14,6 @@ import { install as installStringDedent } from "./string-dedent";
 import { installModuleHooks } from "../module-hooks";
 import { installNodeCompat } from "./node-compat/node-compat";
 import { patchRequire } from "../cjs-interop";
-import { installBuiltinsHelpText } from "../builtins-help-text";
 
 const quickjsBuiltinsProps = makeGetterPropertyDescriptorMap({
   std: () => require("quickjs:std"),
@@ -224,5 +223,4 @@ export default function installApi(target: typeof globalThis) {
   installModuleHooks();
   installNodeCompat(target);
   patchRequire(target);
-  installBuiltinsHelpText(target);
 }

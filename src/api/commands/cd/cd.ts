@@ -3,8 +3,6 @@ import { env } from "../../env";
 import { assert } from "../../assert";
 import { is } from "../../is";
 import type { Path } from "../../path";
-import { setHelpText } from "../../help";
-import cdHelpText from "./cd.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
 export function cd(path?: string | Path): void {
@@ -31,5 +29,3 @@ export function cd(path?: string | Path): void {
 
   os.chdir(path);
 }
-
-setHelpText(cd, cdHelpText);

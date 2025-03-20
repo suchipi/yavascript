@@ -1,6 +1,4 @@
 import * as std from "quickjs:std";
-import { setHelpText } from "../../help";
-import exitHelpText from "./exit.help.md";
 
 function exit(code?: number) {
   std.exit(code);
@@ -14,8 +12,6 @@ Object.defineProperty(exit, "code", {
     std.setExitCode(newValue);
   },
 });
-
-setHelpText(exit, exitHelpText);
 
 const exit_: typeof exit & {
   code: number;

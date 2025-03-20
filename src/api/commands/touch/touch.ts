@@ -3,8 +3,6 @@ import * as os from "quickjs:os";
 import { is } from "../../is";
 import { assert } from "../../assert";
 import type { Path } from "../../path";
-import { setHelpText } from "../../help";
-import touchHelpText from "./touch.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
 // cause everytime we touch, I get this feeling
@@ -36,5 +34,3 @@ export function touch(path: string | Path) {
     os.utimes(path, Date.now(), Date.now());
   }
 }
-
-setHelpText(touch, touchHelpText);

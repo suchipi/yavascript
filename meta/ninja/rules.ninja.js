@@ -7,12 +7,6 @@ rule("copy", {
   description: "COPY $out",
 });
 
-rule("render-md", {
-  command: `node meta/scripts/render-md.js $in $out`,
-  description: "RENDER-MD $out",
-  implicitInputs: walkJsDeps("meta/scripts/render-md.js"),
-});
-
 // NOTE: must define YAVASCRIPT_ARCH
 rule("kame", {
   command: [

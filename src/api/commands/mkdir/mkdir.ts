@@ -7,8 +7,6 @@ import { _getPathInfo } from "../../filesystem/_getPathInfo";
 import { dirname } from "../dirname";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 import { logger } from "../../logger";
-import { setHelpText } from "../../help";
-import mkdirHelp from "./mkdir.help.md";
 
 export function mkdir(
   path: string | Path,
@@ -156,5 +154,3 @@ export function mkdir(
     }
   }
 }
-
-setHelpText(mkdir, mkdirHelp);

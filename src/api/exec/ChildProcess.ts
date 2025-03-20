@@ -9,8 +9,6 @@ import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
 import { Path } from "../path";
-import childProcessHelpText from "./ChildProcess.help.md";
-import { setHelpText } from "../help";
 
 export type ChildProcessOptions = {
   cwd?: string | Path;
@@ -163,5 +161,3 @@ export class ChildProcess {
     }
   }
 }
-
-setHelpText(ChildProcess, childProcessHelpText);

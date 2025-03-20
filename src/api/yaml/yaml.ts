@@ -1,10 +1,6 @@
 import { parse, stringify } from "yaml";
 import { assert } from "../assert";
 import { types } from "../types";
-import { setHelpText } from "../help";
-import yamlHelpText from "./YAML.help.md";
-import yamlParseHelpText from "./YAML.parse.help.md";
-import yamlStringifyHelpText from "./YAML.stringify.help.md";
 
 const reviverType = types.or(types.undefined, types.null, types.anyFunction);
 const replacerType = types.or(
@@ -51,7 +47,3 @@ export const YAML = Object.assign(Object.create(null) as {}, {
     return stringify(input, replacer, indent);
   },
 });
-
-setHelpText(YAML, yamlHelpText);
-setHelpText(YAML.parse, yamlParseHelpText);
-setHelpText(YAML.stringify, yamlStringifyHelpText);

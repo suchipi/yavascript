@@ -4,8 +4,6 @@ import { Path } from "../../path";
 import { isDir } from "../../filesystem";
 import { is } from "../../is";
 import { assert } from "../../assert";
-import { setHelpText } from "../../help";
-import lsHelpText from "./ls.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
 export function ls(dir: string | Path = pwd()): Array<Path> {
@@ -36,5 +34,3 @@ export function ls(dir: string | Path = pwd()): Array<Path> {
 
   return children;
 }
-
-setHelpText(ls, lsHelpText);

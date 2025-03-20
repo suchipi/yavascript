@@ -2,8 +2,6 @@ import { basename } from "../basename";
 import { is } from "../../is";
 import { assert } from "../../assert";
 import type { Path } from "../../path";
-import { setHelpText } from "../../help";
-import extnameHelpText from "./extname.help.md";
 
 export function extname(
   pathOrFilename: string | Path,
@@ -38,5 +36,3 @@ export function extname(
     return "." + parts[parts.length - 1];
   }
 }
-
-setHelpText(extname, extnameHelpText);

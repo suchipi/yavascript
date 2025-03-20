@@ -3,8 +3,6 @@ import { Path } from "../path";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
-import { setHelpText } from "../help";
-import isDirHelpText from "./isDir.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 export function isDir(path: string | Path): boolean {
@@ -38,5 +36,3 @@ export function isDir(path: string | Path): boolean {
     return false;
   }
 }
-
-setHelpText(isDir, isDirHelpText);

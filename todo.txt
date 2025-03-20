@@ -8,9 +8,9 @@
 - [x] make quote accept Path objects
 - [x] make ls, pwd, etc all return Path objects when possible
 - [x] add something to make "this path but with a different extension" and "this path but swap the basedir from this to this" easier
-- [ ] ~~finish all the help docs!!!~~
-  - [-] take all useful info from help docs and move it into the .inc.d.ts files
-  - [ ] remove the help docs and make the help function use the dtsmd-generated files instead
+- [x] ~~finish all the help docs!!!~~
+  - [x] take all useful info from help docs and move it into the .inc.d.ts files
+  - [x] remove the help docs and make the help function ~~use the dtsmd-generated files instead~~ print a link instead
 - [ ] spicy: override types for string-receiving methods to accept anything that can be converted to a string (if quickjs converts it)
   - this is to make Paths easier to work with
 - [x] add frozen "initial pwd" somewhere
@@ -21,7 +21,8 @@
 - [ ] InteractivePrompt: screen contents can get messed up when hitting backspace repeatedly
 - [ ] InteractivePrompt: spawning one InteractivePrompt from within another results in both running at once. Problem? idk, but it makes it hard to use InteractivePrompt from a repl
 - [ ] support source maps for compiled languages
-- [ ] pager for long help text (when using repl)
+- [x] ~~pager for long help text (when using repl)~~
+  - [x] invalidated since help text is browser-only now
 - [-] create solution for tracing `exec` and friends without it being crazy chatty. maybe log levels
 - [x] allow catting multiple files together, and do so as binary
 - [ ] jsx in the repl behaves weirdly because the repl autocomplete thinks the slash is a regexp literal

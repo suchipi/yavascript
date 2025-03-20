@@ -1,7 +1,6 @@
 import * as os from "quickjs:os";
 import * as engine from "quickjs:engine";
 import { dirname } from "../commands/dirname";
-import { wrappedStringLazy } from "../help";
 
 // Not public API; exported for __filename, which *is* a public API
 export function get__filename(depth: number): string {
@@ -12,7 +11,7 @@ export function get__filename(depth: number): string {
     // ignored
   }
 
-  return wrappedStringLazy(ret, () => require("./__filename.help.md"));
+  return ret;
 }
 
 // Not public API; exported for __dirname, which *is* a public API
@@ -25,7 +24,5 @@ export function get__dirname(depth: number): string {
   }
 
   const ret = dirname(filename);
-  return wrappedStringLazy(ret.toString(), () =>
-    require("./__dirname.help.md")
-  );
+  return ret.toString();
 }

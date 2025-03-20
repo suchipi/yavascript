@@ -2,8 +2,6 @@ import * as os from "quickjs:os";
 import { Path } from "../path";
 import { types } from "../types";
 import { assert } from "../assert";
-import { setHelpText } from "../help";
-import renameHelpText from "./rename.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 export function rename(from: string | Path, to: string | Path): void {
@@ -36,5 +34,3 @@ export function rename(from: string | Path, to: string | Path): void {
     throw err;
   }
 }
-
-setHelpText(rename, renameHelpText);

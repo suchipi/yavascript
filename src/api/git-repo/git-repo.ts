@@ -5,13 +5,6 @@ import { types } from "../types";
 import { Path } from "../path";
 import { assert } from "../assert";
 import { makeErrorWithProperties } from "../../error-with-properties";
-import { setHelpText } from "../help";
-import gitRepoHelpText from "./git-repo.help.md";
-import findRootHelpText from "./git-repo_findRoot.help.md";
-import commitSHAHelpText from "./git-repo_commitSHA.help.md";
-import branchNameHelpText from "./git-repo_branchName.help.md";
-import isIgnoredHelpText from "./git-repo_isIgnored.help.md";
-import isWorkingTreeDirtyHelpText from "./git-repo_isWorkingTreeDirty.help.md";
 import { quote } from "../strings";
 
 export class GitRepo {
@@ -214,10 +207,3 @@ export class GitRepo {
     return result.status === 0;
   }
 }
-
-setHelpText(GitRepo, gitRepoHelpText);
-setHelpText(GitRepo.findRoot, findRootHelpText);
-setHelpText(GitRepo.prototype.commitSHA, commitSHAHelpText);
-setHelpText(GitRepo.prototype.branchName, branchNameHelpText);
-setHelpText(GitRepo.prototype.isIgnored, isIgnoredHelpText);
-setHelpText(GitRepo.prototype.isWorkingTreeDirty, isWorkingTreeDirtyHelpText);

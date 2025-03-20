@@ -5,9 +5,6 @@ import { makeErrorWithProperties } from "../../error-with-properties";
 import { logger } from "../logger";
 import { assert } from "../assert";
 import type { Path } from "../path";
-import { setHelpText } from "../help";
-import execHelpText from "./exec.help.md";
-import dollarHelpText from "./_dollar.help.md";
 import { ChildProcess } from "./ChildProcess";
 import { types } from "../types";
 import { quote } from "../strings";
@@ -198,8 +195,6 @@ const exec = (
   }
 };
 
-setHelpText(exec, execHelpText);
-
 export { exec };
 
 export function $(args: Array<string | Path | number> | string | Path): {
@@ -213,5 +208,3 @@ export function $(args: Array<string | Path | number> | string | Path): {
 }
 
 exec.toArgv = toArgv;
-
-setHelpText($, dollarHelpText);

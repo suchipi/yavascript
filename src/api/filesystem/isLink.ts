@@ -3,8 +3,6 @@ import { Path } from "../path";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
-import { setHelpText } from "../help";
-import isLinkHelpText from "./isLink.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 export function isLink(path: string | Path): boolean {
@@ -34,5 +32,3 @@ export function isLink(path: string | Path): boolean {
     return false;
   }
 }
-
-setHelpText(isLink, isLinkHelpText);

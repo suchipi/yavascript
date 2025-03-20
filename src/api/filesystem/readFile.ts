@@ -4,8 +4,6 @@ import { Path } from "../path";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
-import { setHelpText } from "../help";
-import readFileHelpText from "./readFile.help.md";
 
 type ReadFile = {
   (path: string | Path): string;
@@ -54,5 +52,3 @@ export const readFile: ReadFile = function readFile(
     return std.loadFile(path);
   }
 } as any;
-
-setHelpText(readFile, readFileHelpText);

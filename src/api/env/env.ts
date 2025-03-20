@@ -1,6 +1,4 @@
 import * as std from "quickjs:std";
-import { setHelpText } from "../help";
-import envHelpText from "./env.help.md";
 
 const _env = std.getenviron();
 
@@ -44,5 +42,3 @@ export const env = new Proxy(_env, {
     return typeof result !== "undefined";
   },
 });
-
-setHelpText(env, envHelpText);

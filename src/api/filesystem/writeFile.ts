@@ -3,8 +3,6 @@ import { Path } from "../path";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
-import { setHelpText } from "../help";
-import writeFileHelpText from "./writeFile.help.md";
 
 export function writeFile(
   path: string | Path,
@@ -37,5 +35,3 @@ export function writeFile(
     file.close();
   }
 }
-
-setHelpText(writeFile, writeFileHelpText);

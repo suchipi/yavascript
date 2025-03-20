@@ -1,7 +1,5 @@
 import { Path } from "../../path";
 import { is } from "../../is";
-import { setHelpText } from "../../help";
-import dirnameHelpText from "./dirname.help.md";
 
 export function dirname(path: string | Path): Path {
   let pathObj: Path;
@@ -18,5 +16,3 @@ export function dirname(path: string | Path): Path {
 
   return pathObj.dirname();
 }
-
-setHelpText(dirname, dirnameHelpText);

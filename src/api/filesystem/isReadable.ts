@@ -1,8 +1,6 @@
 import * as os from "quickjs:os";
 import { assert } from "../assert";
 import { types } from "../types";
-import { setHelpText } from "../help";
-import isReadableHelpText from "./isReadable.help.md";
 
 export function isReadable(path: Path | string) {
   assert.type(
@@ -24,5 +22,3 @@ export function isReadable(path: Path | string) {
 
   return true;
 }
-
-setHelpText(isReadable, isReadableHelpText);

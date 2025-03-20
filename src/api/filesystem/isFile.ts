@@ -3,8 +3,6 @@ import { Path } from "../path";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
-import { setHelpText } from "../help";
-import isFileHelpText from "./isFile.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 
 export function isFile(path: string | Path) {
@@ -27,5 +25,3 @@ export function isFile(path: string | Path) {
     return false;
   }
 }
-
-setHelpText(isFile, isFileHelpText);

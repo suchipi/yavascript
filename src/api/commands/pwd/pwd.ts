@@ -1,8 +1,5 @@
 import * as os from "quickjs:os";
 import { Path } from "../../path";
-import { setHelpText } from "../../help";
-import pwdHelpText from "./pwd.help.md";
-import pwdInitialHelpText from "./pwd_initial.help.md";
 
 export function pwd(): Path {
   return new Path(os.getcwd());
@@ -19,6 +16,3 @@ Object.defineProperty(pwd, "initial", {
 
   value: initialPwd,
 });
-
-setHelpText(pwd, pwdHelpText);
-setHelpText((pwd as any).initial, pwdInitialHelpText);

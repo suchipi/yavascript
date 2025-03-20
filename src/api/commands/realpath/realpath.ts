@@ -2,8 +2,6 @@ import * as os from "quickjs:os";
 import { is } from "../../is";
 import { assert } from "../../assert";
 import { Path } from "../../path";
-import { setHelpText } from "../../help";
-import realpathHelpText from "./realpath.help.md";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
 
 export function realpath(path: string | Path): Path {
@@ -22,5 +20,3 @@ export function realpath(path: string | Path): Path {
   const result = os.realpath(path);
   return new Path(result);
 }
-
-setHelpText(realpath, realpathHelpText);

@@ -4,8 +4,6 @@ import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
-import { setHelpText } from "../help";
-import existsHelpText from "./exists.help.md";
 
 export function exists(path: string | Path): boolean {
   assert.type(
@@ -27,5 +25,3 @@ export function exists(path: string | Path): boolean {
     return false;
   }
 }
-
-setHelpText(exists, existsHelpText);

@@ -49,21 +49,17 @@ You'll also find analogues to familiar CLI tools, like:
 
 ...and more.
 
-## APIs
+## API Documentation
 
-To view the APIs online:
+See [here](/meta/generated-docs/README.md).
 
-- An overview is available [here](/meta/generated-docs/README.md)
-- Or you can view [the `.d.ts` file](./yavascript.d.ts), if you prefer.
+## TypeScript Types
 
-Or, if you already have YavaScript installed:
-
-- Run `help()` from the REPL
-- Use `yavascript --print-types` to obtain the `.d.ts` file for your release
+YavaScript comes with a TypeScript type definition (`.d.ts`) file.
 
 The `.d.ts` file contains documented TypeScript type definitions which can be given to your IDE to assist you when writing scripts, even if you aren't writing your scripts in TypeScript.
 
-YavaScript's `help()` function can be used in YavaScript's interactive repl to read formatted markdown documentation offline in your terminal.
+You can [view the `.d.ts` file online](./yavascript.d.ts), but if you have YavaScript installed, you should instead run `yavascript --print-types` to obtain the `.d.ts` file for your specific release.
 
 ## Example
 
@@ -153,7 +149,6 @@ You'll need to install these prerequisites:
 
 - [Node.js](https://nodejs.org/en)
 - [Ninja](https://ninja-build.org/)
-- [bat](https://github.com/sharkdp/bat) (for syntax-highlighting code blocks in help markdown)
 
 Then run `meta/build.sh`. The compiled output will be in the `dist` folder:
 

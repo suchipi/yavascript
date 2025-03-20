@@ -2,10 +2,7 @@
 set -ex
 
 # install ninja
-sudo apt-get install -y ninja-build bat
-
-# ubuntu package names bat binary "batcat" instead of bat...
-ln -s /usr/bin/batcat /usr/local/bin/bat
+sudo apt-get install -y ninja-build
 
 export NVM_DIR="$HOME/.nvm"
 # this is really chatty...

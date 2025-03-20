@@ -2,8 +2,6 @@ import * as os from "quickjs:os";
 import { is } from "../../is";
 import { assert } from "../../assert";
 import { Path } from "../../path";
-import { setHelpText } from "../../help";
-import readlinkHelpText from "./readlink.help.md";
 
 export function readlink(path: string | Path): Path {
   if (is(path, types.Path)) {
@@ -24,5 +22,3 @@ export function readlink(path: string | Path): Path {
     return new Path(os.readlink(path));
   }
 }
-
-setHelpText(readlink, readlinkHelpText);
