@@ -1,29 +1,90 @@
-/** An object that represents a filesystem path. */
+/**
+ * A class which represents a filesystem path. The class contains various
+ * methods that make it easy to work with filesystem paths; there are methods
+ * for adding/removing path components, converting between absolute and relative
+ * paths, getting the basename and dirname, and more.
+ *
+ * All functions in yavascript which accept path strings as arguments also
+ * accept Path objects. As such, it is recommended that all filesystem paths in
+ * your programs are Path objects rather than strings.
+ *
+ * Every Path object has two properties: `segments` and `separator`. `segments`
+ * is an Array of strings containing all the non-slash portions of the path. For
+ * example, the path "one/two/three" would have segments `["one", "two",
+ * "three"]`. `separator` is which slash is used to separate the segments;
+ * either `"/"` or `"\"`.
+ *
+ * A Path object can represent either a POSIX-style path or a win32-style path.
+ * For the win32 style, UNC paths are supported. POSIX-style paths starting with
+ * "/" (eg. "/usr/bin") have an empty string at the beginning of their segments
+ * array to represent the left-hand-side of the leading slash. For instance,
+ * "/usr/bin" would have segments `["", "usr", "bin"]`.
+ */
 declare class Path {
-  /** The character used to separate path segments on this OS. */
+  /**
+   * The character used to separate path segments on the current operating
+   * system where yavascript is running.
+   *
+   * Its value is either a forward slash (`"/"`) or a backslash (`"\"`). Its value
+   * is a backslash on windows, and a forward slash on all other operating
+   * systems.
+   */
   static readonly OS_SEGMENT_SEPARATOR: "/" | "\\";
 
   /**
-   * The character used to separate entries within the PATH environment
-   * variable on this OS.
+   * The character used to separate entries within the system's `PATH`
+   * environment variable on the current operating system where yavascript is
+   * running.
+   *
+   * The `PATH` environment variable contains a list of folders wherein
+   * command-line programs can be found, separated by either a colon (`:`) or a
+   * semicolon (`;`). The value of `OS_ENV_VAR_SEPARATOR` is a semicolon on
+   * windows, and a colon on all other operating systems.
+   *
+   * The `PATH` environment variable can be accessed by yavascript programs via
+   * `env.PATH`. Therefore, one can contain a list of all entries in the `PATH`
+   * environment variable via:
+   *
+   * ```ts
+   * const folders: Array<string> = env.PATH.split(Path.OS_ENV_VAR_SEPARATOR);
+   * ```
    */
   static readonly OS_ENV_VAR_SEPARATOR: ":" | ";";
 
   /**
-   * A list of suffixes that could appear in the filename for a program on the
-   * current OS. For instance, on Windows, programs often end with ".exe".
+   * A Set of filename extension strings that command-line programs may end with
+   * on the current operating system where yavascript is running. For instance,
+   * on Windows, programs often end with ".exe". Each of these strings contains
+   * a leading dot (`.`).
    *
-   * On Unix-like OSes, this is empty. On Windows, it's based on `env.PATHEXT`.
+   * On windows, this value is based on the `PATHEXT` environment variable,
+   * which defaults to ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC"
+   * on Windows Vista and up. If `PATHEXT` is not defined, that default value is
+   * used.
+   *
+   * On all other operating systems, this Set is empty.
    */
   static readonly OS_PROGRAM_EXTENSIONS: ReadonlySet<string>;
 
-  /** Split one or more path strings into an array of path segments. */
+  /**
+   * Converts a string (or array of strings) into an array of path segment
+   * strings (the parts between the slashes).
+   *
+   * Example:
+   *
+   * ```ts
+   * const input = ["hi", "there/every/one", "yeah\\yup"];
+   * const result = Path.splitToSegments(input);
+   * // result is ["hi", "there", "every", "one", "yeah", "yup"]
+   * ```
+   */
   static splitToSegments(inputParts: Array<string> | string): Array<string>;
 
   /**
-   * Search the provided path string or strings for a path separator character,
-   * and return it. If none is found, return `fallback`, which defaults to the
-   * OS's path segment separator.
+   * Searches the provided path string or strings for a path separator character
+   * (either forward slash or backslash), and returns the one it finds. If
+   * neither is found, it returns the `fallback` arg, which defaults to the
+   * current OS's path segment separator (`Path.OS_SEGMENT_SEPARATOR`).
    */
   static detectSeparator<Fallback extends string | null = string>(
     input: Array<string> | string,
@@ -32,16 +93,27 @@ declare class Path {
   ): string | Fallback;
 
   /**
-   * Concatenates the input path(s) and then resolves all non-leading `.` and
-   * `..` segments.
+   * Creates a new Path by concatenating the input path(s) and then resolving all
+   * non-leading `.` and `..` segments. In other words:
+   *
+   * - Segments containing `.` are removed
+   * - Segments containing `..` are removed, along with the segment preceding
+   *   them.
+   *
+   * Note that any `.` or `..` segments at the beginning of the path (ie.
+   * "leading segments") are not removed.
    */
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
   ): Path;
 
   /**
-   * Return whether the provided path is absolute; that is, whether it
-   * starts with either `/` or a drive letter (ie `C:`).
+   * Returns a boolean indicating whether the provided path is absolute; that
+   * is, whether it starts with either a slash (`/` or `\`) or a drive letter
+   * (ie `C:`).
+   *
+   * Note that Windows UNC Paths (eg. `\\MYSERVER\share$\`) are considered
+   * absolute.
    */
   static isAbsolute(path: string | Path): boolean;
 
@@ -57,22 +129,35 @@ declare class Path {
   /**
    * The path separator that should be used to turn this path into a string.
    *
-   * Will be either `/` or `\`.
+   * Will be either `"/"` or `"\"`.
    */
   separator: string;
 
-  /** Create a new Path object using the provided input(s). */
+  /**
+   * Creates a new Path object using the provided input(s), which will be
+   * concatenated together in order left-to-right.
+   */
   constructor(...inputs: Array<string | Path | Array<string | Path>>);
 
   /**
-   * Create a new Path object using the provided segments and separator.
+   * Creates a new Path containing the user-provided segments and separator. In
+   * most cases, you won't need to do this, and can use `new Path(...)` instead.
    *
-   * If unspecified, `separator` defaults to `Path.OS_SEGMENT_SEPARATOR`.
+   * If unspecified, the `separator` parameter defaults to
+   * `Path.OS_SEGMENT_SEPARATOR`.
    */
   static fromRaw(segments: Array<string>, separator?: string): Path;
 
   /**
-   * Resolve all non-leading `.` and `..` segments in this path.
+   * Creates a new Path by resolving all non-leading `.` and `..` segments in
+   * this Path. In other words:
+   *
+   * - Segments containing `.` are removed
+   * - Segments containing `..` are removed, along with the segment preceding
+   *   them.
+   *
+   * Note that any `.` or `..` segments at the beginning of the path (ie.
+   * "leading segments") are not removed.
    */
   normalize(): Path;
 
