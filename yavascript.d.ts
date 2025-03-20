@@ -1672,74 +1672,74 @@ declare var console: Console;
 declare function print(...args: any): void;
 
 /**
- * Remove ANSI control characters from a string.
+ * Removes ANSI control characters from a string.
  */
 declare function stripAnsi(input: string | number | Path): string;
 
 /**
- * Wrap a string in double quotes, and escape any double-quotes inside using `\"`.
+ * Wraps a string in double quotes, and escapes any double-quotes inside using `\"`.
  */
 declare function quote(input: string | number | Path): string;
 
 // Colors
 
-/** Wrap a string with the ANSI control characters that will make it print as black text. */
+/** Wraps a string with the ANSI control characters that will make it print as black text. */
 declare function black(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print as red text. */
+/** Wraps a string with the ANSI control characters that will make it print as red text. */
 declare function red(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print as green text. */
+/** Wraps a string with the ANSI control characters that will make it print as green text. */
 declare function green(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print as yellow text. */
+/** Wraps a string with the ANSI control characters that will make it print as yellow text. */
 declare function yellow(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print as blue text. */
+/** Wraps a string with the ANSI control characters that will make it print as blue text. */
 declare function blue(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print as magenta text. */
+/** Wraps a string with the ANSI control characters that will make it print as magenta text. */
 declare function magenta(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print as cyan text. */
+/** Wraps a string with the ANSI control characters that will make it print as cyan text. */
 declare function cyan(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print as white text. */
+/** Wraps a string with the ANSI control characters that will make it print as white text. */
 declare function white(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print as gray text. */
+/** Wraps a string with the ANSI control characters that will make it print as gray text. (Alias for {@link grey}.) */
 declare function gray(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print as grey text. */
+/** Wraps a string with the ANSI control characters that will make it print as grey text. (Alias for {@link gray}.) */
 declare function grey(input: string | number | Path): string;
 
 // Background Colors
 
-/** Wrap a string with the ANSI control characters that will make it have a black background. */
+/** Wraps a string with the ANSI control characters that will make it have a black background when printed. */
 declare function bgBlack(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it have a red background. */
+/** Wraps a string with the ANSI control characters that will make it have a red background when printed. */
 declare function bgRed(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it have a green background. */
+/** Wraps a string with the ANSI control characters that will make it have a green background when printed. */
 declare function bgGreen(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it have a yellow background. */
+/** Wraps a string with the ANSI control characters that will make it have a yellow background when printed. */
 declare function bgYellow(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it have a blue background. */
+/** Wraps a string with the ANSI control characters that will make it have a blue background when printed. */
 declare function bgBlue(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it have a magenta background. */
+/** Wraps a string with the ANSI control characters that will make it have a magenta background when printed. */
 declare function bgMagenta(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it have a cyan background. */
+/** Wraps a string with the ANSI control characters that will make it have a cyan background when printed. */
 declare function bgCyan(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it have a white background. */
+/** Wraps a string with the ANSI control characters that will make it have a white background when printed. */
 declare function bgWhite(input: string | number | Path): string;
 
 // Modifiers
 
-/** Wrap a string with the ANSI control character that resets all styling. */
+/** Prefixes a string with the ANSI control character that resets all styling. */
 declare function reset(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print with a bold style. */
+/** Wraps a string with the ANSI control characters that will make it print with a bold style. */
 declare function bold(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print with a dimmed style. */
+/** Wraps a string with the ANSI control characters that will make it print with a dimmed style. */
 declare function dim(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print italicized. */
+/** Wraps a string with the ANSI control characters that will make it print italicized. */
 declare function italic(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print underlined. */
+/** Wraps a string with the ANSI control characters that will make it print underlined. */
 declare function underline(input: string | number | Path): string;
-/** Wrap a string with ANSI control characters such that its foreground (text) and background colors are swapped. */
+/** Wraps a string with ANSI control characters that will make it print with its foreground (text) and background colors swapped. */
 declare function inverse(input: string | number | Path): string;
-/** Wrap a string with ANSI control characters such that it is hidden. */
+/** Wraps a string with ANSI control characters that will make it print as hidden. */
 declare function hidden(input: string | number | Path): string;
-/** Wrap a string with the ANSI control characters that will make it print with a horizontal line through its center. */
+/** Wraps a string with the ANSI control characters that will make it print with a horizontal line through its center. */
 declare function strikethrough(input: string | number | Path): string;
 
 /**
@@ -3263,6 +3263,9 @@ declare const assert: {
   ) => asserts value is UnwrapTypeFromCoerceableOrValidator<T>;
 };
 
+/**
+ * This API is a work-in-progress and is subject to change at any time.
+ */
 interface InteractivePrompt {
   prompt?: () => string;
   printInput?: (input: string) => void;
@@ -3281,6 +3284,9 @@ interface InteractivePrompt {
   start(): void;
 }
 
+/**
+ * This API is a work-in-progress and is subject to change at any time.
+ */
 interface InteractivePromptConstructor {
   new (
     handleInput: (input: string) => void,
@@ -3303,14 +3309,16 @@ interface InteractivePromptConstructor {
   prototype: InteractivePrompt;
 }
 
-/** wip experimental use at your own risk */
+/**
+ * This API is a work-in-progress and is subject to change at any time.
+ */
 declare var InteractivePrompt: InteractivePromptConstructor;
 
 /**
  * Launch the Yavascript REPL (read-eval-print-loop).
  *
  * @param context Variables to make available as globals within the repl.
- * @param lang The langauge to use in the repl. Defaults to "javascript".
+ * @param lang The language to use in the repl. Defaults to "javascript".
  */
 declare const startRepl: {
   (
@@ -3867,9 +3875,18 @@ declare const CSV: {
   stringify(input: Array<Array<string>>): string;
 };
 
+/**
+ * An object with a `parse` function and a `stringify` function which can be
+ * used to parse TOML document strings into objects and serialize objects into
+ * TOML document strings.
+ *
+ * Its interface is similar to `JSON.parse` and `JSON.stringify`, but
+ * `TOML.parse` and `TOML.stringify` do not support the spacing/replacer/reviver
+ * options that `JSON.parse` and `JSON.stringify` do.
+ */
 declare var TOML: {
   /**
-   * Parse a TOML document (`data`) into an object.
+   * Parse a TOML document string (`data`) into an object.
    */
   parse(data: string): { [key: string]: any };
   /**
@@ -3879,31 +3896,43 @@ declare var TOML: {
 };
 
 interface RegExpConstructor {
-  /** See https://github.com/tc39/proposal-regex-escaping */
+  /**
+   * The function `RegExp.escape` accepts an input string and prefixes with `\`
+   * those characters in that string which have a special meaning when appearing
+   * in a regular expression.
+   *
+   * The implementation is based on the stage 2 ECMAScript proposal of the same
+   * name: https://github.com/tc39/proposal-regex-escaping
+   */
   escape(str: any): string;
 }
 
 interface StringConstructor {
   /**
-   * Remove leading minimum indentation from the string.
-   * The first line of the string must be empty.
+   * The function `String.dedent` can be used to remove leading indentation from
+   * a string. It is commonly used as a tagged template function, but you can
+   * also call it and pass in a string.
    *
-   * https://github.com/tc39/proposal-string-dedent
+   * Note that the first line of the string must be empty.
+   *
+   * `String.dedent` is the default export from the npm package `string-dedent`.
+   * See its readme on npm for more info:
+   * https://www.npmjs.com/package/string-dedent
    */
   dedent: {
     /**
-     * Remove leading minimum indentation from the string.
-     * The first line of the string must be empty.
+     * Removes leading minimum indentation from the string `input`.
+     * The first line of `input` MUST be empty.
      *
-     * https://github.com/tc39/proposal-string-dedent
+     * For more info, see: https://www.npmjs.com/package/string-dedent#usage
      */
     (input: string): string;
 
     /**
-     * Remove leading minimum indentation from the template literal.
-     * The first line of the string must be empty.
+     * Removes leading minimum indentation from the tagged template literal.
+     * The first line of the template literal MUST be empty.
      *
-     * https://github.com/tc39/proposal-string-dedent
+     * For more info, see: https://www.npmjs.com/package/string-dedent#usage
      */
     (
       strings: readonly string[] | ArrayLike<string>,
@@ -3914,7 +3943,7 @@ interface StringConstructor {
      * Wrap another template tag function such that tagged literals
      * become dedented before being passed to the wrapped function.
      *
-     * https://www.npmjs.com/package/string-dedent#usage
+     * For more info, see: https://www.npmjs.com/package/string-dedent#usage
      */
     <
       Func extends (

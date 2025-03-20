@@ -1,3 +1,6 @@
+/**
+ * This API is a work-in-progress and is subject to change at any time.
+ */
 interface InteractivePrompt {
   prompt?: () => string;
   printInput?: (input: string) => void;
@@ -16,6 +19,9 @@ interface InteractivePrompt {
   start(): void;
 }
 
+/**
+ * This API is a work-in-progress and is subject to change at any time.
+ */
 interface InteractivePromptConstructor {
   new (
     handleInput: (input: string) => void,
@@ -38,5 +44,7 @@ interface InteractivePromptConstructor {
   prototype: InteractivePrompt;
 }
 
-/** wip experimental use at your own risk */
+/**
+ * This API is a work-in-progress and is subject to change at any time.
+ */
 declare var InteractivePrompt: InteractivePromptConstructor;

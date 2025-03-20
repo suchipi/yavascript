@@ -2,7 +2,7 @@
  * Launch the Yavascript REPL (read-eval-print-loop).
  *
  * @param context Variables to make available as globals within the repl.
- * @param lang The langauge to use in the repl. Defaults to "javascript".
+ * @param lang The language to use in the repl. Defaults to "javascript".
  */
 declare const startRepl: {
   (

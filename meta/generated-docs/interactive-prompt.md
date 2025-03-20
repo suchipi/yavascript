@@ -12,6 +12,8 @@
 
 # InteractivePrompt (interface)
 
+This API is a work-in-progress and is subject to change at any time.
+
 ```ts
 interface InteractivePrompt {
   prompt?: () => string;
@@ -76,6 +78,8 @@ start(): void;
 
 # InteractivePromptConstructor (interface)
 
+This API is a work-in-progress and is subject to change at any time.
+
 ```ts
 interface InteractivePromptConstructor {
   new (
@@ -125,7 +129,7 @@ prototype: InteractivePrompt;
 
 # InteractivePrompt (InteractivePromptConstructor)
 
-wip experimental use at your own risk
+This API is a work-in-progress and is subject to change at any time.
 
 ```ts
 var InteractivePrompt: InteractivePromptConstructor;

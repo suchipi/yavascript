@@ -7,7 +7,7 @@
 Launch the Yavascript REPL (read-eval-print-loop).
 
 - `@param` _context_ — Variables to make available as globals within the repl.
-- `@param` _lang_ — The langauge to use in the repl. Defaults to "javascript".
+- `@param` _lang_ — The language to use in the repl. Defaults to "javascript".
 
 ```ts
 const startRepl: {

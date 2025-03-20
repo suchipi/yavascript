@@ -1,24 +1,29 @@
 interface StringConstructor {
   /**
-   * Remove leading minimum indentation from the string.
-   * The first line of the string must be empty.
+   * The function `String.dedent` can be used to remove leading indentation from
+   * a string. It is commonly used as a tagged template function, but you can
+   * also call it and pass in a string.
    *
-   * https://github.com/tc39/proposal-string-dedent
+   * Note that the first line of the string must be empty.
+   *
+   * `String.dedent` is the default export from the npm package `string-dedent`.
+   * See its readme on npm for more info:
+   * https://www.npmjs.com/package/string-dedent
    */
   dedent: {
     /**
-     * Remove leading minimum indentation from the string.
-     * The first line of the string must be empty.
+     * Removes leading minimum indentation from the string `input`.
+     * The first line of `input` MUST be empty.
      *
-     * https://github.com/tc39/proposal-string-dedent
+     * For more info, see: https://www.npmjs.com/package/string-dedent#usage
      */
     (input: string): string;
 
     /**
-     * Remove leading minimum indentation from the template literal.
-     * The first line of the string must be empty.
+     * Removes leading minimum indentation from the tagged template literal.
+     * The first line of the template literal MUST be empty.
      *
-     * https://github.com/tc39/proposal-string-dedent
+     * For more info, see: https://www.npmjs.com/package/string-dedent#usage
      */
     (
       strings: readonly string[] | ArrayLike<string>,
@@ -29,7 +34,7 @@ interface StringConstructor {
      * Wrap another template tag function such that tagged literals
      * become dedented before being passed to the wrapped function.
      *
-     * https://www.npmjs.com/package/string-dedent#usage
+     * For more info, see: https://www.npmjs.com/package/string-dedent#usage
      */
     <
       Func extends (
