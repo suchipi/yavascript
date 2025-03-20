@@ -118,6 +118,21 @@ declare class Path {
   static isAbsolute(path: string | Path): boolean;
 
   /**
+   * Creates a new Path containing the user-provided segments and separator. In
+   * most cases, you won't need to do this, and can use `new Path(...)` instead.
+   *
+   * If unspecified, the `separator` parameter defaults to
+   * `Path.OS_SEGMENT_SEPARATOR`.
+   */
+  static fromRaw(segments: Array<string>, separator?: string): Path;
+
+  /**
+   * Creates a new Path object using the provided input(s), which will be
+   * concatenated together in order left-to-right.
+   */
+  constructor(...inputs: Array<string | Path | Array<string | Path>>);
+
+  /**
    * An array of the path segments that make up this path.
    *
    * For `/tmp/foo.txt`, it'd be `["", "tmp", "foo.txt"]`.
@@ -132,21 +147,6 @@ declare class Path {
    * Will be either `"/"` or `"\"`.
    */
   separator: string;
-
-  /**
-   * Creates a new Path object using the provided input(s), which will be
-   * concatenated together in order left-to-right.
-   */
-  constructor(...inputs: Array<string | Path | Array<string | Path>>);
-
-  /**
-   * Creates a new Path containing the user-provided segments and separator. In
-   * most cases, you won't need to do this, and can use `new Path(...)` instead.
-   *
-   * If unspecified, the `separator` parameter defaults to
-   * `Path.OS_SEGMENT_SEPARATOR`.
-   */
-  static fromRaw(segments: Array<string>, separator?: string): Path;
 
   /**
    * Creates a new Path by resolving all non-leading `.` and `..` segments in
