@@ -4,6 +4,9 @@
 
 # YAML (object)
 
+The `YAML` namespace contains functions which can serialize and deserialize
+YAML documents, following the same pattern as JavaScript's `JSON` builtin.
+
 ```ts
 const YAML: {
   parse(
@@ -23,7 +26,8 @@ const YAML: {
 
 ## YAML.parse (method)
 
-Parse a YAML document (`input`) into a JSON-compatible value.
+Converts a YAML document string into a JavaScript value. It works the same
+way that `JSON.parse` does, but for YAML.
 
 ```ts
 parse(input: string, reviver?: (this: any, key: string, value: any) => any): any;
@@ -31,7 +35,8 @@ parse(input: string, reviver?: (this: any, key: string, value: any) => any): any
 
 ## YAML.stringify (method)
 
-Convert a JSON-compatible value into a YAML document.
+Converts a JavaScript value into a YAML document string. It works the same
+way that `JSON.stringify` does, but for YAML.
 
 ```ts
 stringify(input: any, replacer?: ((this: any, key: string, value: any) => any) | (number | string)[] | null, indent?: number): string;
