@@ -37,7 +37,7 @@
 - [x] Path normalize handles `../../a` wrong; gives `a`, but should give `../../a`
 - [x] `inspect(Path.prototype)` fails due to `[inspect.custom]` handling
 - [ ] make `__dirname` and `__filename` Path objects? Or have versions that are?
-- [ ] finish filling out `meta/scripts/lib/generated-doc-links.json5`
+- [x] finish filling out `meta/scripts/lib/generated-doc-links.json5`
 - [ ] whoami
 - [ ] open/xdg-open
 - [ ] hostname
