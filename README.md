@@ -1,65 +1,39 @@
-# yavascript
+# ![YavaScript logo](meta/assets/logo.png)
 
-YavaScript is a cross-platform bash-like script runner and repl which is distributed as a single
-statically-linked binary. Scripts can be written in [JavaScript](https://en.wikipedia.org/wiki/JavaScript), [TypeScript](https://www.typescriptlang.org/), [JSX/TSX](https://react.dev/learn/writing-markup-with-jsx), [CoffeeScript](https://coffeescript.org/) or [Civet](https://civet.dev/).
+YavaScript is a cross-platform bash-like script runner and repl which is distributed as a single statically-linked program, weighing in at about 4MB. Scripts can be written in [JavaScript](https://en.wikipedia.org/wiki/JavaScript) or [JS-related languages](#languages).
 
 > YavaScript is the name of the program. YavaScript is not a new language. YavaScript uses normal JavaScript.
 
-There are APIs available for all the things you'd normally want to do in
-a bash script, such as:
+## Why?
 
-- Running programs and getting their stdout/stderr/status
-- Reading/writing environment variables
-- Checking if files/folders exist
-- Removing/creating/copying files/folders
-- Reading and changing the current working directory
-- Reading and resolving symbolic links
-- Using globs to get large lists of files
+YavaScript exists as an alternative to bash scripts. Instead of writing scripts using shell syntax and running them with bash, you write them in JavaScript and run them with YavaScript.
+
+At only ~4MB and with no dependencies, YavaScript is easy to install or include in a Docker image. As such, it's suitable for use in all the places you would use shell scripts now. It's a great fit for those sort of "environment-level infrastructure" scripts that every Git repo ends up needing, like "build the app", "pull the latest docker images", "install/use the correct versions of languages and tools", etc.
+
+YavaScript has built-in APIs for all the things you'd normally want to do in a bash script, such as:
+
+- Running programs
+- Using environment variables
+- Working with files/folders
+- Resolving globs into lists of paths
 - Printing stylized text
-- Clearing the terminal
-- Fetching files from the internet
 
-Additionally, you can do other things that are either not present in bash or are cumbersome to use in bash, namely:
+As well as APIs for things which are difficult or cumbersome in bash, like:
 
-- Serialize and deserialize JSON, CSV, YAML, and TOML
-- Removing ANSI control characters from a string
-- Split path strings into a list of segments and rejoin them into a string
-- Check if a path is absolute and resolve relative paths
-- Parse command-line flags
-- Work with Arrays (lists)
-- Work with Objects (key/value dictionaries)
-- Work with Typed Arrays (byte buffers)
-- Reliably get the path to the currently-running file
+- (De)serialize JSON, CSV, YAML, and TOML
+- Parse command-line flags into a structured object
+- Safely manipulate and resolve path strings
+- Work with raw byte buffers (typed arrays)
+- Reliably get the path to the currently-running script
 - Strongly-typed interfaces and functions (via TypeScript)
 - Cross-file import/export using ECMAScript Modules
-- Split strings on delimeters
-- Pretty-print complex structures
 - Call low-level POSIX C APIs like fputs, sprintf, isatty
-- Perform work in threads
-- Import packages from npm (via "npm:" imports) or local node_modules
 
-You'll also find analogues to familiar CLI tools, like:
+You'll also find cross-platform analogues to familiar CLI tools, like `mkdir`, `rm`, `chmod`, `dirname`, `which`, and more.
 
-- dirname
-- basename
-- cat
-- ls
-- realpath
-- readlink
+## APIs
 
-...and more.
-
-## API Documentation
-
-See [here](/meta/generated-docs/README.md).
-
-## TypeScript Types
-
-YavaScript comes with a TypeScript type definition (`.d.ts`) file.
-
-The `.d.ts` file contains documented TypeScript type definitions which can be given to your IDE to assist you when writing scripts, even if you aren't writing your scripts in TypeScript.
-
-You can [view the `.d.ts` file online](./yavascript.d.ts), but if you have YavaScript installed, you should instead run `yavascript --print-types` to obtain the `.d.ts` file for your specific release.
+**For the full API documentation, see [here](/meta/generated-docs/README.md).**
 
 ## Example
 
@@ -124,6 +98,43 @@ console.log(os.lstat(".gitignore").size);
 console.log("Is tty?", os.isatty(std.in));
 ```
 
+## How is that different from \_\_\_\_?
+
+There are several other projects that bring a shell-like environment to JS, such as [zx](https://github.com/google/zx), [ShellJS](https://www.npmjs.com/package/shelljs), and [Bun Shell](https://bun.sh/docs/runtime/shell). The main difference between those and YavaScript is that YavaScript is very small, fully cross-platform, and brings its own JavaScript engine. The effect of those differences is that you can rely on YavaScript in places where you couldn't always rely on zx/shelljs/bun, like in your bootstrapping script that installs Node, or your smallest Docker containers. Or even on tiny constrained systems, like your router!
+
+## Supported Platforms
+
+- macOS (10.16 or higher)
+  - Intel Processors (x86_64)
+  - Apple Silicon (aarch64)
+- Linux
+  - aarch64 or x86_64
+  - glibc, muslc, or statically-linked
+- Windows (MinGW)
+  - x86_64
+
+## Installation
+
+You can find the binary for your platform on [the releases page](https://github.com/suchipi/yavascript/releases). As YavaScript is fully self-contained in one small file, it's trivial to install and uninstall; simply place it somewhere specified in your [`PATH`](https://superuser.com/a/284351).
+
+## Languages
+
+YavaScript can load and run any of these languages with no ahead-of-time compilation step needed:
+
+- JavaScript
+- [TypeScript](https://www.typescriptlang.org/)
+- [JSX/TSX](https://react.dev/learn/writing-markup-with-jsx)
+- [CoffeeScript](https://coffeescript.org/)
+- [Civet](https://civet.dev/)
+
+## TypeScript Types
+
+YavaScript comes with a TypeScript type definition (`.d.ts`) file.
+
+The `.d.ts` file contains documented TypeScript type definitions which can be given to your IDE to assist you when writing scripts, even if you aren't writing your scripts in TypeScript.
+
+You can [view the `.d.ts` file online](./yavascript.d.ts), but if you have YavaScript installed, you should instead run `yavascript --print-types` to obtain the `.d.ts` file for your specific release.
+
 ## QuickJS
 
 YavaScript is powered by a fork of the QuickJS JavaScript Engine, originally
@@ -133,17 +144,7 @@ supporting the ES2020 specification.
 - Original QuickJS engine: https://bellard.org/quickjs/
 - The fork we use: https://github.com/suchipi/quickjs/
 
-## Installation
-
-You can find the binary for your platform on [the releases page](https://github.com/suchipi/yavascript/releases). As YavaScript is fully self-contained in one small file, it's trivial to install and uninstall; simply place it somewhere specified in your [`PATH`](https://superuser.com/a/284351). Supported platforms are:
-
-- macOS 10.16 or higher, either Intel or Apple Silicon (M1, M2, etc)
-- Linux (gnu), either aarch64 or x86_64
-- Linux (musl), either aarch64 or x86_64
-- Linux (with musl libc statically linked into the binary), either aarch64 or x86_64
-- Windows (MinGW), x86_64
-
-## Compiling
+## Compiling from Source
 
 You'll need to install these prerequisites:
 
