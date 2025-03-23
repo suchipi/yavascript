@@ -1,6 +1,7 @@
 import { Path } from "../../path";
 import { assert } from "../../assert";
 import { is } from "../../is";
+import { types } from "../../types";
 
 export function basename(path: string | Path): string {
   if (is(path, types.Path)) {

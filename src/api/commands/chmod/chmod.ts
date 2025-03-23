@@ -4,6 +4,7 @@ import { assert } from "../../assert";
 import { makeErrorWithProperties } from "../../../error-with-properties";
 import type { Path } from "../../path";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
+import { types } from "../../types";
 
 type ChmodPermissionsWho =
   | "user"

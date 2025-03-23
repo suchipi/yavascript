@@ -4,6 +4,7 @@ import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
+import { isDir } from "./isDir";
 
 export function remove(path: string | Path): void {
   assert.type(

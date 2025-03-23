@@ -2,6 +2,7 @@ import * as os from "quickjs:os";
 import { is } from "../../is";
 import { assert } from "../../assert";
 import { Path } from "../../path";
+import { types } from "../../types";
 
 export function readlink(path: string | Path): Path {
   if (is(path, types.Path)) {

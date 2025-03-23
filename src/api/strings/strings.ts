@@ -1,5 +1,6 @@
 import stripAnsiFromString from "strip-ansi";
 import kleur from "kleur";
+import type { Path } from "../path";
 
 kleur.enabled = true;
 

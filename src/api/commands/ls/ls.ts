@@ -5,6 +5,7 @@ import { isDir } from "../../filesystem";
 import { is } from "../../is";
 import { assert } from "../../assert";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
+import { types } from "../../types";
 
 export function ls(dir: string | Path = pwd()): Array<Path> {
   if (is(dir, types.Path)) {

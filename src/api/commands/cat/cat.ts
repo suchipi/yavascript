@@ -1,3 +1,4 @@
+import * as std from "quickjs:std";
 import * as os from "quickjs:os";
 import * as encoding from "quickjs:encoding";
 import { assert } from "../../assert";

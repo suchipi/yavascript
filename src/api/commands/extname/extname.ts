@@ -2,6 +2,7 @@ import { basename } from "../basename";
 import { is } from "../../is";
 import { assert } from "../../assert";
 import type { Path } from "../../path";
+import { types } from "../../types";
 
 export function extname(
   pathOrFilename: string | Path,

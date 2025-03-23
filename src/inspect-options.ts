@@ -2,6 +2,7 @@ let hasColors: () => boolean;
 
 // defer check for `yavascript` global until first time `hasColors` is called
 const __hasColorsInitialValue = (): boolean => {
+  // @ts-ignore checking global that isn't in project types
   if (typeof yavascript !== "undefined") {
     hasColors = (require("./has-colors") as typeof import("./has-colors"))
       .hasColors;

@@ -43,3 +43,4 @@
 - [ ] hostname
 - [ ] make the readme more "first-reader-friendly" (ie. reorder some of the info, add a logo, etc)
 - [ ] move some of the static properties on Path to some sort of "os" thing, along with other similar helpers. maybe extension of the existing "quickjs:os" `os` global?
+- [ ] there's something wrong with yavascript.d.ts that's making it not take effect

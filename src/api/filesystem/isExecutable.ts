@@ -1,6 +1,7 @@
 import * as os from "quickjs:os";
 import { assert } from "../assert";
 import { types } from "../types";
+import type { Path } from "../path";
 
 export function isExecutable(path: Path | string) {
   assert.type(

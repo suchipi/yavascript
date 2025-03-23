@@ -4,6 +4,7 @@ import { is } from "../../is";
 import { assert } from "../../assert";
 import type { Path } from "../../path";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
+import { types } from "../../types";
 
 // cause everytime we touch, I get this feeling
 export function touch(path: string | Path) {

@@ -1,5 +1,6 @@
 import { Path } from "../../path";
 import { is } from "../../is";
+import { types } from "../../types";
 
 export function dirname(path: string | Path): Path {
   let pathObj: Path;

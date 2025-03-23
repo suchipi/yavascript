@@ -3,6 +3,7 @@ import { is } from "../../is";
 import { assert } from "../../assert";
 import { Path } from "../../path";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
+import { types } from "../../types";
 
 export function realpath(path: string | Path): Path {
   if (is(path, types.Path)) {

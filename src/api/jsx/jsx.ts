@@ -22,3 +22,17 @@ export const JSX = {
     return { $$typeof: Element, type, props, key };
   },
 };
+
+export namespace JSX {
+  export interface Element<
+    Props = { [key: string | symbol | number]: any },
+    Type = any
+  > {
+    $$typeof: typeof Element;
+    type: Type;
+    props: Props;
+    key: string | number | null;
+  }
+
+  export type Fragment = Element<{}, typeof Fragment>;
+}

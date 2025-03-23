@@ -4,6 +4,7 @@ import { assert } from "../../assert";
 import { is } from "../../is";
 import type { Path } from "../../path";
 import { appendSlashIfWindowsDriveLetter } from "../../path/_win32Helpers";
+import { types } from "../../types";
 
 export function cd(path?: string | Path): void {
   if (path == null) {
