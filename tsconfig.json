@@ -3,9 +3,8 @@
   "exclude": [
     "**/*.inc.d.ts",
     "meta/examples",
-    // doesn't handle the syntax properly for this one
-    "src/test_fixtures/scripts/toplevel-await.tsx",
-    "yavascript.d.ts"
+    "src/test_fixtures/**/*",
+    "./yavascript.d.ts"
   ],
 
   "compilerOptions": {
