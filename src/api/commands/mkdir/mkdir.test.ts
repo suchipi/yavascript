@@ -71,7 +71,7 @@ describe("non-recursive", () => {
       {
         "code": 1,
         "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/collision/file' because there is an existing file with that name.
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/collision/file' because there is an existing file with that name. (path = Path { <rootDir>/src/test_fixtures/mkdir/collision/file })
         at somewhere
       {
         path: Path { <rootDir>/src/test_fixtures/mkdir/collision/file }
@@ -95,7 +95,7 @@ describe("non-recursive", () => {
       {
         "code": 1,
         "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/parent_collision/file' because its parent '<rootDir>/src/test_fixtures/mkdir/parent_collision' exists but is not a directory.
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/parent_collision/file' because its parent '<rootDir>/src/test_fixtures/mkdir/parent_collision' exists but is not a directory. (path = Path { <rootDir>/src/test_fixtures/mkdir/parent_collision/file }, parentPath = Path { <rootDir>/src/test_fixtures/mkdir/parent_collision })
         at somewhere
       {
         path: Path { <rootDir>/src/test_fixtures/mkdir/parent_collision/file }
@@ -172,7 +172,7 @@ describe("recursive via option", () => {
       {
         "code": 1,
         "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/recursive/collision/file' because '<rootDir>/src/test_fixtures/mkdir/recursive/collision/file' is a file, not a directory.
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/recursive/collision/file' because '<rootDir>/src/test_fixtures/mkdir/recursive/collision/file' is a file, not a directory. (path = Path { <rootDir>/src/test_fixtures/mkdir/recursive/collision/file }, pathSoFar = Path { <rootDir>/src/test_fixtures/mkdir/recursive/collision/file })
         at somewhere
       {
         path: Path { <rootDir>/src/test_fixtures/mkdir/recursive/collision/file }
@@ -199,7 +199,7 @@ describe("recursive via option", () => {
       {
         "code": 1,
         "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/recursive/parent_collision/file' because '<rootDir>/src/test_fixtures/mkdir/recursive/parent_collision' is a file, not a directory.
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/recursive/parent_collision/file' because '<rootDir>/src/test_fixtures/mkdir/recursive/parent_collision' is a file, not a directory. (path = Path { <rootDir>/src/test_fixtures/mkdir/recursive/parent_collision/file }, pathSoFar = Path { <rootDir>/src/test_fixtures/mkdir/recursive/parent_collision })
         at somewhere
       {
         path: Path { <rootDir>/src/test_fixtures/mkdir/recursive/parent_collision/file }
@@ -271,7 +271,7 @@ describe("recursive via mkdirp", () => {
       {
         "code": 1,
         "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file' because '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file' is a file, not a directory.
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file' because '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file' is a file, not a directory. (path = Path { <rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file }, pathSoFar = Path { <rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file })
         at somewhere
       {
         path: Path { <rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/collision/file }
@@ -296,7 +296,7 @@ describe("recursive via mkdirp", () => {
       {
         "code": 1,
         "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision/file' because '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision' is a file, not a directory.
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision/file' because '<rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision' is a file, not a directory. (path = Path { <rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision/file }, pathSoFar = Path { <rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision })
         at somewhere
       {
         path: Path { <rootDir>/src/test_fixtures/mkdir/recursive_mkdirp/parent_collision/file }
