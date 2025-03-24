@@ -15,6 +15,11 @@ test("very basic usage", async () => {
       console.log("typeof repo.branchName()", typeof repo.branchName());
       console.log("typeof repo.commitSHA()", typeof repo.commitSHA());
       console.log("repo.commitSHA().length", repo.commitSHA().length);
+
+      // Silence exec logging because the exit value of the upcoming command
+      // varies depending on if the working tree is dirty, so we need to omit
+      // that from the snapshot
+      logger.info = () => {};
       console.log("typeof repo.isWorkingTreeDirty()", typeof repo.isWorkingTreeDirty());
     `,
     { cwd: __dirname }
@@ -29,8 +34,6 @@ test("very basic usage", async () => {
     exec: git rev-parse --abbrev-ref HEAD
     exec: git rev-parse HEAD
     exec: git rev-parse HEAD
-    exec: git diff --quiet
-      exec -> {"status":1}
     ",
       "stdout": "__dirname <rootDir>/src/api/git-repo
     GitRepo.findRoot(__dirname) Path { <rootDir> }
