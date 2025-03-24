@@ -45,7 +45,6 @@ function copyRaw(
   try {
     trace("opening", from, "(mode: rb)");
     const fromFile = std.open(from, "rb");
-    // @ts-ignore yavascript.d.ts FILE vs quickjs FILE mismatch?
     filesToCloseLater[from] = fromFile;
 
     fromStats = os.stat(from);
@@ -59,7 +58,6 @@ function copyRaw(
     const toFd = os.open(to, os.O_WRONLY | os.O_CREAT, fromPerms);
     fdsToCloseLater[to] = toFd;
     const toFile = std.fdopen(toFd, "w");
-    // @ts-ignore yavascript.d.ts FILE vs quickjs FILE mismatch?
     filesToCloseLater[to] = toFile;
 
     const bufferSize = 16 * 1024 * 1024; // 16MB

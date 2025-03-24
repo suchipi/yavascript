@@ -40,11 +40,9 @@ export class HistoryFile {
     if (this.path == null) return;
 
     if (this.fileForAppend == null) {
-      // @ts-ignore yavascript.d.ts FILE vs quickjs FILE mismatch?
       this.fileForAppend = std.open(this.path?.toString(), "a");
     }
 
-    // @ts-ignore yavascript.d.ts FILE vs quickjs FILE mismatch?
     this.fileForAppend.puts(line + "\n");
   }
 }

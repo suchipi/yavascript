@@ -1,4 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["../../yavascript.d.ts", "./**/*.ts"]
+  "files": [],
+  "include": ["../../yavascript.d.ts", "./**/*.ts"],
+  "exclude": []
 }

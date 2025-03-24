@@ -340,7 +340,7 @@ declare class Path {
 /**
  * Options for {@link Path.prototype.relativeTo}.
  */
-export interface PathRelativeToOptions {
+declare interface PathRelativeToOptions {
   /**
    * Defaults to false. When true, a leading `./` will be omitted from the
    * path, if present. Note that a leading `../` will never be omitted.

@@ -77,10 +77,8 @@ const exec = (
   let tmpOut: FILE | null = null;
   let tmpErr: FILE | null = null;
   if (captureOutput) {
-    // @ts-ignore yavascript.d.ts FILE vs quickjs FILE mismatch?
     tmpOut = std.tmpfile();
     child.stdio.out = tmpOut!;
-    // @ts-ignore yavascript.d.ts FILE vs quickjs FILE mismatch?
     tmpErr = std.tmpfile();
     child.stdio.err = tmpErr!;
   }

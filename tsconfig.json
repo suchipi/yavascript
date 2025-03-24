@@ -4,7 +4,8 @@
     "**/*.inc.d.ts",
     "meta/examples",
     "src/test_fixtures/**/*",
-    "./yavascript.d.ts"
+    "./yavascript.d.ts",
+    "meta/type-tests/**/*"
   ],
 
   "compilerOptions": {

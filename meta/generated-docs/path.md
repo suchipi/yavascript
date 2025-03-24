@@ -27,7 +27,7 @@
   - [Path.prototype.replace (method)](#pathprototypereplace-method)
   - [Path.prototype.replaceAll (method)](#pathprototypereplaceall-method)
   - [Path.prototype.replaceLast (method)](#pathprototypereplacelast-method)
-- [PathRelativeToOptions (exported interface)](#pathrelativetooptions-exported-interface)
+- [PathRelativeToOptions (interface)](#pathrelativetooptions-interface)
   - [PathRelativeToOptions.noLeadingDot (boolean property)](#pathrelativetooptionsnoleadingdot-boolean-property)
 
 # Path (class)
@@ -484,12 +484,12 @@ as `new Path(replacement)`; ie. non-empty.
 replaceLast(replacement: string | Path | Array<string | Path>): Path;
 ```
 
-# PathRelativeToOptions (exported interface)
+# PathRelativeToOptions (interface)
 
 Options for [Path.prototype.relativeTo](/meta/generated-docs/path.md#pathprototyperelativeto-method).
 
 ```ts
-interface PathRelativeToOptions {
+declare interface PathRelativeToOptions {
   noLeadingDot?: boolean;
 }
 ```
