@@ -42,15 +42,8 @@ Here's an example of a script using YavaScript:
 ```js
 #!/usr/bin/env yavascript
 
-// This <reference> comment is optional; it tells VS Code to load the
-// specified TypeScript definitions, which it can use for Intellisense,
-// linting, and autocomplete, even if you aren't using TypeScript.
-/// <reference path="./yavascript.d.ts" />
-
 // Searches upwards from this file to find the root of the Git repository
-const repoRoot = GitRepo.findRoot(__dirname);
-// or, one could use hardcoded location relative to this file:
-// const repoRoot = new Path(__dirname, "../..");
+const repoRoot = GitRepo.findRoot(__filename);
 
 cd(repoRoot);
 
@@ -58,10 +51,11 @@ cd(repoRoot);
 const diffResult = exec("git diff --quiet", { failOnNonZeroStatus: false });
 const isWorkingTreeDirty = diffResult.status !== 0;
 
-// If there are, check whether .js files in lib/ have a matching .d.ts file.
+// If there are, check whether .js files in lib/ have a matching .d.ts file. This is a contrived hypothetical thing you might run in CI.
 if (isWorkingTreeDirty) {
   const jsFiles = glob("lib/**/*.js");
   for (const filePath of jsFiles) {
+    // filePath is an instance of the Path class: https://github.com/suchipi/yavascript/blob/main/meta/generated-docs/path.md#path-class
     const dtsFilePath = filePath.replaceLast(
       filePath.basename().replace(/\.js$/, ".d.ts")
     );
@@ -82,8 +76,7 @@ if (isWorkingTreeDirty) {
 const branchName = $(`git rev-parse --abbrev-ref HEAD`).stdout.trim();
 const gitInfo = { branchName, isWorkingTreeDirty };
 
-// `echo` and `print` are aliases for `console.log`, for discoverability. All
-// three support any number of arguments, which don't have to be strings.
+// `echo` and `print` are aliases for `console.log`, for discoverability.
 echo(gitInfo);
 
 // YAML.stringify works like JSON.stringify. We also have CSV and TOML!
@@ -134,6 +127,12 @@ YavaScript comes with a TypeScript type definition (`.d.ts`) file.
 The `.d.ts` file contains documented TypeScript type definitions which can be given to your IDE to assist you when writing scripts, even if you aren't writing your scripts in TypeScript.
 
 You can [view the `.d.ts` file online](./yavascript.d.ts), but if you have YavaScript installed, you should instead run `yavascript --print-types` to obtain the `.d.ts` file for your specific release.
+
+You can put this comment at the top of your script to instruct VS Code to load the type information from the `.d.ts` file, which will improve the quality of Intellisense, error checking, and autocomplete, even if you aren't using TypeScript:
+
+```ts
+/// <reference path="./yavascript.d.ts" />
+```
 
 ## QuickJS
 
