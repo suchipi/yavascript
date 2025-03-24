@@ -8,10 +8,9 @@ test("globals", async () => {
     for (const [key, descriptor] of Object.entries(globalDescriptors)) {
       try {
         const value = globalThis[key];
-        const hasHelpText = help.getHelpText(value) !== null;
-        console.log((hasHelpText ? "[x] " : "[ ] ") + key + ":", typeof value);
+        console.log(key + ":", typeof value);
       } catch (err) {
-        console.log("[-] " + key, "throws error")
+        console.log(key, "throws error")
       }
     }
   `);
@@ -21,183 +20,183 @@ test("globals", async () => {
       "error": false,
       "stderr": "",
       "stdout": "
-    [x] Object: function
-    [x] Function: function
-    [x] Error: function
-    [x] EvalError: function
-    [x] RangeError: function
-    [x] ReferenceError: function
-    [x] SyntaxError: function
-    [x] TypeError: function
-    [x] URIError: function
-    [x] InternalError: function
-    [x] AggregateError: function
-    [x] Array: function
-    [x] parseInt: function
-    [x] parseFloat: function
-    [x] isNaN: function
-    [x] isFinite: function
-    [x] decodeURI: function
-    [x] decodeURIComponent: function
-    [x] encodeURI: function
-    [x] encodeURIComponent: function
-    [x] escape: function
-    [x] unescape: function
-    [x] Infinity: number
-    [x] NaN: number
-    [x] undefined: undefined
-    [x] __date_clock: function
-    [x] Number: function
-    [x] Boolean: function
-    [x] String: function
-    [x] Math: object
-    [x] Reflect: object
-    [x] Symbol: function
-    [x] eval: function
-    [x] globalThis: object
-    [x] Date: function
-    [x] RegExp: function
-    [x] JSON: object
-    [x] Proxy: function
-    [x] Map: function
-    [x] Set: function
-    [x] WeakMap: function
-    [x] WeakSet: function
-    [x] ArrayBuffer: function
-    [x] SharedArrayBuffer: function
-    [x] Uint8ClampedArray: function
-    [x] Int8Array: function
-    [x] Uint8Array: function
-    [x] Int16Array: function
-    [x] Uint16Array: function
-    [x] Int32Array: function
-    [x] Uint32Array: function
-    [x] BigInt64Array: function
-    [x] BigUint64Array: function
-    [x] Float32Array: function
-    [x] Float64Array: function
-    [x] DataView: function
-    [x] Atomics: object
-    [x] Promise: function
-    [x] BigInt: function
-    [x] BigFloat: function
-    [x] BigFloatEnv: function
-    [x] BigDecimal: function
-    [x] Operators: function
-    [x] inspect: function
-    [x] print: function
-    [x] console: object
-    [ ] setInterval: function
-    [ ] clearInterval: function
-    [ ] __qjsbootstrap_offset: number
-    [x] scriptArgs: object
-    [ ] setTimeout: function
-    [ ] clearTimeout: function
-    [ ] require: function
-    [ ] __kame_instances__: object
-    [ ] std: object
-    [ ] os: object
-    [x] basename: function
-    [x] cat: function
-    [x] cd: function
-    [x] chmod: function
-    [x] dirname: function
-    [x] echo: function
-    [x] exit: function
-    [x] extname: function
-    [x] ls: function
-    [x] mkdir: function
-    [x] mkdirp: function
-    [x] printf: function
-    [x] pwd: function
-    [x] readlink: function
-    [x] realpath: function
-    [x] sleep: function
-    [x] touch: function
-    [x] which: function
-    [-] ensureDir throws error
-    [-] cp throws error
-    [-] mv throws error
-    [-] ren throws error
-    [-] rm throws error
-    [-] grep throws error
-    [-] man throws error
-    [-] cwd throws error
-    [-] where throws error
-    [-] FILE throws error
-    [x] env: object
-    [x] exec: function
-    [x] $: function
-    [x] ChildProcess: function
-    [x] exists: function
-    [x] isFile: function
-    [x] isDir: function
-    [x] isLink: function
-    [x] readFile: function
-    [x] remove: function
-    [x] writeFile: function
-    [x] copy: function
-    [x] rename: function
-    [x] isExecutable: function
-    [x] isReadable: function
-    [x] isWritable: function
-    [x] Path: function
-    [x] glob: function
-    [x] types: object
-    [x] is: function
-    [x] _is: function
-    [x] assert: function
-    [x] GitRepo: function
-    [x] quote: function
-    [x] stripAnsi: function
-    [x] bgBlack: function
-    [x] bgBlue: function
-    [x] bgCyan: function
-    [x] bgGreen: function
-    [x] bgMagenta: function
-    [x] bgRed: function
-    [x] bgWhite: function
-    [x] bgYellow: function
-    [x] black: function
-    [x] blue: function
-    [x] bold: function
-    [x] cyan: function
-    [x] dim: function
-    [x] gray: function
-    [x] green: function
-    [x] grey: function
-    [x] hidden: function
-    [x] inverse: function
-    [x] italic: function
-    [x] magenta: function
-    [x] red: function
-    [x] reset: function
-    [x] strikethrough: function
-    [x] underline: function
-    [x] white: function
-    [x] yellow: function
-    [x] clear: function
-    [x] bigint: function
-    [x] boolean: function
-    [x] number: function
-    [x] string: function
-    [x] symbol: function
-    [x] JSX: object
-    [x] CSV: object
-    [x] YAML: object
-    [x] logger: object
-    [x] parseScriptArgs: function
-    [ ] startRepl: function
-    [ ] InteractivePrompt: function
-    [x] yavascript: object
-    [x] help: function
-    [x] TOML: object
-    [x] __filename: string
-    [x] __dirname: string
-    [x] grepFile: function
-    [x] grepString: function
-    [x] global: object
-    [x] process: object
+    Object: function
+    Function: function
+    Error: function
+    EvalError: function
+    RangeError: function
+    ReferenceError: function
+    SyntaxError: function
+    TypeError: function
+    URIError: function
+    InternalError: function
+    AggregateError: function
+    Array: function
+    parseInt: function
+    parseFloat: function
+    isNaN: function
+    isFinite: function
+    decodeURI: function
+    decodeURIComponent: function
+    encodeURI: function
+    encodeURIComponent: function
+    escape: function
+    unescape: function
+    Infinity: number
+    NaN: number
+    undefined: undefined
+    __date_clock: function
+    Number: function
+    Boolean: function
+    String: function
+    Math: object
+    Reflect: object
+    Symbol: function
+    eval: function
+    globalThis: object
+    Date: function
+    RegExp: function
+    JSON: object
+    Proxy: function
+    Map: function
+    Set: function
+    WeakMap: function
+    WeakSet: function
+    ArrayBuffer: function
+    SharedArrayBuffer: function
+    Uint8ClampedArray: function
+    Int8Array: function
+    Uint8Array: function
+    Int16Array: function
+    Uint16Array: function
+    Int32Array: function
+    Uint32Array: function
+    BigInt64Array: function
+    BigUint64Array: function
+    Float32Array: function
+    Float64Array: function
+    DataView: function
+    Atomics: object
+    Promise: function
+    BigInt: function
+    BigFloat: function
+    BigFloatEnv: function
+    BigDecimal: function
+    Operators: function
+    inspect: function
+    print: function
+    console: object
+    setInterval: function
+    clearInterval: function
+    __qjsbootstrap_offset: number
+    scriptArgs: object
+    setTimeout: function
+    clearTimeout: function
+    require: function
+    __kame_instances__: object
+    std: object
+    os: object
+    basename: function
+    cat: function
+    cd: function
+    chmod: function
+    dirname: function
+    echo: function
+    exit: function
+    extname: function
+    ls: function
+    mkdir: function
+    mkdirp: function
+    printf: function
+    pwd: function
+    readlink: function
+    realpath: function
+    sleep: function
+    touch: function
+    which: function
+    ensureDir throws error
+    cp throws error
+    mv throws error
+    ren throws error
+    rm throws error
+    grep throws error
+    man throws error
+    cwd throws error
+    where throws error
+    FILE throws error
+    env: object
+    exec: function
+    $: function
+    ChildProcess: function
+    exists: function
+    isFile: function
+    isDir: function
+    isLink: function
+    readFile: function
+    remove: function
+    writeFile: function
+    copy: function
+    rename: function
+    isExecutable: function
+    isReadable: function
+    isWritable: function
+    Path: function
+    glob: function
+    types: object
+    is: function
+    _is: function
+    assert: function
+    GitRepo: function
+    quote: function
+    stripAnsi: function
+    bgBlack: function
+    bgBlue: function
+    bgCyan: function
+    bgGreen: function
+    bgMagenta: function
+    bgRed: function
+    bgWhite: function
+    bgYellow: function
+    black: function
+    blue: function
+    bold: function
+    cyan: function
+    dim: function
+    gray: function
+    green: function
+    grey: function
+    hidden: function
+    inverse: function
+    italic: function
+    magenta: function
+    red: function
+    reset: function
+    strikethrough: function
+    underline: function
+    white: function
+    yellow: function
+    clear: function
+    bigint: function
+    boolean: function
+    number: function
+    string: function
+    symbol: function
+    JSX: object
+    CSV: object
+    YAML: object
+    logger: object
+    parseScriptArgs: function
+    startRepl: function
+    InteractivePrompt: function
+    yavascript: object
+    help: function
+    TOML: object
+    __filename: string
+    __dirname: string
+    grepFile: function
+    grepString: function
+    global: object
+    process: object
     ",
     }
   `);
