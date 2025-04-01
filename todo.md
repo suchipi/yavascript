@@ -36,7 +36,6 @@
 - [ ] make assert have nice messages when one isn't specified
 - [x] Path normalize handles `../../a` wrong; gives `a`, but should give `../../a`
 - [x] `inspect(Path.prototype)` fails due to `[inspect.custom]` handling
-- [ ] make `__dirname` and `__filename` Path objects? Or have versions that are?
 - [x] finish filling out `meta/scripts/lib/generated-doc-links.json5`
 - [ ] whoami
 - [ ] open/xdg-open
@@ -44,3 +43,4 @@
 - [ ] make the readme more "first-reader-friendly" (ie. reorder some of the info, add a logo, etc)
 - [ ] move some of the static properties on Path to some sort of "os" thing, along with other similar helpers. maybe extension of the existing "quickjs:os" `os` global?
 - [x] there's something wrong with yavascript.d.ts that's making it not take effect
+- [ ] release a new version
