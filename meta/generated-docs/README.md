@@ -46,6 +46,7 @@ Here is a list of all of YavaScript's builtin APIs, aside from those normally fo
 - [`which`]: Find the path to a program on the system
 - [`grepFile`]: Search for matches in a file
 - [`grepString`]: Search for matches in a string
+- [`whoami`]: Get user name/uid/gid
 
 ## Types and Helpers
 
@@ -185,6 +186,7 @@ For convenience, two builtin modules from QuickJS are also available as globals.
 [`which`]: /meta/generated-docs/which.md#which-function
 [`grepFile`]: /meta/generated-docs/grep.md#grepfile-function
 [`grepString`]: /meta/generated-docs/grep.md#grepstring-function
+[`whoami`]: /meta/generated-docs/whoami.md#whoami-function
 [`Path`]: /meta/generated-docs/path.md#path-class
 [`GitRepo`]: /meta/generated-docs/git-repo.md#gitrepo-class
 [`glob`]: /meta/generated-docs/glob.md#glob-function

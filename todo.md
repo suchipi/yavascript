@@ -37,7 +37,10 @@
 - [x] Path normalize handles `../../a` wrong; gives `a`, but should give `../../a`
 - [x] `inspect(Path.prototype)` fails due to `[inspect.custom]` handling
 - [x] finish filling out `meta/scripts/lib/generated-doc-links.json5`
-- [ ] whoami
+- [-] whoami
+  - [x] macOS
+  - [x] linux
+  - [ ] windows
 - [ ] open/xdg-open
 - [ ] hostname
 - [ ] make the readme more "first-reader-friendly" (ie. reorder some of the info, add a logo, etc)

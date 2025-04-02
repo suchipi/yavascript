@@ -1253,6 +1253,22 @@ declare type WhichOptions = {
   };
 };
 
+/** The type of the return value of {@link whoami}. */
+declare interface WhoAmIResult {
+  name: string;
+  uid: number;
+  gid: number;
+}
+
+/**
+ * Get info about the user the yavascript process is executing as.
+ *
+ * Provides functionality similar to the unix binaries `whoami` and `id`.
+ *
+ * NOTE: Doesn't work on Windows; throws an error.
+ */
+declare function whoami(): WhoAmIResult;
+
 /**
  * Runs a child process and blocks until it exits. You can call it with either a
  * string or an array of strings.

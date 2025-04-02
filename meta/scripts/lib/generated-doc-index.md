@@ -46,6 +46,7 @@ Here is a list of all of YavaScript's builtin APIs, aside from those normally fo
 - [`which`]: Find the path to a program on the system
 - [`grepFile`]: Search for matches in a file
 - [`grepString`]: Search for matches in a string
+- [`whoami`]: Get user name/uid/gid
 
 ## Types and Helpers
 

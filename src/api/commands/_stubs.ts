@@ -31,6 +31,11 @@ export default makeGetterPropertyDescriptorMap(
     where() {
       throw new ReferenceError("'where' is not defined. Did you mean 'which'?");
     },
+    id() {
+      throw new ReferenceError(
+        "'id' is not defined. Maybe you want to use 'whoami()'?"
+      );
+    },
   },
   false
 );

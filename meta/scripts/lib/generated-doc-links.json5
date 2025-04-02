@@ -40,6 +40,7 @@
   which: "/meta/generated-docs/which.md#which-function",
   grepFile: "/meta/generated-docs/grep.md#grepfile-function",
   grepString: "/meta/generated-docs/grep.md#grepstring-function",
+  whoami: "/meta/generated-docs/whoami.md#whoami-function",
 
   // Types and Helpers
   Path: "/meta/generated-docs/path.md#path-class",

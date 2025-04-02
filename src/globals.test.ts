@@ -114,6 +114,7 @@ test("globals", async () => {
     sleep: function
     touch: function
     which: function
+    whoami: function
     ensureDir throws error
     cp throws error
     mv throws error
@@ -123,6 +124,7 @@ test("globals", async () => {
     man throws error
     cwd throws error
     where throws error
+    id throws error
     FILE throws error
     env: object
     exec: function

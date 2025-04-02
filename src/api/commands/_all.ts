@@ -24,4 +24,5 @@ export default makeGetterPropertyDescriptorMap({
   sleep: () => (require("./sleep") as typeof import("./sleep")).sleep,
   touch: () => (require("./touch") as typeof import("./touch")).touch,
   which: () => (require("./which") as typeof import("./which")).which,
+  whoami: () => (require("./whoami") as typeof import("./whoami")).whoami,
 });
