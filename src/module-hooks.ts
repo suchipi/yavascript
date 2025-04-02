@@ -50,12 +50,9 @@ function potentialFilesForPath(path: string): Array<string> {
 
 export function installModuleHooks() {
   ModuleDelegate.resolve = (name, fromFile) => {
-    if (name.startsWith("quickjs:")) {
+    if (ModuleDelegate.builtinModuleNames.includes(name)) {
       return name;
     }
-
-    // TODO: quickjs needs to expose the list of user-defined builtin modules so
-    // that we can return them as-is
 
     // need to check npm first, because http(s) URLs that point to the CDN that
     // the npm: proto is backed by (skypack) should be handled by its handler

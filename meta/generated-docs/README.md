@@ -298,3 +298,4 @@ For convenience, two builtin modules from QuickJS are also available as globals.
 [`ExtnameOptions`]: /meta/generated-docs/extname.md#extnameoptions-interface
 [`Path.prototype.relativeTo`]: /meta/generated-docs/path.md#pathprototyperelativeto-method
 [`Path.prototype.extname`]: /meta/generated-docs/path.md#pathprototypeextname-method
+[`getpwuid`]: /meta/generated-docs/libc.md#quickjsstdgetpwuid-exported-function

@@ -1,6 +1,7 @@
 - [ModuleDelegate (interface)](#moduledelegate-interface)
   - [ModuleDelegate.searchExtensions (property)](#moduledelegatesearchextensions-property)
   - [ModuleDelegate.compilers (object property)](#moduledelegatecompilers-object-property)
+  - [ModuleDelegate.builtinModuleNames (property)](#moduledelegatebuiltinmodulenames-property)
   - [ModuleDelegate.resolve (method)](#moduledelegateresolve-method)
   - [ModuleDelegate.read (method)](#moduledelegateread-method)
 - [RequireFunction (interface)](#requirefunction-interface)
@@ -24,6 +25,7 @@ interface ModuleDelegate {
   compilers: {
     [extensionWithDot: string]: (filename: string, content: string) => string;
   };
+  builtinModuleNames: Array<string>;
   resolve(name: string, fromFile: string): string;
   read(modulePath: string): string;
 }
@@ -94,6 +96,18 @@ NOTE: When adding to this object, you may also wish to add to
 compilers: {
   [extensionWithDot: string]: (filename: string, content: string) => string;
 };
+```
+
+## ModuleDelegate.builtinModuleNames (property)
+
+An Array containing the names of all the built-in modules, such as
+"quickjs:std", "quickjs:bytecode", etc.
+
+`quickjs:engine`'s `defineBuiltinModule` function adds to the end of this
+array.
+
+```ts
+builtinModuleNames: Array<string>;
 ```
 
 ## ModuleDelegate.resolve (method)

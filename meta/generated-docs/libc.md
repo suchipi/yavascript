@@ -49,6 +49,15 @@
   - ["quickjs:std".geteuid (exported function)](#quickjsstdgeteuid-exported-function)
   - ["quickjs:std".getgid (exported function)](#quickjsstdgetgid-exported-function)
   - ["quickjs:std".getegid (exported function)](#quickjsstdgetegid-exported-function)
+  - ["quickjs:std".PasswdEntry (exported interface)](#quickjsstdpasswdentry-exported-interface)
+    - [PasswdEntry.name (string property)](#passwdentryname-string-property)
+    - [PasswdEntry.passwd (string property)](#passwdentrypasswd-string-property)
+    - [PasswdEntry.uid (number property)](#passwdentryuid-number-property)
+    - [PasswdEntry.gid (number property)](#passwdentrygid-number-property)
+    - [PasswdEntry.gecos (string property)](#passwdentrygecos-string-property)
+    - [PasswdEntry.dir (string property)](#passwdentrydir-string-property)
+    - [PasswdEntry.shell (string property)](#passwdentryshell-string-property)
+  - ["quickjs:std".getpwuid (exported function)](#quickjsstdgetpwuid-exported-function)
   - ["quickjs:std".UrlGet (interface)](#quickjsstdurlget-interface)
     - [UrlGet(...) (call signature)](#urlget-call-signature)
     - [UrlGet(...) (call signature)](#urlget-call-signature-1)
@@ -456,6 +465,16 @@ declare module "quickjs:std" {
   export function geteuid(): number;
   export function getgid(): number;
   export function getegid(): number;
+  export interface PasswdEntry {
+    name: string;
+    passwd: string;
+    uid: number;
+    gid: number;
+    gecos: string;
+    dir: string;
+    shell: string;
+  }
+  export function getpwuid(id: number): PasswdEntry;
   interface UrlGet {
     (url: string): string;
     (
@@ -823,6 +842,77 @@ the same uid/gid paradigm as Unix-like operating systems.
 
 ```ts
 function getegid(): number;
+```
+
+## "quickjs:std".PasswdEntry (exported interface)
+
+The type of the object returned by [getpwuid](/meta/generated-docs/libc.md#quickjsstdgetpwuid-exported-function).
+
+```ts
+interface PasswdEntry {
+  name: string;
+  passwd: string;
+  uid: number;
+  gid: number;
+  gecos: string;
+  dir: string;
+  shell: string;
+}
+```
+
+### PasswdEntry.name (string property)
+
+```ts
+name: string;
+```
+
+### PasswdEntry.passwd (string property)
+
+```ts
+passwd: string;
+```
+
+### PasswdEntry.uid (number property)
+
+```ts
+uid: number;
+```
+
+### PasswdEntry.gid (number property)
+
+```ts
+gid: number;
+```
+
+### PasswdEntry.gecos (string property)
+
+```ts
+gecos: string;
+```
+
+### PasswdEntry.dir (string property)
+
+```ts
+dir: string;
+```
+
+### PasswdEntry.shell (string property)
+
+```ts
+shell: string;
+```
+
+## "quickjs:std".getpwuid (exported function)
+
+Get information from the passwd file entry for the specified user id.
+
+See https://linux.die.net/man/3/getpwuid.
+
+This function throws an error on windows, because windows doesn't support
+the same uid/gid paradigm as Unix-like operating systems.
+
+```ts
+function getpwuid(id: number): PasswdEntry;
 ```
 
 ## "quickjs:std".UrlGet (interface)

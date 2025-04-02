@@ -5631,6 +5631,27 @@ declare module "quickjs:std" {
    */
   export function getegid(): number;
 
+  /** The type of the object returned by {@link getpwuid}. */
+  export interface PasswdEntry {
+    name: string;
+    passwd: string;
+    uid: number;
+    gid: number;
+    gecos: string;
+    dir: string;
+    shell: string;
+  }
+
+  /**
+   * Get information from the passwd file entry for the specified user id.
+   *
+   * See https://linux.die.net/man/3/getpwuid.
+   *
+   * This function throws an error on windows, because windows doesn't support
+   * the same uid/gid paradigm as Unix-like operating systems.
+   */
+  export function getpwuid(id: number): PasswdEntry;
+
   interface UrlGet {
     /**
      * Download `url` using the `curl` command line utility. Returns string
@@ -6415,6 +6436,15 @@ interface ModuleDelegate {
   compilers: {
     [extensionWithDot: string]: (filename: string, content: string) => string;
   };
+
+  /**
+   * An Array containing the names of all the built-in modules, such as
+   * "quickjs:std", "quickjs:bytecode", etc.
+   *
+   * `quickjs:engine`'s `defineBuiltinModule` function adds to the end of this
+   * array.
+   */
+  builtinModuleNames: Array<string>;
 
   /**
    * Resolves a require/import request from `fromFile` into a canonicalized
