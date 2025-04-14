@@ -125,6 +125,7 @@ test("globals", async () => {
     cwd throws error
     where throws error
     id throws error
+    openURL throws error
     FILE throws error
     env: object
     exec: function
@@ -178,6 +179,7 @@ test("globals", async () => {
     white: function
     yellow: function
     clear: function
+    openUrl: function
     bigint: function
     boolean: function
     number: function
