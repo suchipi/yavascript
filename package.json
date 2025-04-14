@@ -15,7 +15,7 @@
     "@suchipi/macaroni": "^0.3.0",
     "@suchipi/marked-terminal": "^5.2.0",
     "@suchipi/print": "^2.5.0",
-    "@suchipi/quickjs": "^0.10.1",
+    "@suchipi/quickjs": "^0.10.2",
     "@suchipi/shinobi": "^1.0.1",
     "@types/coffeescript": "^2.5.7",
     "@types/jest": "^29.5.14",
