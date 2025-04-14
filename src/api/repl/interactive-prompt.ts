@@ -1,7 +1,10 @@
 import { assert } from "../assert";
+import { yellow } from "../strings";
 import { types } from "../types";
 import { startRepl } from "./generic-repl";
 import { HistoryFile } from "./history-file";
+
+let didDoInteractivePromptWarning = false;
 
 export class InteractivePrompt {
   handleInput: (input: string) => void;
@@ -36,6 +39,15 @@ export class InteractivePrompt {
       };
     } = {}
   ) {
+    if (!didDoInteractivePromptWarning) {
+      console.warn(
+        yellow(
+          "InteractivePrompt is hella WIP and buggy; it WILL change. You're using it at your own risk"
+        )
+      );
+      didDoInteractivePromptWarning = true;
+    }
+
     assert.type(
       handleInput,
       types.Function,
