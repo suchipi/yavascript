@@ -8,8 +8,10 @@ function run(cmd) {
 // yavascript.inc.d.ts
 function getVersion() {
   if (process.env.YAVASCRIPT_VERSION) {
-    if (!process.env.YAVASCRIPT_VERSION.startsWith("v")) {
-      throw new Error(`env var YAVASCRIPT_VERSION must start with 'v'!`);
+    if (!/^v|^git-/.test(process.env.YAVASCRIPT_VERSION)) {
+      throw new Error(
+        `env var YAVASCRIPT_VERSION must start with 'v' or 'git-'!`
+      );
     }
     return process.env.YAVASCRIPT_VERSION;
   }
