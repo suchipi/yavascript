@@ -132,12 +132,20 @@ program(
   "dist/bundles/primordials-arm64.js"
 );
 
-const platform = require("@suchipi/quickjs").identifyCurrentPlatform().name;
+const qjsPlatform = require("@suchipi/quickjs").identifyCurrentPlatform();
 build({
   rule: "copy",
   inputs: [
-    builddir(`bin/${platform}/yavascript`) +
-      (process.platform === "win32" ? ".exe" : ""),
+    builddir(`bin/${qjsPlatform.name}/yavascript${qjsPlatform.programSuffix}`),
   ],
-  output: builddir("yavascript"),
+  output: builddir("yavascript" + qjsPlatform.programSuffix),
+});
+build({
+  rule: "copy",
+  inputs: [
+    builddir(
+      `bin/${qjsPlatform.name}/yavascript-bootstrap${qjsPlatform.programSuffix}`
+    ),
+  ],
+  output: builddir("yavascript-bootstrap" + qjsPlatform.programSuffix),
 });
