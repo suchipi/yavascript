@@ -149,8 +149,11 @@ You'll need to install these prerequisites:
 
 - [Node.js](https://nodejs.org/en)
 - [Ninja](https://ninja-build.org/)
+- [fnm](https://github.com/Schniz/fnm) (optional)
 
 Then run `meta/build.sh`. The compiled output will be in the `dist` folder:
+
+> If you didn't install fnm, use `env SKIP_FNM_USE=1 meta/build.sh` instead.
 
 - `dist/yavascript`: The binary for your platform
 - `dist/bin/*`: Binaries for all supported platforms
