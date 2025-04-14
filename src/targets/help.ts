@@ -35,10 +35,10 @@ ${bold("Usage:")} ${bin("yavascript")} ${opt("[options]")} [file-to-run]
     "<language>"
   )}:  Set the scripting language to use. Valid values are "js",
                       "javascript", "ts", "typescript", "jsx", "tsx", "coffee",
-                      or "coffeescript". If not specified, the language will be
-                      inferred from the file extension. If the file has no
-                      extension, the language will be inferred from its
-                      contents.
+                      "coffeescript", or "civet". If not specified, the
+                      language will be inferred from the file extension. If the
+                      file has no extension, the language will be inferred from
+                      its contents.
 
   ${boldOpt("-r")} ${str("<file>")} /
   ${boldOpt("--require")} ${str(
