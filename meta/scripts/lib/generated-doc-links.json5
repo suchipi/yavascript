@@ -41,6 +41,7 @@
   grepFile: "/meta/generated-docs/grep.md#grepfile-function",
   grepString: "/meta/generated-docs/grep.md#grepstring-function",
   whoami: "/meta/generated-docs/whoami.md#whoami-function",
+  openUrl: "/meta/generated-docs/open-url.md#openurl-function",
 
   // Types and Helpers
   Path: "/meta/generated-docs/path.md#path-class",

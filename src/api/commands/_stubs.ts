@@ -36,6 +36,11 @@ export default makeGetterPropertyDescriptorMap(
         "'id' is not defined. Maybe you want to use 'whoami()'?"
       );
     },
+    openURL() {
+      throw new ReferenceError(
+        "'openURL' is not defined. Did you mean 'openUrl'?"
+      );
+    },
   },
   false
 );

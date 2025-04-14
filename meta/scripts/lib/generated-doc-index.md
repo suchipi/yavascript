@@ -47,6 +47,7 @@ Here is a list of all of YavaScript's builtin APIs, aside from those normally fo
 - [`grepFile`]: Search for matches in a file
 - [`grepString`]: Search for matches in a string
 - [`whoami`]: Get user name/uid/gid
+- [`openUrl`]: Open a file/url using your operating system's default application for that file/url
 
 ## Types and Helpers
 

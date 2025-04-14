@@ -122,6 +122,10 @@ const consoleProps = makeGetterPropertyDescriptorMap({
   clear: () => require("./console").clear,
 });
 
+const openUrlProps = makeGetterPropertyDescriptorMap({
+  openUrl: () => require("./open-url").openUrl,
+});
+
 const othersProps = makeGetterPropertyDescriptorMap(
   {
     bigint: () => require("./others").bigint,
@@ -189,6 +193,7 @@ export default function installApi(target: typeof globalThis) {
     ...gitRepoProps,
     ...stringsProps,
     ...consoleProps,
+    ...openUrlProps,
     ...othersProps,
     ...jsxProps,
     ...csvProps,
