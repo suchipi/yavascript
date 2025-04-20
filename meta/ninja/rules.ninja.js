@@ -97,12 +97,9 @@ rule("md-links-from-json5", {
 });
 
 rule("markdown-toc", {
-  command: `npx --no-install markdown-toc $in > $out`,
+  command: `node meta/scripts/markdown-toc.js --input $in --output $out`,
   description: "MD-TOC $out",
-  implicitInputs: [
-    "node_modules/markdown-toc/cli.js",
-    "node_modules/markdown-toc/package.json",
-  ],
+  implicitInputs: [walkJsDeps("meta/scripts/markdown-toc.js")],
 });
 
 rule("combine", {
