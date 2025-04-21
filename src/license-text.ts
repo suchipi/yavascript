@@ -232,7 +232,7 @@ limitations under the License.`;
 
 export default `Licensing Information
 
--------------- cutils --------------
+====== cutils ======
 
 C utilities
 
@@ -241,7 +241,7 @@ Copyright (c) 2018 Charlie Gordon
 
 ${MIT}
 
--------------- libbf --------------
+====== libbf ======
 
 Tiny arbitrary precision floating point library
 
@@ -249,7 +249,7 @@ Copyright (c) 2017-2021 Fabrice Bellard
 
 ${MIT}
 
--------------- libregexp --------------
+====== libregexp ======
 
 Regular Expression Engine
 
@@ -257,7 +257,7 @@ Copyright (c) 2017-2018 Fabrice Bellard
 
 ${MIT}
 
--------------- libunicode --------------
+====== libunicode ======
 
 Unicode utilities
 
@@ -265,7 +265,7 @@ Copyright (c) 2017-2018 Fabrice Bellard
 
 ${MIT}
 
--------------- list --------------
+====== list ======
 
 Linux klist like system
 
@@ -273,7 +273,7 @@ Copyright (c) 2016-2017 Fabrice Bellard
 
 ${MIT}
 
--------------- qjsc --------------
+====== qjsc ======
 
 QuickJS command line compiler
 
@@ -281,7 +281,7 @@ Copyright (c) 2018-2021 Fabrice Bellard
 
 ${MIT}
 
--------------- quickjs (suchipi fork) --------------
+====== quickjs (suchipi fork) ======
 
 QuickJS Javascript Engine
 
@@ -291,7 +291,7 @@ Copyright (c) 2022-2022 Lily Skye
 
 ${MIT}
 
--------------- quickjs-libc (suchipi fork) --------------
+====== quickjs-libc (suchipi fork) ======
 
 QuickJS C library
 
@@ -300,7 +300,7 @@ Copyright (c) 2022-2022 Lily Skye
 
 ${MIT}
 
--------------- qjsbootstrap --------------
+====== qjsbootstrap ======
 
 QuickJS bootstrap
 
@@ -312,7 +312,7 @@ Copyright (c) 2017-2021 Charlie Gordon
 
 ${MIT}
 
--------------- quickjs repl --------------
+====== quickjs repl ======
 
 QuickJS Read Eval Print Loop (modified)
 
@@ -322,7 +322,7 @@ Copyright (c) 2022 Lily Skye
 
 ${MIT}
 
--------------- @suchipi/print --------------
+====== @suchipi/print ======
 
 The ISC License
 
@@ -331,7 +331,7 @@ Copyright (c) 2022 Lily Skye
 
 ${ISC}
 
--------------- kleur --------------
+====== kleur ======
 
 The MIT License (MIT)
 
@@ -339,7 +339,7 @@ Copyright (c) Luke Edwards <luke.edwards05@gmail.com> (lukeed.com)
 
 ${MIT}
 
--------------- minimatch --------------
+====== minimatch ======
 
 The ISC License
 
@@ -347,7 +347,7 @@ Copyright (c) 2011-2022 Isaac Z. Schlueter and Contributors
 
 ${ISC}
 
--------------- brace-expansion --------------
+====== brace-expansion ======
 
 MIT License
 
@@ -355,7 +355,7 @@ Copyright (c) 2013 Julian Gruber <julian@juliangruber.com>
 
 ${MIT}
 
--------------- balanced-match --------------
+====== balanced-match ======
 
 (MIT)
 
@@ -363,7 +363,7 @@ Copyright (c) 2013 Julian Gruber &lt;julian@juliangruber.com&gt;
 
 ${MIT}
 
--------------- ansi-regex --------------
+====== ansi-regex ======
 
 MIT License
 
@@ -371,7 +371,7 @@ Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 ${MIT}
 
--------------- strip-ansi --------------
+====== strip-ansi ======
 
 MIT License
 
@@ -379,19 +379,13 @@ Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 ${MIT}
 
--------------- @suchipi/is --------------
-
-MIT License Copyright (c) 2022 Lily Skye
-
-${MIT}
-
--------------- coffeescript --------------
+====== coffeescript ======
 
 Copyright (c) 2009-2018 Jeremy Ashkenas
 
 ${MIT}
 
--------------- lines-and-columns --------------
+====== lines-and-columns ======
 
 The MIT License (MIT)
 
@@ -399,7 +393,7 @@ Copyright (c) 2015 Brian Donovan
 
 ${MIT}
 
--------------- sucrase --------------
+====== sucrase ======
 
 The MIT License (MIT)
 
@@ -459,7 +453,34 @@ Rich Harris
 Sebastian McKenzie
 zsjforcn
 
--------------- clef-parse --------------
+====== @jridgewell/set-array ======
+
+Copyright 2022 Justin Ridgewell <jridgewell@google.com>
+
+${MIT}
+
+====== @jridgewell/sourcemap-codec ======
+
+The MIT License
+
+Copyright (c) 2015 Rich Harris
+
+${MIT}
+
+
+====== @jridgewell/trace-mapping ======
+
+Copyright 2022 Justin Ridgewell <justin@ridgewell.name>
+
+${MIT}
+
+====== @jridgewell/resolve-uri ======
+
+Copyright 2019 Justin Ridgewell <jridgewell@google.com>
+
+${MIT}
+
+====== clef-parse ======
 
 MIT License
 
@@ -467,7 +488,14 @@ Copyright (c) 2022 Lily Skye
 
 ${MIT}
 
--------------- papaparse --------------
+====== nice-path ======
+
+The MIT License (MIT)
+Copyright (c) 2019-2024 Lily Skye
+
+${MIT}
+
+====== papaparse ======
 
 MIT License
 
@@ -475,7 +503,7 @@ Copyright (c) 2015 Matthew Holt
 
 ${MIT}
 
--------------- yaml (npm package) --------------
+====== yaml (npm package) ======
 
 The ISC License
 
@@ -483,7 +511,7 @@ Copyright Eemeli Aro <eemeli@gmail.com>
 
 ${ISC}
 
--------------- string-dedent --------------
+====== string-dedent ======
 
 MIT License
 
@@ -491,19 +519,25 @@ Copyright (c) 2020-2022 Justin Ridgewell
 
 ${MIT}
 
--------------- a-mimir --------------
+====== a-mimir ======
 
 MIT License Copyright (c) 2023 Lily Skye
 
 ${MIT}
 
--------------- @swc/helpers --------------
+====== pheno ======
+
+MIT License Copyright (c) 2022-2023 Lily Skye
+
+${MIT}
+
+====== @swc/helpers ======
 
 Apache 2.0
 
 ${APACHE2}
 
--------------- @danielx/civet --------------
+====== @danielx/civet ======
 
 MIT License
 
@@ -511,7 +545,7 @@ Copyright (c) 2022 Daniel X Moore and other contributors
 
 ${MIT}
 
--------------- @iarna/toml --------------
+====== @iarna/toml ======
 
 ISC License
 
@@ -519,7 +553,7 @@ Copyright (c) 2016, Rebecca Turner <me@re-becca.org>
 
 ${ISC}
 
--------------- yavascript --------------
+====== yavascript ======
 
 YavaScript script interpreter
 
