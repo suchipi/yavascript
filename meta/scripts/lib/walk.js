@@ -14,7 +14,7 @@ function walkJsDeps(entrypoint, { useKameResolver = false } = {}) {
     skip: /node_modules/g,
   };
   if (useKameResolver) {
-    walkOptions.resolver = require("../../../src/kame-config").resolve;
+    walkOptions.resolver = require("../../kame/kame-config").resolve;
   }
 
   const { errors, modules } = walk(entrypointAbs, walkOptions);

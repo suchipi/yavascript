@@ -11,13 +11,13 @@ rule("copy", {
 rule("kame", {
   command: [
     `env YAVASCRIPT_ARCH=$YAVASCRIPT_ARCH npx --no-install kame bundle`,
-    `--resolver ./src/kame-config.js`,
-    `--loader ./src/kame-config.js`,
+    `--resolver ./meta/kame/kame-config.js`,
+    `--loader ./meta/kame/kame-config.js`,
     `--input $in`,
     `--output $out`,
   ],
   description: "KAME BUNDLE $out",
-  implicitInputs: ["src/kame-config.js"],
+  implicitInputs: ["meta/kame/kame-config.js"],
 });
 
 // to-bytecode rule
