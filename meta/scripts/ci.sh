@@ -15,7 +15,13 @@ nvm install
 nvm use
 
 env SKIP_FNM_USE=1 meta/build.sh
+
 # commented out until I can get it working locally
 # meta/docker/wine-test-image/build.sh
+
+pushd meta/tests
+npm install
+popd
+
 npm test
 npm run typecheck

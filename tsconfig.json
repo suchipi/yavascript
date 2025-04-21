@@ -3,8 +3,8 @@
   "exclude": [
     "**/*.inc.d.ts",
     "meta/examples",
-    "src/test_fixtures/**/*",
     "./yavascript.d.ts",
+    "meta/tests/**/*",
     "meta/type-tests/**/*"
   ],
 
