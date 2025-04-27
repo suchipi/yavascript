@@ -43,7 +43,8 @@
   - [ ] windows
 - [-] open/xdg-open
   - [x] api added (as `openUrl` function)
-  - [ ] test on linux/win32
+  - [x] test on linux
+  - [ ] test on windows
 - [ ] hostname
 - [x] make the readme more "first-reader-friendly" (ie. reorder some of the info, add a logo, etc)
 - [ ] move some of the static properties on Path to some sort of "os" thing, along with other similar helpers. maybe extension of the existing "quickjs:os" `os` global?
