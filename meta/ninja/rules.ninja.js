@@ -11,8 +11,7 @@ rule("copy", {
 rule("kame", {
   command: [
     `env YAVASCRIPT_ARCH=$YAVASCRIPT_ARCH npx --no-install kame bundle`,
-    `--resolver ./meta/kame/kame-config.js`,
-    `--loader ./meta/kame/kame-config.js`,
+    `--config ./meta/kame/kame-config.js`,
     `--input $in`,
     `--output $out`,
   ],
