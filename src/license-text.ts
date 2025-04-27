@@ -488,13 +488,6 @@ Copyright (c) 2022 Lily Skye
 
 ${MIT}
 
-====== nice-path ======
-
-The MIT License (MIT)
-Copyright (c) 2019-2024 Lily Skye
-
-${MIT}
-
 ====== papaparse ======
 
 MIT License

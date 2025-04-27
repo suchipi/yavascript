@@ -86,7 +86,6 @@ test("bundled third-party code snapshot", async () => {
       "kleur",
       "lines-and-columns",
       "minimatch",
-      "nice-path",
       "papaparse",
       "pheno",
       "string-dedent",
