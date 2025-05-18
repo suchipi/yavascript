@@ -25,7 +25,7 @@ As well as APIs for things which are difficult or cumbersome in bash, like:
 - Safely manipulate and resolve path strings
 - Work with raw byte buffers (typed arrays)
 - Reliably get the path to the currently-running script
-- Strongly-typed interfaces and functions (via TypeScript)
+- Typed interfaces and functions (via TypeScript)
 - Cross-file import/export using ECMAScript Modules
 - Call low-level POSIX C APIs like fputs, sprintf, isatty
 
