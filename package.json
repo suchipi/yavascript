@@ -21,7 +21,6 @@
     "chalk": "^4.1.2",
     "clef-parse": "^0.6.0",
     "coffeescript": "^2.7.0",
-    "first-base": "^1.5.2",
     "globby": "^11.1.0",
     "json5": "^2.2.3",
     "kame": "^1.15.0",
