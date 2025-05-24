@@ -1,29 +1,62 @@
-- [chmod (function)](#chmod-function)
-- [ChmodPermissionsWho (type)](#chmodpermissionswho-type)
-- [ChmodPermissionsWhat (type)](#chmodpermissionswhat-type)
+- [chmod (Chmod)](#chmod-chmod)
+- [Chmod (interface)](#chmod-interface)
+  - [Chmod(...) (call signature)](#chmod-call-signature)
+  - [Chmod(...) (call signature)](#chmod-call-signature-1)
+- [Chmod (exported namespace)](#chmod-exported-namespace)
+  - [Chmod.Who (exported type)](#chmodwho-exported-type)
+  - [Chmod.Operation (exported type)](#chmodoperation-exported-type)
+  - [Chmod.Permission (exported type)](#chmodpermission-exported-type)
 
-# chmod (function)
+# chmod (Chmod)
 
 Set the permission bits for the specified file.
 
-- `@param` _permissions_ — The permission bits to set. This can be a number, a string
-  containing an octal number, or an object.
-- `@param` _path_ — The path to the file.
+Provides the same functionality as the unix binary of the same name.
+
+```ts
+const chmod: Chmod;
+```
+
+# Chmod (interface)
+
+The interface for the global function `chmod`, which has two call signatures.
+
+```ts
+interface Chmod {
+  (permissions: number | string, path: string | Path): void;
+  (
+    operation: Chmod.Operation,
+    permissions: Record<Chmod.Who, Chmod.Permission>,
+    path: string | Path
+  ): void;
+}
+```
+
+## Chmod(...) (call signature)
+
+Set the permission bits for the specified file.
 
 Provides the same functionality as the unix binary of the same name.
 
-The `permissions` argument can be either:
+- `@param` _permissions_ — The permission bits to set. This can be a number, or a string containing an octal number.
+- `@param` _path_ — The path to the file.
 
-- a number (best expressed using octal, eg `0o655`)
-- a string (which will be interpreted as an octal number, eg `'777'`)
-- or an object (see below).
+```ts
+(permissions: number | string, path: string | Path): void;
+```
 
-> NOTE: At this time there are no "add"/"remove" semantics; the existing
-> permissions will be completely overwritten with your specified permissions.
-> This will be changed later as this is not intuitive.
+## Chmod(...) (call signature)
 
-When permissions is an object, each of the object's own properties' keys must
-be one of these strings:
+Apply a change to the permission bits for the specified file.
+
+Provides the same functionality as the unix binary of the same name.
+
+- `@param` _operation_ — What to do to the bits; can be "add", "set", or "remove".
+- `@param` _permissions_ — An object describing the changes (see below).
+- `@param` _path_ — The path to the file.
+
+Each of the `permissions` object's own property keys must be one of these
+strings:
 
 - `"user"`
 - `"group"`
@@ -55,28 +88,56 @@ and their values must be one of these strings:
 
 Some example objects:
 
-```ts
-chmod({ user: "readwrite", group: "read", others: "none" });
-chmod({ ug: "rw", o: "w" });
-chmod({ all: "full" });
+```json
+{ user: "readwrite", group: "read", others: "none" }
+{ ug: "rw", o: "w" }
+{ all: "full" }
 ```
 
 ```ts
-declare function chmod(
-  permissions:
-    | number
-    | string
-    | Record<ChmodPermissionsWho, ChmodPermissionsWhat>,
-  path: string | Path
-): void;
+(operation: Chmod.Operation, permissions: Record<Chmod.Who, Chmod.Permission>, path: string | Path): void;
 ```
 
-# ChmodPermissionsWho (type)
+# Chmod (exported namespace)
+
+```ts
+namespace Chmod {
+  export type Who =
+    | "user"
+    | "group"
+    | "others"
+    | "all"
+    | "u"
+    | "g"
+    | "o"
+    | "a"
+    | "ug"
+    | "go"
+    | "uo";
+  export type Operation = "add" | "set" | "remove";
+  export type Permission =
+    | "read"
+    | "write"
+    | "execute"
+    | "readwrite"
+    | "none"
+    | "full"
+    | "r"
+    | "w"
+    | "x"
+    | "rw"
+    | "rx"
+    | "wx"
+    | "rwx";
+}
+```
+
+## Chmod.Who (exported type)
 
 A string representing who a permission applies to.
 
 ```ts
-declare type ChmodPermissionsWho =
+type Who =
   | "user"
   | "group"
   | "others"
@@ -90,12 +151,20 @@ declare type ChmodPermissionsWho =
   | "uo";
 ```
 
-# ChmodPermissionsWhat (type)
+## Chmod.Operation (exported type)
+
+A string representing how the permissions should be changed.
+
+```ts
+type Operation = "add" | "set" | "remove";
+```
+
+## Chmod.Permission (exported type)
 
 A string representing the access level for the given permission.
 
 ```ts
-declare type ChmodPermissionsWhat =
+type Permission =
   | "read"
   | "write"
   | "execute"
