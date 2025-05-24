@@ -30,7 +30,7 @@
   - works fine in windows Terminal git bash though
 - [ ] in windows terminal git bash, in repl, pressing up for history doesn't work past the first item
 - [ ] repl sometimes needs you to press Ctrl+C more times than it should
-- [-] fix chmod so it has add/remove semantics and respects existing perms
+- [x] fix chmod so it has add/remove semantics and respects existing perms
 - [ ] yavascript globals aren't set up in workers
 - [ ] add `.on("exit")` support to node-compat `process` shim
 - [ ] make assert have nice messages when one isn't specified
