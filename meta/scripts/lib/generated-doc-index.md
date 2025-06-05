@@ -144,9 +144,20 @@ There are several lowercase aliases for builtin constructors, so that certain ty
 - [`string`]: Alias for `String`
 - [`symbol`]: Alias for `Symbol`
 
+## QuickJS Modules
+
+The following QuickJS builtin modules are available via `import`/`require`:
+
+- [`"quickjs:std"`]: C stdlib wrappers
+- [`"quickjs:os"`]: OS-specific functions
+- [`"quickjs:bytecode"`]: Convert JS code or values to/from bytecode
+- [`"quickjs:context"`]: Create context (separate global environments, aka "Realms") to run code in
+- [`"quickjs:engine"`]: APIs relating to the builtin JS engine and module loader
+- [`"quickjs:encoding"`]: Utility functions for converting between binary and UTF-8.
+
 ## QuickJS Module Namespace Globals
 
-For convenience, two builtin modules from QuickJS are also available as globals.
+For convenience, two of the builtin modules from QuickJS are also available as globals.
 
 - [`std`]: The "quickjs:std" module
 - [`os`]: The "quickjs:os" module

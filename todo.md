@@ -49,4 +49,4 @@
 - [ ] move some of the static properties on Path to some sort of "os" thing, along with other similar helpers. maybe extension of the existing "quickjs:os" `os` global?
 - [x] there's something wrong with yavascript.d.ts that's making it not take effect
 - [x] deduplicate nice-path from clef-parse (make it use Path global instead)
-- [ ] release a new version
+- [ ] make it so `quickjs:context`s can get yavascript globals bound to their global intrinsics

@@ -177,4 +177,11 @@
   "Path.prototype.relativeTo": "/meta/generated-docs/path.md#pathprototyperelativeto-method",
   "Path.prototype.extname": "/meta/generated-docs/path.md#pathprototypeextname-method",
   getpwuid: "/meta/generated-docs/libc.md#quickjsstdgetpwuid-exported-function",
+
+  '"quickjs:std"': "/meta/generated-docs/libc.md#quickjsstd-namespace",
+  '"quickjs:os"': "/meta/generated-docs/libc.md#quickjsos-namespace",
+  '"quickjs:bytecode"': "/meta/generated-docs/bytecode.md#quickjsbytecode-namespace",
+  '"quickjs:context"': "/meta/generated-docs/context.md#quickjscontext-namespace",
+  '"quickjs:encoding"': "/meta/generated-docs/encoding.md#quickjsencoding-namespace",
+  '"quickjs:engine"': "/meta/generated-docs/engine.md#quickjsengine-namespace",
 }

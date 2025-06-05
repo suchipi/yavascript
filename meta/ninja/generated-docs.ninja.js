@@ -53,7 +53,7 @@ const quickjsDtsFilesMap = {
   intervals: "node_modules/@suchipi/quickjs/build/dts/quickjs-intervals.d.ts",
   bytecode: "node_modules/@suchipi/quickjs/build/dts/quickjs-bytecode.d.ts",
   libc: "node_modules/@suchipi/quickjs/build/dts/quickjs-libc.d.ts",
-  // skipping context as child contexts don't yet have a way to get yavascript globals
+  context: "node_modules/@suchipi/quickjs/build/dts/quickjs-context.d.ts",
   encoding: "node_modules/@suchipi/quickjs/build/dts/quickjs-encoding.d.ts",
   engine: "node_modules/@suchipi/quickjs/build/dts/quickjs-engine.d.ts",
   // skipping pointer
