@@ -12,14 +12,14 @@ mkdir -p empty
 
 IMAGE_NAME="suchipi/yavascript"
 
-# override to "latest" or "v1.2.3" via env var
+# override to "latest" or "1.2.3" via env var
 TAG="${YS_DOCKER_TAG:-}"
 if [[ "$TAG" == "" ]]; then
   TAG="dev-unstable-$(date +%s)"
 fi
 
-docker build -f Dockerfile.x86_64 -t "${IMAGE_NAME}:${TAG}-x86_64" .
-docker build -f Dockerfile.aarch64 -t "${IMAGE_NAME}:${TAG}-aarch64" .
+docker build --platform=linux/amd64 -f Dockerfile.x86_64 -t "${IMAGE_NAME}:${TAG}-x86_64" .
+docker build --platform=linux/aarch64 -f Dockerfile.aarch64 -t "${IMAGE_NAME}:${TAG}-aarch64" .
 
 # have to push them to be able to make a manifest list :(
 docker push "${IMAGE_NAME}:${TAG}-x86_64"
