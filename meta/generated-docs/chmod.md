@@ -2,7 +2,7 @@
 - [Chmod (interface)](#chmod-interface)
   - [Chmod(...) (call signature)](#chmod-call-signature)
   - [Chmod(...) (call signature)](#chmod-call-signature-1)
-- [Chmod (exported namespace)](#chmod-exported-namespace)
+- [Chmod (namespace)](#chmod-namespace)
   - [Chmod.Who (exported type)](#chmodwho-exported-type)
   - [Chmod.Operation (exported type)](#chmodoperation-exported-type)
   - [Chmod.Permission (exported type)](#chmodpermission-exported-type)
@@ -98,10 +98,10 @@ Some example objects:
 (operation: Chmod.Operation, permissions: Record<Chmod.Who, Chmod.Permission>, path: string | Path): void;
 ```
 
-# Chmod (exported namespace)
+# Chmod (namespace)
 
 ```ts
-namespace Chmod {
+declare namespace Chmod {
   export type Who =
     | "user"
     | "group"

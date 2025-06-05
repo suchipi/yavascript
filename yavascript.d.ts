@@ -961,7 +961,7 @@ interface Chmod {
   ): void;
 }
 
-export namespace Chmod {
+declare namespace Chmod {
   /** A string representing who a permission applies to. */
   export type Who =
     | "user"
