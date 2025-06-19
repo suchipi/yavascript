@@ -37,7 +37,8 @@ declare interface ChildProcess {
     err: FILE;
   };
 
-  pid: number | null;
+  get state(): ChildProcessState;
+  get pid(): number | null;
 
   /** Spawns the process and returns its pid (process id). */
   start(): number;
@@ -46,6 +47,42 @@ declare interface ChildProcess {
   waitUntilComplete():
     | { status: number; signal: undefined }
     | { status: undefined; signal: number };
+}
+
+declare type ChildProcessState =
+  | {
+      id: ChildProcessStateKind.UNSTARTED;
+    }
+  | {
+      id: ChildProcessStateKind.STARTED;
+      pid: number;
+    }
+  | {
+      id: ChildProcessStateKind.STOPPED;
+      pid: number;
+    }
+  | {
+      id: ChildProcessStateKind.CONTINUED;
+      pid: number;
+    }
+  | {
+      id: ChildProcessStateKind.EXITED;
+      oldPid: number;
+      status: number;
+    }
+  | {
+      id: ChildProcessStateKind.SIGNALED;
+      oldPid: number;
+      signal: number;
+    };
+
+declare enum ChildProcessStateKind {
+  UNSTARTED = "UNSTARTED",
+  STARTED = "STARTED",
+  STOPPED = "STOPPED",
+  CONTINUED = "CONTINUED",
+  EXITED = "EXITED",
+  SIGNALED = "SIGNALED",
 }
 
 /**

@@ -92,8 +92,9 @@ test("modifying logger.trace affects logging of API functions", async () => {
     ChildProcess result: [
       "true"
     ] -> {
+      id: "EXITED"
+      oldPid: 26531
       status: 0
-      signal: undefined
     }
     ",
       "stdout": "",

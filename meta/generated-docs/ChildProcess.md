@@ -6,9 +6,11 @@
     - [ChildProcess.stdio.in (FILE property)](#childprocessstdioin-file-property)
     - [ChildProcess.stdio.out (FILE property)](#childprocessstdioout-file-property)
     - [ChildProcess.stdio.err (FILE property)](#childprocessstdioerr-file-property)
-  - [ChildProcess.pid (property)](#childprocesspid-property)
+  - [ChildProcess.state (getter)](#childprocessstate-getter)
+  - [ChildProcess.pid (getter)](#childprocesspid-getter)
   - [ChildProcess.start (method)](#childprocessstart-method)
   - [ChildProcess.waitUntilComplete (method)](#childprocesswaituntilcomplete-method)
+- [ChildProcessState (type)](#childprocessstate-type)
 - [ChildProcessOptions (type)](#childprocessoptions-type)
   - [ChildProcessOptions.cwd (property)](#childprocessoptionscwd-property)
   - [ChildProcessOptions.env (object property)](#childprocessoptionsenv-object-property)
@@ -48,7 +50,8 @@ declare interface ChildProcess {
     out: FILE;
     err: FILE;
   };
-  pid: number | null;
+  get state(): ChildProcessState;
+  get pid(): number | null;
   start(): number;
   waitUntilComplete():
     | {
@@ -127,10 +130,16 @@ Where the process writes stderr to
 err: FILE;
 ```
 
-## ChildProcess.pid (property)
+## ChildProcess.state (getter)
 
 ```ts
-pid: number | null;
+get state(): ChildProcessState;
+```
+
+## ChildProcess.pid (getter)
+
+```ts
+get pid(): number | null;
 ```
 
 ## ChildProcess.start (method)
@@ -153,6 +162,37 @@ waitUntilComplete(): {
   status: undefined;
   signal: number;
 };
+```
+
+# ChildProcessState (type)
+
+```ts
+declare type ChildProcessState =
+  | {
+      id: ChildProcessStateKind.UNSTARTED;
+    }
+  | {
+      id: ChildProcessStateKind.STARTED;
+      pid: number;
+    }
+  | {
+      id: ChildProcessStateKind.STOPPED;
+      pid: number;
+    }
+  | {
+      id: ChildProcessStateKind.CONTINUED;
+      pid: number;
+    }
+  | {
+      id: ChildProcessStateKind.EXITED;
+      oldPid: number;
+      status: number;
+    }
+  | {
+      id: ChildProcessStateKind.SIGNALED;
+      oldPid: number;
+      signal: number;
+    };
 ```
 
 # ChildProcessOptions (type)

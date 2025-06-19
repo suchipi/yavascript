@@ -131,6 +131,7 @@ test("globals", async () => {
     exec: function
     $: function
     ChildProcess: function
+    ChildProcessStateKind: object
     exists: function
     isFile: function
     isDir: function

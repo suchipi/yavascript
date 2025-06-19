@@ -50,3 +50,4 @@
 - [x] there's something wrong with yavascript.d.ts that's making it not take effect
 - [x] deduplicate nice-path from clef-parse (make it use Path global instead)
 - [ ] make it so `quickjs:context`s can get yavascript globals bound to their global intrinsics
+- [ ] repl: don't add contiguous duplicate entries to history

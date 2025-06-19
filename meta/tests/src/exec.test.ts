@@ -426,8 +426,9 @@ test("logging", async () => {
       "echo"
       "hi"
     ] -> {
+      id: "EXITED"
+      oldPid: 26774
       status: 0
-      signal: undefined
     }
     exec: echo "   hi"
     ChildProcess.start: [
@@ -438,8 +439,9 @@ test("logging", async () => {
       "echo"
       "   hi"
     ] -> {
+      id: "EXITED"
+      oldPid: 26779
       status: 0
-      signal: undefined
     }
     ",
       "stdout": "hi
@@ -471,8 +473,9 @@ test("non-blocking", async () => {
     ChildProcess result: [
       "true"
     ] -> {
+      id: "EXITED"
+      oldPid: 26782
       status: 0
-      signal: undefined
     }
     hi 3
     ",

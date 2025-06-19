@@ -26,6 +26,34 @@ exports[`__filename-and-__dirname-2.js 1`] = `
 }
 `;
 
+exports[`child-process-state.js 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "ChildProcess.start: [
+  "sleep"
+  "2"
+]
+ChildProcess result: [
+  "sleep"
+  "2"
+] -> {
+  id: "EXITED"
+  oldPid: 26314
+  status: 0
+}
+",
+  "stdout": "before start UNSTARTED
+calling start...
+after start STARTED
+after 1000ms STARTED
+after 2000ms EXITED
+calling waitUntilComplete...
+after waitUntilComplete EXITED
+",
+}
+`;
+
 exports[`http-import-error.js 1`] = `
 {
   "code": 1,

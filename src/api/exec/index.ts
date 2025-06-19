@@ -1,2 +1,7 @@
 export { exec, $ } from "./exec";
-export { ChildProcess, ChildProcessOptions } from "./ChildProcess";
+export {
+  ChildProcess,
+  ChildProcessOptions,
+  ChildProcessState,
+  ChildProcessStateKind,
+} from "./ChildProcess";

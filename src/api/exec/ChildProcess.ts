@@ -10,6 +10,42 @@ import { types } from "../types";
 import { assert } from "../assert";
 import { Path } from "../path";
 
+export enum ChildProcessStateKind {
+  UNSTARTED = "UNSTARTED",
+  STARTED = "STARTED",
+  STOPPED = "STOPPED",
+  CONTINUED = "CONTINUED",
+  EXITED = "EXITED",
+  SIGNALED = "SIGNALED",
+}
+
+export type ChildProcessState =
+  | {
+      id: ChildProcessStateKind.UNSTARTED;
+    }
+  | {
+      id: ChildProcessStateKind.STARTED;
+      pid: number;
+    }
+  | {
+      id: ChildProcessStateKind.STOPPED;
+      pid: number;
+    }
+  | {
+      id: ChildProcessStateKind.CONTINUED;
+      pid: number;
+    }
+  | {
+      id: ChildProcessStateKind.EXITED;
+      oldPid: number;
+      status: number;
+    }
+  | {
+      id: ChildProcessStateKind.SIGNALED;
+      oldPid: number;
+      signal: number;
+    };
+
 export type ChildProcessOptions = {
   cwd?: string | Path;
   env?: { [key: string | number]: string | number | boolean };
@@ -37,7 +73,17 @@ export class ChildProcess {
     trace: (...args: Array<any>) => void;
   };
 
-  pid: number | null = null;
+  private _state: ChildProcessState = { id: ChildProcessStateKind.UNSTARTED };
+
+  get state() {
+    this._updateState();
+    return this._state;
+  }
+
+  get pid() {
+    this._updateState();
+    return this._getPidRaw();
+  }
 
   constructor(
     args: string | Path | Array<string | number | Path>,
@@ -113,7 +159,7 @@ export class ChildProcess {
   start(): number {
     this._logging.trace.call(null, "ChildProcess.start:", this.args);
 
-    this.pid = os.exec(this.args, {
+    const pid = os.exec(this.args, {
       block: false,
       cwd: this.cwd.toString(),
       env: this.env,
@@ -121,43 +167,140 @@ export class ChildProcess {
       stdout: this.stdio.out.fileno(),
       stderr: this.stdio.err.fileno(),
     });
-    return this.pid;
+
+    this._state = {
+      id: ChildProcessStateKind.STARTED,
+      pid,
+    };
+
+    return pid;
+  }
+
+  private _getPidRaw() {
+    const state = this._state;
+    switch (state.id) {
+      case ChildProcessStateKind.UNSTARTED:
+        return null;
+      case ChildProcessStateKind.STARTED:
+      case ChildProcessStateKind.STOPPED:
+      case ChildProcessStateKind.CONTINUED:
+        return state.pid;
+      case ChildProcessStateKind.EXITED:
+      case ChildProcessStateKind.SIGNALED:
+        return state.oldPid;
+      default: {
+        const here: never = state;
+        throw new Error(
+          `Unhandled ChildProcessStateKind: ${(state as any).id}`
+        );
+      }
+    }
+  }
+
+  private _updateState() {
+    switch (this._state.id) {
+      case ChildProcessStateKind.UNSTARTED:
+      case ChildProcessStateKind.EXITED:
+      case ChildProcessStateKind.SIGNALED:
+        return;
+      case ChildProcessStateKind.STARTED:
+      case ChildProcessStateKind.STOPPED:
+      case ChildProcessStateKind.CONTINUED:
+        this._waitpid(false);
+        break;
+      default: {
+        const here: never = this._state;
+        throw new Error(
+          `Unhandled ChildProcessStateKind: ${(this._state as any).id}`
+        );
+      }
+    }
+  }
+
+  private _waitpid(block: boolean) {
+    const pid = this._getPidRaw();
+    if (!pid) {
+      return;
+    }
+
+    const flags = block ? 0 : os.WNOHANG;
+    const [ret, status] = os.waitpid(pid, flags);
+    if (ret === pid) {
+      if (os.WIFEXITED(status)) {
+        this._state = {
+          id: ChildProcessStateKind.EXITED,
+          oldPid: pid,
+          status: os.WEXITSTATUS(status),
+        };
+        this._logging.trace.call(
+          null,
+          "ChildProcess result:",
+          this.args,
+          "->",
+          this._state
+        );
+      } else if (os.WIFSIGNALED(status)) {
+        this._state = {
+          id: ChildProcessStateKind.SIGNALED,
+          oldPid: pid,
+          signal: os.WTERMSIG(status),
+        };
+        this._logging.trace.call(
+          null,
+          "ChildProcess result:",
+          this.args,
+          "->",
+          this._state
+        );
+      } else if (os.WIFSTOPPED(status)) {
+        this._state = {
+          id: ChildProcessStateKind.STOPPED,
+          pid,
+        };
+        this._logging.trace.call(null, "ChildProcess stopped:", this.args);
+      } else if (os.WIFCONTINUED(status)) {
+        this._state = {
+          id: ChildProcessStateKind.CONTINUED,
+          pid,
+        };
+        this._logging.trace.call(null, "ChildProcess continued:", this.args);
+      }
+    }
+
+    return false;
   }
 
   waitUntilComplete():
     | { status: number; signal: undefined }
     | { status: undefined; signal: number } {
-    const pid = this.pid;
-    if (pid == null) {
-      throw new Error(
-        "Cannot wait for a child process that hasn't yet been started"
-      );
-    }
+    do {
+      const rawState = this._state;
+      idSwitch: switch (rawState.id) {
+        case ChildProcessStateKind.UNSTARTED: {
+          throw new Error(
+            "The ChildProcess hasn't yet started. Call ChildProcess's start() method before calling waitUntilComplete()."
+          );
+        }
+        case ChildProcessStateKind.EXITED: {
+          return { status: rawState.status, signal: undefined };
+        }
+        case ChildProcessStateKind.SIGNALED: {
+          return { status: undefined, signal: rawState.signal };
+        }
+        case ChildProcessStateKind.STARTED:
+        case ChildProcessStateKind.CONTINUED:
+        case ChildProcessStateKind.STOPPED: {
+          this._waitpid(true);
+          break idSwitch;
+        }
 
-    while (true) {
-      const [ret, status] = os.waitpid(pid);
-      if (ret == pid) {
-        if (os.WIFEXITED(status)) {
-          const ret = { status: os.WEXITSTATUS(status), signal: undefined };
-          this._logging.trace.call(
-            null,
-            "ChildProcess result:",
-            this.args,
-            "->",
-            ret
+        default: {
+          const here: never = rawState;
+          throw new Error(
+            `Unhandled ChildProcessStateKind: ${(rawState as any).id}`
           );
-          return ret;
-        } else if (os.WIFSIGNALED(status)) {
-          const ret = { status: undefined, signal: os.WTERMSIG(status) };
-          this._logging.trace.call(
-            null,
-            "ChildProcess result:",
-            this.args,
-            "->"
-          );
-          return ret;
         }
       }
-    }
+    } while (true);
   }
 }
