@@ -39,7 +39,7 @@ ChildProcess result: [
   "2"
 ] -> {
   id: "EXITED"
-  oldPid: 26314
+  oldPid: <redacted>
   status: 0
 }
 ",

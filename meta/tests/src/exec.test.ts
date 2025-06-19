@@ -427,7 +427,7 @@ test("logging", async () => {
       "hi"
     ] -> {
       id: "EXITED"
-      oldPid: 26774
+      oldPid: <redacted>
       status: 0
     }
     exec: echo "   hi"
@@ -440,7 +440,7 @@ test("logging", async () => {
       "   hi"
     ] -> {
       id: "EXITED"
-      oldPid: 26779
+      oldPid: <redacted>
       status: 0
     }
     ",
@@ -474,7 +474,7 @@ test("non-blocking", async () => {
       "true"
     ] -> {
       id: "EXITED"
-      oldPid: 26782
+      oldPid: <redacted>
       status: 0
     }
     hi 3

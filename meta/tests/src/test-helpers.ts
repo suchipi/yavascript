@@ -79,7 +79,9 @@ export function cleanOutput(input: string): string {
     .replace(/(  at somewhere\n)+/g, "  at somewhere\n")
     .replace(new RegExp(TMP, "g"), "/tmp")
     .replace(new RegExp(binaryPath, "g"), "<yavascript binary>")
-    .replace(new RegExp(rootDir(), "g"), "<rootDir>");
+    .replace(new RegExp(rootDir(), "g"), "<rootDir>")
+    .replace(new RegExp(/pid: \d+/, "g"), "pid: <redacted>")
+    .replace(new RegExp(/oldPid: \d+/, "g"), "oldPid: <redacted>");
 }
 
 export function cleanResult(input: EvaluateResult): EvaluateResult {
