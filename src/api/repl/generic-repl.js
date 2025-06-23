@@ -332,13 +332,15 @@ export function startRepl(
     return -1;
   }
 
+  let last_history_line = null;
   function history_add(str) {
-    if (str) {
+    if (str && str !== last_history_line) {
       history.push(str);
       if (history_file) {
         history_file.append(str);
       }
     }
+    last_history_line = str;
     history_index = history.length;
   }
 

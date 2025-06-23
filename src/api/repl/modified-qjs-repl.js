@@ -417,11 +417,13 @@ export function startRepl(lang) {
     return -1;
   }
 
+  let last_history_line = null;
   function history_add(str) {
-    if (str) {
+    if (str && str !== last_history_line) {
       history.push(str);
       historyFile.append(str);
     }
+    last_history_line = str;
     history_index = history.length;
   }
 
