@@ -335,6 +335,20 @@ declare class Path {
    * @param replacement - The new final segment(s) for the returned Path
    */
   replaceLast(replacement: string | Path | Array<string | Path>): Path;
+
+  /**
+   * Return a boolean indicating whether this Path has the same separator and
+   * segments as another Path.
+   *
+   * To check only segments and not separator, use {@link Path.prototype.hasEqualSegments}.
+   */
+  equals(other: string | Path | Array<string | Path>): boolean;
+
+  /**
+   * Return a boolean indicating whether this Path has the same segments as
+   * another Path. **Separator is not checked; use {@link Path.prototype.equals} for that.**
+   */
+  hasEqualSegments(other: string | Path | Array<string | Path>): boolean;
 }
 
 /**

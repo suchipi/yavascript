@@ -309,6 +309,8 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`Path.prototype.replace`]: /meta/generated-docs/path.md#pathprototypereplace-method
 [`Path.prototype.replaceAll`]: /meta/generated-docs/path.md#pathprototypereplaceall-method
 [`Path.prototype.replaceLast`]: /meta/generated-docs/path.md#pathprototypereplacelast-method
+[`Path.prototype.equals`]: /meta/generated-docs/path.md#pathprototypeequals-method
+[`Path.prototype.hasEqualSegments`]: /meta/generated-docs/path.md#pathprototypehasequalsegments-method
 [`PathRelativeToOptions`]: /meta/generated-docs/path.md#pathrelativetooptions-interface
 [`ExtnameOptions`]: /meta/generated-docs/extname.md#extnameoptions-interface
 [`Path.prototype.relativeTo`]: /meta/generated-docs/path.md#pathprototyperelativeto-method

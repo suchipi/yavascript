@@ -784,3 +784,89 @@ test("Path.clone", async () => {
     }
   `);
 });
+
+test("Path.equals", async () => {
+  const script = `
+    const pairs = [
+      [new Path(), new Path()],
+      [new Path(""), new Path("")],
+      [new Path("/abc/d"), new Path("/abc/d")],
+      [new Path("/abc/d"), new Path("abc/d")],
+      [new Path("abc/d"), new Path("abc/d")],
+      [new Path("/123/4"), new Path("abc/d")],
+      [Path.fromRaw(["", "a", "b", "c"], "\\\\"), new Path("/a/b/c")],
+      [Path.fromRaw(["a", "b", "c"], "\\\\"), new Path("a/b/c")],
+    ];
+
+    for (const [a, b] of pairs) {
+      echo(a, b, "equals", a.equals(b));
+    }
+  `;
+
+  const result = await evaluate(script);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path {
+      segments: []
+      separator: "/"
+    } Path {
+      segments: []
+      separator: "/"
+    } equals true
+    Path { / } Path { / } equals true
+    Path { /abc/d } Path { /abc/d } equals true
+    Path { /abc/d } Path { abc/d } equals false
+    Path { abc/d } Path { abc/d } equals true
+    Path { /123/4 } Path { abc/d } equals false
+    Path { \\a\\b\\c } Path { /a/b/c } equals false
+    Path { a\\b\\c } Path { a/b/c } equals false
+    ",
+    }
+  `);
+});
+
+test("Path.hasEqualSegments", async () => {
+  const script = `
+    const pairs = [
+      [new Path(), new Path()],
+      [new Path(""), new Path("")],
+      [new Path("/abc/d"), new Path("/abc/d")],
+      [new Path("/abc/d"), new Path("abc/d")],
+      [new Path("abc/d"), new Path("abc/d")],
+      [new Path("/123/4"), new Path("abc/d")],
+      [Path.fromRaw(["", "a", "b", "c"], "\\\\"), new Path("/a/b/c")],
+      [Path.fromRaw(["a", "b", "c"], "\\\\"), new Path("a/b/c")],
+    ];
+
+    for (const [a, b] of pairs) {
+      echo(a, b, "hasEqualSegments", a.hasEqualSegments(b));
+    }
+  `;
+
+  const result = await evaluate(script);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Path {
+      segments: []
+      separator: "/"
+    } Path {
+      segments: []
+      separator: "/"
+    } hasEqualSegments true
+    Path { / } Path { / } hasEqualSegments true
+    Path { /abc/d } Path { /abc/d } hasEqualSegments true
+    Path { /abc/d } Path { abc/d } hasEqualSegments false
+    Path { abc/d } Path { abc/d } hasEqualSegments true
+    Path { /123/4 } Path { abc/d } hasEqualSegments false
+    Path { \\a\\b\\c } Path { /a/b/c } hasEqualSegments true
+    Path { a\\b\\c } Path { a/b/c } hasEqualSegments true
+    ",
+    }
+  `);
+});

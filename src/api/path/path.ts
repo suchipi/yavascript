@@ -398,6 +398,27 @@ class Path {
     return Path.fromRaw(segments, this.separator);
   }
 
+  equals(other: string | Path | Array<string | Path>): boolean {
+    if (!is(other, types.Path)) {
+      other = new Path(other);
+    }
+
+    return other.separator === this.separator && this.hasEqualSegments(other);
+  }
+
+  hasEqualSegments(other: string | Path | Array<string | Path>): boolean {
+    if (!is(other, types.Path)) {
+      other = new Path(other);
+    }
+
+    return (
+      this.segments.length === other.segments.length &&
+      this.segments.every((segment, index) => {
+        return segment === other.segments[index];
+      })
+    );
+  }
+
   [inspect.custom](inputs: InspectCustomInputs) {
     if (
       typeof this.segments === "undefined" ||

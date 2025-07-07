@@ -27,6 +27,8 @@
   - [Path.prototype.replace (method)](#pathprototypereplace-method)
   - [Path.prototype.replaceAll (method)](#pathprototypereplaceall-method)
   - [Path.prototype.replaceLast (method)](#pathprototypereplacelast-method)
+  - [Path.prototype.equals (method)](#pathprototypeequals-method)
+  - [Path.prototype.hasEqualSegments (method)](#pathprototypehasequalsegments-method)
 - [PathRelativeToOptions (interface)](#pathrelativetooptions-interface)
   - [PathRelativeToOptions.noLeadingDot (boolean property)](#pathrelativetooptionsnoleadingdot-boolean-property)
 
@@ -100,6 +102,8 @@ declare class Path {
     replacement: string | Path | Array<string | Path>
   ): Path;
   replaceLast(replacement: string | Path | Array<string | Path>): Path;
+  equals(other: string | Path | Array<string | Path>): boolean;
+  hasEqualSegments(other: string | Path | Array<string | Path>): boolean;
 }
 ```
 
@@ -482,6 +486,26 @@ as `new Path(replacement)`; ie. non-empty.
 
 ```ts
 replaceLast(replacement: string | Path | Array<string | Path>): Path;
+```
+
+## Path.prototype.equals (method)
+
+Return a boolean indicating whether this Path has the same separator and
+segments as another Path.
+
+To check only segments and not separator, use [Path.prototype.hasEqualSegments](/meta/generated-docs/path.md#pathprototypehasequalsegments-method).
+
+```ts
+equals(other: string | Path | Array<string | Path>): boolean;
+```
+
+## Path.prototype.hasEqualSegments (method)
+
+Return a boolean indicating whether this Path has the same segments as
+another Path. **Separator is not checked; use [Path.prototype.equals](/meta/generated-docs/path.md#pathprototypeequals-method) for that.**
+
+```ts
+hasEqualSegments(other: string | Path | Array<string | Path>): boolean;
 ```
 
 # PathRelativeToOptions (interface)
