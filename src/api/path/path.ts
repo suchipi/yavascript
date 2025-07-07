@@ -284,7 +284,9 @@ class Path {
   }
 
   startsWith(value: string | Path | Array<string | Path>): boolean {
-    value = new Path(value);
+    if (!is(value, types.Path)) {
+      value = new Path(value);
+    }
 
     return value.segments.every(
       (segment, index) => this.segments[index] === segment
@@ -292,7 +294,9 @@ class Path {
   }
 
   endsWith(value: string | Path | Array<string | Path>): boolean {
-    value = new Path(value);
+    if (!is(value, types.Path)) {
+      value = new Path(value);
+    }
 
     const valueSegmentsReversed = [...value.segments].reverse();
     const ownSegmentsReversed = [...this.segments].reverse();
@@ -306,7 +310,9 @@ class Path {
     value: string | Path | Array<string | Path>,
     fromIndex: number = 0
   ): number {
-    value = new Path(value);
+    if (!is(value, types.Path)) {
+      value = new Path(value);
+    }
 
     const ownSegmentsLength = this.segments.length;
     for (let i = fromIndex; i < ownSegmentsLength; i++) {
@@ -333,8 +339,12 @@ class Path {
     value: string | Path | Array<string | Path>,
     replacement: string | Path | Array<string | Path>
   ): Path {
-    value = new Path(value);
-    replacement = new Path(replacement);
+    if (!is(value, types.Path)) {
+      value = new Path(value);
+    }
+    if (!is(replacement, types.Path)) {
+      replacement = new Path(replacement);
+    }
 
     const matchIndex = this.indexOf(value);
 
@@ -354,7 +364,9 @@ class Path {
     value: string | Path | Array<string | Path>,
     replacement: string | Path | Array<string | Path>
   ): Path {
-    replacement = new Path(replacement);
+    if (!is(replacement, types.Path)) {
+      replacement = new Path(replacement);
+    }
 
     let searchIndex = 0;
 
@@ -375,7 +387,9 @@ class Path {
   }
 
   replaceLast(replacement: string | Path | Array<string | Path>): Path {
-    replacement = new Path(replacement);
+    if (!is(replacement, types.Path)) {
+      replacement = new Path(replacement);
+    }
 
     const segments = [...this.segments];
     segments.pop();
