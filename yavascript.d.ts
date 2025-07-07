@@ -1534,39 +1534,30 @@ declare interface ChildProcess {
 
 declare type ChildProcessState =
   | {
-      id: ChildProcessStateKind.UNSTARTED;
+      id: "UNSTARTED";
     }
   | {
-      id: ChildProcessStateKind.STARTED;
+      id: "STARTED";
       pid: number;
     }
   | {
-      id: ChildProcessStateKind.STOPPED;
+      id: "STOPPED";
       pid: number;
     }
   | {
-      id: ChildProcessStateKind.CONTINUED;
+      id: "CONTINUED";
       pid: number;
     }
   | {
-      id: ChildProcessStateKind.EXITED;
+      id: "EXITED";
       oldPid: number;
       status: number;
     }
   | {
-      id: ChildProcessStateKind.SIGNALED;
+      id: "SIGNALED";
       oldPid: number;
       signal: number;
     };
-
-declare enum ChildProcessStateKind {
-  UNSTARTED = "UNSTARTED",
-  STARTED = "STARTED",
-  STOPPED = "STOPPED",
-  CONTINUED = "CONTINUED",
-  EXITED = "EXITED",
-  SIGNALED = "SIGNALED",
-}
 
 /**
  * Options to be passed to the ChildProcess constructor. Their purposes and

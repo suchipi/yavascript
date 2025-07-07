@@ -10,38 +10,29 @@ import { types } from "../types";
 import { assert } from "../assert";
 import { Path } from "../path";
 
-export enum ChildProcessStateKind {
-  UNSTARTED = "UNSTARTED",
-  STARTED = "STARTED",
-  STOPPED = "STOPPED",
-  CONTINUED = "CONTINUED",
-  EXITED = "EXITED",
-  SIGNALED = "SIGNALED",
-}
-
 export type ChildProcessState =
   | {
-      id: ChildProcessStateKind.UNSTARTED;
+      id: "UNSTARTED";
     }
   | {
-      id: ChildProcessStateKind.STARTED;
+      id: "STARTED";
       pid: number;
     }
   | {
-      id: ChildProcessStateKind.STOPPED;
+      id: "STOPPED";
       pid: number;
     }
   | {
-      id: ChildProcessStateKind.CONTINUED;
+      id: "CONTINUED";
       pid: number;
     }
   | {
-      id: ChildProcessStateKind.EXITED;
+      id: "EXITED";
       oldPid: number;
       status: number;
     }
   | {
-      id: ChildProcessStateKind.SIGNALED;
+      id: "SIGNALED";
       oldPid: number;
       signal: number;
     };
@@ -73,7 +64,7 @@ export class ChildProcess {
     trace: (...args: Array<any>) => void;
   };
 
-  private _state: ChildProcessState = { id: ChildProcessStateKind.UNSTARTED };
+  private _state: ChildProcessState = { id: "UNSTARTED" };
 
   get state() {
     this._updateState();
@@ -169,7 +160,7 @@ export class ChildProcess {
     });
 
     this._state = {
-      id: ChildProcessStateKind.STARTED,
+      id: "STARTED",
       pid,
     };
 
@@ -179,14 +170,14 @@ export class ChildProcess {
   private _getPidRaw() {
     const state = this._state;
     switch (state.id) {
-      case ChildProcessStateKind.UNSTARTED:
+      case "UNSTARTED":
         return null;
-      case ChildProcessStateKind.STARTED:
-      case ChildProcessStateKind.STOPPED:
-      case ChildProcessStateKind.CONTINUED:
+      case "STARTED":
+      case "STOPPED":
+      case "CONTINUED":
         return state.pid;
-      case ChildProcessStateKind.EXITED:
-      case ChildProcessStateKind.SIGNALED:
+      case "EXITED":
+      case "SIGNALED":
         return state.oldPid;
       default: {
         const here: never = state;
@@ -199,13 +190,13 @@ export class ChildProcess {
 
   private _updateState() {
     switch (this._state.id) {
-      case ChildProcessStateKind.UNSTARTED:
-      case ChildProcessStateKind.EXITED:
-      case ChildProcessStateKind.SIGNALED:
+      case "UNSTARTED":
+      case "EXITED":
+      case "SIGNALED":
         return;
-      case ChildProcessStateKind.STARTED:
-      case ChildProcessStateKind.STOPPED:
-      case ChildProcessStateKind.CONTINUED:
+      case "STARTED":
+      case "STOPPED":
+      case "CONTINUED":
         this._waitpid(false);
         break;
       default: {
@@ -228,7 +219,7 @@ export class ChildProcess {
     if (ret === pid) {
       if (os.WIFEXITED(status)) {
         this._state = {
-          id: ChildProcessStateKind.EXITED,
+          id: "EXITED",
           oldPid: pid,
           status: os.WEXITSTATUS(status),
         };
@@ -241,7 +232,7 @@ export class ChildProcess {
         );
       } else if (os.WIFSIGNALED(status)) {
         this._state = {
-          id: ChildProcessStateKind.SIGNALED,
+          id: "SIGNALED",
           oldPid: pid,
           signal: os.WTERMSIG(status),
         };
@@ -254,13 +245,13 @@ export class ChildProcess {
         );
       } else if (os.WIFSTOPPED(status)) {
         this._state = {
-          id: ChildProcessStateKind.STOPPED,
+          id: "STOPPED",
           pid,
         };
         this._logging.trace.call(null, "ChildProcess stopped:", this.args);
       } else if (os.WIFCONTINUED(status)) {
         this._state = {
-          id: ChildProcessStateKind.CONTINUED,
+          id: "CONTINUED",
           pid,
         };
         this._logging.trace.call(null, "ChildProcess continued:", this.args);
@@ -276,20 +267,20 @@ export class ChildProcess {
     do {
       const rawState = this._state;
       idSwitch: switch (rawState.id) {
-        case ChildProcessStateKind.UNSTARTED: {
+        case "UNSTARTED": {
           throw new Error(
             "The ChildProcess hasn't yet started. Call ChildProcess's start() method before calling waitUntilComplete()."
           );
         }
-        case ChildProcessStateKind.EXITED: {
+        case "EXITED": {
           return { status: rawState.status, signal: undefined };
         }
-        case ChildProcessStateKind.SIGNALED: {
+        case "SIGNALED": {
           return { status: undefined, signal: rawState.signal };
         }
-        case ChildProcessStateKind.STARTED:
-        case ChildProcessStateKind.CONTINUED:
-        case ChildProcessStateKind.STOPPED: {
+        case "STARTED":
+        case "CONTINUED":
+        case "STOPPED": {
           this._waitpid(true);
           break idSwitch;
         }
