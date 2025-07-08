@@ -3,5 +3,4 @@ export {
   ChildProcess,
   ChildProcessOptions,
   ChildProcessState,
-  ChildProcessStateKind,
 } from "./ChildProcess";
