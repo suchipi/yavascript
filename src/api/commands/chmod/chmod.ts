@@ -32,7 +32,7 @@ const PERMISSIONS = {
 function permsNumberFor(
   initialPerms: number,
   operation: Chmod.Operation,
-  instructions: Record<Chmod.Who, Chmod.Permission>
+  instructions: Partial<Record<Chmod.Who, Chmod.Permission>>
 ): number {
   let perms = initialPerms;
   if (operation === "set") {
@@ -226,9 +226,11 @@ function permsNumberFor(
 
 export interface Chmod {
   (permissions: number | string, path: string | Path): void;
-  (
-    operation: Chmod.Operation,
-    permissions: Record<Chmod.Who, Chmod.Permission>,
+  <Operation extends Chmod.Operation>(
+    operation: Operation,
+    permissions: Operation extends "set"
+      ? Partial<Record<Chmod.Who, Chmod.Permission>>
+      : Record<Chmod.Who, Chmod.Permission>,
     path: string | Path
   ): void;
 }
@@ -240,11 +242,14 @@ export const chmod: Chmod = (
     | [permissions: number | string, path: string | Path]
     | [
         operation: Chmod.Operation,
-        permissions: Record<Chmod.Who, Chmod.Permission>,
+        permissions: Partial<Record<Chmod.Who, Chmod.Permission>>,
         path: string | Path
       ]
 ): void => {
-  let permissions: number | string | Record<Chmod.Who, Chmod.Permission>;
+  let permissions:
+    | number
+    | string
+    | Partial<Record<Chmod.Who, Chmod.Permission>>;
   let path: string | Path;
   let operation: Chmod.Operation = "set";
 

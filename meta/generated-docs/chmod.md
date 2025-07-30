@@ -24,9 +24,11 @@ The interface for the global function `chmod`, which has two call signatures.
 ```ts
 interface Chmod {
   (permissions: number | string, path: string | Path): void;
-  (
-    operation: Chmod.Operation,
-    permissions: Record<Chmod.Who, Chmod.Permission>,
+  <Operation extends Chmod.Operation>(
+    operation: Operation,
+    permissions: Operation extends "set"
+      ? Record<Chmod.Who, Chmod.Permission>
+      : Partial<Record<Chmod.Who, Chmod.Permission>>,
     path: string | Path
   ): void;
 }
@@ -95,7 +97,7 @@ Some example objects:
 ```
 
 ```ts
-(operation: Chmod.Operation, permissions: Record<Chmod.Who, Chmod.Permission>, path: string | Path): void;
+<Operation extends Chmod.Operation>(operation: Operation, permissions: Operation extends "set" ? Record<Chmod.Who, Chmod.Permission> : Partial<Record<Chmod.Who, Chmod.Permission>>, path: string | Path): void;
 ```
 
 # Chmod (namespace)
