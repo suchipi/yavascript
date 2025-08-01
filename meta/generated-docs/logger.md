@@ -1,6 +1,7 @@
 - [logger (object)](#logger-object)
   - [logger.trace (function property)](#loggertrace-function-property)
   - [logger.info (function property)](#loggerinfo-function-property)
+  - [logger.warn (function property)](#loggerwarn-function-property)
 
 # logger (object)
 
@@ -16,6 +17,7 @@ This object behaves similarly to the shell builtin `set -x`.
 const logger: {
   trace: (...args: Array<any>) => void;
   info: (...args: Array<any>) => void;
+  warn: (...args: Array<any>) => void;
 };
 ```
 
@@ -37,8 +39,19 @@ This property is used as the default value for `info` in yavascript API
 functions which receive `logging.info` as an option, like [exec](/meta/generated-docs/exec.md#exec-interface),
 [copy](/meta/generated-docs/filesystem.md#copy-function), and [glob](/meta/generated-docs/glob.md#glob-function).
 
-The default value of `logger.info` writes dimmed text to stdout.
+The default value of `logger.info` writes dimmed text to stderr.
 
 ```ts
 info: (...args: Array<any>) => void;
+```
+
+## logger.warn (function property)
+
+This property is used as the default value for `warn` in yavascript API
+functions which receive `logging.warn` as an option, like [readEnvBool](/meta/generated-docs/env.md#readenvbool-function).
+
+The default value of `logger.warn` writes yellow text to stderr.
+
+```ts
+warn: (...args: Array<any>) => void;
 ```

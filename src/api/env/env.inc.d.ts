@@ -5,3 +5,29 @@
  * Any value you write will be coerced into a string.
  */
 declare const env: { [key: string]: string | undefined };
+
+/**
+ * A function which reads an environment variable and returns an appropriate
+ * boolean based on the string value of the environment variable.
+ *
+ * - If the environment variable is not set, The `fallback` parameter is returned.
+ * - If the value is "1", "true", "True", or "TRUE", the boolean `true` is returned.
+ * - If the value is "0", "false", "False", or "FALSE", the boolean `false` is returned.
+ * - If the environment variable is defined but its value isn't one of the
+ *   values listed above, a warning is printed and the `fallback` parameter is returned.
+ *
+ * Generally, the `fallback` parameter is set to `true`, `false`, or `null`.
+ *
+ * @param key The environment variable to read.
+ * @param fallback Value to return if the environment variable is unset or not
+ * coercable to boolean.
+ * @param logging logger override for the warning printed when an environment
+ * variable has an unsupported value. Defaults to {@link logger}.
+ */
+declare function readEnvBool<T>(
+  key: string,
+  fallback: T,
+  logging?: {
+    warn?: (...args: Array<any>) => void;
+  }
+): boolean | T;

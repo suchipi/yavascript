@@ -36,6 +36,7 @@ const FILEstubProps = makeGetterPropertyDescriptorMap(
 
 const envProps = makeGetterPropertyDescriptorMap({
   env: () => require("./env").env,
+  readEnvBool: () => require("./env").readEnvBool,
 });
 
 const execProps = makeGetterPropertyDescriptorMap({

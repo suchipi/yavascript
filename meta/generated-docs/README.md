@@ -163,6 +163,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 - [`os`]: The "quickjs:os" module
 
 [`env`]: /meta/generated-docs/env.md#env-object
+[`readEnvBool`]: /meta/generated-docs/env.md#readenvbool-function
 [`exec`]: /meta/generated-docs/exec.md#exec-interface
 [`$`]: /meta/generated-docs/exec.md#-function
 [`ChildProcess`]: /meta/generated-docs/ChildProcess.md#childprocess-interface

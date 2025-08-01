@@ -128,6 +128,7 @@ test("globals", async () => {
     openURL throws error
     FILE throws error
     env: object
+    readEnvBool: function
     exec: function
     $: function
     ChildProcess: function

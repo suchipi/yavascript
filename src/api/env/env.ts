@@ -1,4 +1,5 @@
 import * as std from "quickjs:std";
+import { logger } from "../logger";
 
 const _env = std.getenviron();
 
@@ -42,3 +43,47 @@ export const env = new Proxy(_env, {
     return typeof result !== "undefined";
   },
 });
+
+export function readEnvBool<T>(
+  key: string,
+  fallback: T,
+  logging: {
+    warn?: (...args: Array<any>) => void;
+  } = logger
+): boolean | T {
+  const value = env[key];
+  if (value == null) {
+    return fallback;
+  }
+
+  switch (value) {
+    case "true":
+    case "True":
+    case "TRUE":
+    case "1": {
+      return true;
+    }
+
+    case "false":
+    case "False":
+    case "FALSE":
+    case "0": {
+      return false;
+    }
+
+    default: {
+      if (logging.warn) {
+        logging.warn(
+          `readEnvBool: environment variable ${JSON.stringify(
+            key
+          )} was ${JSON.stringify(
+            value
+          )}, which doesn't look like a boolean. Returning the fallback value of ${String(
+            fallback
+          )}.`
+        );
+      }
+      return fallback;
+    }
+  }
+}

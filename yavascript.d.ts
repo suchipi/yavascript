@@ -159,6 +159,32 @@ declare const yavascript: {
 declare const env: { [key: string]: string | undefined };
 
 /**
+ * A function which reads an environment variable and returns an appropriate
+ * boolean based on the string value of the environment variable.
+ *
+ * - If the environment variable is not set, The `fallback` parameter is returned.
+ * - If the value is "1", "true", "True", or "TRUE", the boolean `true` is returned.
+ * - If the value is "0", "false", "False", or "FALSE", the boolean `false` is returned.
+ * - If the environment variable is defined but its value isn't one of the
+ *   values listed above, a warning is printed and the `fallback` parameter is returned.
+ *
+ * Generally, the `fallback` parameter is set to `true`, `false`, or `null`.
+ *
+ * @param key The environment variable to read.
+ * @param fallback Value to return if the environment variable is unset or not
+ * coercable to boolean.
+ * @param logging logger override for the warning printed when an environment
+ * variable has an unsupported value. Defaults to {@link logger}.
+ */
+declare function readEnvBool<T>(
+  key: string,
+  fallback: T,
+  logging?: {
+    warn?: (...args: Array<any>) => void;
+  }
+): boolean | T;
+
+/**
  * A function which parses command line `--flags` into an object of flags and an
  * array of positional arguments. This function is opinionated; if it doesn't
  * meet your needs, you can parse the {@link scriptArgs} global manually.
@@ -3894,9 +3920,17 @@ declare const logger: {
    * functions which receive `logging.info` as an option, like {@link exec},
    * {@link copy}, and {@link glob}.
    *
-   * The default value of `logger.info` writes dimmed text to stdout.
+   * The default value of `logger.info` writes dimmed text to stderr.
    */
   info: (...args: Array<any>) => void;
+
+  /**
+   * This property is used as the default value for `warn` in yavascript API
+   * functions which receive `logging.warn` as an option, like {@link readEnvBool}.
+   *
+   * The default value of `logger.warn` writes yellow text to stderr.
+   */
+  warn: (...args: Array<any>) => void;
 };
 
 /**

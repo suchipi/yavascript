@@ -22,7 +22,15 @@ declare const logger: {
    * functions which receive `logging.info` as an option, like {@link exec},
    * {@link copy}, and {@link glob}.
    *
-   * The default value of `logger.info` writes dimmed text to stdout.
+   * The default value of `logger.info` writes dimmed text to stderr.
    */
   info: (...args: Array<any>) => void;
+
+  /**
+   * This property is used as the default value for `warn` in yavascript API
+   * functions which receive `logging.warn` as an option, like {@link readEnvBool}.
+   *
+   * The default value of `logger.warn` writes yellow text to stderr.
+   */
+  warn: (...args: Array<any>) => void;
 };
