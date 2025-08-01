@@ -210,10 +210,16 @@ export default function installApi(target: typeof globalThis) {
       get() {
         return get__filename(2);
       },
+      set(_newValue) {
+        throw new Error("__filename's value cannot be changed");
+      },
     },
     __dirname: {
       get() {
         return get__dirname(2);
+      },
+      set(_newValue) {
+        throw new Error("__dirname's value cannot be changed");
       },
     },
   });

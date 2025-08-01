@@ -4,204 +4,265 @@ test("globals", async () => {
   const result = await evaluate(`
     console.log(); // print newline first so inline snapshot is more readable
 
+    const PLACEHOLDER = Symbol("PLACEHOLDER");
+
     const globalDescriptors = Object.getOwnPropertyDescriptors(globalThis);
     for (const [key, descriptor] of Object.entries(globalDescriptors)) {
+      let logLine = key + ":";
+
+      let value;
       try {
-        const value = globalThis[key];
-        console.log(key + ":", typeof value);
+        value = globalThis[key];
+        logLine += " " + typeof value;
       } catch (err) {
-        console.log(key, "throws error")
+        logLine += " get throws error";
       }
+
+      if ((descriptor.writable || descriptor.set) && key !== "undefined" && key !== "globalThis") {
+        try {
+          globalThis[key] = PLACEHOLDER;
+          if (globalThis[key] !== PLACEHOLDER) {
+            logLine += " writable but rejects new value";
+          }
+        } catch (err) {
+          logLine += " set throws error";
+        }
+        globalThis[key] = value;
+      } else {
+        logLine += " readonly";
+      }
+
+      logLine += " (";
+      if (descriptor.get) {
+        logLine += "G";
+      }
+      if (descriptor.set) {
+        logLine += "S";
+      }
+      if (descriptor.configurable) {
+        logLine += "C";
+      }
+      if (descriptor.writable) {
+        logLine += "W";
+      }
+      if (descriptor.enumerable) {
+        logLine += "E";
+      }
+      logLine += ")";
+      
+      console.log(logLine);
     }
   `);
   expect(cleanResult(result)).toMatchInlineSnapshot(`
     {
+      "code": 1,
+      "error": false,
+      "stderr": "Error: __filename's value cannot be changed
+      at somewhere
+    ",
+      "stdout": "
+    Object: function (CW)
+    Function: function (CW)
+    Error: function (CW)
+    EvalError: function (CW)
+    RangeError: function (CW)
+    ReferenceError: function (CW)
+    SyntaxError: function (CW)
+    TypeError: function (CW)
+    URIError: function (CW)
+    InternalError: function (CW)
+    AggregateError: function (CW)
+    Array: function (CW)
+    parseInt: function (CW)
+    parseFloat: function (CW)
+    isNaN: function (CW)
+    isFinite: function (CW)
+    decodeURI: function (CW)
+    decodeURIComponent: function (CW)
+    encodeURI: function (CW)
+    encodeURIComponent: function (CW)
+    escape: function (CW)
+    unescape: function (CW)
+    Infinity: number readonly ()
+    NaN: number readonly ()
+    undefined: undefined readonly ()
+    __date_clock: function (CW)
+    Number: function (CW)
+    Boolean: function (CW)
+    String: function (CW)
+    Math: object (CW)
+    Reflect: object (CW)
+    Symbol: function (CW)
+    eval: function (CW)
+    globalThis: object readonly (CW)
+    Date: function (CW)
+    RegExp: function (CW)
+    JSON: object (CW)
+    Proxy: function (CW)
+    Map: function (CW)
+    Set: function (CW)
+    WeakMap: function (CW)
+    WeakSet: function (CW)
+    ArrayBuffer: function (CW)
+    SharedArrayBuffer: function (CW)
+    Uint8ClampedArray: function (CW)
+    Int8Array: function (CW)
+    Uint8Array: function (CW)
+    Int16Array: function (CW)
+    Uint16Array: function (CW)
+    Int32Array: function (CW)
+    Uint32Array: function (CW)
+    BigInt64Array: function (CW)
+    BigUint64Array: function (CW)
+    Float32Array: function (CW)
+    Float64Array: function (CW)
+    DataView: function (CW)
+    Atomics: object (CW)
+    Promise: function (CW)
+    BigInt: function (CW)
+    BigFloat: function (CW)
+    BigFloatEnv: function (CW)
+    BigDecimal: function (CW)
+    Operators: function (CW)
+    inspect: function (CWE)
+    print: function (GSCE)
+    console: object (GSCE)
+    setInterval: function (CWE)
+    clearInterval: function (CWE)
+    __qjsbootstrap_offset: number readonly ()
+    scriptArgs: object (CWE)
+    setTimeout: function (CWE)
+    clearTimeout: function (CWE)
+    require: function (CWE)
+    __kame_instances__: object (CWE)
+    std: object (GSCE)
+    os: object (GSCE)
+    basename: function (GSCE)
+    cat: function (GSCE)
+    cd: function (GSCE)
+    chmod: function (GSCE)
+    dirname: function (GSCE)
+    echo: function (GSCE)
+    exit: function (GSCE)
+    extname: function (GSCE)
+    ls: function (GSCE)
+    mkdir: function (GSCE)
+    mkdirp: function (GSCE)
+    printf: function (GSCE)
+    pwd: function (GSCE)
+    readlink: function (GSCE)
+    realpath: function (GSCE)
+    sleep: function (GSCE)
+    touch: function (GSCE)
+    which: function (GSCE)
+    whoami: function (GSCE)
+    ensureDir: get throws error (GSC)
+    cp: get throws error (GSC)
+    mv: get throws error (GSC)
+    ren: get throws error (GSC)
+    rm: get throws error (GSC)
+    grep: get throws error (GSC)
+    man: get throws error (GSC)
+    cwd: get throws error (GSC)
+    where: get throws error (GSC)
+    id: get throws error (GSC)
+    openURL: get throws error (GSC)
+    FILE: get throws error (GSC)
+    env: object (GSCE)
+    readEnvBool: function (GSCE)
+    exec: function (GSCE)
+    $: function (GSCE)
+    ChildProcess: function (GSCE)
+    exists: function (GSCE)
+    isFile: function (GSCE)
+    isDir: function (GSCE)
+    isLink: function (GSCE)
+    readFile: function (GSCE)
+    remove: function (GSCE)
+    writeFile: function (GSCE)
+    copy: function (GSCE)
+    rename: function (GSCE)
+    isExecutable: function (GSCE)
+    isReadable: function (GSCE)
+    isWritable: function (GSCE)
+    Path: function (GSCE)
+    glob: function (GSCE)
+    types: object (GSCE)
+    is: function (GSCE)
+    _is: function (GSCE)
+    assert: function (GSCE)
+    GitRepo: function (GSCE)
+    quote: function (GSCE)
+    stripAnsi: function (GSCE)
+    bgBlack: function (GSCE)
+    bgBlue: function (GSCE)
+    bgCyan: function (GSCE)
+    bgGreen: function (GSCE)
+    bgMagenta: function (GSCE)
+    bgRed: function (GSCE)
+    bgWhite: function (GSCE)
+    bgYellow: function (GSCE)
+    black: function (GSCE)
+    blue: function (GSCE)
+    bold: function (GSCE)
+    cyan: function (GSCE)
+    dim: function (GSCE)
+    gray: function (GSCE)
+    green: function (GSCE)
+    grey: function (GSCE)
+    hidden: function (GSCE)
+    inverse: function (GSCE)
+    italic: function (GSCE)
+    magenta: function (GSCE)
+    red: function (GSCE)
+    reset: function (GSCE)
+    strikethrough: function (GSCE)
+    underline: function (GSCE)
+    white: function (GSCE)
+    yellow: function (GSCE)
+    clear: function (GSCE)
+    openUrl: function (GSCE)
+    bigint: function (GSC)
+    boolean: function (GSC)
+    number: function (GSC)
+    string: function (GSC)
+    symbol: function (GSC)
+    JSX: object (GSCE)
+    CSV: object (GSCE)
+    YAML: object (GSCE)
+    logger: object (GSCE)
+    parseScriptArgs: function (GSCE)
+    startRepl: function (GSCE)
+    InteractivePrompt: function (GSCE)
+    yavascript: object (GSCE)
+    help: function (GSCE)
+    TOML: object (GSCE)
+    ",
+    }
+  `);
+});
+
+test("overriding yavascript api globals works", async () => {
+  const result = await evaluate(`glob = true; console.log(glob)`);
+  expect(result).toMatchInlineSnapshot(`
+    {
       "code": 0,
       "error": false,
       "stderr": "",
-      "stdout": "
-    Object: function
-    Function: function
-    Error: function
-    EvalError: function
-    RangeError: function
-    ReferenceError: function
-    SyntaxError: function
-    TypeError: function
-    URIError: function
-    InternalError: function
-    AggregateError: function
-    Array: function
-    parseInt: function
-    parseFloat: function
-    isNaN: function
-    isFinite: function
-    decodeURI: function
-    decodeURIComponent: function
-    encodeURI: function
-    encodeURIComponent: function
-    escape: function
-    unescape: function
-    Infinity: number
-    NaN: number
-    undefined: undefined
-    __date_clock: function
-    Number: function
-    Boolean: function
-    String: function
-    Math: object
-    Reflect: object
-    Symbol: function
-    eval: function
-    globalThis: object
-    Date: function
-    RegExp: function
-    JSON: object
-    Proxy: function
-    Map: function
-    Set: function
-    WeakMap: function
-    WeakSet: function
-    ArrayBuffer: function
-    SharedArrayBuffer: function
-    Uint8ClampedArray: function
-    Int8Array: function
-    Uint8Array: function
-    Int16Array: function
-    Uint16Array: function
-    Int32Array: function
-    Uint32Array: function
-    BigInt64Array: function
-    BigUint64Array: function
-    Float32Array: function
-    Float64Array: function
-    DataView: function
-    Atomics: object
-    Promise: function
-    BigInt: function
-    BigFloat: function
-    BigFloatEnv: function
-    BigDecimal: function
-    Operators: function
-    inspect: function
-    print: function
-    console: object
-    setInterval: function
-    clearInterval: function
-    __qjsbootstrap_offset: number
-    scriptArgs: object
-    setTimeout: function
-    clearTimeout: function
-    require: function
-    __kame_instances__: object
-    std: object
-    os: object
-    basename: function
-    cat: function
-    cd: function
-    chmod: function
-    dirname: function
-    echo: function
-    exit: function
-    extname: function
-    ls: function
-    mkdir: function
-    mkdirp: function
-    printf: function
-    pwd: function
-    readlink: function
-    realpath: function
-    sleep: function
-    touch: function
-    which: function
-    whoami: function
-    ensureDir throws error
-    cp throws error
-    mv throws error
-    ren throws error
-    rm throws error
-    grep throws error
-    man throws error
-    cwd throws error
-    where throws error
-    id throws error
-    openURL throws error
-    FILE throws error
-    env: object
-    readEnvBool: function
-    exec: function
-    $: function
-    ChildProcess: function
-    exists: function
-    isFile: function
-    isDir: function
-    isLink: function
-    readFile: function
-    remove: function
-    writeFile: function
-    copy: function
-    rename: function
-    isExecutable: function
-    isReadable: function
-    isWritable: function
-    Path: function
-    glob: function
-    types: object
-    is: function
-    _is: function
-    assert: function
-    GitRepo: function
-    quote: function
-    stripAnsi: function
-    bgBlack: function
-    bgBlue: function
-    bgCyan: function
-    bgGreen: function
-    bgMagenta: function
-    bgRed: function
-    bgWhite: function
-    bgYellow: function
-    black: function
-    blue: function
-    bold: function
-    cyan: function
-    dim: function
-    gray: function
-    green: function
-    grey: function
-    hidden: function
-    inverse: function
-    italic: function
-    magenta: function
-    red: function
-    reset: function
-    strikethrough: function
-    underline: function
-    white: function
-    yellow: function
-    clear: function
-    openUrl: function
-    bigint: function
-    boolean: function
-    number: function
-    string: function
-    symbol: function
-    JSX: object
-    CSV: object
-    YAML: object
-    logger: object
-    parseScriptArgs: function
-    startRepl: function
-    InteractivePrompt: function
-    yavascript: object
-    help: function
-    TOML: object
-    __filename: string
-    __dirname: string
-    grepFile: function
-    grepString: function
-    global: object
-    process: object
+      "stdout": "true
+    ",
+    }
+  `);
+});
+
+test("overriding yavascript api stubs works", async () => {
+  const result = await evaluate(`ensureDir = mkdirp; console.log(ensureDir)`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": false,
+      "stderr": "",
+      "stdout": "Function "mkdirp" {}
     ",
     }
   `);
