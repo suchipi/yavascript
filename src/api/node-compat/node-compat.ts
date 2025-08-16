@@ -1,5 +1,6 @@
 import * as std from "quickjs:std";
 import * as os from "quickjs:os";
+import * as engine from "quickjs:engine";
 import { version as ysVersion, arch as ysArch } from "../../hardcoded";
 
 export function installNodeCompat(global: any) {
@@ -54,4 +55,21 @@ export function installNodeCompat(global: any) {
     enumerable: false,
     value: process,
   });
+
+  // Work around QuickJS bug fixed in https://github.com/suchipi/quickjs/commit/3f173e219b476860828694b9f04b8e1ca7c3b419
+  // TODO: remove this once bugfix is in an npm release
+  engine.ModuleDelegate.builtinModuleNames.push("process");
+  engine.ModuleDelegate.builtinModuleNames.push("node:process");
+  const processMod = {
+    __isCjsModule: true,
+    __cjsExports: process,
+    default: process,
+  };
+  engine.defineBuiltinModule("process", processMod);
+  engine.defineBuiltinModule("node:process", processMod);
+
+  // Remove duplicates. Not needed after aforementioned bug is resolved.
+  engine.ModuleDelegate.builtinModuleNames = Array.from(
+    new Set(engine.ModuleDelegate.builtinModuleNames)
+  );
 }
