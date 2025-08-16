@@ -46,7 +46,7 @@
   "scripts": {
     "build": "meta/build.sh",
     "test": "cd meta/tests && npm run test --",
-    "typecheck": "tsc --noEmit --skipLibCheck"
+    "typecheck": "tsc --noEmit"
   },
   "prettier": {}
 }
