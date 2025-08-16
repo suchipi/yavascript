@@ -1,14 +1,14 @@
-import { memoize } from "./lazy-load";
+import { memoizeFn } from "./lazy-load";
 import * as CJS from "./cjs-interop";
 import * as npmProto from "./module-protocols/npm";
 
-const getSucrase: () => typeof import("sucrase") = memoize(() =>
+const getSucrase: () => typeof import("sucrase") = memoizeFn(() =>
   require("sucrase")
 );
-const getCoffeeScript: () => typeof import("coffeescript") = memoize(() =>
+const getCoffeeScript: () => typeof import("coffeescript") = memoizeFn(() =>
   require("coffeescript")
 );
-const getCivet: () => typeof import("@danielx/civet") = memoize(() =>
+const getCivet: () => typeof import("@danielx/civet") = memoizeFn(() =>
   require("@danielx/civet")
 );
 

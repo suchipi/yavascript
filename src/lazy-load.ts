@@ -17,6 +17,18 @@ export function memoize<T>(fn: () => T): { get(): T; set(val: T): void } {
   };
 }
 
+export function memoizeFn<T>(fn: () => T): () => T {
+  let _value: T | typeof EMPTY = EMPTY;
+
+  return () => {
+    if (_value === EMPTY) {
+      _value = fn();
+    }
+
+    return _value;
+  };
+}
+
 export function makeGetterPropertyDescriptorMap<
   Input extends { [key: string]: () => any }
 >(
