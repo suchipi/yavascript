@@ -12,6 +12,8 @@ test("logger is present", async () => {
       set info: Function "set info" {}
       get trace: Function "get trace" {}
       set trace: Function "set trace" {}
+      get warn: Function "get warn" {}
+      set warn: Function "set warn" {}
     }
     ",
     }
