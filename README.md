@@ -103,7 +103,7 @@ There are several other projects that bring a shell-like environment to JS, such
 - Linux
   - aarch64 or x86_64
   - glibc, muslc, or statically-linked
-- Windows (MinGW)
+- Windows (MinGW, not all APIs are supported)
   - x86_64
 
 ## Installation
