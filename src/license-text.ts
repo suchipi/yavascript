@@ -453,9 +453,11 @@ Rich Harris
 Sebastian McKenzie
 zsjforcn
 
-====== @jridgewell/set-array ======
+====== @jridgewell/gen-mapping ======
 
-Copyright 2022 Justin Ridgewell <jridgewell@google.com>
+The MIT License
+
+Copyright (c) 2025 Justin Ridgewell <justin@ridgewell.name>
 
 ${MIT}
 
@@ -463,7 +465,7 @@ ${MIT}
 
 The MIT License
 
-Copyright (c) 2015 Rich Harris
+Copyright 2024 Justin Ridgewell <justin@ridgewell.name>
 
 ${MIT}
 

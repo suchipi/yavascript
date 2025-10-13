@@ -72,8 +72,8 @@ test("bundled third-party code snapshot", async () => {
     [
       "@danielx/civet",
       "@iarna/toml",
+      "@jridgewell/gen-mapping",
       "@jridgewell/resolve-uri",
-      "@jridgewell/set-array",
       "@jridgewell/sourcemap-codec",
       "@jridgewell/trace-mapping",
       "@swc/helpers",
@@ -101,7 +101,11 @@ test("all third-party code in bundle has license attribution", async () => {
   const licenseText = await getLicenseTextFromBinary();
 
   for (const pkg of packages) {
-    expect(licenseText).toContain(pkg);
+    try {
+      expect(licenseText).toContain(pkg);
+    } catch (err) {
+      throw new Error(`License text didn't include ${pkg}`);
+    }
   }
 });
 

@@ -6,10 +6,10 @@
     - [process.versions.yavascript (string property)](#processversionsyavascript-string-property)
     - [process.versions.unicode (string property)](#processversionsunicode-string-property)
   - [process.arch (string property)](#processarch-string-property)
-  - [process.env (object property)](#processenv-object-property)
-  - [process.argv (property)](#processargv-property)
-  - [process.argv0 (string property)](#processargv0-string-property)
-  - [process.execPath (string property)](#processexecpath-string-property)
+  - [process.env (readonly object property)](#processenv-readonly-object-property)
+  - [process.argv (readonly property)](#processargv-readonly-property)
+  - [process.argv0 (readonly string property)](#processargv0-readonly-string-property)
+  - [process.execPath (readonly string property)](#processexecpath-readonly-string-property)
   - [process.exitCode (number property)](#processexitcode-number-property)
   - [process.exit (method)](#processexit-method)
 
@@ -94,7 +94,7 @@ unicode: string;
 arch: string;
 ```
 
-## process.env (object property)
+## process.env (readonly object property)
 
 Same as the global [env](/meta/generated-docs/env.md#env-object).
 
@@ -104,7 +104,7 @@ readonly env: {
 };
 ```
 
-## process.argv (property)
+## process.argv (readonly property)
 
 Same as the global [scriptArgs](/meta/generated-docs/libc.md#scriptargs-value).
 
@@ -112,7 +112,7 @@ Same as the global [scriptArgs](/meta/generated-docs/libc.md#scriptargs-value).
 readonly argv: Array<string>;
 ```
 
-## process.argv0 (string property)
+## process.argv0 (readonly string property)
 
 Same as `scriptArgs[0]`.
 
@@ -120,7 +120,7 @@ Same as `scriptArgs[0]`.
 readonly argv0: string;
 ```
 
-## process.execPath (string property)
+## process.execPath (readonly string property)
 
 Shortcut for `os.realpath(os.execPath())`, using the QuickJS [os](/meta/generated-docs/libc.md#quickjsos-namespace)
 module.

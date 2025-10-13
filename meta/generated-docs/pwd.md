@@ -1,6 +1,6 @@
 - [pwd (function)](#pwd-function)
   - [pwd(...) (call signature)](#pwd-call-signature)
-  - [pwd.initial (Path property)](#pwdinitial-path-property)
+  - [pwd.initial (readonly Path property)](#pwdinitial-readonly-path-property)
 
 # pwd (function)
 
@@ -25,7 +25,7 @@ Provides the same functionality as the shell builtin of the same name.
 (): Path;
 ```
 
-## pwd.initial (Path property)
+## pwd.initial (readonly Path property)
 
 A frozen, read-only `Path` object containing what `pwd()` was when
 yavascript first started up.

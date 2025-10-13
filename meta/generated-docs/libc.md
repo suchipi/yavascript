@@ -32,7 +32,8 @@
   - ["quickjs:std".puts (exported function)](#quickjsstdputs-exported-function)
   - ["quickjs:std".printf (exported function)](#quickjsstdprintf-exported-function)
   - ["quickjs:std".sprintf (exported function)](#quickjsstdsprintf-exported-function)
-  - ["quickjs:std".in\_ (FILE)](#quickjsstdin_-file)
+  - ["quickjs:std".in (exported FILE)](#quickjsstdin-exported-file)
+  - ["quickjs:std".in (exported binding)](#quickjsstdin-exported-binding)
   - ["quickjs:std".out (exported FILE)](#quickjsstdout-exported-file)
   - ["quickjs:std".err (exported FILE)](#quickjsstderr-exported-file)
   - ["quickjs:std".SEEK_SET (exported number)](#quickjsstdseek_set-exported-number)
@@ -569,7 +570,7 @@ status code passed to `setExitCode`.
 - `@param` _statusCode_ — The future exit code; 0 for success, nonzero for failure.
 
 ```ts
-function setExitCode(statusCode: number): void;
+export function setExitCode(statusCode: number): void;
 ```
 
 ## "quickjs:std".getExitCode (exported function)
@@ -580,7 +581,7 @@ it hasn't yet been set.
 Can only be called from the main thread.
 
 ```ts
-function getExitCode(): number;
+export function getExitCode(): number;
 ```
 
 ## "quickjs:std".exit (exported function)
@@ -596,7 +597,7 @@ setExitCode, `0` will be used.
 - `@param` _statusCode_ — The exit code; 0 for success, nonzero for failure.
 
 ```ts
-function exit(statusCode?: number): never;
+export function exit(statusCode?: number): never;
 ```
 
 ## "quickjs:std".loadFile (exported function)
@@ -606,7 +607,7 @@ Load the file `filename` and return it as a string assuming UTF-8 encoding.
 - `@param` _filename_ — The relative or absolute path to the file to load. Relative paths are resolved relative to the process's current working directory.
 
 ```ts
-function loadFile(filename: string): string;
+export function loadFile(filename: string): string;
 ```
 
 ## "quickjs:std".isFILE (exported function)
@@ -617,7 +618,7 @@ Return a boolean indicating whether the provided value is a FILE object.
 - `@returns` Whether the value was a `FILE` or not.
 
 ```ts
-function isFILE(value: any): boolean;
+export function isFILE(value: any): boolean;
 ```
 
 ## "quickjs:std".open (exported function)
@@ -630,7 +631,7 @@ Return the FILE object.
 - `@returns` The opened FILE object.
 
 ```ts
-function open(filename: string, flags: string): FILE;
+export function open(filename: string, flags: string): FILE;
 ```
 
 ## "quickjs:std".popen (exported function)
@@ -643,7 +644,7 @@ Return the FILE object.
 - `@returns` The opened FILE object.
 
 ```ts
-function popen(command: string, flags: string): FILE;
+export function popen(command: string, flags: string): FILE;
 ```
 
 ## "quickjs:std".fdopen (exported function)
@@ -656,7 +657,7 @@ Return the FILE object.
 - `@returns` The opened FILE object.
 
 ```ts
-function fdopen(fd: number, flags: string): FILE;
+export function fdopen(fd: number, flags: string): FILE;
 ```
 
 ## "quickjs:std".tmpfile (exported function)
@@ -667,7 +668,7 @@ Return the FILE object.
 - `@returns` The opened FILE object.
 
 ```ts
-function tmpfile(): FILE;
+export function tmpfile(): FILE;
 ```
 
 ## "quickjs:std".puts (exported function)
@@ -675,7 +676,7 @@ function tmpfile(): FILE;
 Equivalent to `std.out.puts(str)`.
 
 ```ts
-function puts(...strings: Array<string>): void;
+export function puts(...strings: Array<string>): void;
 ```
 
 ## "quickjs:std".printf (exported function)
@@ -683,7 +684,7 @@ function puts(...strings: Array<string>): void;
 Equivalent to `std.out.printf(fmt, ...args)`
 
 ```ts
-function printf(fmt: string, ...args: Array<any>): void;
+export function printf(fmt: string, ...args: Array<any>): void;
 ```
 
 ## "quickjs:std".sprintf (exported function)
@@ -691,15 +692,21 @@ function printf(fmt: string, ...args: Array<any>): void;
 Equivalent to the libc sprintf().
 
 ```ts
-function sprintf(fmt: string, ...args: Array<any>): void;
+export function sprintf(fmt: string, ...args: Array<any>): void;
 ```
 
-## "quickjs:std".in\_ (FILE)
+## "quickjs:std".in (exported FILE)
 
 Wrapper to the libc file stdin.
 
 ```ts
 var in_: FILE;
+```
+
+## "quickjs:std".in (exported binding)
+
+```ts
+export { in_ as in };
 ```
 
 ## "quickjs:std".out (exported FILE)
@@ -771,7 +778,7 @@ var _IONBF: number;
 Return the value of the environment variable `name` or `undefined` if it is not defined.
 
 ```ts
-function getenv(name: string): string | undefined;
+export function getenv(name: string): string | undefined;
 ```
 
 ## "quickjs:std".setenv (exported function)
@@ -779,7 +786,7 @@ function getenv(name: string): string | undefined;
 Set the value of the environment variable `name` to the string `value`.
 
 ```ts
-function setenv(name: string, value: string): void;
+export function setenv(name: string, value: string): void;
 ```
 
 ## "quickjs:std".unsetenv (exported function)
@@ -787,7 +794,7 @@ function setenv(name: string, value: string): void;
 Delete the environment variable `name`.
 
 ```ts
-function unsetenv(name: string): void;
+export function unsetenv(name: string): void;
 ```
 
 ## "quickjs:std".getenviron (exported function)
@@ -795,7 +802,7 @@ function unsetenv(name: string): void;
 Return an object containing the environment variables as key-value pairs.
 
 ```ts
-function getenviron(): {
+export function getenviron(): {
   [key: string]: string | undefined;
 };
 ```
@@ -808,7 +815,7 @@ This function throws an error on windows, because windows doesn't support
 the same uid/gid paradigm as Unix-like operating systems.
 
 ```ts
-function getuid(): number;
+export function getuid(): number;
 ```
 
 ## "quickjs:std".geteuid (exported function)
@@ -819,7 +826,7 @@ This function throws an error on windows, because windows doesn't support
 the same uid/gid paradigm as Unix-like operating systems.
 
 ```ts
-function geteuid(): number;
+export function geteuid(): number;
 ```
 
 ## "quickjs:std".getgid (exported function)
@@ -830,7 +837,7 @@ This function throws an error on windows, because windows doesn't support
 the same uid/gid paradigm as Unix-like operating systems.
 
 ```ts
-function getgid(): number;
+export function getgid(): number;
 ```
 
 ## "quickjs:std".getegid (exported function)
@@ -841,7 +848,7 @@ This function throws an error on windows, because windows doesn't support
 the same uid/gid paradigm as Unix-like operating systems.
 
 ```ts
-function getegid(): number;
+export function getegid(): number;
 ```
 
 ## "quickjs:std".PasswdEntry (exported interface)
@@ -912,7 +919,7 @@ This function throws an error on windows, because windows doesn't support
 the same uid/gid paradigm as Unix-like operating systems.
 
 ```ts
-function getpwuid(id: number): PasswdEntry;
+export function getpwuid(id: number): PasswdEntry;
 ```
 
 ## "quickjs:std".UrlGet (interface)
@@ -1154,7 +1161,7 @@ Parse `str` using a superset of JSON.parse. The following extensions are accepte
 - octal (0o prefix) and hexadecimal (0x prefix) numbers
 
 ```ts
-function parseExtJSON(str: string): any;
+export function parseExtJSON(str: string): any;
 ```
 
 ## "quickjs:std".strftime (exported function)
@@ -1167,7 +1174,7 @@ Formats a time/date into a format as specified by the user.
 - `@param` _time_ — The Date object (or unix timestamp, in ms) to render.
 
 ```ts
-function strftime(
+export function strftime(
   maxBytes: number,
   format: string,
   time: Date | number
@@ -1372,7 +1379,7 @@ Open a file handle. Returns a number; the file descriptor.
 - `@param` _mode_ — Octal access mask. Defaults to 0o666.
 
 ```ts
-function open(filename: string, flags: number, mode?: number): number;
+export function open(filename: string, flags: number, mode?: number): number;
 ```
 
 ## "quickjs:os".O_RDONLY (exported number)
@@ -1456,7 +1463,7 @@ var O_TEXT: number | undefined;
 Close the file with descriptor `fd`.
 
 ```ts
-function close(fd: number): void;
+export function close(fd: number): void;
 ```
 
 ## "quickjs:os".OsSeek (interface)
@@ -1497,7 +1504,7 @@ var seek: OsSeek;
 Read `length` bytes from the file with descriptor `fd` to the ArrayBuffer `buffer` at byte position `offset`. Return the number of read bytes.
 
 ```ts
-function read(
+export function read(
   fd: number,
   buffer: ArrayBuffer,
   offset: number,
@@ -1510,7 +1517,7 @@ function read(
 Write `length` bytes to the file with descriptor `fd` from the ArrayBuffer `buffer` at byte position `offset`. Return the number of written bytes.
 
 ```ts
-function write(
+export function write(
   fd: number,
   buffer: ArrayBuffer,
   offset: number,
@@ -1523,7 +1530,7 @@ function write(
 Return `true` if the file opened with descriptor `fd` is a TTY (terminal).
 
 ```ts
-function isatty(fd: number): boolean;
+export function isatty(fd: number): boolean;
 ```
 
 ## "quickjs:os".ttyGetWinSize (exported function)
@@ -1531,7 +1538,7 @@ function isatty(fd: number): boolean;
 Return the TTY size as `[width, height]` or `null` if not available.
 
 ```ts
-function ttyGetWinSize(fd: number): null | [number, number];
+export function ttyGetWinSize(fd: number): null | [number, number];
 ```
 
 ## "quickjs:os".ttySetRaw (exported function)
@@ -1539,7 +1546,7 @@ function ttyGetWinSize(fd: number): null | [number, number];
 Set the TTY in raw mode.
 
 ```ts
-function ttySetRaw(fd: number): void;
+export function ttySetRaw(fd: number): void;
 ```
 
 ## "quickjs:os".remove (exported function)
@@ -1547,7 +1554,7 @@ function ttySetRaw(fd: number): void;
 Remove a file.
 
 ```ts
-function remove(filename: string): void;
+export function remove(filename: string): void;
 ```
 
 ## "quickjs:os".rename (exported function)
@@ -1555,7 +1562,7 @@ function remove(filename: string): void;
 Rename a file.
 
 ```ts
-function rename(oldname: string, newname: string): void;
+export function rename(oldname: string, newname: string): void;
 ```
 
 ## "quickjs:os".realpath (exported function)
@@ -1563,7 +1570,7 @@ function rename(oldname: string, newname: string): void;
 Return the canonicalized absolute pathname of `path`.
 
 ```ts
-function realpath(path: string): string;
+export function realpath(path: string): string;
 ```
 
 ## "quickjs:os".getcwd (exported function)
@@ -1571,7 +1578,7 @@ function realpath(path: string): string;
 Return the current working directory.
 
 ```ts
-function getcwd(): string;
+export function getcwd(): string;
 ```
 
 ## "quickjs:os".chdir (exported function)
@@ -1579,7 +1586,7 @@ function getcwd(): string;
 Change the current directory.
 
 ```ts
-function chdir(path: string): void;
+export function chdir(path: string): void;
 ```
 
 ## "quickjs:os".mkdir (exported function)
@@ -1587,7 +1594,7 @@ function chdir(path: string): void;
 Create a directory at `path`.
 
 ```ts
-function mkdir(path: string, mode?: number): void;
+export function mkdir(path: string, mode?: number): void;
 ```
 
 ## "quickjs:os".Stats (exported type)
@@ -1701,7 +1708,7 @@ Return a stats object with the following fields:
 The times are specified in milliseconds since 1970. `lstat()` is the same as `stat()` except that it returns information about the link itself.
 
 ```ts
-function stat(path: string): Stats;
+export function stat(path: string): Stats;
 ```
 
 ## "quickjs:os".lstat (exported function)
@@ -1724,7 +1731,7 @@ Return a stats object with the following fields:
 The times are specified in milliseconds since 1970. `lstat()` is the same as `stat()` except that it returns information about the link itself.
 
 ```ts
-function lstat(path: string): Stats;
+export function lstat(path: string): Stats;
 ```
 
 ## "quickjs:os".S_IFMT (exported number)
@@ -1962,7 +1969,7 @@ Change the access and modification times of the file path.
 The times are specified in milliseconds since 1970.
 
 ```ts
-function utimes(path: string, atime: number, mtime: number): void;
+export function utimes(path: string, atime: number, mtime: number): void;
 ```
 
 ## "quickjs:os".symlink (exported function)
@@ -1970,7 +1977,7 @@ function utimes(path: string, atime: number, mtime: number): void;
 Create a link at `linkpath` containing the string `target`.
 
 ```ts
-function symlink(target: string, linkpath: string): void;
+export function symlink(target: string, linkpath: string): void;
 ```
 
 ## "quickjs:os".readlink (exported function)
@@ -1978,7 +1985,7 @@ function symlink(target: string, linkpath: string): void;
 Return the link target.
 
 ```ts
-function readlink(path: string): string;
+export function readlink(path: string): string;
 ```
 
 ## "quickjs:os".readdir (exported function)
@@ -1986,7 +1993,7 @@ function readlink(path: string): string;
 Return an array of strings containing the filenames of the directory `path`.
 
 ```ts
-function readdir(path: string): Array<string>;
+export function readdir(path: string): Array<string>;
 ```
 
 ## "quickjs:os".setReadHandler (exported function)
@@ -1994,7 +2001,7 @@ function readdir(path: string): Array<string>;
 Add a read handler to the file with descriptor `fd`. `func` is called each time there is data pending for `fd`. A single read handler per file handle is supported. Use `func = null` to remove the handler.
 
 ```ts
-function setReadHandler(fd: number, func: null | (() => void)): void;
+export function setReadHandler(fd: number, func: null | (() => void)): void;
 ```
 
 ## "quickjs:os".setWriteHandler (exported function)
@@ -2002,7 +2009,7 @@ function setReadHandler(fd: number, func: null | (() => void)): void;
 Add a write handler to the file with descriptor `fd`. `func` is called each time data can be written to `fd`. A single write handler per file handle is supported. Use `func = null` to remove the handler.
 
 ```ts
-function setWriteHandler(fd: number, func: null | (() => void)): void;
+export function setWriteHandler(fd: number, func: null | (() => void)): void;
 ```
 
 ## "quickjs:os".signal (exported function)
@@ -2010,7 +2017,10 @@ function setWriteHandler(fd: number, func: null | (() => void)): void;
 Call the function `func` when the signal `signal` happens. Only a single handler per signal number is supported. Use `null` to set the default handler or `undefined` to ignore the signal. Signal handlers can only be defined in the main thread.
 
 ```ts
-function signal(signal: number, func: null | undefined | (() => void)): void;
+export function signal(
+  signal: number,
+  func: null | undefined | (() => void)
+): void;
 ```
 
 ## "quickjs:os".SIGINT (exported number)
@@ -2154,7 +2164,7 @@ var SIGTTOU: number | undefined;
 Send the signal `sig` to the process `pid`. Use `os.SIG*` constants.
 
 ```ts
-function kill(pid: number, sig: number): void;
+export function kill(pid: number, sig: number): void;
 ```
 
 ## "quickjs:os".ExecOptions (exported type)
@@ -2263,7 +2273,7 @@ gid?: number;
 Execute a process with the arguments args, and the provided options (if any).
 
 ```ts
-function exec(args: Array<string>, options?: ExecOptions): number;
+export function exec(args: Array<string>, options?: ExecOptions): number;
 ```
 
 ## "quickjs:os".waitpid (exported function)
@@ -2275,7 +2285,7 @@ From man waitpid(2):
 waitpid(): on success, returns the process ID of the child whose state has changed; if WNOHANG was specified and one or more child(ren) specified by pid exist, but have not yet changed state, then 0 is returned.
 
 ```ts
-function waitpid(pid: number, options?: number): [number, number];
+export function waitpid(pid: number, options?: number): [number, number];
 ```
 
 ## "quickjs:os".WNOHANG (exported number)
@@ -2299,7 +2309,7 @@ var WUNTRACED: number;
 Function to be used to interpret the 'status' return value of `waitpid`.
 
 ```ts
-function WEXITSTATUS(status: number): number;
+export function WEXITSTATUS(status: number): number;
 ```
 
 ## "quickjs:os".WTERMSIG (exported function)
@@ -2307,7 +2317,7 @@ function WEXITSTATUS(status: number): number;
 Function to be used to interpret the 'status' return value of `waitpid`.
 
 ```ts
-function WTERMSIG(status: number): number;
+export function WTERMSIG(status: number): number;
 ```
 
 ## "quickjs:os".WSTOPSIG (exported function)
@@ -2315,7 +2325,7 @@ function WTERMSIG(status: number): number;
 Function to be used to interpret the 'status' return value of `waitpid`.
 
 ```ts
-function WSTOPSIG(status: number): number;
+export function WSTOPSIG(status: number): number;
 ```
 
 ## "quickjs:os".WIFEXITED (exported function)
@@ -2323,7 +2333,7 @@ function WSTOPSIG(status: number): number;
 Function to be used to interpret the 'status' return value of `waitpid`.
 
 ```ts
-function WIFEXITED(status: number): boolean;
+export function WIFEXITED(status: number): boolean;
 ```
 
 ## "quickjs:os".WIFSIGNALED (exported function)
@@ -2331,7 +2341,7 @@ function WIFEXITED(status: number): boolean;
 Function to be used to interpret the 'status' return value of `waitpid`.
 
 ```ts
-function WIFSIGNALED(status: number): boolean;
+export function WIFSIGNALED(status: number): boolean;
 ```
 
 ## "quickjs:os".WIFSTOPPED (exported function)
@@ -2339,7 +2349,7 @@ function WIFSIGNALED(status: number): boolean;
 Function to be used to interpret the 'status' return value of `waitpid`.
 
 ```ts
-function WIFSTOPPED(status: number): boolean;
+export function WIFSTOPPED(status: number): boolean;
 ```
 
 ## "quickjs:os".WIFCONTINUED (exported function)
@@ -2347,7 +2357,7 @@ function WIFSTOPPED(status: number): boolean;
 Function to be used to interpret the 'status' return value of `waitpid`.
 
 ```ts
-function WIFCONTINUED(status: number): boolean;
+export function WIFCONTINUED(status: number): boolean;
 ```
 
 ## "quickjs:os".dup (exported function)
@@ -2355,7 +2365,7 @@ function WIFCONTINUED(status: number): boolean;
 `dup` Unix system call.
 
 ```ts
-function dup(fd: number): number;
+export function dup(fd: number): number;
 ```
 
 ## "quickjs:os".dup2 (exported function)
@@ -2363,7 +2373,7 @@ function dup(fd: number): number;
 `dup2` Unix system call.
 
 ```ts
-function dup2(oldfd: number, newfd: number): number;
+export function dup2(oldfd: number, newfd: number): number;
 ```
 
 ## "quickjs:os".pipe (exported function)
@@ -2371,7 +2381,7 @@ function dup2(oldfd: number, newfd: number): number;
 `pipe` Unix system call. Return two handles as `[read_fd, write_fd]`.
 
 ```ts
-function pipe(): [number, number];
+export function pipe(): [number, number];
 ```
 
 ## "quickjs:os".sleep (exported function)
@@ -2379,7 +2389,7 @@ function pipe(): [number, number];
 Sleep for `delay_ms` milliseconds.
 
 ```ts
-function sleep(delay_ms: number): void;
+export function sleep(delay_ms: number): void;
 ```
 
 ## "quickjs:os".OSTimer (exported type)
@@ -2395,7 +2405,7 @@ type OSTimer = {
 Call the function func after delay ms. Return a handle to the timer.
 
 ```ts
-function setTimeout(func: (...args: any) => any, delay: number): OSTimer;
+export function setTimeout(func: (...args: any) => any, delay: number): OSTimer;
 ```
 
 ## "quickjs:os".clearTimeout (exported function)
@@ -2403,7 +2413,7 @@ function setTimeout(func: (...args: any) => any, delay: number): OSTimer;
 Cancel a timer.
 
 ```ts
-function clearTimeout(handle: OSTimer): void;
+export function clearTimeout(handle: OSTimer): void;
 ```
 
 ## "quickjs:os".platform (exported value)
@@ -2548,7 +2558,7 @@ var F_OK: number;
 `access` Unix system call; checks if a file is readable, writable, executable, and/or exists (use [R_OK](/meta/generated-docs/libc.md#quickjsosr_ok-exported-number), [W_OK](/meta/generated-docs/libc.md#quickjsosw_ok-exported-number), [X_OK](/meta/generated-docs/libc.md#quickjsosx_ok-exported-number), and/or [F_OK](/meta/generated-docs/libc.md#quickjsosf_ok-exported-number) for `accessMode`). Throws a descriptive error (with errno property) if the requested access is not available; otherwise, returns undefined.
 
 ```ts
-function access(path: string, accessMode: number): void;
+export function access(path: string, accessMode: number): void;
 ```
 
 ## "quickjs:os".execPath (exported function)
@@ -2556,7 +2566,7 @@ function access(path: string, accessMode: number): void;
 gets the path to the executable which is executing this JS code. might be a relative path or symlink.
 
 ```ts
-function execPath(): string;
+export function execPath(): string;
 ```
 
 ## "quickjs:os".chmod (exported function)
@@ -2564,7 +2574,7 @@ function execPath(): string;
 changes the access permission bits of the file at `path` using the octal number `mode`.
 
 ```ts
-function chmod(path: string, mode: number): void;
+export function chmod(path: string, mode: number): void;
 ```
 
 # setTimeout (value)

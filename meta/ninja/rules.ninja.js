@@ -29,7 +29,7 @@ rule("kame", {
   const quickjsBinsPath = path.join(
     buildArtifactsLocation(),
     identifyCurrentPlatform().name,
-    "bin"
+    "bin",
   );
 
   const quickjsBinsPathRel = path.relative(process.cwd(), quickjsBinsPath);
@@ -39,7 +39,7 @@ rule("kame", {
     (process.platform === "win32" ? ".exe" : "");
   const fileToByteCodePath = path.join(
     quickjsBinsPathRel,
-    "file-to-bytecode.js"
+    "file-to-bytecode.js",
   );
 
   rule("to-bytecode", {
@@ -83,7 +83,7 @@ rule("prettier", {
 const docLinksFile = rel("../scripts/lib/generated-doc-links.json5");
 rule("dtsmd", {
   command: `npx --no-install dtsmd --links-file ${JSON.stringify(
-    docLinksFile
+    docLinksFile,
   )} $in > $out`,
   description: "DTSMD $out",
   implicitInputs: [`node_modules/@suchipi/dtsmd/dist/cli.js`, docLinksFile],
@@ -98,7 +98,7 @@ rule("md-links-from-json5", {
 rule("markdown-toc", {
   command: `node meta/scripts/markdown-toc.js --input $in --output $out`,
   description: "MD-TOC $out",
-  implicitInputs: [walkJsDeps("meta/scripts/markdown-toc.js")],
+  implicitInputs: walkJsDeps("meta/scripts/markdown-toc.js"),
 });
 
 rule("combine", {

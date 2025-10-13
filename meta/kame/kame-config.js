@@ -23,6 +23,7 @@ exports.resolve = (id, fromFilePath) => {
     case "node:path":
     case "node:module":
     case "node:process":
+    case "buffer":
     case "node:buffer":
     case "vm":
     case "node:vm":

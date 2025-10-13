@@ -22,7 +22,7 @@
     - [ChildProcessOptions.logging.trace (function property)](#childprocessoptionsloggingtrace-function-property)
 - [ChildProcessConstructor (interface)](#childprocessconstructor-interface)
   - [ChildProcessConstructor new(...) (construct signature)](#childprocessconstructor-new-construct-signature)
-  - [ChildProcessConstructor.prototype (ChildProcess property)](#childprocessconstructorprototype-childprocess-property)
+  - [ChildProcessConstructor.prototype (readonly ChildProcess property)](#childprocessconstructorprototype-readonly-childprocess-property)
 - [ChildProcess (ChildProcessConstructor)](#childprocess-childprocessconstructor)
 
 # ChildProcess (interface)
@@ -318,7 +318,7 @@ Construct a new ChildProcess.
 new (args: string | Path | Array<string | number | Path>, options?: ChildProcessOptions): ChildProcess;
 ```
 
-## ChildProcessConstructor.prototype (ChildProcess property)
+## ChildProcessConstructor.prototype (readonly ChildProcess property)
 
 ```ts
 readonly prototype: ChildProcess;

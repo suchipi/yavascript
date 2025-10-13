@@ -4,8 +4,8 @@
 - [StringConstructor (interface)](#stringconstructor-interface)
   - [StringConstructor.cooked (method)](#stringconstructorcooked-method)
 - [SymbolConstructor (interface)](#symbolconstructor-interface)
-  - [SymbolConstructor.typeofValue (property)](#symbolconstructortypeofvalue-property)
-  - [SymbolConstructor.operatorSet (property)](#symbolconstructoroperatorset-property)
+  - [SymbolConstructor.typeofValue (readonly property)](#symbolconstructortypeofvalue-readonly-property)
+  - [SymbolConstructor.operatorSet (readonly property)](#symbolconstructoroperatorset-readonly-property)
 - [OperatorSet (type)](#operatorset-type)
   - [OperatorSet.**is** (`"OperatorSet"` property)](#operatorsetis-operatorset-property)
 - [OperatorFunctions (interface)](#operatorfunctions-interface)
@@ -48,17 +48,17 @@
   - [BigFloatEnvConstructor.prec (getter)](#bigfloatenvconstructorprec-getter)
   - [BigFloatEnvConstructor.expBits (getter)](#bigfloatenvconstructorexpbits-getter)
   - [BigFloatEnvConstructor.setPrec (method)](#bigfloatenvconstructorsetprec-method)
-  - [BigFloatEnvConstructor.precMin (number property)](#bigfloatenvconstructorprecmin-number-property)
-  - [BigFloatEnvConstructor.precMax (number property)](#bigfloatenvconstructorprecmax-number-property)
-  - [BigFloatEnvConstructor.expBitsMin (number property)](#bigfloatenvconstructorexpbitsmin-number-property)
-  - [BigFloatEnvConstructor.expBitsMax (number property)](#bigfloatenvconstructorexpbitsmax-number-property)
-  - [BigFloatEnvConstructor.RNDN (BigFloatRoundingMode property)](#bigfloatenvconstructorrndn-bigfloatroundingmode-property)
-  - [BigFloatEnvConstructor.RNDZ (BigFloatRoundingMode property)](#bigfloatenvconstructorrndz-bigfloatroundingmode-property)
-  - [BigFloatEnvConstructor.RNDD (BigFloatRoundingMode property)](#bigfloatenvconstructorrndd-bigfloatroundingmode-property)
-  - [BigFloatEnvConstructor.RNDU (BigFloatRoundingMode property)](#bigfloatenvconstructorrndu-bigfloatroundingmode-property)
-  - [BigFloatEnvConstructor.RNDNA (BigFloatRoundingMode property)](#bigfloatenvconstructorrndna-bigfloatroundingmode-property)
-  - [BigFloatEnvConstructor.RNDA (BigFloatRoundingMode property)](#bigfloatenvconstructorrnda-bigfloatroundingmode-property)
-  - [BigFloatEnvConstructor.RNDF (BigFloatRoundingMode property)](#bigfloatenvconstructorrndf-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.precMin (readonly number property)](#bigfloatenvconstructorprecmin-readonly-number-property)
+  - [BigFloatEnvConstructor.precMax (readonly number property)](#bigfloatenvconstructorprecmax-readonly-number-property)
+  - [BigFloatEnvConstructor.expBitsMin (readonly number property)](#bigfloatenvconstructorexpbitsmin-readonly-number-property)
+  - [BigFloatEnvConstructor.expBitsMax (readonly number property)](#bigfloatenvconstructorexpbitsmax-readonly-number-property)
+  - [BigFloatEnvConstructor.RNDN (readonly BigFloatRoundingMode property)](#bigfloatenvconstructorrndn-readonly-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDZ (readonly BigFloatRoundingMode property)](#bigfloatenvconstructorrndz-readonly-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDD (readonly BigFloatRoundingMode property)](#bigfloatenvconstructorrndd-readonly-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDU (readonly BigFloatRoundingMode property)](#bigfloatenvconstructorrndu-readonly-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDNA (readonly BigFloatRoundingMode property)](#bigfloatenvconstructorrndna-readonly-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDA (readonly BigFloatRoundingMode property)](#bigfloatenvconstructorrnda-readonly-bigfloatroundingmode-property)
+  - [BigFloatEnvConstructor.RNDF (readonly BigFloatRoundingMode property)](#bigfloatenvconstructorrndf-readonly-bigfloatroundingmode-property)
   - [BigFloatEnvConstructor.prototype (BigFloatEnv property)](#bigfloatenvconstructorprototype-bigfloatenv-property)
 - [BigFloatEnv (BigFloatEnvConstructor)](#bigfloatenv-bigfloatenvconstructor)
 - [BigFloatEnv (interface)](#bigfloatenv-interface)
@@ -207,7 +207,7 @@ interface SymbolConstructor {
 }
 ```
 
-## SymbolConstructor.typeofValue (property)
+## SymbolConstructor.typeofValue (readonly property)
 
 A method that changes the result of using the `typeof` operator on the
 object. Called by the semantics of the typeof operator.
@@ -231,7 +231,7 @@ on an object:
 readonly typeofValue: unique symbol;
 ```
 
-## SymbolConstructor.operatorSet (property)
+## SymbolConstructor.operatorSet (readonly property)
 
 To override operators (+, -, ==, etc) for an object, set its
 `Symbol.operatorSet` property to an `OperatorSet` object, which can be
@@ -680,7 +680,7 @@ If expBits is undefined, it is set to [BigFloatEnv.expBitsMax](/meta/generated-d
 setPrec<Ret>(func: () => Ret, prec: number, expBits?: number): Ret;
 ```
 
-## BigFloatEnvConstructor.precMin (number property)
+## BigFloatEnvConstructor.precMin (readonly number property)
 
 Integer; the minimum allowed precision. Must be at least 2.
 
@@ -688,7 +688,7 @@ Integer; the minimum allowed precision. Must be at least 2.
 readonly precMin: number;
 ```
 
-## BigFloatEnvConstructor.precMax (number property)
+## BigFloatEnvConstructor.precMax (readonly number property)
 
 Integer; the maximum allowed precision. Must be at least 113.
 
@@ -696,7 +696,7 @@ Integer; the maximum allowed precision. Must be at least 113.
 readonly precMax: number;
 ```
 
-## BigFloatEnvConstructor.expBitsMin (number property)
+## BigFloatEnvConstructor.expBitsMin (readonly number property)
 
 Integer; the minimum allowed exponent size in bits. Must be at least 3.
 
@@ -704,7 +704,7 @@ Integer; the minimum allowed exponent size in bits. Must be at least 3.
 readonly expBitsMin: number;
 ```
 
-## BigFloatEnvConstructor.expBitsMax (number property)
+## BigFloatEnvConstructor.expBitsMax (readonly number property)
 
 Integer; the maximum allowed exponent size in bits. Must be at least 15.
 
@@ -712,7 +712,7 @@ Integer; the maximum allowed exponent size in bits. Must be at least 15.
 readonly expBitsMax: number;
 ```
 
-## BigFloatEnvConstructor.RNDN (BigFloatRoundingMode property)
+## BigFloatEnvConstructor.RNDN (readonly BigFloatRoundingMode property)
 
 Round to nearest, with ties to even rounding mode.
 
@@ -720,7 +720,7 @@ Round to nearest, with ties to even rounding mode.
 readonly RNDN: BigFloatRoundingMode;
 ```
 
-## BigFloatEnvConstructor.RNDZ (BigFloatRoundingMode property)
+## BigFloatEnvConstructor.RNDZ (readonly BigFloatRoundingMode property)
 
 Round to zero rounding mode.
 
@@ -728,7 +728,7 @@ Round to zero rounding mode.
 readonly RNDZ: BigFloatRoundingMode;
 ```
 
-## BigFloatEnvConstructor.RNDD (BigFloatRoundingMode property)
+## BigFloatEnvConstructor.RNDD (readonly BigFloatRoundingMode property)
 
 Round to -Infinity rounding mode.
 
@@ -736,7 +736,7 @@ Round to -Infinity rounding mode.
 readonly RNDD: BigFloatRoundingMode;
 ```
 
-## BigFloatEnvConstructor.RNDU (BigFloatRoundingMode property)
+## BigFloatEnvConstructor.RNDU (readonly BigFloatRoundingMode property)
 
 Round to +Infinity rounding mode.
 
@@ -744,7 +744,7 @@ Round to +Infinity rounding mode.
 readonly RNDU: BigFloatRoundingMode;
 ```
 
-## BigFloatEnvConstructor.RNDNA (BigFloatRoundingMode property)
+## BigFloatEnvConstructor.RNDNA (readonly BigFloatRoundingMode property)
 
 Round to nearest, with ties away from zero rounding mode.
 
@@ -752,7 +752,7 @@ Round to nearest, with ties away from zero rounding mode.
 readonly RNDNA: BigFloatRoundingMode;
 ```
 
-## BigFloatEnvConstructor.RNDA (BigFloatRoundingMode property)
+## BigFloatEnvConstructor.RNDA (readonly BigFloatRoundingMode property)
 
 Round away from zero rounding mode.
 
@@ -760,7 +760,7 @@ Round away from zero rounding mode.
 readonly RNDA: BigFloatRoundingMode;
 ```
 
-## BigFloatEnvConstructor.RNDF (BigFloatRoundingMode property)
+## BigFloatEnvConstructor.RNDF (readonly BigFloatRoundingMode property)
 
 Faithful rounding mode. The result is non-deterministically rounded to
 -Infinity or +Infinity.

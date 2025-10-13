@@ -55,7 +55,7 @@ the module.
 The main module can be set via [setMainModule](/meta/generated-docs/engine.md#quickjsenginesetmainmodule-exported-function).
 
 ```ts
-function isMainModule(resolvedFilepath: string): boolean;
+export function isMainModule(resolvedFilepath: string): boolean;
 ```
 
 ## "quickjs:engine".setMainModule (exported function)
@@ -67,7 +67,7 @@ future, but it will NOT retroactively change the value of
 `import.meta.main` in existing already-loaded modules.
 
 ```ts
-function setMainModule(resolvedFilepath: string): void;
+export function setMainModule(resolvedFilepath: string): void;
 ```
 
 ## "quickjs:engine".evalScript (exported function)
@@ -81,7 +81,7 @@ Evaluate the string `code` as a script (global eval).
 - `@returns` The result of the evaluation.
 
 ```ts
-function evalScript(
+export function evalScript(
   code: string,
   options?: {
     backtraceBarrier?: boolean;
@@ -98,7 +98,7 @@ Evaluate the file `filename` as a script (global eval).
 - `@returns` The result of the evaluation.
 
 ```ts
-function runScript(filename: string): any;
+export function runScript(filename: string): any;
 ```
 
 ## "quickjs:engine".importModule (exported function)
@@ -110,7 +110,7 @@ Evaluate the file `filename` as a module. Effectively a synchronous dynamic `imp
 - `@returns` The result of the evaluation (module namespace object).
 
 ```ts
-function importModule(
+export function importModule(
   filename: string,
   basename?: string
 ): {
@@ -127,7 +127,7 @@ Return the resolved path to a module.
 - `@returns` The resolved module path.
 
 ```ts
-function resolveModule(filename: string, basename?: string): string;
+export function resolveModule(filename: string, basename?: string): string;
 ```
 
 ## "quickjs:engine".getFileNameFromStack (exported function)
@@ -139,7 +139,7 @@ If there isn't a valid filename for the specified stack frame, an error will be 
 - `@param` _stackLevels_ — How many levels up the stack to search for a filename. Defaults to 0, which uses the current stack frame.
 
 ```ts
-function getFileNameFromStack(stackLevels?: number): string;
+export function getFileNameFromStack(stackLevels?: number): string;
 ```
 
 ## "quickjs:engine".isModuleNamespace (exported function)
@@ -147,7 +147,7 @@ function getFileNameFromStack(stackLevels?: number): string;
 Returns true if `target` is a module namespace object.
 
 ```ts
-function isModuleNamespace(target: any): boolean;
+export function isModuleNamespace(target: any): boolean;
 ```
 
 ## "quickjs:engine".defineBuiltinModule (exported function)
@@ -156,7 +156,7 @@ Create a virtual built-in module whose exports consist of the own
 enumerable properties of `obj`.
 
 ```ts
-function defineBuiltinModule(
+export function defineBuiltinModule(
   name: string,
   obj: {
     [key: string]: any;
@@ -181,5 +181,5 @@ The cycle removal algorithm is automatically started when needed, so this
 function is useful in case of specific memory constraints or for testing.
 
 ```ts
-function gc(): void;
+export function gc(): void;
 ```

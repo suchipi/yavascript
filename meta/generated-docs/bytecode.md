@@ -32,7 +32,7 @@ Convert the module or script in the specified file into bytecode.
 When converted back to a value, it will be a function.
 
 ```ts
-function fromFile(
+export function fromFile(
   path: string,
   options?: {
     byteSwap?: boolean;
@@ -47,7 +47,7 @@ function fromFile(
 Convert the provided value into bytecode. Doesn't work with all values.
 
 ```ts
-function fromValue(
+export function fromValue(
   value: any,
   options?: {
     byteSwap?: boolean;
@@ -60,5 +60,5 @@ function fromValue(
 Convert the provided bytecode into a value.
 
 ```ts
-function toValue(bytecode: ArrayBuffer): any;
+export function toValue(bytecode: ArrayBuffer): any;
 ```

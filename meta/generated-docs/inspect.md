@@ -57,7 +57,7 @@
   - [InspectCustomInputs.linesBefore (property)](#inspectcustominputslinesbefore-property)
   - [InspectCustomInputs.linesAfter (property)](#inspectcustominputslinesafter-property)
   - [InspectCustomInputs.propLines (property)](#inspectcustominputsproplines-property)
-  - [InspectCustomInputs.tooDeep (boolean property)](#inspectcustominputstoodeep-boolean-property)
+  - [InspectCustomInputs.tooDeep (readonly boolean property)](#inspectcustominputstoodeep-readonly-boolean-property)
   - [InspectCustomInputs.indent (string property)](#inspectcustominputsindent-string-property)
   - [InspectCustomInputs.typeSuffix (string property)](#inspectcustominputstypesuffix-string-property)
   - [InspectCustomInputs.opts (InspectOptions property)](#inspectcustominputsopts-inspectoptions-property)
@@ -528,7 +528,7 @@ linesAfter: Array<string>;
 propLines: Array<string>;
 ```
 
-## InspectCustomInputs.tooDeep (boolean property)
+## InspectCustomInputs.tooDeep (readonly boolean property)
 
 ```ts
 readonly tooDeep: boolean;
