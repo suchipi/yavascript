@@ -57,7 +57,7 @@ returning a boolean).
 ```ts
 const is: <T extends TypeValidator<any> | CoerceableToTypeValidator>(
   value: any,
-  type: T
+  type: T,
 ) => value is UnwrapTypeFromCoerceableOrValidator<T>;
 ```
 

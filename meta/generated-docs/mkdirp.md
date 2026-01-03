@@ -17,6 +17,6 @@ declare function mkdirp(
       trace?: (...args: Array<any>) => void;
       info?: (...args: Array<any>) => void;
     };
-  }
+  },
 ): void;
 ```

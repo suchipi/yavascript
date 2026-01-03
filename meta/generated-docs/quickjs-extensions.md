@@ -149,7 +149,7 @@
 interface ObjectConstructor {
   toPrimitive(
     input: any,
-    hint: "string" | "number" | "default"
+    hint: "string" | "number" | "default",
   ): string | number | bigint | boolean | undefined | symbol | null;
   isPrimitive(input: any): boolean;
 }
@@ -382,7 +382,7 @@ interface OperatorsConstructor {
     ...otherOperators: Array<LeftOperators<T, any> | RightOperators<T, any>>
   ) => OperatorSet;
   updateBigIntOperators(
-    ops: Pick<OperatorFunctions<BigInt, BigInt>, "/" | "**">
+    ops: Pick<OperatorFunctions<BigInt, BigInt>, "/" | "**">,
   ): void;
 }
 ```
@@ -1356,17 +1356,17 @@ interface BigFloat {
   toPrecision(
     precision: number,
     roundingMode?: BigFloatRoundingMode,
-    radix?: number
+    radix?: number,
   ): string;
   toFixed(
     fractionDigits: number,
     roundingMode?: BigFloatRoundingMode,
-    radix?: number
+    radix?: number,
   ): string;
   toExponential(
     fractionDigits: number,
     roundingMode?: BigFloatRoundingMode,
-    radix?: number
+    radix?: number,
   ): string;
   [Symbol.typeofValue]: () => "bigfloat";
 }
@@ -1588,11 +1588,11 @@ interface BigDecimal {
   toPrecision(precision: number, roundingMode?: BigDecimalRoundingMode): string;
   toFixed(
     fractionDigits: number,
-    roundingMode?: BigDecimalRoundingMode
+    roundingMode?: BigDecimalRoundingMode,
   ): string;
   toExponential(
     fractionDigits: number,
-    roundingMode?: BigDecimalRoundingMode
+    roundingMode?: BigDecimalRoundingMode,
   ): string;
 }
 ```

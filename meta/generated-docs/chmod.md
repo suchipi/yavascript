@@ -29,7 +29,7 @@ interface Chmod {
     permissions: Operation extends "set"
       ? Record<Chmod.Who, Chmod.Permission>
       : Partial<Record<Chmod.Who, Chmod.Permission>>,
-    path: string | Path
+    path: string | Path,
   ): void;
 }
 ```

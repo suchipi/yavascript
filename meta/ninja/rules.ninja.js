@@ -77,7 +77,7 @@ rule("macaroni", {
 rule("prettier", {
   command: "npx --no-install prettier $PRETTIER_FLAGS $in > $out",
   description: "PRETTIER $out",
-  implicitInputs: [`node_modules/prettier/bin-prettier.js`],
+  implicitInputs: [`node_modules/prettier/bin/prettier.cjs`],
 });
 
 const docLinksFile = rel("../scripts/lib/generated-doc-links.json5");

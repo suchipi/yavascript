@@ -1326,6 +1326,7 @@ declare interface WhoAmIResult {
  */
 declare function whoami(): WhoAmIResult;
 
+
 /**
  * Runs a child process and blocks until it exits. You can call it with either a
  * string or an array of strings.
@@ -4441,6 +4442,7 @@ declare var process: {
   exit(code?: number | null | undefined): void;
 };
 
+
 // ==========================================
 // ------------------------------------------
 // QuickJS APIs, which YavaScript builds upon
@@ -6989,9 +6991,11 @@ declare module "quickjs:encoding" {
   export function fromUtf8(input: string): ArrayBuffer;
 }
 
+
 declare const std: typeof import("quickjs:std");
 declare const os: typeof import("quickjs:os");
 
 // undocumented from quickjs, but it's there
 /** Get the current unix timestamp with microsecond precision. */
 declare function __date_clock(): number;
+

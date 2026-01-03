@@ -11,7 +11,7 @@ YAML documents, following the same pattern as JavaScript's `JSON` builtin.
 const YAML: {
   parse(
     input: string,
-    reviver?: (this: any, key: string, value: any) => any
+    reviver?: (this: any, key: string, value: any) => any,
   ): any;
   stringify(
     input: any,
@@ -19,7 +19,7 @@ const YAML: {
       | ((this: any, key: string, value: any) => any)
       | (number | string)[]
       | null,
-    indent?: number
+    indent?: number,
   ): string;
 };
 ```

@@ -34,7 +34,7 @@ const grepString: {
     pattern: string | RegExp,
     options: GrepOptions & {
       details: true;
-    }
+    },
   ): Array<GrepMatchDetail>;
   (str: string, pattern: string | RegExp, options?: GrepOptions): Array<string>;
 };
@@ -72,12 +72,12 @@ const grepFile: {
     pattern: string | RegExp,
     options: GrepOptions & {
       details: true;
-    }
+    },
   ): Array<GrepMatchDetail>;
   (
     path: string | Path,
     pattern: string | RegExp,
-    options?: GrepOptions
+    options?: GrepOptions,
   ): Array<string>;
 };
 ```
@@ -105,7 +105,7 @@ interface String {
       pattern: string | RegExp,
       options: GrepOptions & {
         details: true;
-      }
+      },
     ): Array<GrepMatchDetail>;
     (pattern: string | RegExp, options?: GrepOptions): Array<string>;
   };

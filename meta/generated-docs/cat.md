@@ -23,13 +23,13 @@ const cat: {
     paths: string | Path | Array<string | Path>,
     options: {
       binary: false;
-    }
+    },
   ): string;
   (
     paths: string | Path | Array<string | Path>,
     options: {
       binary: true;
-    }
+    },
   ): ArrayBuffer;
 };
 ```

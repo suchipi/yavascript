@@ -482,39 +482,39 @@ declare module "quickjs:std" {
       url: string,
       options: {
         binary: false;
-      }
+      },
     ): string;
     (
       url: string,
       options: {
         full: false;
-      }
+      },
     ): string;
     (
       url: string,
       options: {
         binary: false;
         full: false;
-      }
+      },
     ): string;
     (
       url: string,
       options: {
         binary: true;
-      }
+      },
     ): ArrayBuffer;
     (
       url: string,
       options: {
         binary: true;
         full: false;
-      }
+      },
     ): ArrayBuffer;
     (
       url: string,
       options: {
         full: true;
-      }
+      },
     ): {
       status: number;
       response: string;
@@ -525,7 +525,7 @@ declare module "quickjs:std" {
       options: {
         full: true;
         binary: false;
-      }
+      },
     ): {
       status: number;
       response: string;
@@ -536,7 +536,7 @@ declare module "quickjs:std" {
       options: {
         full: true;
         binary: true;
-      }
+      },
     ): {
       status: number;
       response: ArrayBuffer;
@@ -548,7 +548,7 @@ declare module "quickjs:std" {
   export function strftime(
     maxBytes: number,
     format: string,
-    time: Date | number
+    time: Date | number,
   ): string;
 }
 ```
@@ -931,39 +931,39 @@ interface UrlGet {
     url: string,
     options: {
       binary: false;
-    }
+    },
   ): string;
   (
     url: string,
     options: {
       full: false;
-    }
+    },
   ): string;
   (
     url: string,
     options: {
       binary: false;
       full: false;
-    }
+    },
   ): string;
   (
     url: string,
     options: {
       binary: true;
-    }
+    },
   ): ArrayBuffer;
   (
     url: string,
     options: {
       binary: true;
       full: false;
-    }
+    },
   ): ArrayBuffer;
   (
     url: string,
     options: {
       full: true;
-    }
+    },
   ): {
     status: number;
     response: string;
@@ -974,7 +974,7 @@ interface UrlGet {
     options: {
       full: true;
       binary: false;
-    }
+    },
   ): {
     status: number;
     response: string;
@@ -985,7 +985,7 @@ interface UrlGet {
     options: {
       full: true;
       binary: true;
-    }
+    },
   ): {
     status: number;
     response: ArrayBuffer;
@@ -1177,7 +1177,7 @@ Formats a time/date into a format as specified by the user.
 export function strftime(
   maxBytes: number,
   format: string,
-  time: Date | number
+  time: Date | number,
 ): string;
 ```
 
@@ -1205,13 +1205,13 @@ declare module "quickjs:os" {
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
-    length: number
+    length: number,
   ): number;
   export function write(
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
-    length: number
+    length: number,
   ): number;
   export function isatty(fd: number): boolean;
   export function ttyGetWinSize(fd: number): null | [number, number];
@@ -1268,7 +1268,7 @@ declare module "quickjs:os" {
   export function setWriteHandler(fd: number, func: null | (() => void)): void;
   export function signal(
     signal: number,
-    func: null | undefined | (() => void)
+    func: null | undefined | (() => void),
   ): void;
   export var SIGINT: number;
   export var SIGABRT: number;
@@ -1322,7 +1322,7 @@ declare module "quickjs:os" {
   };
   export function setTimeout(
     func: (...args: any) => any,
-    delay: number
+    delay: number,
   ): OSTimer;
   export function clearTimeout(handle: OSTimer): void;
   export var platform: "linux" | "darwin" | "win32" | "freebsd" | "js";
@@ -1508,7 +1508,7 @@ export function read(
   fd: number,
   buffer: ArrayBuffer,
   offset: number,
-  length: number
+  length: number,
 ): number;
 ```
 
@@ -1521,7 +1521,7 @@ export function write(
   fd: number,
   buffer: ArrayBuffer,
   offset: number,
-  length: number
+  length: number,
 ): number;
 ```
 
@@ -2019,7 +2019,7 @@ Call the function `func` when the signal `signal` happens. Only a single handler
 ```ts
 export function signal(
   signal: number,
-  func: null | undefined | (() => void)
+  func: null | undefined | (() => void),
 ): void;
 ```
 

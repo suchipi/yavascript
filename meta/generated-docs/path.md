@@ -63,7 +63,7 @@ declare class Path {
   static splitToSegments(inputParts: Array<string> | string): Array<string>;
   static detectSeparator<Fallback extends string | null = string>(
     input: Array<string> | string,
-    fallback: Fallback = Path.OS_SEGMENT_SEPARATOR
+    fallback: Fallback = Path.OS_SEGMENT_SEPARATOR,
   ): string | Fallback;
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
@@ -87,19 +87,19 @@ declare class Path {
   endsWith(value: string | Path | Array<string | Path>): boolean;
   indexOf(
     value: string | Path | Array<string | Path>,
-    fromIndex?: number | undefined
+    fromIndex?: number | undefined,
   ): number;
   includes(
     value: string | Path | Array<string | Path>,
-    fromIndex?: number | undefined
+    fromIndex?: number | undefined,
   ): boolean;
   replace(
     value: string | Path | Array<string | Path>,
-    replacement: string | Path | Array<string | Path>
+    replacement: string | Path | Array<string | Path>,
   ): Path;
   replaceAll(
     value: string | Path | Array<string | Path>,
-    replacement: string | Path | Array<string | Path>
+    replacement: string | Path | Array<string | Path>,
   ): Path;
   replaceLast(replacement: string | Path | Array<string | Path>): Path;
   equals(other: string | Path | Array<string | Path>): boolean;

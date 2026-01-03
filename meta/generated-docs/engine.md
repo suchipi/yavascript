@@ -22,12 +22,12 @@ declare module "quickjs:engine" {
     options?: {
       backtraceBarrier?: boolean;
       filename?: string;
-    }
+    },
   ): any;
   export function runScript(filename: string): any;
   export function importModule(
     filename: string,
-    basename?: string
+    basename?: string,
   ): {
     [key: string]: any;
   };
@@ -38,7 +38,7 @@ declare module "quickjs:engine" {
     name: string,
     obj: {
       [key: string]: any;
-    }
+    },
   ): void;
   export const ModuleDelegate: ModuleDelegate;
   export function gc(): void;
@@ -86,7 +86,7 @@ export function evalScript(
   options?: {
     backtraceBarrier?: boolean;
     filename?: string;
-  }
+  },
 ): any;
 ```
 
@@ -112,7 +112,7 @@ Evaluate the file `filename` as a module. Effectively a synchronous dynamic `imp
 ```ts
 export function importModule(
   filename: string,
-  basename?: string
+  basename?: string,
 ): {
   [key: string]: any;
 };
@@ -160,7 +160,7 @@ export function defineBuiltinModule(
   name: string,
   obj: {
     [key: string]: any;
-  }
+  },
 ): void;
 ```
 

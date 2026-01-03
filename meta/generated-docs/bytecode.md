@@ -13,13 +13,13 @@ declare module "quickjs:bytecode" {
       byteSwap?: boolean;
       sourceType?: "module" | "script";
       encodedFileName?: string;
-    }
+    },
   ): ArrayBuffer;
   export function fromValue(
     value: any,
     options?: {
       byteSwap?: boolean;
-    }
+    },
   ): ArrayBuffer;
   export function toValue(bytecode: ArrayBuffer): any;
 }
@@ -38,7 +38,7 @@ export function fromFile(
     byteSwap?: boolean;
     sourceType?: "module" | "script";
     encodedFileName?: string;
-  }
+  },
 ): ArrayBuffer;
 ```
 
@@ -51,7 +51,7 @@ export function fromValue(
   value: any,
   options?: {
     byteSwap?: boolean;
-  }
+  },
 ): ArrayBuffer;
 ```
 

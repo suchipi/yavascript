@@ -28,49 +28,49 @@ const yavascript: {
       options?: {
         filename?: string;
         expression?: boolean;
-      }
+      },
     ): string;
     tsx(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      }
+      },
     ): string;
     ts(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      }
+      },
     ): string;
     jsx(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      }
+      },
     ): string;
     coffee(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      }
+      },
     ): string;
     civet(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      }
+      },
     ): string;
     autodetect(
       code: string,
       options?: {
         filename?: string;
         expression?: boolean;
-      }
+      },
     ): string;
   };
 };

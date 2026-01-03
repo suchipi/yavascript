@@ -77,7 +77,7 @@ declare function parseScriptArgs(
   hints?: {
     [key: string]: typeof String | typeof Boolean | typeof Number | typeof Path;
   },
-  args?: Array<string>
+  args?: Array<string>,
 ): ParseScriptArgsResult;
 ```
 

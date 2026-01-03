@@ -54,13 +54,13 @@ const readFile: {
     path: string | Path,
     options: {
       binary: false;
-    }
+    },
   ): string;
   (
     path: string | Path,
     options: {
       binary: true;
-    }
+    },
   ): ArrayBuffer;
 };
 ```
@@ -110,7 +110,7 @@ Strings are written using the UTF-8 encoding.
 ```ts
 declare function writeFile(
   path: string | Path,
-  data: string | ArrayBuffer
+  data: string | ArrayBuffer,
 ): void;
 ```
 
@@ -204,7 +204,7 @@ Provides the same functionality as the command `cp -R`.
 declare function copy(
   from: string | Path,
   to: string | Path,
-  options?: CopyOptions
+  options?: CopyOptions,
 ): void;
 ```
 

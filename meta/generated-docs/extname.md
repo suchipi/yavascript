@@ -15,7 +15,7 @@ returned.
 ```ts
 declare function extname(
   pathOrFilename: string | Path,
-  options?: ExtnameOptions
+  options?: ExtnameOptions,
 ): string;
 ```
 
