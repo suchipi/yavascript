@@ -16,7 +16,7 @@ test("CSV", async () => {
         csv,
         reparsed
       })
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {

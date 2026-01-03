@@ -11,7 +11,7 @@ export function dirname(path: string | Path): Path {
     pathObj = new Path(path);
   } else {
     throw new TypeError(
-      "'path' argument must be either a string or a Path object"
+      "'path' argument must be either a string or a Path object",
     );
   }
 

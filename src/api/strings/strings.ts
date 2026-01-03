@@ -21,7 +21,7 @@ export const quote = (str: string | number | Path) => {
   assert.type(
     str,
     types.or(types.string, types.number, types.Path),
-    "'str' argument must be a string, number, or Path"
+    "'str' argument must be a string, number, or Path",
   );
   if (typeof str !== "string") {
     str = str.toString();

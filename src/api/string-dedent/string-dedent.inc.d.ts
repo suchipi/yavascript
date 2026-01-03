@@ -40,9 +40,9 @@ interface StringConstructor {
       Func extends (
         strings: readonly string[] | ArrayLike<string>,
         ...substitutions: any[]
-      ) => string
+      ) => string,
     >(
-      input: Func
+      input: Func,
     ): Func;
   };
 }

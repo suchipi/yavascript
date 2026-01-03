@@ -39,7 +39,7 @@ export type EvaluateResult = {
 
 export async function runYavascript(
   args: Array<string>,
-  options: SpawnOptions = {}
+  options: SpawnOptions = {},
 ) {
   const runContext = spawn(binaryPath, args, {
     cwd: rootDir(),
@@ -51,7 +51,7 @@ export async function runYavascript(
 
 export async function evaluate(
   code: string,
-  options: SpawnOptions = {}
+  options: SpawnOptions = {},
 ): Promise<EvaluateResult> {
   return runYavascript(["-e", code], options);
 }

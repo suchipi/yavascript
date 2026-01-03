@@ -57,7 +57,7 @@ if (isWorkingTreeDirty) {
   for (const filePath of jsFiles) {
     // filePath is an instance of the Path class: https://github.com/suchipi/yavascript/blob/main/meta/generated-docs/path.md#path-class
     const dtsFilePath = filePath.replaceLast(
-      filePath.basename().replace(/\.js$/, ".d.ts")
+      filePath.basename().replace(/\.js$/, ".d.ts"),
     );
     if (!exists(dtsFilePath)) {
       const displayPath = quote(dtsFilePath.relativeTo(repoRoot));

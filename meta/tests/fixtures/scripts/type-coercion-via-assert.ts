@@ -8,7 +8,7 @@ const logThrowMessage = (val, type) => {
   console.log(
     "no error message from",
     val,
-    is(type, Function) ? type.name : type
+    is(type, Function) ? type.name : type,
   );
 };
 

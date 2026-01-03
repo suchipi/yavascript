@@ -7,7 +7,7 @@ declare const assert: {
    */
   <ValueType>(
     value: ValueType,
-    message?: string
+    message?: string,
   ): asserts value is ValueType extends null | undefined | false | 0 | ""
     ? never
     : ValueType;
@@ -22,6 +22,6 @@ declare const assert: {
   type: <T extends TypeValidator<any> | CoerceableToTypeValidator>(
     value: any,
     type: T,
-    optionalMessage?: string
+    optionalMessage?: string,
   ) => asserts value is UnwrapTypeFromCoerceableOrValidator<T>;
 };

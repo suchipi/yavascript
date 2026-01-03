@@ -105,8 +105,8 @@ test("exec false - Path", async () => {
 test("exec - child process receives args", async () => {
   const result = await evaluate(
     `exec([${JSON.stringify(
-      binaryPath
-    )}, "-e", "scriptArgs", "bla", "blah", "--", "haha"])`
+      binaryPath,
+    )}, "-e", "scriptArgs", "bla", "blah", "--", "haha"])`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -132,8 +132,8 @@ test("exec - child process receives args", async () => {
 test("exec with env vars", async () => {
   const result = await evaluate(
     `exec([${JSON.stringify(
-      binaryPath
-    )}, "-e", "env"], { env: { HI_MOM: "yup" } })`
+      binaryPath,
+    )}, "-e", "env"], { env: { HI_MOM: "yup" } })`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -151,7 +151,7 @@ test("exec with env vars", async () => {
 
 test("exec with cwd", async () => {
   const result = await evaluate(
-    `exec([${JSON.stringify(binaryPath)}, "-e", "pwd()"], { cwd: "/tmp" })`
+    `exec([${JSON.stringify(binaryPath)}, "-e", "pwd()"], { cwd: "/tmp" })`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -181,7 +181,7 @@ test("exec with env", async () => {
 
 test("exec with captureOutput true", async () => {
   const result = await evaluate(
-    `exec(["echo", "hi there"], { captureOutput: true })`
+    `exec(["echo", "hi there"], { captureOutput: true })`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -200,7 +200,7 @@ test("exec with captureOutput true", async () => {
 
 test("exec with captureOutput 'utf8'", async () => {
   const result = await evaluate(
-    `exec(["echo", "hi there"], { captureOutput: "utf8" })`
+    `exec(["echo", "hi there"], { captureOutput: "utf8" })`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -219,7 +219,7 @@ test("exec with captureOutput 'utf8'", async () => {
 
 test("exec with captureOutput 'arraybuffer'", async () => {
   const result = await evaluate(
-    `exec(["echo", "hi there"], { captureOutput: "arraybuffer" })`
+    `exec(["echo", "hi there"], { captureOutput: "arraybuffer" })`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -240,7 +240,7 @@ test("exec with captureOutput 'arraybuffer'", async () => {
 
 test("exec with failOnNonZeroStatus false - running 'false'", async () => {
   const result = await evaluate(
-    `exec(["false"], { failOnNonZeroStatus: false })`
+    `exec(["false"], { failOnNonZeroStatus: false })`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -260,7 +260,7 @@ test("exec with failOnNonZeroStatus false - running 'false'", async () => {
 
 test("exec with failOnNonZeroStatus false - running 'true'", async () => {
   const result = await evaluate(
-    `exec(["true"], { failOnNonZeroStatus: false })`
+    `exec(["true"], { failOnNonZeroStatus: false })`,
   );
   expect(result).toMatchInlineSnapshot(`
     {

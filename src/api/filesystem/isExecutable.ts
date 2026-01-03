@@ -7,7 +7,7 @@ export function isExecutable(path: Path | string) {
   assert.type(
     path,
     types.or(types.Path, types.string),
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   path = path.toString();

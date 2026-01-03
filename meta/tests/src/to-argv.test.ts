@@ -2,7 +2,7 @@ import { evaluate, binaryPath, inspect, cleanResult } from "./test-helpers";
 
 async function toArgv(str: string) {
   const result = await evaluate(
-    `JSON.stringify(exec.toArgv(${JSON.stringify(str)}))`
+    `JSON.stringify(exec.toArgv(${JSON.stringify(str)}))`,
   );
   if (result.code !== 0) {
     throw new Error(`toArgv failed: ${JSON.stringify(result, null, 2)}`);
@@ -88,8 +88,8 @@ test("escaped characters outside of string", async () => {
 test("string gluing", async () => {
   expect(
     await toArgv(
-      `one two'three' four"five"'six' "seven""eight" nine"ten" 'eleven''twelve'`
-    )
+      `one two'three' four"five"'six' "seven""eight" nine"ten" 'eleven''twelve'`,
+    ),
   ).toEqual([
     "one",
     "twothree",
@@ -105,7 +105,7 @@ test("multiline without backslashes", async () => {
     await toArgv(`ffmpeg
 -i something
 somethingelse.mp4
-`)
+`),
   ).toEqual(["ffmpeg", "-i", "something", "somethingelse.mp4"]);
 });
 
@@ -115,7 +115,7 @@ test("multiline with backslashes that were probably meant to be bash-style line 
 ffmpeg \\
 -i something \\
 somethingelse.mp4
-`)
+`),
   ).toEqual(["ffmpeg", "-i", "something", "somethingelse.mp4"]);
 });
 
@@ -124,13 +124,13 @@ test("multiline with escaped newlines that were probably meant to be bash-style 
     await toArgv(`ffmpeg \
 -i something \
 somethingelse.mp4
-`)
+`),
   ).toEqual(["ffmpeg", "-i", "something", "somethingelse.mp4"]);
 });
 
 test("consecutive whitespace", async () => {
   expect(
-    await toArgv(`a        b  \n\n\t\nc\t\t\td\v\v\ve     f\r\ng\r\n\r\n\r\nh`)
+    await toArgv(`a        b  \n\n\t\nc\t\t\td\v\v\ve     f\r\ng\r\n\r\n\r\nh`),
   ).toEqual(["a", "b", "c", "d", "e", "f", "g", "h"]);
 });
 

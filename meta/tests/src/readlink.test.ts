@@ -5,7 +5,7 @@ const symlinksFixturesDir = rootDir("meta/tests/fixtures/symlinks");
 test("readlink", async () => {
   const result = await evaluate(
     `[readlink("dead-link"), readlink("link-to-file"), readlink("link-to-folder")]`,
-    { cwd: symlinksFixturesDir }
+    { cwd: symlinksFixturesDir },
   );
   expect(result).toMatchInlineSnapshot(`
     {

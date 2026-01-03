@@ -30,10 +30,10 @@ export function memoizeFn<T>(fn: () => T): () => T {
 }
 
 export function makeGetterPropertyDescriptorMap<
-  Input extends { [key: string]: () => any }
+  Input extends { [key: string]: () => any },
 >(
   input: Input,
-  enumerable: boolean = true
+  enumerable: boolean = true,
 ): { [k in keyof Input]: PropertyDescriptor } {
   const entries: Array<[string, PropertyDescriptor]> = [];
 

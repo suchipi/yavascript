@@ -19,7 +19,7 @@ test("grepString", async () => {
         result4,
         result5,
       });
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -128,7 +128,7 @@ test("String.prototype.grep", async () => {
         result4,
         result5,
       });
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -237,7 +237,7 @@ test("grepFile", async () => {
         result4,
         result5,
       });
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {

@@ -4,7 +4,7 @@ test("printf", async () => {
   const result = await evaluate(
     `
       printf("bla %s blah %03d yeah 0x%04x", "hi", 9, 100);
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {

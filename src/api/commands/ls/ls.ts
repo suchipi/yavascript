@@ -15,7 +15,7 @@ export function ls(dir: string | Path = pwd()): Array<Path> {
   assert.type(
     dir,
     String,
-    "'dir' argument must be either a string or a Path object"
+    "'dir' argument must be either a string or a Path object",
   );
 
   dir = appendSlashIfWindowsDriveLetter(dir);

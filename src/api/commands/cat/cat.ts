@@ -12,24 +12,24 @@ let pathsArgType: TypeValidator<string | Path | Array<string | Path>> | null =
 
 export function cat(
   paths: string | Path | Array<string | Path>,
-  options: { binary?: boolean } = {}
+  options: { binary?: boolean } = {},
 ): string | ArrayBuffer {
   if (pathsArgType == null) {
     pathsArgType = types.or(
       types.string,
       types.Path,
-      types.arrayOf(types.or(types.string, types.Path))
+      types.arrayOf(types.or(types.string, types.Path)),
     );
   }
   assert.type(
     paths,
     pathsArgType,
-    "'paths' argument must be either a string, a Path object, or an Array of strings/Path objects"
+    "'paths' argument must be either a string, a Path object, or an Array of strings/Path objects",
   );
   assert.type(
     options,
     types.object,
-    "when present, 'options' argument must be an object"
+    "when present, 'options' argument must be an object",
   );
 
   if (!Array.isArray(paths)) {
@@ -54,7 +54,7 @@ export function cat(
     assert.type(
       path,
       String,
-      "'path' argument must be either a string or a Path object"
+      "'path' argument must be either a string or a Path object",
     );
 
     const stats = os.stat(path);

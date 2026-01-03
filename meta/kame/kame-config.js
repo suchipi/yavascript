@@ -57,7 +57,7 @@ exports.resolve = (id, fromFilePath) => {
         return (
           defaultResolver.resolve(
             id.replace(/\?contentString$/, ""),
-            fromFilePath
+            fromFilePath,
           ) + "?contentString"
         );
       }
@@ -66,7 +66,7 @@ exports.resolve = (id, fromFilePath) => {
         return (
           defaultResolver.resolve(
             id.replace(/\?evalAtBuildTime$/, ""),
-            fromFilePath
+            fromFilePath,
           ) + "?evalAtBuildTime"
         );
       }

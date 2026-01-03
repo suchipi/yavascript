@@ -29,7 +29,7 @@ test("prints thrown non-errors to stderr", async () => {
 
 test("prints extra error properties to stderr", async () => {
   const result = await evaluate(
-    `e = new Error('hi'); e.something = true; e.somethingElse = false; throw e;`
+    `e = new Error('hi'); e.something = true; e.somethingElse = false; throw e;`,
   );
   expect(result).toMatchInlineSnapshot(`
     {

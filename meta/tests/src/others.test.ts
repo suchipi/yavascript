@@ -8,7 +8,7 @@ test("global constructor aliases", async () => {
       assert(number === Number);
       assert(string === String);
       assert(symbol === Symbol);
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {

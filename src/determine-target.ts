@@ -19,7 +19,7 @@ export type TargetDetermination =
   | TargetInfo<"invalid", { message: string }>;
 
 export default function determineTarget(
-  argv: Array<string>
+  argv: Array<string>,
 ): TargetDetermination {
   const [_yavascriptBinary, ...rest] = argv;
 
@@ -142,7 +142,7 @@ export default function determineTarget(
         return {
           target: "invalid",
           message: `Invalid --lang: ${JSON.stringify(
-            nextArg
+            nextArg,
           )}.\nValid values for --lang are ${validLangs
             .slice(0, -1)
             .join(", ")} or ${validLangs[validLangs.length - 1]}.\n`,

@@ -8,7 +8,7 @@ import { extname } from "../commands/extname";
 
 function validateSegments(
   segments: Array<string>,
-  separator: string
+  separator: string,
 ): Array<string> {
   return segments.filter((part, index) => {
     // first part can be "" to represent left side of root "/"
@@ -39,13 +39,13 @@ class Path {
   static OS_PROGRAM_EXTENSIONS = new Set(
     os.platform === "win32"
       ? (env.PATHEXT || windowsDefaultPathExt).split(";")
-      : []
+      : [],
   );
 
   static splitToSegments(inputParts: Array<string> | string): Array<string> {
     assert.type(
       inputParts,
-      types.or(types.string, types.arrayOf(types.string))
+      types.or(types.string, types.arrayOf(types.string)),
     );
 
     if (!Array.isArray(inputParts)) {
@@ -56,14 +56,14 @@ class Path {
 
     return validateSegments(
       inputParts.map((part) => part.split(/(?:\/|\\)/g)).flat(1),
-      separator
+      separator,
     );
   }
 
   static detectSeparator<Fallback extends string | null = string>(
     input: Array<string> | string,
     // @ts-ignore might be instantiated with a different subtype
-    fallback: Fallback = Path.OS_SEGMENT_SEPARATOR
+    fallback: Fallback = Path.OS_SEGMENT_SEPARATOR,
   ): string | Fallback {
     assert.type(input, types.or(types.string, types.arrayOf(types.string)));
     assert.type(fallback, types.or(types.string, types.null));
@@ -93,9 +93,9 @@ class Path {
         types.or(
           types.string,
           types.Path,
-          types.arrayOf(types.or(types.string, types.Path))
-        )
-      )
+          types.arrayOf(types.or(types.string, types.Path)),
+        ),
+      ),
     );
 
     return new Path(...inputs).normalize();
@@ -121,9 +121,9 @@ class Path {
         types.or(
           types.string,
           types.Path,
-          types.arrayOf(types.or(types.string, types.Path))
-        )
-      )
+          types.arrayOf(types.or(types.string, types.Path)),
+        ),
+      ),
     );
 
     const parts = inputs
@@ -137,7 +137,7 @@ class Path {
 
   static fromRaw(
     segments: Array<string>,
-    separator: string = Path.OS_SEGMENT_SEPARATOR
+    separator: string = Path.OS_SEGMENT_SEPARATOR,
   ) {
     assert.type(segments, types.arrayOf(types.string));
     assert.type(separator, types.string);
@@ -199,9 +199,9 @@ class Path {
         types.or(
           types.string,
           types.Path,
-          types.arrayOf(types.or(types.string, types.Path))
-        )
-      )
+          types.arrayOf(types.or(types.string, types.Path)),
+        ),
+      ),
     );
 
     const otherSegments = new Path(others.flat(1)).segments;
@@ -225,13 +225,13 @@ class Path {
     // @ts-ignore could be instantiated with different subtype
     return (this.constructor as typeof Path).fromRaw(
       [...this.segments],
-      this.separator
+      this.separator,
     );
   }
 
   relativeTo(
     dir: Path | string,
-    options: { noLeadingDot?: boolean } = {}
+    options: { noLeadingDot?: boolean } = {},
   ): Path {
     if (!is(dir, types.Path)) {
       dir = new Path(dir);
@@ -289,7 +289,7 @@ class Path {
     }
 
     return value.segments.every(
-      (segment, index) => this.segments[index] === segment
+      (segment, index) => this.segments[index] === segment,
     );
   }
 
@@ -302,13 +302,13 @@ class Path {
     const ownSegmentsReversed = [...this.segments].reverse();
 
     return valueSegmentsReversed.every(
-      (segment, index) => ownSegmentsReversed[index] === segment
+      (segment, index) => ownSegmentsReversed[index] === segment,
     );
   }
 
   indexOf(
     value: string | Path | Array<string | Path>,
-    fromIndex: number = 0
+    fromIndex: number = 0,
   ): number {
     if (!is(value, types.Path)) {
       value = new Path(value);
@@ -330,14 +330,14 @@ class Path {
 
   includes(
     value: string | Path | Array<string | Path>,
-    fromIndex: number = 0
+    fromIndex: number = 0,
   ): boolean {
     return this.indexOf(value, fromIndex) !== -1;
   }
 
   replace(
     value: string | Path | Array<string | Path>,
-    replacement: string | Path | Array<string | Path>
+    replacement: string | Path | Array<string | Path>,
   ): Path {
     if (!is(value, types.Path)) {
       value = new Path(value);
@@ -362,7 +362,7 @@ class Path {
 
   replaceAll(
     value: string | Path | Array<string | Path>,
-    replacement: string | Path | Array<string | Path>
+    replacement: string | Path | Array<string | Path>,
   ): Path {
     if (!is(replacement, types.Path)) {
       replacement = new Path(replacement);
@@ -439,10 +439,10 @@ class Path {
     // in our special way
     {
       const segmentsIndex = inputs.propLines.findIndex((line) =>
-        line.startsWith(colours.keys + "segments" + colours.off)
+        line.startsWith(colours.keys + "segments" + colours.off),
       );
       const separatorIndex = inputs.propLines.findIndex((line) =>
-        line.startsWith(colours.keys + "separator" + colours.off)
+        line.startsWith(colours.keys + "separator" + colours.off),
       );
 
       if (segmentsIndex !== -1) {

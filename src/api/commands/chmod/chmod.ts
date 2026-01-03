@@ -32,7 +32,7 @@ const PERMISSIONS = {
 function permsNumberFor(
   initialPerms: number,
   operation: Chmod.Operation,
-  instructions: Partial<Record<Chmod.Who, Chmod.Permission>>
+  instructions: Partial<Record<Chmod.Who, Chmod.Permission>>,
 ): number {
   let perms = initialPerms;
   if (operation === "set") {
@@ -231,7 +231,7 @@ export interface Chmod {
     permissions: Operation extends "set"
       ? Partial<Record<Chmod.Who, Chmod.Permission>>
       : Record<Chmod.Who, Chmod.Permission>,
-    path: string | Path
+    path: string | Path,
   ): void;
 }
 
@@ -243,7 +243,7 @@ export const chmod: Chmod = (
     | [
         operation: Chmod.Operation,
         permissions: Partial<Record<Chmod.Who, Chmod.Permission>>,
-        path: string | Path
+        path: string | Path,
       ]
 ): void => {
   let permissions:
@@ -258,7 +258,7 @@ export const chmod: Chmod = (
     assert.type(
       permissions,
       types.or(types.string, types.number),
-      "when 'operation' argument is omitted, 'permissions' argument must be either an octal string or a number"
+      "when 'operation' argument is omitted, 'permissions' argument must be either an octal string or a number",
     );
   } else if (args.length === 3) {
     [operation, permissions, path] = args;
@@ -267,14 +267,14 @@ export const chmod: Chmod = (
       types.or(
         types.exactString("add"),
         types.exactString("set"),
-        types.exactString("remove")
+        types.exactString("remove"),
       ),
-      "'operation' argument must be either 'add', 'set', or 'remove'"
+      "'operation' argument must be either 'add', 'set', or 'remove'",
     );
     assert.type(
       permissions,
       types.object,
-      "when 'operation' argument is present, 'permissions' argument must be an object"
+      "when 'operation' argument is present, 'permissions' argument must be an object",
     );
   } else {
     throw new Error("chmod must be called with either 2 or 3 arguments.");
@@ -287,7 +287,7 @@ export const chmod: Chmod = (
   assert.type(
     path,
     String,
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   path = appendSlashIfWindowsDriveLetter(path);
@@ -300,7 +300,7 @@ export const chmod: Chmod = (
     const asNum = parseInt(permissions, 8);
     if (Number.isNaN(asNum)) {
       throw new Error(
-        `Invalid permissions string: ${permissions}. It should be an octal-representation number, like "750".`
+        `Invalid permissions string: ${permissions}. It should be an octal-representation number, like "750".`,
       );
     } else {
       permNum = asNum;
@@ -312,7 +312,7 @@ export const chmod: Chmod = (
     throw makeErrorWithProperties(
       "'permissions' argument must be a number, string, or object",
       { received: permissions },
-      TypeError
+      TypeError,
     );
   }
 

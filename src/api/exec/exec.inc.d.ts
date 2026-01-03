@@ -147,10 +147,10 @@ declare interface Exec {
       failOnNonZeroStatus: true;
       captureOutput: false;
       block: true;
-    }
+    },
   >(
     args: Array<string | Path | number> | string | Path,
-    options?: ExecOptions
+    options?: ExecOptions,
   ): ExecOptions["block"] extends false
     ? { wait(): ExecWaitResult<ExecOptions> }
     : ExecWaitResult<ExecOptions>;

@@ -52,7 +52,7 @@ declare const readFile: {
  */
 declare function writeFile(
   path: string | Path,
-  data: string | ArrayBuffer
+  data: string | ArrayBuffer,
 ): void;
 
 /**
@@ -119,7 +119,7 @@ declare function exists(path: string | Path): boolean;
 declare function copy(
   from: string | Path,
   to: string | Path,
-  options?: CopyOptions
+  options?: CopyOptions,
 ): void;
 
 /**

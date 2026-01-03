@@ -3,13 +3,13 @@ import * as CJS from "./cjs-interop";
 import * as npmProto from "./module-protocols/npm";
 
 const getSucrase: () => typeof import("sucrase") = memoizeFn(() =>
-  require("sucrase")
+  require("sucrase"),
 );
 const getCoffeeScript: () => typeof import("coffeescript") = memoizeFn(() =>
-  require("coffeescript")
+  require("coffeescript"),
 );
 const getCivet: () => typeof import("@danielx/civet") = memoizeFn(() =>
-  require("@danielx/civet")
+  require("@danielx/civet"),
 );
 
 export type CompilerOptions = {
@@ -33,7 +33,7 @@ function stripShebangs(input: string) {
 function compileUsingSucrase(
   code: string,
   options: CompilerOptions | undefined | null,
-  sucraseOptions: import("sucrase").Options
+  sucraseOptions: import("sucrase").Options,
 ) {
   if (options?.filename) {
     sucraseOptions.filePath = options.filename;

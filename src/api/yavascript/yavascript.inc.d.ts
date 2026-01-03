@@ -53,7 +53,7 @@ declare const yavascript: {
      */
     js(
       code: string,
-      options?: { filename?: string; expression?: boolean }
+      options?: { filename?: string; expression?: boolean },
     ): string;
 
     /**
@@ -63,7 +63,7 @@ declare const yavascript: {
      */
     tsx(
       code: string,
-      options?: { filename?: string; expression?: boolean }
+      options?: { filename?: string; expression?: boolean },
     ): string;
 
     /**
@@ -73,7 +73,7 @@ declare const yavascript: {
      */
     ts(
       code: string,
-      options?: { filename?: string; expression?: boolean }
+      options?: { filename?: string; expression?: boolean },
     ): string;
 
     /**
@@ -86,7 +86,7 @@ declare const yavascript: {
      */
     jsx(
       code: string,
-      options?: { filename?: string; expression?: boolean }
+      options?: { filename?: string; expression?: boolean },
     ): string;
 
     /**
@@ -96,7 +96,7 @@ declare const yavascript: {
      */
     coffee(
       code: string,
-      options?: { filename?: string; expression?: boolean }
+      options?: { filename?: string; expression?: boolean },
     ): string;
 
     /**
@@ -106,7 +106,7 @@ declare const yavascript: {
      */
     civet(
       code: string,
-      options?: { filename?: string; expression?: boolean }
+      options?: { filename?: string; expression?: boolean },
     ): string;
 
     /**
@@ -126,7 +126,7 @@ declare const yavascript: {
      */
     autodetect(
       code: string,
-      options?: { filename?: string; expression?: boolean }
+      options?: { filename?: string; expression?: boolean },
     ): string;
   };
 };

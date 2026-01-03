@@ -49,7 +49,7 @@ export function readEnvBool<T>(
   fallback: T,
   logging: {
     warn?: (...args: Array<any>) => void;
-  } = logger
+  } = logger,
 ): boolean | T {
   const value = env[key];
   if (value == null) {
@@ -75,12 +75,12 @@ export function readEnvBool<T>(
       if (logging.warn) {
         logging.warn(
           `readEnvBool: environment variable ${JSON.stringify(
-            key
+            key,
           )} was ${JSON.stringify(
-            value
+            value,
           )}, which doesn't look like a boolean. Returning the fallback value of ${String(
-            fallback
-          )}.`
+            fallback,
+          )}.`,
         );
       }
       return fallback;

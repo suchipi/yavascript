@@ -13,7 +13,7 @@ export function realpath(path: string | Path): Path {
   assert.type(
     path,
     String,
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   path = appendSlashIfWindowsDriveLetter(path);

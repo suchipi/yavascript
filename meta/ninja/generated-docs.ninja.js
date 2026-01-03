@@ -8,7 +8,7 @@ const newlineFile = rel("../scripts/lib/newline.txt");
 function dtsToMd(
   inputFile,
   outputFile,
-  name = path.basename(inputFile).replace(/(?:\.inc)?\.d\.ts$/, "")
+  name = path.basename(inputFile).replace(/(?:\.inc)?\.d\.ts$/, ""),
 ) {
   const mdWithoutToc = build({
     rule: "dtsmd",
@@ -42,7 +42,7 @@ for (const dtsFile of dtsIncFiles) {
   const inputFile = dtsFile;
   const outputFile = rel(
     "../generated-docs/" +
-      path.basename(inputFile).replace(/\.inc\.d\.ts$/, ".md")
+      path.basename(inputFile).replace(/\.inc\.d\.ts$/, ".md"),
   );
 
   dtsToMd(inputFile, outputFile);

@@ -70,6 +70,6 @@ export function installNodeCompat(global: any) {
 
   // Remove duplicates. Not needed after aforementioned bug is resolved.
   engine.ModuleDelegate.builtinModuleNames = Array.from(
-    new Set(engine.ModuleDelegate.builtinModuleNames)
+    new Set(engine.ModuleDelegate.builtinModuleNames),
   );
 }

@@ -8,7 +8,7 @@ test("cat - single file - returns string", async () => {
     const result = cat('hello.txt');
     console.error(result);
   `,
-    { cwd: fileContentFixturesDir }
+    { cwd: fileContentFixturesDir },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -28,7 +28,7 @@ test("cat - multiple files - returns string", async () => {
     const result = cat(['hello.txt', 'hello2.txt']);
     console.error(result);
   `,
-    { cwd: fileContentFixturesDir }
+    { cwd: fileContentFixturesDir },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -49,7 +49,7 @@ test("cat - single file - returns arraybuffer", async () => {
     const result = cat('hello.txt', { binary: true });
     console.error(result);
   `,
-    { cwd: fileContentFixturesDir }
+    { cwd: fileContentFixturesDir },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -71,7 +71,7 @@ test("cat - multiple files - returns arraybuffer", async () => {
     const result = cat(['hello.txt', 'hello2.txt'], { binary: true });
     console.error(result);
   `,
-    { cwd: fileContentFixturesDir }
+    { cwd: fileContentFixturesDir },
   );
   expect(result).toMatchInlineSnapshot(`
     {

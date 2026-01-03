@@ -78,7 +78,7 @@ export class ChildProcess {
 
   constructor(
     args: string | Path | Array<string | number | Path>,
-    options: ChildProcessOptions = {}
+    options: ChildProcessOptions = {},
   ) {
     // type of `args` gets checked in `toArgv`
     this.args = toArgv(args);
@@ -94,7 +94,7 @@ export class ChildProcess {
       throw makeErrorWithProperties(
         "when present, 'cwd' option must be either a string or a Path object",
         { received: cwd },
-        TypeError
+        TypeError,
       );
     }
 
@@ -103,7 +103,7 @@ export class ChildProcess {
     assert.type(
       baseEnv,
       types.object,
-      "when present, 'env' option must be an object"
+      "when present, 'env' option must be an object",
     );
 
     this.env = {};
@@ -122,17 +122,17 @@ export class ChildProcess {
     assert.type(
       this.stdio.in,
       types.FILE,
-      "when present, 'stdio.in' option must be a FILE object"
+      "when present, 'stdio.in' option must be a FILE object",
     );
     assert.type(
       this.stdio.out,
       types.FILE,
-      "when present, 'stdio.out' option must be a FILE object"
+      "when present, 'stdio.out' option must be a FILE object",
     );
     assert.type(
       this.stdio.err,
       types.FILE,
-      "when present, 'stdio.err' option must be a FILE object"
+      "when present, 'stdio.err' option must be a FILE object",
     );
 
     this._logging = {
@@ -142,7 +142,7 @@ export class ChildProcess {
     assert.type(
       this._logging.trace,
       types.Function,
-      "when present, 'options.logging.trace' must be a function"
+      "when present, 'options.logging.trace' must be a function",
     );
   }
 
@@ -182,7 +182,7 @@ export class ChildProcess {
       default: {
         const here: never = state;
         throw new Error(
-          `Unhandled ChildProcessStateKind: ${(state as any).id}`
+          `Unhandled ChildProcessStateKind: ${(state as any).id}`,
         );
       }
     }
@@ -202,7 +202,7 @@ export class ChildProcess {
       default: {
         const here: never = this._state;
         throw new Error(
-          `Unhandled ChildProcessStateKind: ${(this._state as any).id}`
+          `Unhandled ChildProcessStateKind: ${(this._state as any).id}`,
         );
       }
     }
@@ -228,7 +228,7 @@ export class ChildProcess {
           "ChildProcess result:",
           this.args,
           "->",
-          this._state
+          this._state,
         );
       } else if (os.WIFSIGNALED(status)) {
         this._state = {
@@ -241,7 +241,7 @@ export class ChildProcess {
           "ChildProcess result:",
           this.args,
           "->",
-          this._state
+          this._state,
         );
       } else if (os.WIFSTOPPED(status)) {
         this._state = {
@@ -269,7 +269,7 @@ export class ChildProcess {
       idSwitch: switch (rawState.id) {
         case "UNSTARTED": {
           throw new Error(
-            "The ChildProcess hasn't yet started. Call ChildProcess's start() method before calling waitUntilComplete()."
+            "The ChildProcess hasn't yet started. Call ChildProcess's start() method before calling waitUntilComplete().",
           );
         }
         case "EXITED": {
@@ -288,7 +288,7 @@ export class ChildProcess {
         default: {
           const here: never = rawState;
           throw new Error(
-            `Unhandled ChildProcessStateKind: ${(rawState as any).id}`
+            `Unhandled ChildProcessStateKind: ${(rawState as any).id}`,
           );
         }
       }

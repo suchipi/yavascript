@@ -24,7 +24,7 @@ declare const cat: {
    */
   (
     paths: string | Path | Array<string | Path>,
-    options: { binary: false }
+    options: { binary: false },
   ): string;
 
   /**
@@ -32,6 +32,6 @@ declare const cat: {
    */
   (
     paths: string | Path | Array<string | Path>,
-    options: { binary: true }
+    options: { binary: true },
   ): ArrayBuffer;
 };

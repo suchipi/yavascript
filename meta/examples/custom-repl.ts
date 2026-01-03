@@ -13,5 +13,5 @@ startRepl(
   // Variables to make available to the repl as globals. Optional
   { TOKEN_SEPARATOR, tokens },
   // Which language repl input should be interpreted as, ie. typescript, coffeescript, jsx, etc. Defaults to "javascript".
-  "typescript"
+  "typescript",
 );

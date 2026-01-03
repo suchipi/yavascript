@@ -19,7 +19,7 @@ export default makeGetterPropertyDescriptorMap(
     },
     grep() {
       throw new ReferenceError(
-        "'grep' is not defined. Maybe you want 'grepFile', 'grepString', or 'String.prototype.grep'?"
+        "'grep' is not defined. Maybe you want 'grepFile', 'grepString', or 'String.prototype.grep'?",
       );
     },
     man() {
@@ -33,14 +33,14 @@ export default makeGetterPropertyDescriptorMap(
     },
     id() {
       throw new ReferenceError(
-        "'id' is not defined. Maybe you want to use 'whoami()'?"
+        "'id' is not defined. Maybe you want to use 'whoami()'?",
       );
     },
     openURL() {
       throw new ReferenceError(
-        "'openURL' is not defined. Did you mean 'openUrl'?"
+        "'openURL' is not defined. Did you mean 'openUrl'?",
       );
     },
   },
-  false
+  false,
 );

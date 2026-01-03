@@ -12,7 +12,7 @@ declare const grepString: {
   (
     str: string,
     pattern: string | RegExp,
-    options: GrepOptions & { details: true }
+    options: GrepOptions & { details: true },
   ): Array<GrepMatchDetail>;
 
   (str: string, pattern: string | RegExp, options?: GrepOptions): Array<string>;
@@ -32,13 +32,13 @@ declare const grepFile: {
   (
     path: string | Path,
     pattern: string | RegExp,
-    options: GrepOptions & { details: true }
+    options: GrepOptions & { details: true },
   ): Array<GrepMatchDetail>;
 
   (
     path: string | Path,
     pattern: string | RegExp,
-    options?: GrepOptions
+    options?: GrepOptions,
   ): Array<string>;
 };
 
@@ -57,7 +57,7 @@ interface String {
   grep: {
     (
       pattern: string | RegExp,
-      options: GrepOptions & { details: true }
+      options: GrepOptions & { details: true },
     ): Array<GrepMatchDetail>;
 
     (pattern: string | RegExp, options?: GrepOptions): Array<string>;

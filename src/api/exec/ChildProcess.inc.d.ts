@@ -123,7 +123,7 @@ declare interface ChildProcessConstructor {
    */
   new (
     args: string | Path | Array<string | number | Path>,
-    options?: ChildProcessOptions
+    options?: ChildProcessOptions,
   ): ChildProcess;
 
   readonly prototype: ChildProcess;

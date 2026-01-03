@@ -10,7 +10,7 @@ function getVersion() {
   if (process.env.YAVASCRIPT_VERSION) {
     if (!/^v|^git-/.test(process.env.YAVASCRIPT_VERSION)) {
       throw new Error(
-        `env var YAVASCRIPT_VERSION must start with 'v' or 'git-'!`
+        `env var YAVASCRIPT_VERSION must start with 'v' or 'git-'!`,
       );
     }
     return process.env.YAVASCRIPT_VERSION;
@@ -66,6 +66,6 @@ const wellKnownArchitectures = new Set(["arm64", "x86_64"]);
 
 if (!wellKnownArchitectures.has(module.exports.arch)) {
   console.warn(
-    `WARNING: yavascript.arch will be set to '${module.exports.arch}', which may not be desirable. Generally, it should be either 'arm64' or 'x86_64'. Feel free to ignore this message if compiling for a different architecture.`
+    `WARNING: yavascript.arch will be set to '${module.exports.arch}', which may not be desirable. Generally, it should be either 'arm64' or 'x86_64'. Feel free to ignore this message if compiling for a different architecture.`,
   );
 }

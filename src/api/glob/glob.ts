@@ -45,30 +45,30 @@ const HAS_GLOB_METACHARS_RE = /[*{}]|\+\(|^!/;
 
 export function glob(
   patterns: string | Array<string>,
-  options: GlobOptions = {}
+  options: GlobOptions = {},
 ): Array<Path> {
   assert.type(
     patterns,
     types.or(types.string, types.arrayOf(types.string)),
-    "'patterns' argument must be either a string or an Array of strings"
+    "'patterns' argument must be either a string or an Array of strings",
   );
 
   assert.type(
     options,
     types.or(types.undefined, types.anyObject),
-    "when present, 'options' argument must be an object"
+    "when present, 'options' argument must be an object",
   );
 
   assert.type(
     options.dir,
     types.or(types.string, types.Path, types.undefined),
-    "when present, 'dir' option must be a string or Path"
+    "when present, 'dir' option must be a string or Path",
   );
 
   assert.type(
     options.logging,
     types.or(types.undefined, types.object),
-    "when present, 'logging' option must be an object"
+    "when present, 'logging' option must be an object",
   );
 
   let dir = options.dir ?? null;
@@ -78,12 +78,12 @@ export function glob(
   assert.type(
     trace,
     types.or(types.undefined, types.anyFunction),
-    "when present, 'logging.trace' option must be a function"
+    "when present, 'logging.trace' option must be a function",
   );
   assert.type(
     info,
     types.or(types.undefined, types.anyFunction),
-    "when present, 'logging.info' option must be a function"
+    "when present, 'logging.info' option must be a function",
   );
 
   const patternsArray = Array.isArray(patterns) ? patterns : [patterns];
@@ -94,7 +94,7 @@ export function glob(
   }
 
   const absolutePatterns = patternsArray.filter((pattern) =>
-    Path.isAbsolute(pattern)
+    Path.isAbsolute(pattern),
   );
 
   if (dir == null && absolutePatterns.length > 0) {
@@ -113,13 +113,13 @@ export function glob(
 
       const result = Path.fromRaw(
         leadingParts,
-        Path.detectSeparator(absolutePattern, "/")
+        Path.detectSeparator(absolutePattern, "/"),
       ).normalize();
 
       trace(
         `using absolute pattern to infer starting dir: ${JSON.stringify(
-          absolutePattern
-        )} -> ${JSON.stringify(result.toString())}`
+          absolutePattern,
+        )} -> ${JSON.stringify(result.toString())}`,
       );
 
       return result;
@@ -142,13 +142,13 @@ export function glob(
 
     if (commonParentDirParts.length === 0) {
       throw new Error(
-        "No initial dir for the glob search was specified, and one or more patterns specify an absolute path, but the specified absolute paths have no common parent path. Not sure where to start the glob search. Please specify a starting path with option 'dir'."
+        "No initial dir for the glob search was specified, and one or more patterns specify an absolute path, but the specified absolute paths have no common parent path. Not sure where to start the glob search. Please specify a starting path with option 'dir'.",
       );
     } else {
       dir = Path.fromRaw(commonParentDirParts).normalize();
 
       trace(
-        `inferred starting dir from absolute pattern(s): ${dir.toString()}`
+        `inferred starting dir from absolute pattern(s): ${dir.toString()}`,
       );
 
       if (dir.segments.length === 1) {
@@ -168,7 +168,7 @@ export function glob(
   const normDir = Path.normalize(dir);
   if (!normDir.isAbsolute()) {
     throw new Error(
-      `'dir' option must be an absolute path, but received: ${quote(dir)}`
+      `'dir' option must be an absolute path, but received: ${quote(dir)}`,
     );
   }
 
@@ -226,7 +226,7 @@ export function glob(
                 pattern,
                 negated,
                 fullName,
-              })
+              }),
             );
 
             return didMatch;
@@ -252,8 +252,8 @@ export function glob(
             if (matchesNegated) {
               trace(
                 `not traversing deeper into dir as it matches a negated pattern: ${JSON.stringify(
-                  { dir: fullName, pattern }
-                )}`
+                  { dir: fullName, pattern },
+                )}`,
               );
 
               shouldGoDeeper = false;

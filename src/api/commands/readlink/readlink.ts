@@ -12,12 +12,12 @@ export function readlink(path: string | Path): Path {
   assert.type(
     path,
     String,
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   if (os.readlink == null) {
     throw new Error(
-      `readlink is not yet supported in platform '${os.platform}'`
+      `readlink is not yet supported in platform '${os.platform}'`,
     );
   } else {
     return new Path(os.readlink(path));

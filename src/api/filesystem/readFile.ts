@@ -14,24 +14,24 @@ type ReadFile = {
 
 export const readFile: ReadFile = function readFile(
   path: string | Path,
-  options: { binary?: boolean } = {}
+  options: { binary?: boolean } = {},
 ): string | ArrayBuffer {
   assert.type(
     path,
     types.or(types.string, types.Path),
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   assert.type(
     options,
     types.or(types.undefined, types.anyObject),
-    "when present, 'options' argument must be an object"
+    "when present, 'options' argument must be an object",
   );
 
   assert.type(
     options.binary,
     types.or(types.undefined, types.boolean),
-    "when present, 'binary' options must be a boolean"
+    "when present, 'binary' options must be a boolean",
   );
 
   if (is(path, types.Path)) {

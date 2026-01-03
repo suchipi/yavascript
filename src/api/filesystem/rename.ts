@@ -8,13 +8,13 @@ export function rename(from: string | Path, to: string | Path): void {
   assert.type(
     from,
     types.or(types.string, types.Path),
-    "'from' argument must be either a string or a Path object"
+    "'from' argument must be either a string or a Path object",
   );
 
   assert.type(
     to,
     types.or(types.string, types.Path),
-    "'to' argument must be either a string or a Path object"
+    "'to' argument must be either a string or a Path object",
   );
 
   from = Path.normalize(from).toString();

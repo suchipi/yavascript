@@ -112,7 +112,7 @@ test("exit.code - normal exit after set", async () => {
   `);
 
   const result4 = await evaluate(
-    `exit.code = 17; void setTimeout(() => { console.log('okay') }, 30);`
+    `exit.code = 17; void setTimeout(() => { console.log('okay') }, 30);`,
   );
   expect(result4).toMatchInlineSnapshot(`
     {

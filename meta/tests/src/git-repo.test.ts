@@ -22,7 +22,7 @@ test("very basic usage", async () => {
       logger.info = () => {};
       console.log("typeof repo.isWorkingTreeDirty()", typeof repo.isWorkingTreeDirty());
     `,
-    { cwd: __dirname }
+    { cwd: __dirname },
   );
   expect(cleanResult(result)).toMatchInlineSnapshot(`
     {
@@ -82,7 +82,7 @@ test("passing relative path to isIgnored resolves relative to repo root rather t
       console.log("at", pwd(), 'repo.isIgnored("hi.txt") is:', repo.isIgnored("hi.txt"));
       console.log("at", pwd(), 'repo.isIgnored(pwd().concat("hi.txt")) is:', repo.isIgnored(pwd().concat("hi.txt")));
     `,
-    { cwd: __dirname }
+    { cwd: __dirname },
   );
   expect(cleanResult(result)).toMatchInlineSnapshot(`
     {
@@ -131,7 +131,7 @@ test("passing absolute path outside repo root to isIgnored throws an error", asy
       const repo = new GitRepo(GitRepo.findRoot(__dirname));
       repo.isIgnored("/tmp/something");
     `,
-    { cwd: __dirname }
+    { cwd: __dirname },
   );
   expect(cleanResult(result)).toMatchInlineSnapshot(`
     {
@@ -157,7 +157,7 @@ test("passing path with newline to isIgnored throws error", async () => {
       const repo = new GitRepo(GitRepo.findRoot(__dirname));
       repo.isIgnored("a\\nb");
     `,
-    { cwd: __dirname }
+    { cwd: __dirname },
   );
   expect(cleanResult(result)).toMatchInlineSnapshot(`
     {

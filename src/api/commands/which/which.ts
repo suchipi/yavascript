@@ -25,13 +25,13 @@ export function which(
     logging?: {
       trace?: (...args: Array<any>) => void;
     };
-  }
+  },
 ): Path | null {
   assert.type(binaryName, types.string, "'binaryName' must be a string");
   assert.type(
     options,
     types.or(types.undefined, types.object),
-    "when present, 'options' must be an object"
+    "when present, 'options' must be an object",
   );
 
   if (options != null) {
@@ -39,26 +39,26 @@ export function which(
       options.searchPaths,
       types.or(
         types.undefined,
-        types.arrayOf(types.or(types.Path, types.string))
+        types.arrayOf(types.or(types.Path, types.string)),
       ),
-      "when present, 'options.searchPaths' must be an Array of strings and/or Paths"
+      "when present, 'options.searchPaths' must be an Array of strings and/or Paths",
     );
     assert.type(
       options.suffixes,
       types.or(types.undefined, types.arrayOf(types.string)),
-      "when present, 'options.suffixes' must be an Array of strings"
+      "when present, 'options.suffixes' must be an Array of strings",
     );
     assert.type(
       options.logging,
       types.or(types.undefined, types.object),
-      "when present, 'options.logging' must be an object"
+      "when present, 'options.logging' must be an object",
     );
 
     if (is(options.logging, types.object)) {
       assert.type(
         options.logging.trace,
         types.or(types.undefined, types.Function),
-        "when present, 'options.logging.trace' must be a Function"
+        "when present, 'options.logging.trace' must be a Function",
       );
     }
   }

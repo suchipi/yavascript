@@ -8,7 +8,7 @@ import type { Path } from "../path";
 export function grepString(
   str: string,
   pattern: string | RegExp,
-  options: { inverse?: boolean; details?: boolean } = {}
+  options: { inverse?: boolean; details?: boolean } = {},
 ) {
   const lines = str.split("\n");
   const regexp =
@@ -50,12 +50,12 @@ export function grepString(
 export function grepFile(
   path: string | Path,
   pattern: string | RegExp,
-  options?: { inverse?: boolean; details?: boolean }
+  options?: { inverse?: boolean; details?: boolean },
 ) {
   assert.type(
     path,
     types.or(types.string, types.Path),
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   if (is(path, types.Path)) {
@@ -69,7 +69,7 @@ export function grepFile(
 export function installToStringProto(stringProto: any) {
   stringProto.grep = function grep(
     pattern: string | RegExp,
-    options?: { inverse?: boolean; lineNumbers?: boolean }
+    options?: { inverse?: boolean; lineNumbers?: boolean },
   ) {
     return grepString(this as string, pattern, options);
   };

@@ -105,7 +105,7 @@ try {
     (err) => {
       printError(err, std.err);
       std.exit(1);
-    }
+    },
   );
 } catch (err) {
   printError(err, std.err);

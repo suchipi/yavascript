@@ -26,7 +26,7 @@ export const JSX = {
 export namespace JSX {
   export interface Element<
     Props = { [key: string | symbol | number]: any },
-    Type = any
+    Type = any,
   > {
     $$typeof: typeof Element;
     type: Type;

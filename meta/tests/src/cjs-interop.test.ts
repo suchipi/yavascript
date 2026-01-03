@@ -4,7 +4,7 @@ describe("wrapping code for CommonJS interop", () => {
   test("module.exports = something", async () => {
     const code = `module.exports = something`;
     const result = await evaluate(
-      `yavascript.compilers.js(${JSON.stringify(code)})`
+      `yavascript.compilers.js(${JSON.stringify(code)})`,
     );
     expect(result).toMatchInlineSnapshot(`
       {
@@ -21,7 +21,7 @@ describe("wrapping code for CommonJS interop", () => {
   test("exports.something = whatever", async () => {
     const code = `exports.something = whatever`;
     const result = await evaluate(
-      `yavascript.compilers.js(${JSON.stringify(code)})`
+      `yavascript.compilers.js(${JSON.stringify(code)})`,
     );
     expect(result).toMatchInlineSnapshot(`
       {
@@ -38,7 +38,7 @@ describe("wrapping code for CommonJS interop", () => {
   test("Object.defineProperty(exports, 'yeah', void 0);", async () => {
     const code = `Object.defineProperty(exports, 'yeah', void 0);`;
     const result = await evaluate(
-      `yavascript.compilers.js(${JSON.stringify(code)})`
+      `yavascript.compilers.js(${JSON.stringify(code)})`,
     );
     expect(result).toMatchInlineSnapshot(`
       {
@@ -55,7 +55,7 @@ describe("wrapping code for CommonJS interop", () => {
   test('Object.defineProperty(exports, "yeah", void 0);', async () => {
     const code = `Object.defineProperty(exports, "yeah", void 0);`;
     const result = await evaluate(
-      `yavascript.compilers.js(${JSON.stringify(code)})`
+      `yavascript.compilers.js(${JSON.stringify(code)})`,
     );
     expect(result).toMatchInlineSnapshot(`
       {
@@ -72,7 +72,7 @@ describe("wrapping code for CommonJS interop", () => {
   test("normal ESM code", async () => {
     const code = `export const five = 5;`;
     const result = await evaluate(
-      `yavascript.compilers.js(${JSON.stringify(code)})`
+      `yavascript.compilers.js(${JSON.stringify(code)})`,
     );
     expect(result).toMatchInlineSnapshot(`
       {

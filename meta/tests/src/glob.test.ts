@@ -13,7 +13,7 @@ function testGlob(
   dir: string | undefined,
   patterns: Array<string> | string,
   expected: Array<string>,
-  testFn?: (descr: string, body: () => any) => any
+  testFn?: (descr: string, body: () => any) => any,
 ) {
   // So you can do test.only, etc
   if (!testFn) testFn = test;
@@ -29,7 +29,7 @@ function testGlob(
         const args = ${JSON.stringify(args)};
         const paths = glob(...args);
         JSON.stringify(paths.map(path => path.toString()))
-      `
+      `,
     );
 
     expect(result).toMatchObject({
@@ -53,7 +53,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/glob/hi.txt",
     "<rootDir>/meta/tests/fixtures/glob/cabana",
     "<rootDir>/meta/tests/fixtures/glob/hi",
-  ]
+  ],
 );
 
 testGlob("single glob", globDir, "*", [
@@ -81,7 +81,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/glob/cabana",
     "<rootDir>/meta/tests/fixtures/glob/hi",
     "<rootDir>/meta/tests/fixtures/glob/hi/there.txt",
-  ]
+  ],
 );
 
 testGlob(
@@ -92,7 +92,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/glob/potato/banana/yo.txt",
     "<rootDir>/meta/tests/fixtures/glob/hi.txt",
     "<rootDir>/meta/tests/fixtures/glob/hi/there.txt",
-  ]
+  ],
 );
 
 testGlob(
@@ -103,7 +103,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/glob/potato/banana/yo.txt",
     "<rootDir>/meta/tests/fixtures/glob/hi.txt",
     "<rootDir>/meta/tests/fixtures/glob/hi/there.txt",
-  ]
+  ],
 );
 
 testGlob(
@@ -114,7 +114,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/glob/potato/banana/yo.txt",
     "<rootDir>/meta/tests/fixtures/glob/hi.txt",
     "<rootDir>/meta/tests/fixtures/glob/hi/there.txt",
-  ]
+  ],
 );
 
 testGlob(
@@ -125,7 +125,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/glob/hi.something.js",
     "<rootDir>/meta/tests/fixtures/glob/potato/banana/yo.js",
     "<rootDir>/meta/tests/fixtures/glob/hi.js",
-  ]
+  ],
 );
 
 testGlob(
@@ -139,7 +139,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/glob/hi.js",
     "<rootDir>/meta/tests/fixtures/glob/hi.txt",
     "<rootDir>/meta/tests/fixtures/glob/hi/there.txt",
-  ]
+  ],
 );
 
 testGlob(
@@ -155,7 +155,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/glob/cabana",
     "<rootDir>/meta/tests/fixtures/glob/hi",
     "<rootDir>/meta/tests/fixtures/glob/hi/there.txt",
-  ]
+  ],
 );
 
 testGlob(
@@ -166,7 +166,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/glob/hi.something.js",
     "<rootDir>/meta/tests/fixtures/glob/hi.js",
     // Note that hi.txt is not present even though it matches the second pattern
-  ]
+  ],
 );
 
 testGlob(
@@ -177,7 +177,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/glob/potato/banana/yo.txt",
     "<rootDir>/meta/tests/fixtures/glob/hi.txt",
     "<rootDir>/meta/tests/fixtures/glob/hi",
-  ]
+  ],
 );
 
 test("error reading dead link does not stop search", async () => {
@@ -185,7 +185,7 @@ test("error reading dead link does not stop search", async () => {
     `JSON.stringify(glob(["**/*"], {
       followSymlinks: true,
       dir: ${JSON.stringify(symlinksDir)}
-    }))`
+    }))`,
   );
 
   const expected = [
@@ -225,14 +225,14 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/symlinks/link-to-folder",
     "<rootDir>/meta/tests/fixtures/symlinks/dead-link",
     "<rootDir>/meta/tests/fixtures/symlinks/some-file",
-  ]
+  ],
 );
 
 testGlob(
   "you have to specify leading dot to get stuff starting with a dot",
   symlinksDir,
   ["**/.*"],
-  ["<rootDir>/meta/tests/fixtures/symlinks/some-folder/.gitkeep"]
+  ["<rootDir>/meta/tests/fixtures/symlinks/some-folder/.gitkeep"],
 );
 
 testGlob(
@@ -246,7 +246,7 @@ testGlob(
     "<rootDir>/meta/tests/fixtures/symlinks/link-to-folder",
     "<rootDir>/meta/tests/fixtures/symlinks/dead-link",
     "<rootDir>/meta/tests/fixtures/symlinks/some-file",
-  ]
+  ],
 );
 
 test("using trace", async () => {
@@ -256,7 +256,7 @@ test("using trace", async () => {
         trace: console.error,
       },
       dir: ${JSON.stringify(globDir)}
-    }))`
+    }))`,
   );
 
   const expectedResult = [

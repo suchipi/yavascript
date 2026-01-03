@@ -21,7 +21,7 @@
  */
 declare function glob(
   patterns: string | Array<string>,
-  options?: GlobOptions
+  options?: GlobOptions,
 ): Array<Path>;
 
 /**

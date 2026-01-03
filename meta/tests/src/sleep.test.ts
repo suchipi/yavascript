@@ -6,7 +6,7 @@ test("sleep", async () => {
       sleep(10);
       sleep.sync(10);
       sleep.async(10).then(() => console.log('hi'));
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {

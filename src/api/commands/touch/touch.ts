@@ -15,7 +15,7 @@ export function touch(path: string | Path) {
   assert.type(
     path,
     String,
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   path = appendSlashIfWindowsDriveLetter(path);

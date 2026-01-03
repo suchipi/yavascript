@@ -6,7 +6,7 @@ test("__filename and __dirname", async () => {
     echo(__filename);
     echo(__dirname);
   `,
-    { cwd: __dirname }
+    { cwd: __dirname },
   );
   expect(result).toMatchInlineSnapshot(`
     {

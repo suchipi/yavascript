@@ -9,7 +9,7 @@ import {
 
 function assert<ValueType>(
   value: ValueType,
-  message?: string
+  message?: string,
 ): asserts value is ValueType extends null | undefined | false | 0 | ""
   ? never
   : ValueType {
@@ -22,7 +22,7 @@ function assert<ValueType>(
 const assertType = <T extends TypeValidator<any> | CoerceableToTypeValidator>(
   value: any,
   type: T,
-  optionalMessage?: string
+  optionalMessage?: string,
 ): asserts value is UnwrapTypeFromCoerceableOrValidator<T> => {
   const validator = types.coerce(type);
   if (optionalMessage != null) {
@@ -36,7 +36,7 @@ const assertType = <T extends TypeValidator<any> | CoerceableToTypeValidator>(
 
 const assert_: typeof assert & { type: typeof assertType } = Object.assign(
   assert,
-  { type: assertType }
+  { type: assertType },
 );
 
 export { assert_ as assert };

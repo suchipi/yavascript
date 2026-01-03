@@ -7,7 +7,7 @@ import {
 
 export const is = <T extends TypeValidator<any> | CoerceableToTypeValidator>(
   value: any,
-  type: T
+  type: T,
 ): value is UnwrapTypeFromCoerceableOrValidator<T> => {
   return types.coerce(type)(value);
 };

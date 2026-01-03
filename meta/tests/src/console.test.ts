@@ -129,7 +129,7 @@ test("console.log multiple", async () => {
 
 test("console.info multiple", async () => {
   const result = await evaluate(
-    `console.info("hi", { hi: true }, "hi again");`
+    `console.info("hi", { hi: true }, "hi again");`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -146,7 +146,7 @@ test("console.info multiple", async () => {
 
 test("console.warn multiple", async () => {
   const result = await evaluate(
-    `console.warn("hi", { hi: true }, "hi again");`
+    `console.warn("hi", { hi: true }, "hi again");`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -163,7 +163,7 @@ test("console.warn multiple", async () => {
 
 test("console.error multiple", async () => {
   const result = await evaluate(
-    `console.error("hi", { hi: true }, "hi again");`
+    `console.error("hi", { hi: true }, "hi again");`,
   );
   expect(result).toMatchInlineSnapshot(`
     {

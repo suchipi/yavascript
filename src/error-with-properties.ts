@@ -4,12 +4,12 @@ const MAX_ERROR_MESSAGE_LENGTH = 1000 - 3; // minus 3 for ellipsis
 
 export function makeErrorWithProperties<
   Properties extends { [key: string]: any },
-  ErrConstructor extends { new (message: string): any }
+  ErrConstructor extends { new (message: string): any },
 >(
   message: string,
   properties: Properties,
   // @ts-ignore could be instantiated with different subtype
-  errorConstructor: ErrConstructor = Error
+  errorConstructor: ErrConstructor = Error,
 ): Properties & ErrConstructor extends { new (message: string): infer Err }
   ? Err
   : never {
@@ -23,7 +23,7 @@ export function makeErrorWithProperties<
       errorMessage += " = ";
       errorMessage += inspect(value, inspectOptions.forError()).replace(
         /\n+/g,
-        " "
+        " ",
       );
       if (i !== entries.length - 1) {
         errorMessage += ", ";

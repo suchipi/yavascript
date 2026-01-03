@@ -29,41 +29,41 @@ test("transforms bare import", async () => {
 test("transforms namespace import", async () => {
   expect(transform(`import * as a from "a"`)).toBe(`a = require("a")`);
   expect(transform(`import       * \n as a   from    'a'`)).toBe(
-    `a = require('a')`
+    `a = require('a')`,
   );
   expect(transform(`import * as std from "quickjs:std"`)).toBe(
-    `std = require("quickjs:std")`
+    `std = require("quickjs:std")`,
   );
   expect(transform(`import * as std from 'quickjs:std'`)).toBe(
-    `std = require('quickjs:std')`
+    `std = require('quickjs:std')`,
   );
 });
 
 test("transforms default import", async () => {
   expect(transform(`import a from "a"`)).toBe(`a = require("a").default`);
   expect(transform(`import      \n\t  a   from    'a'`)).toBe(
-    `a = require('a').default`
+    `a = require('a').default`,
   );
   expect(transform(`import std from "quickjs:std"`)).toBe(
-    `std = require("quickjs:std").default`
+    `std = require("quickjs:std").default`,
   );
   expect(transform(`import std from 'quickjs:std'`)).toBe(
-    `std = require('quickjs:std').default`
+    `std = require('quickjs:std').default`,
   );
 });
 
 test("transforms named import", async () => {
   expect(transform(`import { a } from "a"`)).toBe(`({ a } = require("a")); a`);
   expect(transform(`import { a, b, c } from "a"`)).toBe(
-    `({ a, b, c } = require("a")); ({ a, b, c })`
+    `({ a, b, c } = require("a")); ({ a, b, c })`,
   );
   expect(transform(`import { a as b } from "a"`)).toBe(
-    `({ a: b } = require("a")); b`
+    `({ a: b } = require("a")); b`,
   );
   expect(transform(`import { abc as def } from 'abc'`)).toBe(
-    `({ abc: def } = require('abc')); def`
+    `({ abc: def } = require('abc')); def`,
   );
   expect(transform(`import { $one, two2, three3 as fo4ur } from 'abc'`)).toBe(
-    `({ $one, two2, three3: fo4ur } = require('abc')); ({ $one, two2, fo4ur })`
+    `({ $one, two2, three3: fo4ur } = require('abc')); ({ $one, two2, fo4ur })`,
   );
 });

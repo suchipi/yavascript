@@ -89,7 +89,7 @@ declare class Path {
   static detectSeparator<Fallback extends string | null = string>(
     input: Array<string> | string,
     // @ts-ignore might be instantiated with a different subtype
-    fallback: Fallback = Path.OS_SEGMENT_SEPARATOR
+    fallback: Fallback = Path.OS_SEGMENT_SEPARATOR,
   ): string | Fallback;
 
   /**
@@ -273,7 +273,7 @@ declare class Path {
    */
   indexOf(
     value: string | Path | Array<string | Path>,
-    fromIndex?: number | undefined
+    fromIndex?: number | undefined,
   ): number;
 
   /**
@@ -284,7 +284,7 @@ declare class Path {
    */
   includes(
     value: string | Path | Array<string | Path>,
-    fromIndex?: number | undefined
+    fromIndex?: number | undefined,
   ): boolean;
 
   /**
@@ -303,7 +303,7 @@ declare class Path {
    */
   replace(
     value: string | Path | Array<string | Path>,
-    replacement: string | Path | Array<string | Path>
+    replacement: string | Path | Array<string | Path>,
   ): Path;
 
   /**
@@ -322,7 +322,7 @@ declare class Path {
    */
   replaceAll(
     value: string | Path | Array<string | Path>,
-    replacement: string | Path | Array<string | Path>
+    replacement: string | Path | Array<string | Path>,
   ): Path;
 
   /**

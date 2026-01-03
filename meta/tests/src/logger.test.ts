@@ -22,7 +22,7 @@ test("logger is present", async () => {
 
 test("logger.info defaults to writing to stderr", async () => {
   const result = await evaluate(
-    `logger.info("test bla bla", 45, { yes: true })`
+    `logger.info("test bla bla", 45, { yes: true })`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -39,7 +39,7 @@ test("logger.info defaults to writing to stderr", async () => {
 
 test("logger.trace defaults to no-op function", async () => {
   const result = await evaluate(
-    `logger.trace("test bla bla", 45, { yes: true })`
+    `logger.trace("test bla bla", 45, { yes: true })`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -60,7 +60,7 @@ test("modifying logger.info affects logging of API functions", async () => {
       logger.info = console.log;
       console.log("second");
       exec("true");
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -81,7 +81,7 @@ test("modifying logger.trace affects logging of API functions", async () => {
     `
       logger.trace = console.error;
       exec("true");
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {

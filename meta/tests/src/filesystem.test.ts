@@ -8,7 +8,7 @@ const fileContentFixturesDir = rootDir("meta/tests/fixtures/file_content");
 test("readlink", async () => {
   const result = await evaluate(
     `[readlink("dead-link"), readlink("link-to-file"), readlink("link-to-folder")]`,
-    { cwd: symlinksFixturesDir }
+    { cwd: symlinksFixturesDir },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -27,7 +27,7 @@ test("readlink", async () => {
 
 test("readFile - string", async () => {
   const result = await evaluate(
-    `readFile("${fileContentFixturesDir}/hello.txt")`
+    `readFile("${fileContentFixturesDir}/hello.txt")`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -43,7 +43,7 @@ test("readFile - string", async () => {
 
 test("readFile - binary", async () => {
   const result = await evaluate(
-    `readFile("${fileContentFixturesDir}/hello.txt", { binary: true })`
+    `readFile("${fileContentFixturesDir}/hello.txt", { binary: true })`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -67,7 +67,7 @@ test("writeFile", async () => {
   }
 
   const result = await evaluate(
-    `writeFile(${JSON.stringify(targetFile)}, "hiiii~!!! :D あ")`
+    `writeFile(${JSON.stringify(targetFile)}, "hiiii~!!! :D あ")`,
   );
   expect(cleanResult(result)).toEqual({
     code: 0,
@@ -110,7 +110,7 @@ test("isDir - on file", async () => {
 
 test("isDir - on link to folder", async () => {
   const result = await evaluate(
-    `isDir("./meta/tests/fixtures/symlinks/link-to-folder")`
+    `isDir("./meta/tests/fixtures/symlinks/link-to-folder")`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -125,7 +125,7 @@ test("isDir - on link to folder", async () => {
 
 test("isDir - on link to file", async () => {
   const result = await evaluate(
-    `isDir("./meta/tests/fixtures/symlinks/link-to-file")`
+    `isDir("./meta/tests/fixtures/symlinks/link-to-file")`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -140,7 +140,7 @@ test("isDir - on link to file", async () => {
 
 test("isDir - on dead link", async () => {
   const result = await evaluate(
-    `isDir("./meta/tests/fixtures/symlinks/dead-link")`
+    `isDir("./meta/tests/fixtures/symlinks/dead-link")`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -181,7 +181,7 @@ test("isLink - on file", async () => {
 
 test("isLink - on link to folder", async () => {
   const result = await evaluate(
-    `isLink("./meta/tests/fixtures/symlinks/link-to-folder")`
+    `isLink("./meta/tests/fixtures/symlinks/link-to-folder")`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -196,7 +196,7 @@ test("isLink - on link to folder", async () => {
 
 test("isLink - on link to file", async () => {
   const result = await evaluate(
-    `isLink("./meta/tests/fixtures/symlinks/link-to-file")`
+    `isLink("./meta/tests/fixtures/symlinks/link-to-file")`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -211,7 +211,7 @@ test("isLink - on link to file", async () => {
 
 test("isLink - on dead link", async () => {
   const result = await evaluate(
-    `isLink("./meta/tests/fixtures/symlinks/dead-link")`
+    `isLink("./meta/tests/fixtures/symlinks/dead-link")`,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -275,14 +275,14 @@ test("remove - on dir with content", async () => {
   fs.mkdirSync(path.join(targetDir, "another-dir-with-content"));
   fs.writeFileSync(
     path.join(targetDir, "another-dir-with-content", "hi.txt"),
-    "hello there"
+    "hello there",
   );
   fs.writeFileSync(
     path.join(targetDir, "another-dir-with-content", "hi2.txt"),
-    "hello again!!"
+    "hello again!!",
   );
   fs.mkdirSync(
-    path.join(targetDir, "another-dir-with-content", "another-empty-dir")
+    path.join(targetDir, "another-dir-with-content", "another-empty-dir"),
   );
   fs.writeFileSync(path.join(targetDir, "something.js"), "console.log(2 + 2);");
 
@@ -416,7 +416,7 @@ test("copy", async () => {
   }
 
   const result = await evaluate(
-    `copy(${JSON.stringify(source)}, ${JSON.stringify(target)})`
+    `copy(${JSON.stringify(source)}, ${JSON.stringify(target)})`,
   );
   expect(cleanResult(result)).toMatchInlineSnapshot(`
     {

@@ -19,13 +19,13 @@ export default function printError(error: any, file: FILE) {
         .split("\n")
         .map((line: string) => line.replace(/^\s+/, "  "))
         .join("\n")
-        .replace(/\s+$/, "")
+        .replace(/\s+$/, ""),
     );
 
     let extraProps: Array<string> = [];
     try {
       extraProps = Object.getOwnPropertyNames(error).filter(
-        (name) => !normalProps.has(name)
+        (name) => !normalProps.has(name),
       );
     } catch (err) {
       // ignored

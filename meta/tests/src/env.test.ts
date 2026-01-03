@@ -33,11 +33,11 @@ test("setting env", async () => {
 test("setting env affects child processes", async () => {
   const result = await evaluate(
     `env.BLAH_BLAH = 'yes'; exec([${JSON.stringify(
-      binaryPath
+      binaryPath,
     )}, "-e", "env.BLAH_BLAH"])`,
     {
       env: { BLAH_BLAH: "yeah" },
-    }
+    },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -144,7 +144,7 @@ test("readEnvBool - unset var", async () => {
     `,
     {
       env: {},
-    }
+    },
   );
   expect(result2).toMatchInlineSnapshot(`
     {
@@ -182,7 +182,7 @@ test("readEnvBool - invalid value with logging override", async () => {
       env: {
         BLAH_BLAH: "potato",
       },
-    }
+    },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -209,7 +209,7 @@ test("setting env interacts with readEnvBool as expected", async () => {
       env: {
         BLAH_BLAH: "true",
       },
-    }
+    },
   );
   expect(result).toMatchInlineSnapshot(`
     {

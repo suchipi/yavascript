@@ -145,7 +145,7 @@ declare namespace JSX {
    */
   export interface Element<
     Props = { [key: string | symbol | number]: any },
-    Type = any
+    Type = any,
   > {
     $$typeof: typeof Element;
     type: Type;
@@ -220,20 +220,20 @@ declare namespace JSX {
    */
   export let createElement: {
     <Type extends string | typeof Fragment | ((...args: any) => any)>(
-      type: Type
+      type: Type,
     ): Element<{}, Type>;
     <
       Type extends string | typeof Fragment | ((...args: any) => any),
-      Props extends { [key: string | number | symbol]: any }
+      Props extends { [key: string | number | symbol]: any },
     >(
       type: Type,
-      props: Props
+      props: Props,
     ): Element<Props, Type>;
 
     <
       Type extends string | typeof Fragment | ((...args: any) => any),
       Props extends { [key: string | number | symbol]: any },
-      Children extends Array<any>
+      Children extends Array<any>,
     >(
       type: Type,
       props: Props,
@@ -242,7 +242,7 @@ declare namespace JSX {
 
     <
       Type extends string | typeof Fragment | ((...args: any) => any),
-      Children extends Array<any>
+      Children extends Array<any>,
     >(
       type: Type,
       ...children: Children

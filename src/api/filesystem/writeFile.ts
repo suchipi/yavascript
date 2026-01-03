@@ -6,18 +6,18 @@ import { assert } from "../assert";
 
 export function writeFile(
   path: string | Path,
-  data: string | ArrayBuffer
+  data: string | ArrayBuffer,
 ): void {
   assert.type(
     path,
     types.or(types.string, types.Path),
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   assert.type(
     data,
     types.or(types.string, types.ArrayBuffer),
-    "'data' argument must be either a string or an ArrayBuffer"
+    "'data' argument must be either a string or an ArrayBuffer",
   );
 
   if (is(path, types.Path)) {

@@ -29,5 +29,5 @@ declare function readEnvBool<T>(
   fallback: T,
   logging?: {
     warn?: (...args: Array<any>) => void;
-  }
+  },
 ): boolean | T;

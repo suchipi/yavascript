@@ -12,7 +12,7 @@ const { flags, args, metadata } = parseScriptArgs(
   // This second argument is optional; in unspecified, it defaults to
   // `scriptArgs.slice(2)`. It's only shown here to demonstrate that it's
   // possible to pass different args here, if desired.
-  scriptArgs.slice(2)
+  scriptArgs.slice(2),
 );
 
 console.log({ flags, args, metadata });

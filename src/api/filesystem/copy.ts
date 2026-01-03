@@ -32,7 +32,7 @@ function formatPath(path: Path | string): string {
 function copyRaw(
   from: string,
   to: string,
-  trace: (...args: Array<any>) => void = logger.trace
+  trace: (...args: Array<any>) => void = logger.trace,
 ): void {
   from = appendSlashIfWindowsDriveLetter(from);
   to = appendSlashIfWindowsDriveLetter(to);
@@ -53,7 +53,7 @@ function copyRaw(
     trace(
       "opening",
       to,
-      `(flags: O_WRONLY | O_CREAT, mode: 0o${fromPerms.toString(8)})`
+      `(flags: O_WRONLY | O_CREAT, mode: 0o${fromPerms.toString(8)})`,
     );
     const toFd = os.open(to, os.O_WRONLY | os.O_CREAT, fromPerms);
     fdsToCloseLater[to] = toFd;
@@ -114,24 +114,24 @@ export type CopyOptions = {
 export function copy(
   from: string | Path,
   to: string | Path,
-  options: CopyOptions = {}
+  options: CopyOptions = {},
 ): void {
   assert.type(
     from,
     types.or(types.string, types.Path),
-    "'from' argument must be either a string or a Path object"
+    "'from' argument must be either a string or a Path object",
   );
 
   assert.type(
     to,
     types.or(types.string, types.Path),
-    "'to' argument must be either a string or a Path object"
+    "'to' argument must be either a string or a Path object",
   );
 
   assert.type(
     options,
     types.or(types.undefined, types.anyObject),
-    "when present, 'options' argument must be an object"
+    "when present, 'options' argument must be an object",
   );
 
   const {
@@ -144,21 +144,21 @@ export function copy(
     types.or(
       types.exactString("overwrite"),
       types.exactString("skip"),
-      types.exactString("error")
+      types.exactString("error"),
     ),
-    'when present, \'whenTargetExists\' option must be either "overwrite", "skip", or "error".'
+    'when present, \'whenTargetExists\' option must be either "overwrite", "skip", or "error".',
   );
 
   assert.type(
     trace,
     types.or(types.undefined, types.anyFunction),
-    "when present, 'logging.trace' option must be a function."
+    "when present, 'logging.trace' option must be a function.",
   );
 
   assert.type(
     info,
     types.or(types.undefined, types.anyFunction),
-    "when present, 'logging.info' option must be a function."
+    "when present, 'logging.info' option must be a function.",
   );
 
   if (is(to, types.Path)) {
@@ -182,7 +182,7 @@ export function copy(
     case "dir -> file": {
       // Invalid
       throw new Error(
-        `Attempting to copy folder to path where file already exists: ${to}`
+        `Attempting to copy folder to path where file already exists: ${to}`,
       );
     }
     case "file -> dir": {
@@ -204,8 +204,8 @@ export function copy(
       if (whenTargetExists === "error") {
         throw new Error(
           `File already exists: ${JSON.stringify(
-            to
-          )}. To skip or overwrite existing files, pass 'whenTargetExists' as an option to 'copy', with a value of either "skip" or "overwrite".`
+            to,
+          )}. To skip or overwrite existing files, pass 'whenTargetExists' as an option to 'copy', with a value of either "skip" or "overwrite".`,
         );
       } else if (whenTargetExists === "skip") {
         info(`copy: SKIPPING ${formatPath(from)} -> ${formatPath(to)}`);
@@ -262,7 +262,7 @@ export function copy(
           targetInfo,
           from,
           to,
-        })}`
+        })}`,
       );
     }
   }

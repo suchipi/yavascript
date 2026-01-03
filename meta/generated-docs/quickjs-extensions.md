@@ -349,8 +349,9 @@ right?: undefined;
 # RightOperators (interface)
 
 ```ts
-interface RightOperators<T, Right>
-  extends Partial<OperatorFunctions<T, Right>> {
+interface RightOperators<T, Right> extends Partial<
+  OperatorFunctions<T, Right>
+> {
   left?: undefined;
   right: {};
 }

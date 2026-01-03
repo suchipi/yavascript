@@ -6,7 +6,7 @@ import { types } from "../../types";
 
 export function extname(
   pathOrFilename: string | Path,
-  options: { full?: boolean } = {}
+  options: { full?: boolean } = {},
 ): string {
   if (is(pathOrFilename, types.Path)) {
     pathOrFilename = pathOrFilename.toString();
@@ -15,7 +15,7 @@ export function extname(
   assert.type(
     pathOrFilename,
     String,
-    "'pathOrFilename' argument must be either a string or a Path object"
+    "'pathOrFilename' argument must be either a string or a Path object",
   );
 
   const filename = basename(pathOrFilename);
@@ -28,7 +28,7 @@ export function extname(
   assert.type(
     options,
     Object,
-    "'options' argument must be either an object or undefined"
+    "'options' argument must be either an object or undefined",
   );
 
   if (options.full) {

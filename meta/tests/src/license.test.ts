@@ -8,7 +8,7 @@ async function getPackagesInBinary() {
     const kameInstance = __kame_instances__[instanceKey];
     const files = Object.keys(kameInstance.modules);
     console.log(JSON.stringify(files, null, 2));
-  `
+  `,
   );
   const partialResult = {
     code: result.code,
@@ -38,7 +38,7 @@ async function getPackagesInBinary() {
     const matches = file.match(/^node_modules\/((?:@[^/]+\/[^/]+)|[^/]+)/i);
     if (matches == null) {
       throw new Error(
-        "Unhandled case in node_modules name grabber regexp: " + file
+        "Unhandled case in node_modules name grabber regexp: " + file,
       );
     }
     const packageName = matches[1];

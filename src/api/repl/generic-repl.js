@@ -38,7 +38,7 @@ export function startRepl(
     get_completions = () => ({ tab: [], pos: 0, ctx: {} }),
     history_file = null,
     get_prompt = () => "> ",
-  } = {}
+  } = {},
 ) {
   var history = history_file ? history_file.load() : [];
   var clip_board = "";

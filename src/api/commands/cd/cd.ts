@@ -12,7 +12,7 @@ export function cd(path?: string | Path): void {
   }
   if (path == null) {
     throw new Error(
-      "Please either specify a path (as the first argument) or set the HOME environment variable"
+      "Please either specify a path (as the first argument) or set the HOME environment variable",
     );
   }
 
@@ -23,7 +23,7 @@ export function cd(path?: string | Path): void {
   assert.type(
     path,
     String,
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   path = appendSlashIfWindowsDriveLetter(path);

@@ -9,7 +9,7 @@ type Hint = typeof String | typeof Boolean | typeof Number | typeof Path;
 
 export function parseScriptArgs(
   hints: { [key: string]: Hint } = {},
-  args: Array<string> = scriptArgs.slice(2)
+  args: Array<string> = scriptArgs.slice(2),
 ): {
   flags: { [key: string]: any };
   args: Array<string>;
@@ -28,7 +28,7 @@ export function parseScriptArgs(
   assert.type(
     hints,
     types.anyObject,
-    "when present, 'hints' argument must be an object"
+    "when present, 'hints' argument must be an object",
   );
 
   const hintsForClef: { [key: string]: clefParse.Hint } = {};
@@ -38,7 +38,7 @@ export function parseScriptArgs(
       throw makeErrorWithProperties(
         "all properties of 'hints' argument must be strings, but it was something else.",
         { actual: key },
-        TypeError
+        TypeError,
       );
     }
 
@@ -60,7 +60,7 @@ export function parseScriptArgs(
         throw makeErrorWithProperties(
           `property '${key}' of 'hints' argument should be String, Boolean, Number, or Path, but it was something else.`,
           { actual: value },
-          TypeError
+          TypeError,
         );
       }
     }
@@ -69,7 +69,7 @@ export function parseScriptArgs(
   assert.type(
     args,
     types.arrayOf(types.string),
-    "when present, 'args' argument must be an array of strings"
+    "when present, 'args' argument must be an array of strings",
   );
 
   // clef-parse calls `shift` on this
@@ -83,7 +83,7 @@ export function parseScriptArgs(
       resolvePath: (...args) =>
         Path.fromRaw(args, Path.OS_SEGMENT_SEPARATOR).normalize().toString(),
       getCwd: () => pwd().toString(),
-    }
+    },
   );
 
   const optionsClone = { ...options };

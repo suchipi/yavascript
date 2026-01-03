@@ -4,7 +4,7 @@ import { types } from "../types";
 import { makeErrorWithProperties } from "../../error-with-properties";
 
 export function toArgv(
-  args: string | Path | Array<string | number | Path>
+  args: string | Path | Array<string | number | Path>,
 ): Array<string> {
   let stringInput: string;
 
@@ -19,7 +19,7 @@ export function toArgv(
   } else {
     throw makeErrorWithProperties(
       "'args' argument must be either a string, a Path, or an array of strings/Paths/numbers",
-      { received: args }
+      { received: args },
     );
   }
 
@@ -122,11 +122,11 @@ export function toArgv(
     result.push(argBeingBuilt);
   } else if (mode === "IN_DOUBLE_STRING") {
     throw new Error(
-      `Invalid command-line string: unterminated double-quote: ${stringInput}`
+      `Invalid command-line string: unterminated double-quote: ${stringInput}`,
     );
   } else if (mode === "IN_SINGLE_STRING") {
     throw new Error(
-      `Invalid command-line string: unterminated single-quote: ${stringInput}`
+      `Invalid command-line string: unterminated single-quote: ${stringInput}`,
     );
   }
 

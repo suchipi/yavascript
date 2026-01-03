@@ -1006,7 +1006,7 @@ export function startRepl(lang) {
         "\\t         " +
         sel(show_time) +
         "toggle timing display\n" +
-        "\\clear      clear the terminal\n"
+        "\\clear      clear the terminal\n",
     );
     std.puts("\\q          exit\n");
   }

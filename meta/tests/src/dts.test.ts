@@ -10,7 +10,7 @@ describe("yavascript.d.ts", () => {
     const sourceFile = ts.createSourceFile(
       "yavascript.d.ts",
       content,
-      ts.ScriptTarget.ES2020
+      ts.ScriptTarget.ES2020,
     );
 
     // @ts-ignore this function is there, but it isn't in the type defs
@@ -24,7 +24,7 @@ describe("yavascript.d.ts", () => {
 
     const lines = content.split("\n");
     const exportingLineIndex = lines.findIndex((line) =>
-      line.startsWith("export")
+      line.startsWith("export"),
     );
     const exportingLine =
       exportingLineIndex === -1 ? null : lines[exportingLineIndex];
@@ -33,7 +33,7 @@ describe("yavascript.d.ts", () => {
       const actual = `Line ${lineNumber}: ${exportingLine}`;
       const expected = `Line ${lineNumber}: ${exportingLine.replace(
         /^export/,
-        "declare"
+        "declare",
       )}`;
       expect(actual).toBe(expected);
     } else {

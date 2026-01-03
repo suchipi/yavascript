@@ -27,11 +27,11 @@ const FILEstubProps = makeGetterPropertyDescriptorMap(
   {
     FILE() {
       throw new Error(
-        "'FILE', as a global constructor, is not defined. To create a FILE, use functions from the 'quickjs:std' module. To check if a value is a FILE, use `is(something, types.FILE)`."
+        "'FILE', as a global constructor, is not defined. To create a FILE, use functions from the 'quickjs:std' module. To check if a value is a FILE, use `is(something, types.FILE)`.",
       );
     },
   },
-  false
+  false,
 );
 
 const envProps = makeGetterPropertyDescriptorMap({
@@ -135,7 +135,7 @@ const othersProps = makeGetterPropertyDescriptorMap(
     string: () => require("./others").string,
     symbol: () => require("./others").symbol,
   },
-  false
+  false,
 );
 
 const jsxProps = makeGetterPropertyDescriptorMap({

@@ -23,7 +23,7 @@ describe("non-recursive", () => {
 
     const result = await evaluate(
       `mkdir(${JSON.stringify(target)}, { logging: { info: console.error } })`,
-      { cwd: rootDir() }
+      { cwd: rootDir() },
     );
     expect(cleanResult(result)).toMatchInlineSnapshot(`
       {
@@ -119,7 +119,7 @@ describe("recursive via option", () => {
 
     const result = await evaluate(
       `mkdir(${JSON.stringify(target)}, { recursive: true })`,
-      { cwd: rootDir() }
+      { cwd: rootDir() },
     );
     expect(cleanResult(result)).toMatchInlineSnapshot(`
       {
@@ -141,7 +141,7 @@ describe("recursive via option", () => {
     expect(fs.existsSync(outerTarget)).toBe(false);
 
     const result = await evaluate(
-      `mkdir(${JSON.stringify(target)}, { recursive: true })`
+      `mkdir(${JSON.stringify(target)}, { recursive: true })`,
     );
     expect(cleanResult(result)).toMatchInlineSnapshot(`
       {
@@ -166,7 +166,7 @@ describe("recursive via option", () => {
     fs.writeFileSync(target, "hi");
 
     const result = await evaluate(
-      `mkdir(${JSON.stringify(target)}, { recursive: true })`
+      `mkdir(${JSON.stringify(target)}, { recursive: true })`,
     );
     expect(result).toMatchInlineSnapshot(`
       {
@@ -193,7 +193,7 @@ describe("recursive via option", () => {
     fs.writeFileSync(outerTarget, "hi");
 
     const result = await evaluate(
-      `mkdir(${JSON.stringify(target)}, { recursive: true })`
+      `mkdir(${JSON.stringify(target)}, { recursive: true })`,
     );
     expect(result).toMatchInlineSnapshot(`
       {

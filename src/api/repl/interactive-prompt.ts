@@ -14,7 +14,7 @@ export class InteractivePrompt {
   historyFileName?: string;
   getCompletions?: (
     line: string,
-    pos: number
+    pos: number,
   ) => {
     // TODO refactor these to have better key names
     tab: Array<string>;
@@ -30,20 +30,20 @@ export class InteractivePrompt {
       historyFileName?: string;
       getCompletions?: (
         line: string,
-        pos: number
+        pos: number,
       ) => {
         // TODO refactor these to have better key names
         tab: Array<string>;
         pos: number;
         ctx: { [key: string | number | symbol]: any };
       };
-    } = {}
+    } = {},
   ) {
     if (!didDoInteractivePromptWarning) {
       console.warn(
         yellow(
-          "InteractivePrompt is hella WIP and buggy; it WILL change. You're using it at your own risk"
-        )
+          "InteractivePrompt is hella WIP and buggy; it WILL change. You're using it at your own risk",
+        ),
       );
       didDoInteractivePromptWarning = true;
     }
@@ -51,32 +51,32 @@ export class InteractivePrompt {
     assert.type(
       handleInput,
       types.Function,
-      "'handleInput' must be a function"
+      "'handleInput' must be a function",
     );
     assert.type(
       options,
       types.or(types.undefined, types.Object),
-      "when present, 'options' must be an object"
+      "when present, 'options' must be an object",
     );
     assert.type(
       options.prompt,
       types.or(types.undefined, types.Function),
-      "when present, 'options.prompt' must be a function"
+      "when present, 'options.prompt' must be a function",
     );
     assert.type(
       options.printInput,
       types.or(types.undefined, types.Function),
-      "when present, 'options.printInput' must be a function"
+      "when present, 'options.printInput' must be a function",
     );
     assert.type(
       options.historyFileName,
       types.or(types.undefined, types.string),
-      "when present, 'options.historyFileName' must be a string"
+      "when present, 'options.historyFileName' must be a string",
     );
     assert.type(
       options.getCompletions,
       types.or(types.undefined, types.Function),
-      "when present, 'options.getCompletions' must be a function"
+      "when present, 'options.getCompletions' must be a function",
     );
 
     this.handleInput = handleInput;

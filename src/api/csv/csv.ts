@@ -34,7 +34,7 @@ export const CSV = {
     assert.type(
       input,
       types.arrayOf(types.arrayOf(types.string)),
-      "'input' argument must be an array of arrays of strings"
+      "'input' argument must be an array of arrays of strings",
     );
 
     return Papa.unparse(input);

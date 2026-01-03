@@ -7,7 +7,7 @@ interface InteractivePrompt {
   historyFileName?: string;
   getCompletions?: (
     line: string,
-    pos: number
+    pos: number,
   ) => {
     // TODO refactor these to have better key names
     tab: Array<string>;
@@ -31,14 +31,14 @@ interface InteractivePromptConstructor {
       historyFileName?: string;
       getCompletions?: (
         line: string,
-        pos: number
+        pos: number,
       ) => {
         // TODO refactor these to have better key names
         tab: Array<string>;
         pos: number;
         ctx: { [key: string | number | symbol]: any };
       };
-    }
+    },
   ): InteractivePrompt;
 
   prototype: InteractivePrompt;

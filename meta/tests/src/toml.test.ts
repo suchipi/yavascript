@@ -14,7 +14,7 @@ test("TOML.parse", async () => {
       \`;
       const obj = TOML.parse(doc);
       console.log(obj);
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -49,7 +49,7 @@ test("TOML.stringify", async () => {
       };
       const doc = TOML.stringify(obj);
       console.log(doc);
-    `
+    `,
   );
   expect(result).toMatchInlineSnapshot(`
     {

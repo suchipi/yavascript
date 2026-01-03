@@ -11,7 +11,7 @@ export function basename(path: string | Path): string {
   assert.type(
     path,
     String,
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   const parts = Path.splitToSegments(path);

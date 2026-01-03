@@ -378,7 +378,7 @@ test("printing of normal Path object", async () => {
     `
       new Path(pwd(), "something")
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -396,7 +396,7 @@ test("printing of empty Path object", async () => {
     `
       new Path()
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -419,7 +419,7 @@ test("printing of Path object with extra props", async () => {
       p.something = true;
       p
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -443,7 +443,7 @@ test("printing of frozen Path object", async () => {
       Object.freeze(p);
       p
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -467,7 +467,7 @@ test("printing of Path object with a child path object attached to it", async ()
       p.p2 = p2;
       p
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -507,7 +507,7 @@ test("Path.startsWith", async () => {
       // true
       echo(p.startsWith(p3));
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -549,7 +549,7 @@ test("Path.endsWith", async () => {
       // true
       echo(p2.endsWith(p3));
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -586,7 +586,7 @@ test("Path.indexOf", async () => {
         p.indexOf("yup", 2), // works because yup is after index 2
       ]);
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -620,7 +620,7 @@ test("Path.replace", async () => {
         p.replace(["something", "yup", "yeah"], "/mhm"),
       ])
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -648,7 +648,7 @@ test("Path.replaceAll", async () => {
       // replaceAll avoids an infinite loop by only replacing forwards
       echo(p.replaceAll("one", "one"));
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -668,7 +668,7 @@ test("Path.replaceLast", async () => {
       const p = new Path("/one/two/three/two/one/zero");
       echo(p.replaceLast("twenty-two"));
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -687,7 +687,7 @@ test("Path.basename", async () => {
       const p = new Path("/one/two/three/two/one/zero.help.txt");
       echo(p.basename());
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -706,7 +706,7 @@ test("Path.extname", async () => {
       const p = new Path("/one/two/three/two/one/zero.help.txt");
       echo(p.extname());
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -725,7 +725,7 @@ test("Path.extname full", async () => {
       const p = new Path("/one/two/three/two/one/zero.help.txt");
       echo(p.extname({ full: true }));
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -744,7 +744,7 @@ test("Path.dirname", async () => {
       const p = new Path("/one/two/three/two/one/zero.help.txt");
       echo(p.dirname());
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {
@@ -768,7 +768,7 @@ test("Path.clone", async () => {
       console.log("p.segments === p2.segments", p.segments === p2.segments);
       console.log("p.separator === p2.separator", p.separator === p2.separator);
     `,
-    { cwd: rootDir() }
+    { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
     {

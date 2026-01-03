@@ -35,7 +35,7 @@ export const logger = {
     assert.type(
       newValue,
       types.anyFunction,
-      "'logger.info' must be a function"
+      "'logger.info' must be a function",
     );
     _info = newValue;
   },
@@ -46,7 +46,7 @@ export const logger = {
     assert.type(
       newValue,
       types.anyFunction,
-      "'logger.trace' must be a function"
+      "'logger.trace' must be a function",
     );
     _trace = newValue;
   },
@@ -57,7 +57,7 @@ export const logger = {
     assert.type(
       newValue,
       types.anyFunction,
-      "'logger.warn' must be a function"
+      "'logger.warn' must be a function",
     );
     _warn = newValue;
   },

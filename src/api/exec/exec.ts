@@ -21,13 +21,13 @@ const exec = (
       info?: (...args: Array<any>) => void;
     };
     block?: boolean;
-  } = {}
+  } = {},
 ): any => {
   // 'args' type gets checked in ChildProcess constructor
   assert.type(
     options,
     types.object,
-    "'options' argument must be either an object or undefined"
+    "'options' argument must be either an object or undefined",
   );
 
   const {
@@ -42,34 +42,34 @@ const exec = (
   assert.type(
     failOnNonZeroStatus,
     types.boolean,
-    "when present, 'failOnNonZeroStatus' option must be a boolean"
+    "when present, 'failOnNonZeroStatus' option must be a boolean",
   );
   assert.type(
     captureOutput,
     types.or(
       types.boolean,
       types.exactString("utf8"),
-      types.exactString("arraybuffer")
+      types.exactString("arraybuffer"),
     ),
-    "when present, 'captureOutput' option must be either a boolean or one of the strings 'utf8' or 'arraybuffer'"
+    "when present, 'captureOutput' option must be either a boolean or one of the strings 'utf8' or 'arraybuffer'",
   );
 
   assert.type(
     trace,
     types.Function,
-    "when present, 'options.logging.trace' must be a function"
+    "when present, 'options.logging.trace' must be a function",
   );
 
   assert.type(
     info,
     types.Function,
-    "when present, 'options.logging.info' must be a function"
+    "when present, 'options.logging.info' must be a function",
   );
 
   assert.type(
     block,
     types.boolean,
-    "when present, 'block' option must be a boolean"
+    "when present, 'block' option must be a boolean",
   );
 
   const child = new ChildProcess(args, { cwd, env, logging: { trace } });
@@ -88,7 +88,7 @@ const exec = (
     info(
       `exec: ${child.args
         .map((arg) => (/[^A-Za-z\-0-9_=\/]/.test(arg) ? quote(arg) : arg))
-        .join(" ")}`
+        .join(" ")}`,
     );
     child.start();
 
@@ -120,14 +120,14 @@ const exec = (
                 // process has already run to completion, you know? this *shouldn't*
                 // ever happen, in theory, but...
                 trace(
-                  `WEIRD! stdout reported it was ${outLen}, but when we read it back, it was ${outBytesRead}. Continuing anyway...`
+                  `WEIRD! stdout reported it was ${outLen}, but when we read it back, it was ${outBytesRead}. Continuing anyway...`,
                 );
               }
 
               const errBytesRead = tmpErr.read(stderr, 0, errLen);
               if (errBytesRead !== errLen) {
                 trace(
-                  `WEIRD! stderr reported it was ${errLen}, but when we read it back, it was ${errBytesRead}. Continuing anyway...`
+                  `WEIRD! stderr reported it was ${errLen}, but when we read it back, it was ${errBytesRead}. Continuing anyway...`,
                 );
               }
             } else {
@@ -144,7 +144,7 @@ const exec = (
           if (failOnNonZeroStatus && result.status !== 0) {
             const err = makeErrorWithProperties(
               `Command failed: ${JSON.stringify(args)}`,
-              result
+              result,
             );
             if (stdout != null) {
               err.stdout = stdout;
@@ -171,7 +171,7 @@ const exec = (
             }
           } else {
             throw new Error(
-              "Internal error: tmpOut and tmpErr weren't set, but attempted to return stdout and stderr. This indicates a bug in the exec function"
+              "Internal error: tmpOut and tmpErr weren't set, but attempted to return stdout and stderr. This indicates a bug in the exec function",
             );
           }
         } catch (err) {

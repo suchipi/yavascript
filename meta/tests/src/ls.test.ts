@@ -22,7 +22,7 @@ test("ls - no args", async () => {
       "<rootDir>/meta/tests/fixtures/glob/hi.txt",
       "<rootDir>/meta/tests/fixtures/glob/cabana",
       "<rootDir>/meta/tests/fixtures/glob/hi",
-    ].sort()
+    ].sort(),
   );
 });
 
@@ -44,7 +44,7 @@ test("ls - no args (different process cwd)", async () => {
       "<rootDir>/meta/tests/fixtures/symlinks/link-to-folder",
       "<rootDir>/meta/tests/fixtures/symlinks/dead-link",
       "<rootDir>/meta/tests/fixtures/symlinks/some-file",
-    ].sort()
+    ].sort(),
   );
 });
 
@@ -64,6 +64,6 @@ test("ls - specifying dir", async () => {
       //
       "<rootDir>/meta/tests/fixtures/glob/potato/banana",
       "<rootDir>/meta/tests/fixtures/glob/potato/eggplant",
-    ].sort()
+    ].sort(),
   );
 });

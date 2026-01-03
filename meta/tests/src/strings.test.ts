@@ -5,7 +5,7 @@ const names = {};
 function testFn(
   name: string,
   input: string | number | { raw: string },
-  expected: string
+  expected: string,
 ) {
   let testName = name;
 

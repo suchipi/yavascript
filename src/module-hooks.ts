@@ -13,7 +13,7 @@ function nodeModulePaths(dir: string) {
   parts.forEach((part, index, all) => {
     const dir = new Path(
       ...parts.slice(0, index + 1),
-      "node_modules"
+      "node_modules",
     ).toString();
 
     dirs.push(dir);
@@ -77,7 +77,7 @@ export function installModuleHooks() {
     const parts = Path.splitToSegments(name);
     if (parts[0] === "." || parts[0] === "..") {
       const paths = potentialFilesForPath(
-        new Path(basedir, ...parts).toString()
+        new Path(basedir, ...parts).toString(),
       );
       for (const path of paths) {
         if (isFile(path)) {
@@ -101,7 +101,7 @@ export function installModuleHooks() {
       {
         name,
         fromFile,
-      }
+      },
     );
   };
 

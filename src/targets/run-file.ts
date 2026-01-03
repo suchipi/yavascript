@@ -11,8 +11,8 @@ function overrideCompiler(
   callback: (
     filename: string,
     content: string,
-    defaultBehavior: (filename: string, content: string) => string
-  ) => string
+    defaultBehavior: (filename: string, content: string) => string,
+  ) => string,
 ) {
   const extension = extname(fileToRun);
 
@@ -22,7 +22,7 @@ function overrideCompiler(
 
   engine.ModuleDelegate.compilers[extension] = (
     filename: string,
-    content: string
+    content: string,
   ) => {
     if (filename === fileToRun) {
       return callback(filename, content, defaultBehavior);
@@ -35,13 +35,13 @@ function overrideCompiler(
 export default async function runFileTarget(
   fileToRun: string,
   langOverride: string | null,
-  asMain: boolean = true
+  asMain: boolean = true,
 ) {
   let absFileToRun = Path.isAbsolute(fileToRun)
     ? fileToRun
     : fileToRun.match(/^\.{1,2}\//)
-    ? engine.resolveModule(fileToRun, "./<cwd>")
-    : new Path(pwd(), fileToRun).toString();
+      ? engine.resolveModule(fileToRun, "./<cwd>")
+      : new Path(pwd(), fileToRun).toString();
 
   absFileToRun = realpath(absFileToRun).toString();
 
@@ -82,7 +82,7 @@ export default async function runFileTarget(
           err.message === "unsupported keyword: export"
         ) {
           const err: any = new Error(
-            `You cannot use toplevel await and export in the same file. Either remove the toplevel await (by wrapping stuff with an immediately-invoked async function) or remove the exports.`
+            `You cannot use toplevel await and export in the same file. Either remove the toplevel await (by wrapping stuff with an immediately-invoked async function) or remove the exports.`,
           );
           err.filename = absFileToRun;
           throw err;

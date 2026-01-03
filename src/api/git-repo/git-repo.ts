@@ -14,13 +14,13 @@ export class GitRepo {
     assert.type(
       fromPath,
       types.or(types.Path, types.string),
-      "'fromPath' argument must be either a string or a Path object"
+      "'fromPath' argument must be either a string or a Path object",
     );
 
     const absFromPath = Path.normalize(fromPath);
     if (!absFromPath.isAbsolute()) {
       throw new Error(
-        `Could not resolve ${quote(fromPath)} into an absolute path`
+        `Could not resolve ${quote(fromPath)} into an absolute path`,
       );
     }
     const currentPath = absFromPath.clone();
@@ -40,7 +40,7 @@ export class GitRepo {
 
     throw makeErrorWithProperties(
       `Could not find git repo root (inputPath = ${fromPath}, resolvedPath = ${absFromPath})`,
-      { inputPath: fromPath, resolvedPath: absFromPath }
+      { inputPath: fromPath, resolvedPath: absFromPath },
     );
   }
 
@@ -48,7 +48,7 @@ export class GitRepo {
     assert.type(
       repoDir,
       types.or(types.Path, types.string),
-      "'repoDir' argument must be either a string or a Path object"
+      "'repoDir' argument must be either a string or a Path object",
     );
 
     if (typeof repoDir === "string") {
@@ -60,7 +60,7 @@ export class GitRepo {
     if (!this.repoDir.isAbsolute()) {
       throw makeErrorWithProperties(
         "Couldn't resolve absolute path to repo dir.",
-        { repoDir, cwd: pwd() }
+        { repoDir, cwd: pwd() },
       );
     }
 
@@ -68,12 +68,12 @@ export class GitRepo {
     if (!exists(dotGitDir)) {
       throw makeErrorWithProperties(
         `The 'repoPath' provided to the GitRepo constructor doesn't appear to refer to a git repository; namely, ${JSON.stringify(
-          dotGitDir
+          dotGitDir,
         )} doesn't exist.`,
         {
           repoDir: this.repoDir.toString(),
           dotGitDir,
-        }
+        },
       );
     }
   }
@@ -116,7 +116,7 @@ export class GitRepo {
           stdout: result.stdout,
           cwd: repoDir,
           signal: result.signal,
-        }
+        },
       );
     }
 
@@ -153,7 +153,7 @@ export class GitRepo {
     assert.type(
       path,
       types.or(types.string, types.Path),
-      "'path' argument must be either a string or a Path object"
+      "'path' argument must be either a string or a Path object",
     );
 
     let pathObj = new Path(path);
@@ -171,7 +171,7 @@ export class GitRepo {
           resolvedPath,
           cwd: pwd(),
           repoDir: this.repoDir.toString(),
-        }
+        },
       );
     }
 
@@ -183,7 +183,7 @@ export class GitRepo {
           resolvedPath,
           cwd: pwd(),
           repoDir: this.repoDir.toString(),
-        }
+        },
       );
     }
 
@@ -201,7 +201,7 @@ export class GitRepo {
           stdout: result.stdout,
           path: resolvedPath,
           signal: result.signal,
-        }
+        },
       );
     }
     return result.status === 0;

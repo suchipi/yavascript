@@ -10,7 +10,7 @@ export function remove(path: string | Path): void {
   assert.type(
     path,
     types.or(types.string, types.Path),
-    "'path' argument must be either a string or a Path object"
+    "'path' argument must be either a string or a Path object",
   );
 
   if (is(path, types.Path)) {
