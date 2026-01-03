@@ -1326,6 +1326,7 @@ declare interface WhoAmIResult {
  */
 declare function whoami(): WhoAmIResult;
 
+
 /**
  * Runs a child process and blocks until it exits. You can call it with either a
  * string or an array of strings.
@@ -4456,6 +4457,7 @@ declare var process: {
   exit(code?: number | null | undefined): void;
 };
 
+
 // ==========================================
 // ------------------------------------------
 // QuickJS APIs, which YavaScript builds upon
@@ -4473,7 +4475,7 @@ interface ObjectConstructor {
    */
   toPrimitive(
     input: any,
-    hint: "string" | "number" | "default",
+    hint: "string" | "number" | "default"
   ): string | number | bigint | boolean | undefined | symbol | null;
 
   /**
@@ -4572,9 +4574,8 @@ interface LeftOperators<T, Left> extends Partial<OperatorFunctions<Left, T>> {
   right?: undefined;
 }
 
-interface RightOperators<T, Right> extends Partial<
-  OperatorFunctions<T, Right>
-> {
+interface RightOperators<T, Right>
+  extends Partial<OperatorFunctions<T, Right>> {
   left?: undefined;
   right: {};
 }
@@ -4603,7 +4604,7 @@ interface OperatorsConstructor {
    * using this function.
    */
   updateBigIntOperators(
-    ops: Pick<OperatorFunctions<BigInt, BigInt>, "/" | "**">,
+    ops: Pick<OperatorFunctions<BigInt, BigInt>, "/" | "**">
   ): void;
 }
 
@@ -5156,7 +5157,7 @@ interface BigFloat {
   toPrecision(
     precision: number,
     roundingMode?: BigFloatRoundingMode,
-    radix?: number,
+    radix?: number
   ): string;
 
   /**
@@ -5169,7 +5170,7 @@ interface BigFloat {
   toFixed(
     fractionDigits: number,
     roundingMode?: BigFloatRoundingMode,
-    radix?: number,
+    radix?: number
   ): string;
 
   /**
@@ -5182,7 +5183,7 @@ interface BigFloat {
   toExponential(
     fractionDigits: number,
     roundingMode?: BigFloatRoundingMode,
-    radix?: number,
+    radix?: number
   ): string;
 
   [Symbol.typeofValue]: () => "bigfloat";
@@ -5314,7 +5315,7 @@ interface BigDecimal {
    */
   toFixed(
     fractionDigits: number,
-    roundingMode?: BigDecimalRoundingMode,
+    roundingMode?: BigDecimalRoundingMode
   ): string;
 
   /**
@@ -5325,7 +5326,7 @@ interface BigDecimal {
    */
   toExponential(
     fractionDigits: number,
-    roundingMode?: BigDecimalRoundingMode,
+    roundingMode?: BigDecimalRoundingMode
   ): string;
 }
 
@@ -5861,10 +5862,7 @@ declare module "quickjs:std" {
      * - `responseHeaders`: headers separated by CRLF (string)
      * - `status`: status code (number)
      */
-    (
-      url: string,
-      options: { full: true },
-    ): {
+    (url: string, options: { full: true }): {
       status: number;
       response: string;
       responseHeaders: string;
@@ -5879,10 +5877,7 @@ declare module "quickjs:std" {
      * - `responseHeaders`: headers separated by CRLF (string)
      * - `status`: status code (number)
      */
-    (
-      url: string,
-      options: { full: true; binary: false },
-    ): {
+    (url: string, options: { full: true; binary: false }): {
       status: number;
       response: string;
       responseHeaders: string;
@@ -5897,10 +5892,7 @@ declare module "quickjs:std" {
      * - `responseHeaders`: headers separated by CRLF (string)
      * - `status`: status code (number)
      */
-    (
-      url: string,
-      options: { full: true; binary: true },
-    ): {
+    (url: string, options: { full: true; binary: true }): {
       status: number;
       response: ArrayBuffer;
       responseHeaders: string;
@@ -5933,7 +5925,7 @@ declare module "quickjs:std" {
   export function strftime(
     maxBytes: number,
     format: string,
-    time: Date | number,
+    time: Date | number
   ): string;
 }
 
@@ -6001,7 +5993,7 @@ declare module "quickjs:os" {
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
-    length: number,
+    length: number
   ): number;
 
   /** Write `length` bytes to the file with descriptor `fd` from the ArrayBuffer `buffer` at byte position `offset`. Return the number of written bytes. */
@@ -6009,7 +6001,7 @@ declare module "quickjs:os" {
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
-    length: number,
+    length: number
   ): number;
 
   /** Return `true` if the file opened with descriptor `fd` is a TTY (terminal). */
@@ -6281,7 +6273,7 @@ declare module "quickjs:os" {
   /** Call the function `func` when the signal `signal` happens. Only a single handler per signal number is supported. Use `null` to set the default handler or `undefined` to ignore the signal. Signal handlers can only be defined in the main thread. */
   export function signal(
     signal: number,
-    func: null | undefined | (() => void),
+    func: null | undefined | (() => void)
   ): void;
 
   /** POSIX signal number. */
@@ -6420,7 +6412,7 @@ declare module "quickjs:os" {
   /** Call the function func after delay ms. Return a handle to the timer. */
   export function setTimeout(
     func: (...args: any) => any,
-    delay: number,
+    delay: number
   ): OSTimer;
 
   /** Cancel a timer. */
@@ -6731,7 +6723,7 @@ declare module "quickjs:engine" {
    */
   export function evalScript(
     code: string,
-    options?: { backtraceBarrier?: boolean; filename?: string },
+    options?: { backtraceBarrier?: boolean; filename?: string }
   ): any;
 
   /**
@@ -6751,7 +6743,7 @@ declare module "quickjs:engine" {
    */
   export function importModule(
     filename: string,
-    basename?: string,
+    basename?: string
   ): { [key: string]: any };
 
   /**
@@ -6783,7 +6775,7 @@ declare module "quickjs:engine" {
    */
   export function defineBuiltinModule(
     name: string,
-    obj: { [key: string]: any },
+    obj: { [key: string]: any }
   ): void;
 
   /**
@@ -6813,7 +6805,7 @@ declare module "quickjs:bytecode" {
       byteSwap?: boolean;
       sourceType?: "module" | "script";
       encodedFileName?: string;
-    },
+    }
   ): ArrayBuffer;
 
   /**
@@ -6821,7 +6813,7 @@ declare module "quickjs:bytecode" {
    */
   export function fromValue(
     value: any,
-    options?: { byteSwap?: boolean },
+    options?: { byteSwap?: boolean }
   ): ArrayBuffer;
 
   /**
@@ -7014,9 +7006,11 @@ declare module "quickjs:encoding" {
   export function fromUtf8(input: string): ArrayBuffer;
 }
 
+
 declare const std: typeof import("quickjs:std");
 declare const os: typeof import("quickjs:os");
 
 // undocumented from quickjs, but it's there
 /** Get the current unix timestamp with microsecond precision. */
 declare function __date_clock(): number;
+
