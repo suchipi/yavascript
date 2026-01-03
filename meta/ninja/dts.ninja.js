@@ -27,6 +27,9 @@ const dtsRaw = build({
 });
 build({
   rule: "prettier",
+  ruleVariables: {
+    PRETTIER_FLAGS: "--ignore-path ''",
+  },
   inputs: [dtsRaw],
   output: builddir("yavascript.d.ts"),
 });
