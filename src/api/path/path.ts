@@ -20,22 +20,6 @@ class Path extends NicePath {
       : [],
   );
 
-  // pheno.coerce relies on a function's .toString() returning a value starting
-  // with "class" to see that function as a class, and therefore coerce it into
-  // the type "instanceOf(<thing>)" when it appears in a function that accepts a type
-  // validator (ie. `is` or `assert.type`).
-  //
-  // Normally, `Path.toString()` would already start with "class", because we
-  // defined it using class syntax. But, as part of compiling yavascript, the
-  // source code is converted to QuickJS bytecode, and that bytecode
-  // representation does not preserve Function bodies, so `Path.toString()`
-  // changes. It instead returns "function Path() {\n    [native code]\n}".
-  //
-  // Therefore, we add an explicit pheno coerce override.
-  static [PHENO_COERCE_OVERRIDE] = function isPath(value: unknown) {
-    return Path.isPath(value);
-  };
-
   static splitToSegments(inputParts: Array<string> | string): Array<string> {
     assert.type(
       inputParts,
@@ -203,5 +187,25 @@ Path.isAbsolute = Path.isAbsolute.bind(Path);
 Path.isPath = Path.isPath.bind(Path);
 Path.normalize = Path.normalize.bind(Path);
 Path.splitToSegments = Path.splitToSegments.bind(Path);
+
+// pheno.coerce relies on a function's .toString() returning a value starting
+// with "class" to see that function as a class, and therefore coerce it into
+// the type "instanceOf(<thing>)" when it appears in a function that accepts a type
+// validator (ie. `is` or `assert.type`).
+//
+// Normally, `Path.toString()` would already start with "class", because we
+// defined it using class syntax. But, as part of compiling yavascript, the
+// source code is converted to QuickJS bytecode, and that bytecode
+// representation does not preserve Function bodies, so `Path.toString()`
+// changes. It instead returns "function Path() {\n    [native code]\n}".
+//
+// Therefore, we add an explicit pheno coerce override.
+Object.defineProperty(Path, PHENO_COERCE_OVERRIDE, {
+  configurable: true,
+  enumerable: false,
+  value: function isPath(value: unknown) {
+    return Path.isPath(value);
+  },
+});
 
 export { Path };
