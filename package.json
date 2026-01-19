@@ -28,7 +28,7 @@
     "nice-path": "^3.2.2",
     "papaparse": "^5.5.3",
     "path-less-traveled": "^2.2.1",
-    "pheno": "^0.12.0",
+    "pheno": "^1.13.0",
     "prettier": "^3.7.4",
     "resolve-everything": "^0.1.2",
     "string-dedent": "^3.0.2",

@@ -4,6 +4,7 @@ import { assert } from "../assert";
 import { types } from "../types";
 import { env } from "../env";
 import { extname } from "../commands/extname";
+import { PHENO_COERCE_OVERRIDE } from "pheno/coerce";
 
 // Default value of env.PATHEXT on Windows Vista and up.
 // XP is the same but without ".MSC".
@@ -18,6 +19,22 @@ class Path extends NicePath {
       ? (env.PATHEXT || windowsDefaultPathExt).split(";")
       : [],
   );
+
+  // pheno.coerce relies on a function's .toString() returning a value starting
+  // with "class" to see that function as a class, and therefore coerce it into
+  // the type "instanceOf(<thing>)" when it appears in a function that accepts a type
+  // validator (ie. `is` or `assert.type`).
+  //
+  // Normally, `Path.toString()` would already start with "class", because we
+  // defined it using class syntax. But, as part of compiling yavascript, the
+  // source code is converted to QuickJS bytecode, and that bytecode
+  // representation does not preserve Function bodies, so `Path.toString()`
+  // changes. It instead returns "function Path() {\n    [native code]\n}".
+  //
+  // Therefore, we add an explicit pheno coerce override.
+  static [PHENO_COERCE_OVERRIDE] = function isPath(value: unknown) {
+    return Path.isPath(value);
+  };
 
   static splitToSegments(inputParts: Array<string> | string): Array<string> {
     assert.type(
@@ -174,23 +191,6 @@ class Path extends NicePath {
     }
   }
 }
-
-// .toString() needs to return a value starting with "class" for pheno.coerce
-// to see this function as a class, and therefore coerce it into the type
-// "instanceOf(Path)" when it appears in a function that accepts a type
-// validator (ie. `is` or `assert.type`).
-//
-// Normally, `Path.toString()` would already start with "class", because we
-// defined it using class syntax. But, as part of compiling yavascript, the
-// source code is converted to QuickJS bytecode, and that bytecode
-// representation does not preserve Function bodies, so `Path.toString()`
-// changes. It instead returns "function Path() {\n    [native code]\n}".
-//
-// Explicitly overriding it like this ensures that it has the correct value
-// even after bytecode conversion.
-Object.defineProperty(Path, "toString", {
-  value: () => "class Path {\n    [native code]\n}",
-});
 
 // All static methods need to be bound for backwards compatibility (they didn't
 // use `this` in the past but now they do). Some of these don't strictly

@@ -1380,7 +1380,7 @@ export const types: types = Object.assign(Object.create(null), {
     return std.isFILE(value);
   },
   Path(value: any): value is Path {
-    return value instanceof Path;
+    return Path.isPath(value);
   },
   JSX: {
     unknownElement(
