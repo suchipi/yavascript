@@ -45,13 +45,6 @@ exports.resolve = (id, fromFilePath) => {
       return path.resolve(__dirname, "kame-ts-interface-checker-stub.js");
     }
 
-    case "nice-path": {
-      // Used by clef-parse, but our Path is a superset of nice-path (nice-path
-      // was derived from yavascript code). So we can reduce bundle size by
-      // deduping.
-      return path.resolve(__dirname, "kame-nice-path-stub.js");
-    }
-
     default: {
       if (id.endsWith("?contentString")) {
         return (

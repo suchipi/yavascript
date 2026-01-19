@@ -2,6 +2,7 @@
   - [Path.OS_SEGMENT_SEPARATOR (static property)](#pathos_segment_separator-static-property)
   - [Path.OS_ENV_VAR_SEPARATOR (static property)](#pathos_env_var_separator-static-property)
   - [Path.OS_PROGRAM_EXTENSIONS (static property)](#pathos_program_extensions-static-property)
+  - [Path.isPath (static method)](#pathispath-static-method)
   - [Path.splitToSegments (static method)](#pathsplittosegments-static-method)
   - [Path.detectSeparator (static method)](#pathdetectseparator-static-method)
   - [Path.normalize (static method)](#pathnormalize-static-method)
@@ -60,6 +61,7 @@ declare class Path {
   static readonly OS_SEGMENT_SEPARATOR: "/" | "\\";
   static readonly OS_ENV_VAR_SEPARATOR: ":" | ";";
   static readonly OS_PROGRAM_EXTENSIONS: ReadonlySet<string>;
+  static isPath(other: unknown): other is Path;
   static splitToSegments(inputParts: Array<string> | string): Array<string>;
   static detectSeparator<Fallback extends string | null = string>(
     input: Array<string> | string,
@@ -159,6 +161,16 @@ On all other operating systems, this Set is empty.
 
 ```ts
 static readonly OS_PROGRAM_EXTENSIONS: ReadonlySet<string>;
+```
+
+## Path.isPath (static method)
+
+Returns a boolean indicating whether `other` is a Path instance.
+
+- `@param` _other_ — Any value
+
+```ts
+static isPath(other: unknown): other is Path;
 ```
 
 ## Path.splitToSegments (static method)

@@ -69,30 +69,31 @@ test("bundled third-party code snapshot", async () => {
   const packages = await getPackagesInBinary();
 
   expect(Array.from(packages).sort()).toMatchInlineSnapshot(`
-    [
-      "@danielx/civet",
-      "@iarna/toml",
-      "@jridgewell/gen-mapping",
-      "@jridgewell/resolve-uri",
-      "@jridgewell/sourcemap-codec",
-      "@jridgewell/trace-mapping",
-      "@swc/helpers",
-      "a-mimir",
-      "ansi-regex",
-      "balanced-match",
-      "brace-expansion",
-      "clef-parse",
-      "coffeescript",
-      "kleur",
-      "lines-and-columns",
-      "minimatch",
-      "papaparse",
-      "pheno",
-      "string-dedent",
-      "strip-ansi",
-      "sucrase",
-      "yaml",
-    ]
+   [
+     "@danielx/civet",
+     "@iarna/toml",
+     "@jridgewell/gen-mapping",
+     "@jridgewell/resolve-uri",
+     "@jridgewell/sourcemap-codec",
+     "@jridgewell/trace-mapping",
+     "@swc/helpers",
+     "a-mimir",
+     "ansi-regex",
+     "balanced-match",
+     "brace-expansion",
+     "clef-parse",
+     "coffeescript",
+     "kleur",
+     "lines-and-columns",
+     "minimatch",
+     "nice-path",
+     "papaparse",
+     "pheno",
+     "string-dedent",
+     "strip-ansi",
+     "sucrase",
+     "yaml",
+   ]
   `);
 });
 

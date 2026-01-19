@@ -25,6 +25,7 @@
     "mark-applier": "^0.5.2",
     "mdtocs": "^1.0.5",
     "minimatch": "^5.1.0",
+    "nice-path": "^3.2.2",
     "papaparse": "^5.5.3",
     "path-less-traveled": "^2.2.1",
     "pheno": "^0.12.0",

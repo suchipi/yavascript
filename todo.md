@@ -50,6 +50,7 @@
 - [ ] move some of the static properties on Path to some sort of "os" thing, along with other similar helpers. maybe extension of the existing "quickjs:os" `os` global?
 - [x] there's something wrong with yavascript.d.ts that's making it not take effect
 - [x] deduplicate nice-path from clef-parse (make it use Path global instead)
+  - [ ] this was done but needs to be done again cause we use nice-path for Path now and clef-parse uses an older version of nice-path
 - [ ] make it so `quickjs:context`s can get yavascript globals bound to their global intrinsics
 - [x] repl: don't add contiguous duplicate entries to history
 - [ ] repl: don't tab-autocomplete variable names for "did you mean" reference error forwarder getter stubs

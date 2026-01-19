@@ -548,6 +548,13 @@ Copyright (c) 2016, Rebecca Turner <me@re-becca.org>
 
 ${ISC}
 
+====== nice-path ======
+
+The MIT License (MIT)
+Copyright (c) 2019-2024 Lily Skye
+
+${MIT}
+
 ====== yavascript ======
 
 YavaScript script interpreter

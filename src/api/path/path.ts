@@ -1,39 +1,16 @@
 import * as os from "quickjs:os";
+import { Path as NicePath } from "nice-path";
 import { assert } from "../assert";
 import { types } from "../types";
-import { is } from "../is";
 import { env } from "../env";
-import { appendSlashIfWindowsDriveLetter } from "./_win32Helpers";
 import { extname } from "../commands/extname";
-
-function validateSegments(
-  segments: Array<string>,
-  separator: string,
-): Array<string> {
-  return segments.filter((part, index) => {
-    // first part can be "" to represent left side of root "/"
-    // second part can be "" to support windows UNC paths
-    if (part === "" && index === 0) {
-      return true;
-    } else if (
-      part === "" &&
-      index === 1 &&
-      separator === "\\" &&
-      segments[0] === ""
-    ) {
-      return true;
-    }
-
-    return Boolean(part);
-  });
-}
 
 // Default value of env.PATHEXT on Windows Vista and up.
 // XP is the same but without ".MSC".
 const windowsDefaultPathExt =
   ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC";
 
-class Path {
+class Path extends NicePath {
   static OS_SEGMENT_SEPARATOR = os.platform === "win32" ? "\\" : "/";
   static OS_ENV_VAR_SEPARATOR = os.platform === "win32" ? ";" : ":";
   static OS_PROGRAM_EXTENSIONS = new Set(
@@ -47,17 +24,7 @@ class Path {
       inputParts,
       types.or(types.string, types.arrayOf(types.string)),
     );
-
-    if (!Array.isArray(inputParts)) {
-      inputParts = [inputParts];
-    }
-
-    const separator = Path.detectSeparator(inputParts);
-
-    return validateSegments(
-      inputParts.map((part) => part.split(/(?:\/|\\)/g)).flat(1),
-      separator,
-    );
+    return super.splitToSegments(inputParts);
   }
 
   static detectSeparator<Fallback extends string | null = string>(
@@ -68,20 +35,7 @@ class Path {
     assert.type(input, types.or(types.string, types.arrayOf(types.string)));
     assert.type(fallback, types.or(types.string, types.null));
 
-    let testStr = input;
-    if (Array.isArray(input)) {
-      testStr = input.join("|");
-    }
-
-    for (const char of testStr) {
-      if (char === "/") {
-        return "/";
-      } else if (char === "\\") {
-        return "\\";
-      }
-    }
-
-    return fallback;
+    return super.detectSeparator(input, fallback);
   }
 
   static normalize(
@@ -98,21 +52,14 @@ class Path {
       ),
     );
 
-    return new Path(...inputs).normalize();
+    return super.normalize(...inputs) as Path;
   }
 
   static isAbsolute(path: string | Path): boolean {
     assert.type(path, types.or(types.string, types.Path));
 
-    if (is(path, types.Path)) {
-      return path.isAbsolute();
-    } else {
-      return new Path(path).isAbsolute();
-    }
+    return super.isAbsolute(path);
   }
-
-  segments: Array<string>;
-  separator: string;
 
   constructor(...inputs: Array<string | Path | Array<string | Path>>) {
     assert.type(
@@ -126,13 +73,7 @@ class Path {
       ),
     );
 
-    const parts = inputs
-      .flat(1)
-      .map((part) => (typeof part === "string" ? part : part.segments))
-      .flat(1);
-
-    this.segments = Path.splitToSegments(parts);
-    this.separator = Path.detectSeparator(parts);
+    super(...inputs);
   }
 
   static fromRaw(
@@ -142,57 +83,10 @@ class Path {
     assert.type(segments, types.arrayOf(types.string));
     assert.type(separator, types.string);
 
-    const path = new Path();
-    path.segments = validateSegments(segments, separator);
-    path.separator = separator;
-    return path;
+    return super.fromRaw(segments, separator) as Path;
   }
 
-  normalize(): Path {
-    // we clone this cause we're gonna mutate it
-    const segments = [...this.segments];
-
-    const newSegments: Array<string> = [];
-    function isNewSegmentsEmptyExcludingDots() {
-      return (
-        newSegments.filter((segment) => segment !== "." && segment !== "..")
-          .length === 0
-      );
-    }
-
-    let currentSegment: string | undefined;
-    while (segments.length > 0) {
-      currentSegment = segments.shift();
-
-      switch (currentSegment) {
-        case ".": {
-          if (isNewSegmentsEmptyExcludingDots()) {
-            newSegments.push(currentSegment);
-          }
-          break;
-        }
-        case "..": {
-          if (isNewSegmentsEmptyExcludingDots()) {
-            newSegments.push(currentSegment);
-          } else {
-            newSegments.pop();
-          }
-
-          break;
-        }
-        default: {
-          if (currentSegment != null) {
-            newSegments.push(currentSegment);
-          }
-          break;
-        }
-      }
-    }
-
-    return Path.fromRaw(newSegments, this.separator);
-  }
-
-  concat(...others: Array<string | Path | Array<string | Path>>): Path {
+  concat(...others: Array<string | Path | Array<string | Path>>): this {
     assert.type(
       others,
       types.arrayOf(
@@ -204,219 +98,15 @@ class Path {
       ),
     );
 
-    const otherSegments = new Path(others.flat(1)).segments;
-    return Path.fromRaw(this.segments.concat(otherSegments), this.separator);
-  }
-
-  isAbsolute(): boolean {
-    const firstPart = this.segments[0];
-
-    // empty first component indicates that path starts with leading slash.
-    // could be unix fs root, or windows unc path
-    if (firstPart === "") return true;
-
-    // windows drive
-    if (/^[A-Za-z]:/.test(firstPart)) return true;
-
-    return false;
-  }
-
-  clone(): this {
-    // @ts-ignore could be instantiated with different subtype
-    return (this.constructor as typeof Path).fromRaw(
-      [...this.segments],
-      this.separator,
-    );
-  }
-
-  relativeTo(
-    dir: Path | string,
-    options: { noLeadingDot?: boolean } = {},
-  ): Path {
-    if (!is(dir, types.Path)) {
-      dir = new Path(dir);
-    }
-
-    const ownSegments = [...this.segments];
-    const dirSegments = [...dir.segments];
-
-    while (ownSegments[0] === dirSegments[0]) {
-      ownSegments.shift();
-      dirSegments.shift();
-    }
-
-    if (dirSegments.length === 0) {
-      if (options.noLeadingDot) {
-        return Path.fromRaw(ownSegments, this.separator);
-      } else {
-        return Path.fromRaw([".", ...ownSegments], this.separator);
-      }
-    } else {
-      const dotDots = dirSegments.map((_) => "..");
-      return Path.fromRaw([...dotDots, ...ownSegments]);
-    }
-  }
-
-  toString(): string {
-    let result = this.segments.join(this.separator);
-    if (result == "") {
-      return "/";
-    } else {
-      result = appendSlashIfWindowsDriveLetter(result);
-      return result;
-    }
+    return super.concat(...others);
   }
 
   toJSON(): string {
     return this.toString();
   }
 
-  basename(): string {
-    return this.segments.at(-1) || "";
-  }
-
-  extname(options: { full?: boolean } = {}): string {
+  extname(options?: { full?: boolean }): string {
     return extname(this, options);
-  }
-
-  dirname(): Path {
-    return this.replaceLast([]);
-  }
-
-  startsWith(value: string | Path | Array<string | Path>): boolean {
-    if (!is(value, types.Path)) {
-      value = new Path(value);
-    }
-
-    return value.segments.every(
-      (segment, index) => this.segments[index] === segment,
-    );
-  }
-
-  endsWith(value: string | Path | Array<string | Path>): boolean {
-    if (!is(value, types.Path)) {
-      value = new Path(value);
-    }
-
-    const valueSegmentsReversed = [...value.segments].reverse();
-    const ownSegmentsReversed = [...this.segments].reverse();
-
-    return valueSegmentsReversed.every(
-      (segment, index) => ownSegmentsReversed[index] === segment,
-    );
-  }
-
-  indexOf(
-    value: string | Path | Array<string | Path>,
-    fromIndex: number = 0,
-  ): number {
-    if (!is(value, types.Path)) {
-      value = new Path(value);
-    }
-
-    const ownSegmentsLength = this.segments.length;
-    for (let i = fromIndex; i < ownSegmentsLength; i++) {
-      if (
-        value.segments.every((valueSegment, valueIndex) => {
-          return this.segments[i + valueIndex] === valueSegment;
-        })
-      ) {
-        return i;
-      }
-    }
-
-    return -1;
-  }
-
-  includes(
-    value: string | Path | Array<string | Path>,
-    fromIndex: number = 0,
-  ): boolean {
-    return this.indexOf(value, fromIndex) !== -1;
-  }
-
-  replace(
-    value: string | Path | Array<string | Path>,
-    replacement: string | Path | Array<string | Path>,
-  ): Path {
-    if (!is(value, types.Path)) {
-      value = new Path(value);
-    }
-    if (!is(replacement, types.Path)) {
-      replacement = new Path(replacement);
-    }
-
-    const matchIndex = this.indexOf(value);
-
-    if (matchIndex === -1) {
-      return this.clone();
-    } else {
-      const newSegments = [
-        ...this.segments.slice(0, matchIndex),
-        ...replacement.segments,
-        ...this.segments.slice(matchIndex + value.segments.length),
-      ];
-      return Path.fromRaw(newSegments, this.separator);
-    }
-  }
-
-  replaceAll(
-    value: string | Path | Array<string | Path>,
-    replacement: string | Path | Array<string | Path>,
-  ): Path {
-    if (!is(replacement, types.Path)) {
-      replacement = new Path(replacement);
-    }
-
-    let searchIndex = 0;
-
-    let currentPath: Path = this;
-
-    const ownLength = this.segments.length;
-    while (searchIndex < ownLength) {
-      const matchingIndex = this.indexOf(value, searchIndex);
-      if (matchingIndex === -1) {
-        break;
-      } else {
-        currentPath = currentPath.replace(value, replacement);
-        searchIndex = matchingIndex + replacement.segments.length;
-      }
-    }
-
-    return currentPath;
-  }
-
-  replaceLast(replacement: string | Path | Array<string | Path>): Path {
-    if (!is(replacement, types.Path)) {
-      replacement = new Path(replacement);
-    }
-
-    const segments = [...this.segments];
-    segments.pop();
-    segments.push(...replacement.segments);
-
-    return Path.fromRaw(segments, this.separator);
-  }
-
-  equals(other: string | Path | Array<string | Path>): boolean {
-    if (!is(other, types.Path)) {
-      other = new Path(other);
-    }
-
-    return other.separator === this.separator && this.hasEqualSegments(other);
-  }
-
-  hasEqualSegments(other: string | Path | Array<string | Path>): boolean {
-    if (!is(other, types.Path)) {
-      other = new Path(other);
-    }
-
-    return (
-      this.segments.length === other.segments.length &&
-      this.segments.every((segment, index) => {
-        return segment === other.segments[index];
-      })
-    );
   }
 
   [inspect.custom](inputs: InspectCustomInputs) {
@@ -501,5 +191,17 @@ class Path {
 Object.defineProperty(Path, "toString", {
   value: () => "class Path {\n    [native code]\n}",
 });
+
+// All static methods need to be bound for backwards compatibility (they didn't
+// use `this` in the past but now they do). Some of these don't strictly
+// speaking need to be bound but it's easier to reason about if they're just all
+// bound
+Path.detectSeparator = Path.detectSeparator.bind(Path);
+Path.from = Path.from.bind(Path);
+Path.fromRaw = Path.fromRaw.bind(Path);
+Path.isAbsolute = Path.isAbsolute.bind(Path);
+Path.isPath = Path.isPath.bind(Path);
+Path.normalize = Path.normalize.bind(Path);
+Path.splitToSegments = Path.splitToSegments.bind(Path);
 
 export { Path };

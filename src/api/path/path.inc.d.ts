@@ -67,6 +67,13 @@ declare class Path {
   static readonly OS_PROGRAM_EXTENSIONS: ReadonlySet<string>;
 
   /**
+   * Returns a boolean indicating whether `other` is a Path instance.
+   *
+   * @param other - Any value
+   */
+  static isPath(other: unknown): other is Path;
+
+  /**
    * Converts a string (or array of strings) into an array of path segment
    * strings (the parts between the slashes).
    *
