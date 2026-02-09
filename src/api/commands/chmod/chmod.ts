@@ -228,9 +228,7 @@ export interface Chmod {
   (permissions: number | string, path: string | Path): void;
   <Operation extends Chmod.Operation>(
     operation: Operation,
-    permissions: Operation extends "set"
-      ? Partial<Record<Chmod.Who, Chmod.Permission>>
-      : Record<Chmod.Who, Chmod.Permission>,
+    permissions: Partial<Record<Chmod.Who, Chmod.Permission>>,
     path: string | Path,
   ): void;
 }

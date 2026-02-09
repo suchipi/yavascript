@@ -26,9 +26,7 @@ interface Chmod {
   (permissions: number | string, path: string | Path): void;
   <Operation extends Chmod.Operation>(
     operation: Operation,
-    permissions: Operation extends "set"
-      ? Record<Chmod.Who, Chmod.Permission>
-      : Partial<Record<Chmod.Who, Chmod.Permission>>,
+    permissions: Partial<Record<Chmod.Who, Chmod.Permission>>,
     path: string | Path,
   ): void;
 }
@@ -97,7 +95,7 @@ Some example objects:
 ```
 
 ```ts
-<Operation extends Chmod.Operation>(operation: Operation, permissions: Operation extends "set" ? Record<Chmod.Who, Chmod.Permission> : Partial<Record<Chmod.Who, Chmod.Permission>>, path: string | Path): void;
+<Operation extends Chmod.Operation>(operation: Operation, permissions: Partial<Record<Chmod.Who, Chmod.Permission>>, path: string | Path): void;
 ```
 
 # Chmod (namespace)

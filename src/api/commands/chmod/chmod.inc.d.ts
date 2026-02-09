@@ -69,9 +69,7 @@ interface Chmod {
    */
   <Operation extends Chmod.Operation>(
     operation: Operation,
-    permissions: Operation extends "set"
-      ? Record<Chmod.Who, Chmod.Permission>
-      : Partial<Record<Chmod.Who, Chmod.Permission>>,
+    permissions: Partial<Record<Chmod.Who, Chmod.Permission>>,
     path: string | Path,
   ): void;
 }
