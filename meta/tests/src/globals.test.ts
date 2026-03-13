@@ -27,7 +27,9 @@ test("globals", async () => {
         } catch (err) {
           logLine += " set throws error";
         }
-        globalThis[key] = value;
+        try {
+          globalThis[key] = value;
+        } catch (err) { /* ignored */ }
       } else {
         logLine += " readonly";
       }
@@ -55,11 +57,9 @@ test("globals", async () => {
   `);
   expect(cleanResult(result)).toMatchInlineSnapshot(`
     {
-      "code": 1,
+      "code": 0,
       "error": false,
-      "stderr": "Error: __filename's value cannot be changed
-      at somewhere
-    ",
+      "stderr": "",
       "stdout": "
     Object: function (CW)
     Function: function (CW)
@@ -237,6 +237,12 @@ test("globals", async () => {
     yavascript: object (GSCE)
     help: function (GSCE)
     TOML: object (GSCE)
+    __filename: string set throws error (GS)
+    __dirname: string set throws error (GS)
+    grepFile: function (CWE)
+    grepString: function (CWE)
+    global: object (CW)
+    process: object (CW)
     ",
     }
   `);
