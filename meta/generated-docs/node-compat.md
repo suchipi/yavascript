@@ -29,7 +29,7 @@ scripts. It contains a subset of the properties found on the Node.js
 `process` global, which each forward to their corresponding yavascript API.
 
 For instance, `process.env` is a getter that returns [env](/meta/generated-docs/env.md#env-object), and
-`process.argv` is a getter that returns [scriptArgs](/meta/generated-docs/libc.md#scriptargs-value).
+`process.argv` is a getter that returns [scriptArgs](/meta/generated-docs/cmdline.md#scriptargs-value).
 
 If you are writing yavascript-specific code, you should use yavascript's APIs
 instead of `process`.
@@ -106,7 +106,7 @@ readonly env: {
 
 ## process.argv (readonly property)
 
-Same as the global [scriptArgs](/meta/generated-docs/libc.md#scriptargs-value).
+Same as the global [scriptArgs](/meta/generated-docs/cmdline.md#scriptargs-value).
 
 ```ts
 readonly argv: Array<string>;
@@ -122,7 +122,7 @@ readonly argv0: string;
 
 ## process.execPath (readonly string property)
 
-Shortcut for `os.realpath(os.execPath())`, using the QuickJS [os](/meta/generated-docs/libc.md#quickjsos-namespace)
+Shortcut for `os.realpath(os.execPath())`, using the QuickJS [os](/meta/generated-docs/os.md#quickjsos-namespace)
 module.
 
 ```ts
@@ -132,7 +132,7 @@ readonly execPath: string;
 ## process.exitCode (number property)
 
 Uses `std.getExitCode()` and `std.setExitCode()` from the QuickJS
-[std](/meta/generated-docs/libc.md#quickjsstd-namespace) module.
+[std](/meta/generated-docs/std.md#quickjsstd-namespace) module.
 
 ```ts
 exitCode: number;
@@ -140,7 +140,7 @@ exitCode: number;
 
 ## process.exit (method)
 
-Uses `std.exit()` from the QuickJS [std](/meta/generated-docs/libc.md#quickjsstd-namespace) module.
+Uses `std.exit()` from the QuickJS [std](/meta/generated-docs/std.md#quickjsstd-namespace) module.
 
 ```ts
 exit(code?: number | null | undefined): void;

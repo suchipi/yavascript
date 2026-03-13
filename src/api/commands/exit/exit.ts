@@ -1,15 +1,15 @@
-import * as std from "quickjs:std";
+import * as cmdline from "quickjs:cmdline";
 
 function exit(code?: number) {
-  std.exit(code);
+  cmdline.exit(code);
 }
 
 Object.defineProperty(exit, "code", {
   get() {
-    return std.getExitCode();
+    return cmdline.getExitCode();
   },
   set(newValue: number) {
-    std.setExitCode(newValue);
+    cmdline.setExitCode(newValue);
   },
 });
 

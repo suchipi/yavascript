@@ -14,7 +14,7 @@
 
 A function which parses command line `--flags` into an object of flags and an
 array of positional arguments. This function is opinionated; if it doesn't
-meet your needs, you can parse the [scriptArgs](/meta/generated-docs/libc.md#scriptargs-value) global manually.
+meet your needs, you can parse the [scriptArgs](/meta/generated-docs/cmdline.md#scriptargs-value) global manually.
 
 Flags `--like-this`, `--like_this`, or `--LIKE_THIS` get converted into
 property names `likeThis` on the returned flags object.

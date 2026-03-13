@@ -109,23 +109,22 @@ test("exec - child process receives args", async () => {
     )}, "-e", "scriptArgs", "bla", "blah", "--", "haha"])`,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "exec: <yavascript binary> -e scriptArgs bla blah -- haha
-    ",
-      "stdout": "[
-      Frozen
-      "<yavascript binary>"
-      "-e"
-      "scriptArgs"
-      "bla"
-      "blah"
-      "--"
-      "haha"
-    ]
-    ",
-    }
+   {
+     "code": 0,
+     "error": false,
+     "stderr": "exec: <yavascript binary> -e scriptArgs bla blah -- haha
+   ",
+     "stdout": "[
+     "<yavascript binary>"
+     "-e"
+     "scriptArgs"
+     "bla"
+     "blah"
+     "--"
+     "haha"
+   ]
+   ",
+   }
   `);
 });
 

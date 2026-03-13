@@ -30,12 +30,14 @@ declare module "quickjs:context" {
       moduleGlobals?: boolean;
       timers?: boolean;
       modules?: {
-        "quickjs:std"?: boolean;
-        "quickjs:os"?: boolean;
         "quickjs:bytecode"?: boolean;
+        "quickjs:cmdline"?: boolean;
         "quickjs:context"?: boolean;
-        "quickjs:engine"?: boolean;
         "quickjs:encoding"?: boolean;
+        "quickjs:engine"?: boolean;
+        "quickjs:os"?: boolean;
+        "quickjs:std"?: boolean;
+        "quickjs:timers"?: boolean;
       };
     });
     globalThis: typeof globalThis;
@@ -71,12 +73,14 @@ class Context {
     moduleGlobals?: boolean;
     timers?: boolean;
     modules?: {
-      "quickjs:std"?: boolean;
-      "quickjs:os"?: boolean;
       "quickjs:bytecode"?: boolean;
+      "quickjs:cmdline"?: boolean;
       "quickjs:context"?: boolean;
-      "quickjs:engine"?: boolean;
       "quickjs:encoding"?: boolean;
+      "quickjs:engine"?: boolean;
+      "quickjs:os"?: boolean;
+      "quickjs:std"?: boolean;
+      "quickjs:timers"?: boolean;
     };
   });
   globalThis: typeof globalThis;
@@ -153,12 +157,14 @@ constructor(options?: {
   moduleGlobals?: boolean;
   timers?: boolean;
   modules?: {
-    "quickjs:std"?: boolean;
-    "quickjs:os"?: boolean;
     "quickjs:bytecode"?: boolean;
+    "quickjs:cmdline"?: boolean;
     "quickjs:context"?: boolean;
-    "quickjs:engine"?: boolean;
     "quickjs:encoding"?: boolean;
+    "quickjs:engine"?: boolean;
+    "quickjs:os"?: boolean;
+    "quickjs:std"?: boolean;
+    "quickjs:timers"?: boolean;
   };
 });
 ```

@@ -968,7 +968,7 @@ clearStatus(): void;
 
 ```ts
 interface BigFloatConstructor {
-  (value: number | string | BigInt | BigFloat): BigFloat;
+  (value: number | string | bigint | BigFloat): BigFloat;
   prototype: BigFloat;
   get LN2(): BigFloat;
   get PI(): BigFloat;
@@ -1011,7 +1011,7 @@ If `value` is a numeric type, it is converted to BigFloat without rounding.
 If `value`` is a string, it is converted to BigFloat using the precision of the global floating point environment ([BigFloatEnv.prec](/meta/generated-docs/quickjs-extensions.md#bigfloatenvconstructorprec-getter)).
 
 ```ts
-(value: number | string | BigInt | BigFloat): BigFloat;
+(value: number | string | bigint | BigFloat): BigFloat;
 ```
 
 ## BigFloatConstructor.prototype (BigFloat property)
@@ -1455,7 +1455,7 @@ declare type BigDecimalRoundingObject =
 ```ts
 interface BigDecimalConstructor {
   (): BigDecimal;
-  (value: number | string | BigInt | BigFloat): BigDecimal;
+  (value: number | string | bigint | BigFloat): BigDecimal;
   add(a: BigDecimal, b: BigDecimal, e?: BigDecimalRoundingObject): BigDecimal;
   sub(a: BigDecimal, b: BigDecimal, e?: BigDecimalRoundingObject): BigDecimal;
   mul(a: BigDecimal, b: BigDecimal, e?: BigDecimalRoundingObject): BigDecimal;
@@ -1476,7 +1476,7 @@ interface BigDecimalConstructor {
 ## BigDecimalConstructor(...) (call signature)
 
 ```ts
-(value: number | string | BigInt | BigFloat): BigDecimal;
+(value: number | string | bigint | BigFloat): BigDecimal;
 ```
 
 ## BigDecimalConstructor.add (method)

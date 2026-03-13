@@ -3,14 +3,18 @@ import { evaluate } from "./test-helpers";
 test("prints thrown errors to stderr", async () => {
   const result = await evaluate(`blahhhh`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 1,
-      "error": false,
-      "stderr": "ReferenceError: 'blahhhh' is not defined
-      at somewhere
-    ",
-      "stdout": "",
-    }
+   {
+     "code": 1,
+     "error": false,
+     "stderr": "ReferenceError: 'blahhhh' is not defined
+     at somewhere
+   {
+     fileName: "<internal>/quickjs.c"
+     lineNumber: 6787
+   }
+   ",
+     "stdout": "",
+   }
   `);
 });
 

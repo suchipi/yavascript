@@ -1,6 +1,7 @@
 import * as std from "quickjs:std";
 import * as os from "quickjs:os";
 import * as engine from "quickjs:engine";
+import * as cmdline from "quickjs:cmdline";
 import { version as ysVersion, arch as ysArch } from "../../hardcoded";
 
 export function installNodeCompat(global: any) {
@@ -33,18 +34,18 @@ export function installNodeCompat(global: any) {
       return os.realpath(os.execPath());
     },
     get exitCode() {
-      return std.getExitCode();
+      return cmdline.getExitCode();
     },
     set exitCode(value: number) {
-      std.setExitCode(value);
+      cmdline.setExitCode(value);
     },
     exit(code?: number | null | undefined) {
       // TODO: process.on("exit", ...)
 
       if (code != null) {
-        std.exit(code);
+        cmdline.exit(code);
       } else {
-        std.exit();
+        cmdline.exit();
       }
     },
   };

@@ -50,12 +50,14 @@ for (const dtsFile of dtsIncFiles) {
 
 const quickjsDtsFilesMap = {
   inspect: "node_modules/@suchipi/quickjs/build/dts/quickjs-inspect.d.ts",
-  intervals: "node_modules/@suchipi/quickjs/build/dts/quickjs-intervals.d.ts",
+  timers: "node_modules/@suchipi/quickjs/build/dts/quickjs-timers.d.ts",
   bytecode: "node_modules/@suchipi/quickjs/build/dts/quickjs-bytecode.d.ts",
-  libc: "node_modules/@suchipi/quickjs/build/dts/quickjs-libc.d.ts",
-  context: "node_modules/@suchipi/quickjs/build/dts/quickjs-context.d.ts",
+  std: "node_modules/@suchipi/quickjs/build/dts/quickjs-std.d.ts",
+  os: "node_modules/@suchipi/quickjs/build/dts/quickjs-os.d.ts",
+  cmdline: "node_modules/@suchipi/quickjs/build/dts/quickjs-cmdline.d.ts",
   encoding: "node_modules/@suchipi/quickjs/build/dts/quickjs-encoding.d.ts",
   engine: "node_modules/@suchipi/quickjs/build/dts/quickjs-engine.d.ts",
+  context: "node_modules/@suchipi/quickjs/build/dts/quickjs-context.d.ts",
   // skipping pointer
   modulesys: "node_modules/@suchipi/quickjs/build/dts/quickjs-modulesys.d.ts",
   // skipping print as we redefine it

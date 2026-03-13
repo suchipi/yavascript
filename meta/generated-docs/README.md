@@ -154,6 +154,8 @@ The following QuickJS builtin modules are available via `import`/`require`:
 - [`"quickjs:context"`]: Create context (separate global environments, aka "Realms") to run code in
 - [`"quickjs:engine"`]: APIs relating to the builtin JS engine and module loader
 - [`"quickjs:encoding"`]: Utility functions for converting between binary and UTF-8.
+- [`"quickjs:cmdline"`]: Command-line app utils; get argv, set exit code, exit
+- [`"quickjs:timers"`]: setTimeout/setInterval
 
 ## QuickJS Module Namespace Globals
 
@@ -242,7 +244,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`clear`]: /meta/generated-docs/console.md#clear-function
 [`inspect`]: /meta/generated-docs/inspect.md#inspect-inspectfunction
 [`logger`]: /meta/generated-docs/logger.md#logger-object
-[`scriptArgs`]: /meta/generated-docs/libc.md#scriptargs-value
+[`scriptArgs`]: /meta/generated-docs/cmdline.md#scriptargs-value
 [`parseScriptArgs`]: /meta/generated-docs/parse-script-args.md#parsescriptargs-function
 [`startRepl`]: /meta/generated-docs/start-repl.md#startrepl-function
 [`InteractivePrompt`]: /meta/generated-docs/interactive-prompt.md#interactiveprompt-interactivepromptconstructor
@@ -262,8 +264,8 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`number`]: /meta/generated-docs/others.md#number-numberconstructor
 [`string`]: /meta/generated-docs/others.md#string-stringconstructor
 [`symbol`]: /meta/generated-docs/others.md#symbol-symbolconstructor
-[`std`]: /meta/generated-docs/libc.md#quickjsstd-namespace
-[`os`]: /meta/generated-docs/libc.md#quickjsos-namespace
+[`std`]: /meta/generated-docs/std.md#quickjsstd-namespace
+[`os`]: /meta/generated-docs/os.md#quickjsos-namespace
 [`JSX.pragmaFrag`]: /meta/generated-docs/jsx.md#jsxpragmafrag-exported-string
 [`logger.info`]: /meta/generated-docs/logger.md#loggerinfo-function-property
 [`logger.trace`]: /meta/generated-docs/logger.md#loggertrace-function-property
@@ -273,15 +275,15 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`TypeValidator`]: /meta/generated-docs/types.md#typevalidator-type
 [`JSX.pragma`]: /meta/generated-docs/jsx.md#jsxpragma-exported-string
 [`setMainModule`]: /meta/generated-docs/engine.md#quickjsenginesetmainmodule-exported-function
-[`setExitCode`]: /meta/generated-docs/libc.md#quickjsstdsetexitcode-exported-function
-[`FILE.seek`]: /meta/generated-docs/libc.md#fileseek-method
-[`FILE.setvbuf`]: /meta/generated-docs/libc.md#filesetvbuf-method
-[`open`]: /meta/generated-docs/libc.md#quickjsosopen-exported-function
-[`access`]: /meta/generated-docs/libc.md#quickjsosaccess-exported-function
-[`R_OK`]: /meta/generated-docs/libc.md#quickjsosr_ok-exported-number
-[`W_OK`]: /meta/generated-docs/libc.md#quickjsosw_ok-exported-number
-[`X_OK`]: /meta/generated-docs/libc.md#quickjsosx_ok-exported-number
-[`F_OK`]: /meta/generated-docs/libc.md#quickjsosf_ok-exported-number
+[`setExitCode`]: /meta/generated-docs/cmdline.md#quickjsstdsetexitcode-exported-function
+[`FILE.seek`]: /meta/generated-docs/std.md#fileseek-method
+[`FILE.setvbuf`]: /meta/generated-docs/std.md#filesetvbuf-method
+[`open`]: /meta/generated-docs/os.md#quickjsosopen-exported-function
+[`access`]: /meta/generated-docs/os.md#quickjsosaccess-exported-function
+[`R_OK`]: /meta/generated-docs/os.md#quickjsosr_ok-exported-number
+[`W_OK`]: /meta/generated-docs/os.md#quickjsosw_ok-exported-number
+[`X_OK`]: /meta/generated-docs/os.md#quickjsosx_ok-exported-number
+[`F_OK`]: /meta/generated-docs/os.md#quickjsosf_ok-exported-number
 [`require`]: /meta/generated-docs/modulesys.md#requirefunction-call-signature
 [`compilers`]: /meta/generated-docs/modulesys.md#moduledelegatecompilers-object-property
 [`searchExtensions`]: /meta/generated-docs/modulesys.md#moduledelegatesearchextensions-property
@@ -316,10 +318,14 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`ExtnameOptions`]: /meta/generated-docs/extname.md#extnameoptions-interface
 [`Path.prototype.relativeTo`]: /meta/generated-docs/path.md#pathprototyperelativeto-method
 [`Path.prototype.extname`]: /meta/generated-docs/path.md#pathprototypeextname-method
-[`getpwuid`]: /meta/generated-docs/libc.md#quickjsstdgetpwuid-exported-function
-[`"quickjs:std"`]: /meta/generated-docs/libc.md#quickjsstd-namespace
-[`"quickjs:os"`]: /meta/generated-docs/libc.md#quickjsos-namespace
+[`getpwuid`]: /meta/generated-docs/std.md#quickjsstdgetpwuid-exported-function
+[`CreateProcess`]: /meta/generated-docs/os.md#quickjs-createprocess-open-exported-value
+[`"quickjs:std"`]: /meta/generated-docs/std.md#quickjsstd-namespace
+[`"quickjs:os"`]: /meta/generated-docs/os.md#quickjsos-namespace
 [`"quickjs:bytecode"`]: /meta/generated-docs/bytecode.md#quickjsbytecode-namespace
 [`"quickjs:context"`]: /meta/generated-docs/context.md#quickjscontext-namespace
 [`"quickjs:encoding"`]: /meta/generated-docs/encoding.md#quickjsencoding-namespace
 [`"quickjs:engine"`]: /meta/generated-docs/engine.md#quickjsengine-namespace
+[`"quickjs:cmdline"`]: /meta/generated-docs/cmdline.md#quickjscmdline-namespace
+[`"quickjs:modulesys"`]: /meta/generated-docs/modulesys.md#quickjsmodulesys-namespace
+[`"quickjs:timers"`]: /meta/generated-docs/timers.md#quickjstimers-namespace

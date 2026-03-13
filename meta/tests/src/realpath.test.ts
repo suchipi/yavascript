@@ -53,18 +53,20 @@ test("realpath against dead link throws error", async () => {
     cwd: symlinkFixturesDir,
   });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 1,
-      "error": false,
-      "stderr": "Error: No such file or directory (errno = 2, path = ./dead-link)
-      at somewhere
-    {
-      errno: 2
-      path: "./dead-link"
-    }
-    ",
-      "stdout": "",
-    }
+   {
+     "code": 1,
+     "error": false,
+     "stderr": "Error: No such file or directory (errno = 2, path = ./dead-link)
+     at somewhere
+   {
+     fileName: "<internal>/quickjs-os.c"
+     lineNumber: 976
+     errno: 2
+     path: "./dead-link"
+   }
+   ",
+     "stdout": "",
+   }
   `);
 });
 
@@ -73,17 +75,19 @@ test("realpath against non-existent target throws error", async () => {
     cwd: rootDir(),
   });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 1,
-      "error": false,
-      "stderr": "Error: No such file or directory (errno = 2, path = ./this doesn't exist, bro)
-      at somewhere
-    {
-      errno: 2
-      path: "./this doesn't exist, bro"
-    }
-    ",
-      "stdout": "",
-    }
+   {
+     "code": 1,
+     "error": false,
+     "stderr": "Error: No such file or directory (errno = 2, path = ./this doesn't exist, bro)
+     at somewhere
+   {
+     fileName: "<internal>/quickjs-os.c"
+     lineNumber: 976
+     errno: 2
+     path: "./this doesn't exist, bro"
+   }
+   ",
+     "stdout": "",
+   }
   `);
 });

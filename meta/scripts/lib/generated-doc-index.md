@@ -154,6 +154,8 @@ The following QuickJS builtin modules are available via `import`/`require`:
 - [`"quickjs:context"`]: Create context (separate global environments, aka "Realms") to run code in
 - [`"quickjs:engine"`]: APIs relating to the builtin JS engine and module loader
 - [`"quickjs:encoding"`]: Utility functions for converting between binary and UTF-8.
+- [`"quickjs:cmdline"`]: Command-line app utils; get argv, set exit code, exit
+- [`"quickjs:timers"`]: setTimeout/setInterval
 
 ## QuickJS Module Namespace Globals
 

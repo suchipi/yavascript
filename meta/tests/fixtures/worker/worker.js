@@ -1,4 +1,4 @@
-import * as std from "quickjs:std";
+import * as cmdline from "quickjs:cmdline";
 import * as os from "quickjs:os";
 
 console.log("in worker");
@@ -6,6 +6,6 @@ console.log("in worker");
 os.Worker.parent.onmessage = (event) => {
   console.log("in worker, received:", inspect(event));
   if (event.data === "try-to-exit") {
-    std.exit(1);
+    cmdline.exit(1);
   }
 };

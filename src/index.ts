@@ -1,4 +1,5 @@
 import * as std from "quickjs:std";
+import * as cmdline from "quickjs:cmdline";
 import printError from "./print-error";
 
 import "./primordials";
@@ -39,7 +40,7 @@ async function main(): Promise<void> {
 
       const { message } = targetInfo;
       invalidTarget(message);
-      std.exit(3);
+      cmdline.exit(3);
       return;
     }
     case "license": {
@@ -104,10 +105,10 @@ try {
     () => {},
     (err) => {
       printError(err, std.err);
-      std.exit(1);
+      cmdline.exit(1);
     },
   );
 } catch (err) {
   printError(err, std.err);
-  std.exit(1);
+  cmdline.exit(1);
 }

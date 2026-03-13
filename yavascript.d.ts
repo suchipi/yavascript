@@ -4910,7 +4910,7 @@ interface BigFloatConstructor {
    *
    * If `value`` is a string, it is converted to BigFloat using the precision of the global floating point environment ({@link BigFloatEnv.prec}).
    */
-  (value: number | string | BigInt | BigFloat): BigFloat;
+  (value: number | string | bigint | BigFloat): BigFloat;
 
   prototype: BigFloat;
 
@@ -5218,7 +5218,7 @@ declare type BigDecimalRoundingObject =
 
 interface BigDecimalConstructor {
   (): BigDecimal;
-  (value: number | string | BigInt | BigFloat): BigDecimal;
+  (value: number | string | bigint | BigFloat): BigDecimal;
 
   /**
    * Adds together `a` and `b` and rounds the result according to the rounding
@@ -5487,17 +5487,46 @@ declare interface InspectCustomInputs {
   colours: { [Key in keyof Required<InspectColours>]: string };
 }
 
-declare type Interval = { [Symbol.toStringTag]: "Interval" };
+// Definitions for the quickjs:timers module and global timer functions
 
-declare function setInterval(func: (...args: any) => any, ms: number): Interval;
-declare function clearInterval(interval: Interval): void;
+declare module "quickjs:timers" {
+  export type Timer = { [Symbol.toStringTag]: "Timer" };
 
-// Definitions of the globals and modules added by quickjs-libc
+  /** Call the function func after delay ms. Return a handle to the timer. */
+  export function setTimeout(
+    func: (...args: any) => any,
+    delay: number
+  ): Timer;
 
-/**
- * Provides the command line arguments. The first argument is the script name.
- */
-declare var scriptArgs: Array<string>;
+  /** Cancel a timer. */
+  export function clearTimeout(handle: Timer): void;
+
+  /** Call the function func repeatedly, with delay ms between each call. Return a handle to the timer. */
+  export function setInterval(
+    func: (...args: any) => any,
+    delay: number
+  ): Timer;
+
+  /** Cancel an interval timer. */
+  export function clearInterval(handle: Timer): void;
+}
+
+/** An opaque timer handle returned by setTimeout/setInterval */
+declare type Timer = import("quickjs:timers").Timer;
+
+/** Call the function func after delay ms. Return a handle to the timer. */
+declare var setTimeout: typeof import("quickjs:timers").setTimeout;
+
+/** Cancel a timer. */
+declare var clearTimeout: typeof import("quickjs:timers").clearTimeout;
+
+/** Call the function func repeatedly, with delay ms between each call. Return a handle to the timer. */
+declare var setInterval: typeof import("quickjs:timers").setInterval;
+
+/** Cancel an interval timer. */
+declare var clearInterval: typeof import("quickjs:timers").clearInterval;
+
+// Definitions for the quickjs:std module
 
 /** An object representing a file handle. */
 declare interface FILE {
@@ -5513,7 +5542,8 @@ declare interface FILE {
    * You should *not* use this property for anything other than logging and
    * debugging. It is *only* provided for debugging and/or troubleshooting
    * purposes. The value of this property could change at any time when
-   * upgrading yavascript, even if upgrading by a minor or patch release.
+   * upgrading QuickJS or yavascript, even if upgrading by a minor or patch
+   * release.
    */
   target: string | number;
 
@@ -5545,13 +5575,13 @@ declare interface FILE {
    *
    * `offset` can be a number or a bigint.
    */
-  seek(offset: number, whence: number): void;
+  seek(offset: number | bigint, whence: number): void;
 
   /** Return the current file position. */
   tell(): number;
 
   /** Return the current file position as a bigint. */
-  tello(): BigInt;
+  tello(): bigint;
 
   /** Return true if end of file. */
   eof(): boolean;
@@ -5609,44 +5639,6 @@ declare interface FILE {
 }
 
 declare module "quickjs:std" {
-  /**
-   * Set the exit code that the process should exit with in the future, if it
-   * exits normally.
-   *
-   * Can only be called from the main thread.
-   *
-   * This exit code will only be used if the process exits "normally", ie, when
-   * there are no more pending JS tasks/listeners. If an unhandled exception is
-   * thrown, the process will always exit with status `1`, regardless of the
-   * status code passed to `setExitCode`. If someone calls {@link exit} and
-   * passes in a status code, that status code will take precedence over the
-   * status code passed to `setExitCode`.
-   *
-   * @param statusCode The future exit code; 0 for success, nonzero for failure.
-   */
-  export function setExitCode(statusCode: number): void;
-
-  /**
-   * Return the exit code that was previously set by {@link setExitCode}, or 0 if
-   * it hasn't yet been set.
-   *
-   * Can only be called from the main thread.
-   */
-  export function getExitCode(): number;
-
-  /**
-   * Exit the process with the provided status code.
-   *
-   * Can only be called from the main thread.
-   *
-   * If `statusCode` is not provided, a value previously passed into
-   * {@link setExitCode} will be used. If no value was previously passed into
-   * setExitCode, `0` will be used.
-   *
-   * @param statusCode The exit code; 0 for success, nonzero for failure.
-   */
-  export function exit(statusCode?: number): never;
-
   /**
    * Load the file `filename` and return it as a string assuming UTF-8 encoding.
    *
@@ -5936,6 +5928,8 @@ declare module "quickjs:std" {
   ): string;
 }
 
+// Definitions for the quickjs:os module
+
 declare module "quickjs:os" {
   /**
    * Open a file handle. Returns a number; the file descriptor.
@@ -5948,95 +5942,47 @@ declare module "quickjs:os" {
 
   /** POSIX open flag, used in {@link open}. */
   export var O_RDONLY: number;
-
-  /** POSIX open flag, used in {@link open}. */
   export var O_WRONLY: number;
-
-  /** POSIX open flag, used in {@link open}. */
   export var O_RDWR: number;
-
-  /** POSIX open flag, used in {@link open}. */
   export var O_APPEND: number;
-
-  /** POSIX open flag, used in {@link open}. */
   export var O_CREAT: number;
-
-  /** POSIX open flag, used in {@link open}. */
   export var O_EXCL: number;
-
-  /** POSIX open flag, used in {@link open}. */
   export var O_TRUNC: number;
-
-  /**
-   * Windows-specific open flag: open the file in binary mode (which is the default). Used in {@link open}.
-   *
-   * NOTE: this property is only present on windows
-   */
-  export var O_BINARY: number | undefined;
-
-  /**
-   * Windows-specific open flag: open the file in text mode. The default is binary mode. Used in {@link open}.
-   *
-   * NOTE: this property is only present on windows
-   */
-  export var O_TEXT: number | undefined;
+  export var O_BINARY: number;
+  export var O_TEXT: number;
 
   /** Close the file with descriptor `fd`. */
   export function close(fd: number): void;
 
   interface OsSeek {
-    /** Seek in the file. Use `std.SEEK_*` for `whence`. `offset` is either a number or a bigint. If `offset` is a bigint, a bigint is returned too. */
     (fd: number, offset: number, whence: number): number;
-
-    /** Seek in the file. Use `std.SEEK_*` for `whence`. `offset` is either a number or a bigint. If `offset` is a bigint, a bigint is returned too. */
-    (fd: number, offset: BigInt, whence: number): BigInt;
+    (fd: number, offset: bigint, whence: number): bigint;
   }
 
-  /** Seek in the file. Use `std.SEEK_*` for `whence`. `offset` is either a number or a bigint. If `offset` is a bigint, a bigint is returned too. */
   export var seek: OsSeek;
 
-  /** Read `length` bytes from the file with descriptor `fd` to the ArrayBuffer `buffer` at byte position `offset`. Return the number of read bytes. */
   export function read(
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
     length: number
   ): number;
-
-  /** Write `length` bytes to the file with descriptor `fd` from the ArrayBuffer `buffer` at byte position `offset`. Return the number of written bytes. */
   export function write(
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
     length: number
   ): number;
-
-  /** Return `true` if the file opened with descriptor `fd` is a TTY (terminal). */
   export function isatty(fd: number): boolean;
-
-  /** Return the TTY size as `[width, height]` or `null` if not available. */
   export function ttyGetWinSize(fd: number): null | [number, number];
-
-  /** Set the TTY in raw mode. */
   export function ttySetRaw(fd: number): void;
-
-  /** Remove a file. */
   export function remove(filename: string): void;
-
-  /** Rename a file. */
   export function rename(oldname: string, newname: string): void;
-
-  /** Return the canonicalized absolute pathname of `path`. */
   export function realpath(path: string): string;
-
-  /** Return the current working directory. */
   export function getcwd(): string;
-
-  /** Change the current directory. */
   export function chdir(path: string): void;
-
-  /** Create a directory at `path`. */
   export function mkdir(path: string, mode?: number): void;
+  export function readdir(path: string): Array<string>;
 
   export type Stats = {
     dev: number;
@@ -6053,388 +5999,107 @@ declare module "quickjs:os" {
     ctime: number;
   };
 
-  /**
-   * Return a stats object with the following fields:
-   *
-   * - `dev`
-   * - `ino`
-   * - `mode`
-   * - `nlink`
-   * - `uid`
-   * - `gid`
-   * - `rdev`
-   * - `size`
-   * - `blocks`
-   * - `atime`
-   * - `mtime`
-   * - `ctime`
-   *
-   * The times are specified in milliseconds since 1970. `lstat()` is the same as `stat()` except that it returns information about the link itself.
-   */
   export function stat(path: string): Stats;
-
-  /**
-   * Return a stats object with the following fields:
-   *
-   * - `dev`
-   * - `ino`
-   * - `mode`
-   * - `nlink`
-   * - `uid`
-   * - `gid`
-   * - `rdev`
-   * - `size`
-   * - `blocks`
-   * - `atime`
-   * - `mtime`
-   * - `ctime`
-   *
-   * The times are specified in milliseconds since 1970. `lstat()` is the same as `stat()` except that it returns information about the link itself.
-   */
   export function lstat(path: string): Stats;
 
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Mask for getting type of file from mode.
-   */
+  /* st_mode constants */
   export var S_IFMT: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * File type: named pipe (fifo)
-   */
   export var S_IFIFO: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * File type: character special
-   */
   export var S_IFCHR: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * File type: directory
-   */
   export var S_IFDIR: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * File type: block special
-   */
   export var S_IFBLK: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * File type: regular
-   */
   export var S_IFREG: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * File type: socket
-   *
-   * NOTE: this property is not present on windows
-   */
-  export var S_IFSOCK: number | undefined;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * File type: symbolic link
-   *
-   * NOTE: this property is not present on windows
-   */
-  export var S_IFLNK: number | undefined;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Flag: set group id on execution
-   *
-   * NOTE: this property is not present on windows
-   */
-  export var S_ISGID: number | undefined;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Flag: set user id on execution
-   *
-   * NOTE: this property is not present on windows
-   */
-  export var S_ISUID: number | undefined;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Mask for getting RWX permissions for owner
-   */
+  export var S_IFSOCK: number;
+  export var S_IFLNK: number;
+  export var S_ISGID: number;
+  export var S_ISUID: number;
   export var S_IRWXU: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Permission: read for owner
-   */
   export var S_IRUSR: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Permission: write for owner
-   */
   export var S_IWUSR: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Permission: execute for owner
-   */
   export var S_IXUSR: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Mask for getting RWX permissions for group
-   */
   export var S_IRWXG: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Permission: read for group
-   */
   export var S_IRGRP: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Permission: write for group
-   */
   export var S_IWGRP: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Permission: execute for group
-   */
   export var S_IXGRP: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Mask for getting RWX permissions for others
-   */
   export var S_IRWXO: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Permission: read for others
-   */
   export var S_IROTH: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Permission: write for others
-   */
   export var S_IWOTH: number;
-
-  /**
-   * Constant to interpret the `mode` property returned by `stat()`. Has the same value as in the C system header `sys/stat.h`.
-   *
-   * Permission: execute for others
-   */
   export var S_IXOTH: number;
 
-  /**
-   * Change the access and modification times of the file path.
-   *
-   * The times are specified in milliseconds since 1970.
-   */
   export function utimes(path: string, atime: number, mtime: number): void;
-
-  /** Create a link at `linkpath` containing the string `target`. */
   export function symlink(target: string, linkpath: string): void;
-
-  /** Return the link target. */
   export function readlink(path: string): string;
-
-  /** Return an array of strings containing the filenames of the directory `path`. */
-  export function readdir(path: string): Array<string>;
-
-  /** Add a read handler to the file with descriptor `fd`. `func` is called each time there is data pending for `fd`. A single read handler per file handle is supported. Use `func = null` to remove the handler. */
   export function setReadHandler(fd: number, func: null | (() => void)): void;
-
-  /** Add a write handler to the file with descriptor `fd`. `func` is called each time data can be written to `fd`. A single write handler per file handle is supported. Use `func = null` to remove the handler. */
   export function setWriteHandler(fd: number, func: null | (() => void)): void;
 
-  /** Call the function `func` when the signal `signal` happens. Only a single handler per signal number is supported. Use `null` to set the default handler or `undefined` to ignore the signal. Signal handlers can only be defined in the main thread. */
   export function signal(
     signal: number,
     func: null | undefined | (() => void)
   ): void;
 
-  /** POSIX signal number. */
+  /* Signal constants */
   export var SIGINT: number;
-
-  /** POSIX signal number. */
   export var SIGABRT: number;
-
-  /** POSIX signal number. */
   export var SIGFPE: number;
-
-  /** POSIX signal number. */
   export var SIGILL: number;
-
-  /** POSIX signal number. */
   export var SIGSEGV: number;
-
-  /** POSIX signal number. */
   export var SIGTERM: number;
+  export var SIGQUIT: number;
+  export var SIGPIPE: number;
+  export var SIGALRM: number;
+  export var SIGUSR1: number;
+  export var SIGUSR2: number;
+  export var SIGCHLD: number;
+  export var SIGCONT: number;
+  export var SIGSTOP: number;
+  export var SIGTSTP: number;
+  export var SIGTTIN: number;
+  export var SIGTTOU: number;
 
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGQUIT: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGPIPE: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGALRM: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGUSR1: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGUSR2: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGCHLD: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGCONT: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGSTOP: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGTSTP: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGTTIN: number | undefined;
-
-  /** POSIX signal number. NOTE: this signal is not present on windows. */
-  export var SIGTTOU: number | undefined;
-
-  /** Send the signal `sig` to the process `pid`. Use `os.SIG*` constants. */
   export function kill(pid: number, sig: number): void;
 
   export type ExecOptions = {
-    /** Boolean (default = true). If true, wait until the process is terminated. In this case, `exec` returns the exit code if positive or the negated signal number if the process was interrupted by a signal. If false, do not block and return the process id of the child. */
     block?: boolean;
-
-    /** Boolean (default = true). If true, the file is searched in the `PATH` environment variable. */
     usePath?: boolean;
-
-    /** String (default = `args[0]`). Set the file to be executed. */
     file?: string;
-
-    /** String. If present, set the working directory of the new process. */
     cwd?: string;
-
-    /** If present, set the file descriptor in the child for stdin. */
-    stdin?: number;
-
-    /** If present, set the file descriptor in the child for stdout. */
-    stdout?: number;
-
-    /** If present, set the file descriptor in the child for stderr. */
-    stderr?: number;
-
-    /** Object. If present, set the process environment from the object key-value pairs. Otherwise use the same environment as the current process. To get the current process's environment variables as on object, use `std.getenviron()`. */
+    stdin?: number | FILE;
+    stdout?: number | FILE;
+    stderr?: number | FILE;
     env?: { [key: string | number]: string | number | boolean };
-
-    /** Integer. If present, the process uid with `setuid`. */
     uid?: number;
-
-    /** Integer. If present, the process gid with `setgid`. */
     gid?: number;
   };
 
-  /** Execute a process with the arguments args, and the provided options (if any). */
   export function exec(args: Array<string>, options?: ExecOptions): number;
-
-  /**
-   * `waitpid` Unix system call. Returns the array [ret, status].
-   *
-   * From man waitpid(2):
-   *
-   * waitpid(): on success, returns the process ID of the child whose state has changed; if WNOHANG was specified and one or more child(ren) specified by pid exist, but have not yet changed state, then 0 is returned.
-   */
   export function waitpid(pid: number, options?: number): [number, number];
 
-  /** Constant for the `options` argument of `waitpid`. */
   export var WNOHANG: number;
-  /** Constant for the `options` argument of `waitpid`. */
   export var WUNTRACED: number;
 
-  /** Function to be used to interpret the 'status' return value of `waitpid`. */
   export function WEXITSTATUS(status: number): number;
-  /** Function to be used to interpret the 'status' return value of `waitpid`. */
   export function WTERMSIG(status: number): number;
-  /** Function to be used to interpret the 'status' return value of `waitpid`. */
   export function WSTOPSIG(status: number): number;
-
-  /** Function to be used to interpret the 'status' return value of `waitpid`. */
   export function WIFEXITED(status: number): boolean;
-  /** Function to be used to interpret the 'status' return value of `waitpid`. */
   export function WIFSIGNALED(status: number): boolean;
-  /** Function to be used to interpret the 'status' return value of `waitpid`. */
   export function WIFSTOPPED(status: number): boolean;
-  /** Function to be used to interpret the 'status' return value of `waitpid`. */
   export function WIFCONTINUED(status: number): boolean;
 
-  /** `dup` Unix system call. */
   export function dup(fd: number): number;
-
-  /** `dup2` Unix system call. */
   export function dup2(oldfd: number, newfd: number): number;
-
-  /** `pipe` Unix system call. Return two handles as `[read_fd, write_fd]`. */
   export function pipe(): [number, number];
-
-  /** Sleep for `delay_ms` milliseconds. */
   export function sleep(delay_ms: number): void;
 
-  export type OSTimer = { [Symbol.toStringTag]: "OSTimer" };
+  // keep in sync with quickjs-os.c
+  export var platform:
+    | "win32"
+    | "darwin"
+    | "emscripten"
+    | "wasm"
+    | "freebsd"
+    | "linux"
+    | "unknown";
 
-  /** Call the function func after delay ms. Return a handle to the timer. */
-  export function setTimeout(
-    func: (...args: any) => any,
-    delay: number
-  ): OSTimer;
-
-  /** Cancel a timer. */
-  export function clearTimeout(handle: OSTimer): void;
-
-  /** Return a string representing the platform: "linux", "darwin", "win32", "freebsd", or "js" (emscripten). */
-  export var platform: "linux" | "darwin" | "win32" | "freebsd" | "js";
-
-  /**
-   * Things that can be put into Worker.postMessage.
-   *
-   * NOTE: This is effectively the same stuff as supported by the structured
-   * clone algorithm, but without support for Map/Set (not supported in
-   * QuickJS yet).
-   */
   export type StructuredClonable =
     | string
     | number
@@ -6460,70 +6125,254 @@ declare module "quickjs:os" {
     | DataView
     | Array<StructuredClonable>
     | SharedArrayBuffer
-    // Map and Set not yet supported
-    // | Map<StructuredClonable, StructuredClonable>
-    // | Set<StructuredClonable>
     | { [key: string | number]: StructuredClonable };
 
   export class Worker {
-    /**
-     * Constructor to create a new thread (worker) with an API close to the
-     * `WebWorkers`. `moduleFilename` is a string specifying the module
-     * filename which is executed in the newly created thread. As for
-     * dynamically imported module, it is relative to the current script or
-     * module path. Threads normally don’t share any data and communicate
-     * between each other with messages. Nested workers are not supported.
-     */
     constructor(moduleFilename: string);
-
-    /**
-     * In the created worker, Worker.parent represents the parent worker and is
-     * used to send or receive messages.
-     */
     static parent: Worker;
-
-    /**
-     * Send a message to the corresponding worker. msg is cloned in the
-     * destination worker using an algorithm similar to the HTML structured
-     * clone algorithm. SharedArrayBuffer are shared between workers.
-     *
-     * Current limitations: Map and Set are not supported yet.
-     */
     postMessage(msg: StructuredClonable): void;
-
     /**
-     * Set a function which is called each time a message is received. The
-     * function is called with a single argument. It is an object with a data
-     * property containing the received message. The thread is not terminated
-     * if there is at least one non null onmessage handler.
+     * Terminate the worker thread. Equivalent to setting `onmessage` to `null`.
      */
+    terminate(): void;
     onmessage: null | ((event: { data: StructuredClonable }) => void);
   }
 
-  /** constant for {@link access}(); test for read permission. */
+  /**
+   * An opaque wrapper around a Win32 HANDLE.
+   *
+   * Win32Handle objects cannot be created directly from JavaScript code.
+   * They are created by native functions like {@link CreateProcess}.
+   *
+   * On non-Windows platforms, this class exists but no instances will ever
+   * be created.
+   */
+  export class Win32Handle {
+    private constructor();
+    readonly [Symbol.toStringTag]: "Win32Handle";
+  }
+
+  export type CreateProcessOptions = {
+    /** The name of the module to be executed (maps to lpApplicationName). */
+    moduleName?: string;
+
+    /** Process creation flags (maps to dwCreationFlags). */
+    flags?: number;
+
+    /** The working directory of the new process. */
+    cwd?: string;
+
+    /** Environment variables for the new process. If not specified, the parent's environment is inherited. Values must be strings. */
+    env?: { [key: string]: string };
+
+    /** FILE object or file descriptor number to use for the child's stdin. */
+    stdin?: FILE | number;
+
+    /** FILE object or file descriptor number to use for the child's stdout. */
+    stdout?: FILE | number;
+
+    /** FILE object or file descriptor number to use for the child's stderr. */
+    stderr?: FILE | number;
+  };
+
+  export type CreateProcessResult = {
+    /** The process ID of the newly created process. */
+    pid: number;
+
+    /** A Win32Handle for the process. */
+    processHandle: Win32Handle;
+
+    /** The thread ID of the primary thread of the newly created process. */
+    tid: number;
+
+    /** A Win32Handle for the primary thread. */
+    threadHandle: Win32Handle;
+  };
+
+  /**
+   * Create a new process using the Win32 `CreateProcessW` API.
+   *
+   * @param commandLine - The command line to execute.
+   * @param options - Optional settings for module name, flags, cwd, env, and stdio redirection.
+   * @returns An object with `pid`, `processHandle`, `tid`, and `threadHandle`.
+   *
+   * NOTE: this function is only present on windows
+   */
+  export var CreateProcess:
+    | undefined
+    | ((
+        commandLine: string | null,
+        options?: CreateProcessOptions
+      ) => CreateProcessResult);
+
+  /**
+   * Wait for a Win32 handle to be signaled (wrapper for Win32 `WaitForSingleObject`).
+   *
+   * @param handle - The handle to wait on.
+   * @param timeoutMs - Timeout in milliseconds. Defaults to `Infinity` (INFINITE). Pass `Infinity` to wait indefinitely.
+   * @returns One of the `WAIT_*` constants.
+   *
+   * NOTE: this function is only present on windows
+   */
+  export var WaitForSingleObject:
+    | undefined
+    | ((handle: Win32Handle, timeoutMs?: number) => number);
+
+  /**
+   * Retrieve the exit code of a process (wrapper for Win32 `GetExitCodeProcess`).
+   *
+   * @param handle - A process handle.
+   * @returns The exit code of the process.
+   *
+   * NOTE: this function is only present on windows
+   */
+  export var GetExitCodeProcess: undefined | ((handle: Win32Handle) => number);
+
+  /**
+   * Terminate a process (wrapper for Win32 `TerminateProcess`).
+   *
+   * @param handle - A process handle.
+   * @param exitCode - The exit code to assign to the process.
+   *
+   * NOTE: this function is only present on windows
+   */
+  export var TerminateProcess:
+    | undefined
+    | ((handle: Win32Handle, exitCode: number) => void);
+
+  /**
+   * Close a Win32 handle. The handle will automatically be closed when the
+   * Win32Handle object is garbage-collected, but it's safe to close it
+   * yourself as well; a handle that has already been closed will not be
+   * closed again during garbage collection.
+   *
+   * @param handle - The handle to close.
+   *
+   * NOTE: this function is only present on windows
+   */
+  export var CloseHandle: undefined | ((handle: Win32Handle) => void);
+
+  export type CreatePipeOptions = {
+    /** Whether the pipe handles should be inheritable. Defaults to true. */
+    inheritHandle?: boolean;
+  };
+
+  export type CreatePipeResult = {
+    /** The read end of the pipe (a FILE object opened in binary read mode). */
+    readEnd: FILE;
+
+    /** The write end of the pipe (a FILE object opened in binary write mode). */
+    writeEnd: FILE;
+  };
+
+  /**
+   * Create an anonymous pipe (wrapper for Win32 `CreatePipe`).
+   *
+   * Returns FILE objects for both ends of the pipe. The read end is opened in
+   * binary read mode ("rb") and the write end in binary write mode ("wb").
+   * You can use all standard FILE methods (readAsString, getline, puts, write,
+   * read, close, etc.) on the returned objects.
+   *
+   * @param options - Optional settings. `inheritHandle` defaults to true.
+   * @returns An object with `readEnd` and `writeEnd` FILE properties.
+   *
+   * NOTE: this function is only present on windows
+   */
+  export var CreatePipe:
+    | undefined
+    | ((options?: CreatePipeOptions) => CreatePipeResult);
+
+  /* Win32-specific constants */
+
+  /**
+   * Win32 wait result constant: the object was signaled.
+   *
+   * NOTE: this property is only present on windows
+   */
+  export var WAIT_OBJECT_0: number | undefined;
+
+  /**
+   * Win32 wait result constant: the object was an abandoned mutex.
+   *
+   * NOTE: this property is only present on windows
+   */
+  export var WAIT_ABANDONED: number | undefined;
+
+  /**
+   * Win32 wait result constant: the wait timed out.
+   *
+   * NOTE: this property is only present on windows
+   */
+  export var WAIT_TIMEOUT: number | undefined;
+
+  /**
+   * Win32 wait result constant: the function call failed.
+   *
+   * NOTE: this property is only present on windows
+   */
+  export var WAIT_FAILED: number | undefined;
+
+  /* access() constants */
   export var R_OK: number;
-
-  /** constant for {@link access}(); test for write permission. */
   export var W_OK: number;
-
-  /** constant for {@link access}(); test for execute (search) permission. */
   export var X_OK: number;
-
-  /** constant for {@link access}(); test for existence of file. */
   export var F_OK: number;
 
-  /** `access` Unix system call; checks if a file is readable, writable, executable, and/or exists (use {@link R_OK}, {@link W_OK}, {@link X_OK}, and/or {@link F_OK} for `accessMode`). Throws a descriptive error (with errno property) if the requested access is not available; otherwise, returns undefined. */
   export function access(path: string, accessMode: number): void;
-
-  /** gets the path to the executable which is executing this JS code. might be a relative path or symlink. */
   export function execPath(): string;
-
-  /** changes the access permission bits of the file at `path` using the octal number `mode`. */
   export function chmod(path: string, mode: number): void;
+  export function gethostname(): string;
 }
 
-declare var setTimeout: typeof import("quickjs:os").setTimeout;
-declare var clearTimeout: typeof import("quickjs:os").clearTimeout;
+/**
+ * The `"quickjs:cmdline"` module provides access to command line arguments
+ * and process exit code management.
+ *
+ * It can be imported using either of these forms:
+ * ```js
+ * import * as cmdline from "quickjs:cmdline";
+ * import { scriptArgs, exit } from "quickjs:cmdline";
+ * ```
+ */
+declare module "quickjs:cmdline" {
+  /**
+   * Returns the command line arguments. The first element is the script name.
+   *
+   * Note: The global `scriptArgs` variable is also available and is the
+   * preferred way to access command line arguments.
+   */
+  export function getScriptArgs(): Array<string>;
+
+  /**
+   * Terminates the process with the given exit code.
+   *
+   * If no exit code is provided, uses the value set by `setExitCode`, or 0 if
+   * one hasn't been set.
+   */
+  export function exit(exitCode?: number): never;
+
+  /**
+   * Gets the current exit code (as set by setExitCode or errors).
+   */
+  export function getExitCode(): number;
+
+  /**
+   * Sets the exit code to be returned when the process exits. This does not
+   * terminate the process; it only sets the code that will be returned when the
+   * process eventually exits.
+   *
+   * If a future `exit` call receives an exitCode argument, the value set by
+   * setExitCode will be ignored.
+   */
+  export function setExitCode(exitCode: number): void;
+}
+
+/**
+ * Provides the command line arguments. The first element is the script name.
+ *
+ * This is a global variable that is set by the host environment.
+ */
+declare var scriptArgs: Array<string>;
 
 /**
  * An object which lets you configure the module loader (import/export/require).
@@ -6975,18 +6824,22 @@ declare module "quickjs:context" {
 
       /** Enable builtin modules. */
       modules?: {
-        /** Enables the "quickjs:std" module. Defaults to `true`. */
-        "quickjs:std"?: boolean;
-        /** Enables the "quickjs:os" module. Defaults to `true`. */
-        "quickjs:os"?: boolean;
         /** Enables the "quickjs:bytecode" module. Defaults to `true`. */
         "quickjs:bytecode"?: boolean;
+        /** Enables the "quickjs:cmdline" module. Defaults to `true`. */
+        "quickjs:cmdline"?: boolean;
         /** Enables the "quickjs:context" module. Defaults to `true`. */
         "quickjs:context"?: boolean;
-        /** Enables the "quickjs:engine" module. Defaults to `true`. */
-        "quickjs:engine"?: boolean;
         /** Enables the "quickjs:encoding" module. Defaults to `true`. */
         "quickjs:encoding"?: boolean;
+        /** Enables the "quickjs:engine" module. Defaults to `true`. */
+        "quickjs:engine"?: boolean;
+        /** Enables the "quickjs:os" module. Defaults to `true`. */
+        "quickjs:os"?: boolean;
+        /** Enables the "quickjs:std" module. Defaults to `true`. */
+        "quickjs:std"?: boolean;
+        /** Enables the "quickjs:timers" module. Defaults to `true`. */
+        "quickjs:timers"?: boolean;
       };
     });
 
@@ -7006,11 +6859,118 @@ declare module "quickjs:context" {
   }
 }
 
-// WHATWG encoding spec at https://encoding.spec.whatwg.org/ would be better,
-// but this is better than nothing
 declare module "quickjs:encoding" {
   export function toUtf8(input: ArrayBuffer): string;
   export function fromUtf8(input: string): ArrayBuffer;
+
+  /**
+   * Encodes a string into bytes, following the WHATWG Encoding standard.
+   * Supports UTF-8, UTF-16LE, UTF-16BE, Shift_JIS, Windows-1252, Windows-1251,
+   * Big5, EUC-KR, EUC-JP, and GB18030 encodings.
+   */
+  export class TextEncoder {
+    constructor(label?: TextEncodingLabel);
+    readonly encoding: TextEncoding;
+    /**
+     * Encodes the input string into bytes.
+     * @param input The string to encode.
+     * @param options Options for encoding. The `stream` option (non-standard) can be used
+     *                to preserve state for stateful encodings like UTF-16.
+     */
+    encode(input?: string, options?: { stream?: boolean }): Uint8Array;
+    /**
+     * Encodes the source string into the destination Uint8Array.
+     * Note: Unlike the standard TextEncoder, this supports all encodings (non-standard extension).
+     */
+    encodeInto(
+      source: string,
+      destination: Uint8Array
+    ): { read: number; written: number };
+  }
+
+  /** The canonical encoding name returned by `.encoding` property */
+  type TextEncoding =
+    | "utf-8"
+    | "utf-16le"
+    | "utf-16be"
+    | "shift_jis"
+    | "windows-1252"
+    | "windows-1251"
+    | "big5"
+    | "euc-kr"
+    | "euc-jp"
+    | "gb18030";
+
+  /** All encoding labels accepted by TextEncoder/TextDecoder constructor */
+  type TextEncodingLabel =
+    | TextEncoding
+    // UTF-8 aliases
+    | "utf8"
+    | "unicode-1-1-utf-8"
+    // UTF-16 aliases
+    | "utf-16"
+    // Shift_JIS aliases
+    | "shift-jis"
+    | "sjis"
+    | "csshiftjis"
+    | "ms932"
+    | "ms_kanji"
+    | "windows-31j"
+    | "x-sjis"
+    // Windows-1252 aliases (WHATWG maps iso-8859-1 to windows-1252)
+    | "cp1252"
+    | "iso-8859-1"
+    | "iso8859-1"
+    | "iso_8859-1"
+    | "latin1"
+    | "iso-8859-15"
+    | "us-ascii"
+    | "ascii"
+    | "x-cp1252"
+    // Windows-1251 aliases
+    | "cp1251"
+    | "x-cp1251"
+    // Big5 aliases
+    | "big5-hkscs"
+    | "cn-big5"
+    | "csbig5"
+    | "x-x-big5"
+    // EUC-KR aliases
+    | "cseuckr"
+    | "korean"
+    | "ks_c_5601-1987"
+    | "iso-ir-149"
+    | "csksc"
+    // EUC-JP aliases
+    | "cseucpkdfmtjapanese"
+    | "x-euc-jp"
+    // GB18030 aliases (WHATWG maps gb2312 and gbk to gb18030)
+    | "gb2312"
+    | "gbk"
+    | "chinese"
+    | "csgb2312"
+    | "x-gbk"
+    | "gb_2312-80"
+    | "iso-ir-58";
+
+  /**
+   * Decodes bytes into a string, following the WHATWG Encoding standard.
+   * Supports UTF-8, UTF-16LE, UTF-16BE, Shift_JIS, Windows-1252, Windows-1251,
+   * Big5, EUC-KR, EUC-JP, and GB18030 encodings.
+   */
+  export class TextDecoder {
+    constructor(
+      label?: TextEncodingLabel,
+      options?: { fatal?: boolean; ignoreBOM?: boolean }
+    );
+    readonly encoding: TextEncoding;
+    readonly fatal: boolean;
+    readonly ignoreBOM: boolean;
+    decode(
+      input?: ArrayBuffer | ArrayBufferView,
+      options?: { stream?: boolean }
+    ): string;
+  }
 }
 
 
