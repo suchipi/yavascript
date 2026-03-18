@@ -13,6 +13,9 @@ test("globals", async () => {
       let value;
       try {
         value = globalThis[key];
+        if (typeof value === "object" && value !== null && Object.isFrozen(value)) {
+          logLine += " frozen";
+        }
         logLine += " " + typeof value;
       } catch (err) {
         logLine += " get throws error";
