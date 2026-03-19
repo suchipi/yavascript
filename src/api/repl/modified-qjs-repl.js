@@ -29,6 +29,7 @@
 import * as std from "quickjs:std";
 import * as os from "quickjs:os";
 import * as engine from "quickjs:engine";
+import * as cmdline from "quickjs:cmdline";
 import printError from "../../print-error";
 import * as inspectOptions from "../../inspect-options";
 import { NOTHING } from "./special";
@@ -600,7 +601,7 @@ export function startRepl(lang) {
   function control_c() {
     if (last_fun === control_c) {
       std.puts("\n");
-      std.exit(0);
+      cmdline.exit(0);
     } else {
       std.puts("\n(Press Ctrl-C again to quit)\n");
       readline_print_prompt();
