@@ -13,7 +13,7 @@ test("worker cannot call std.exit", async () => {
     {
       "code": 0,
       "error": false,
-      "stderr": "Error: std.exit can only be called from the main thread
+      "stderr": "Error: cmdline.exit can only be called from the main thread
       at somewhere
 
     ",
