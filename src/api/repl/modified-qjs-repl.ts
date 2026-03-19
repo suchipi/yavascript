@@ -24,8 +24,6 @@
  * THE SOFTWARE.
  */
 
-///<reference path="../../../yavascript.d.ts" />
-
 import * as std from "quickjs:std";
 import * as os from "quickjs:os";
 import * as engine from "quickjs:engine";
@@ -38,21 +36,32 @@ import { langToCompiler } from "../../langs";
 import { HistoryFile } from "./history-file";
 import { hasColors } from "../../has-colors";
 
+enum Direction {
+  Forward = 1,
+  Backward = -1,
+}
+
+enum CommandResult {
+  AcceptLine = -1,
+  Abort = -2,
+  Exit = -3,
+}
+
 // TODO: change this to share code with the generic repl
-export function startRepl(lang) {
+export function startRepl(lang: string) {
   const compiler = langToCompiler(lang);
-  const compileExpression = (expr) => {
+  const compileExpression = (expr: string): string => {
     const compiledCode = compiler(expr, { expression: true });
     return esmToRequire.transform(compiledCode);
   };
 
   /* close global objects */
-  var Object = globalThis.Object;
-  var String = globalThis.String;
-  var Date = globalThis.Date;
-  var Math = globalThis.Math;
+  const Object = globalThis.Object;
+  const String = globalThis.String;
+  const Date = globalThis.Date;
+  const Math = globalThis.Math;
 
-  var colors = {
+  const colors = {
     none: "\x1b[0m",
     black: "\x1b[30m",
     red: "\x1b[31m",
@@ -75,7 +84,7 @@ export function startRepl(lang) {
 
   // Styles here are trying to match the styles from the builtin inspect
   // function, which itself comes from npm:@suchipi/print
-  var styles = {
+  const styles = {
     default: "none",
     comment: "gray",
     string: "bright_green",
@@ -91,17 +100,17 @@ export function startRepl(lang) {
 
   const historyFile = new HistoryFile("yavascript_repl_history.txt");
 
-  var history = historyFile.load();
+  const history = historyFile.load();
   var clip_board = "";
 
   var pstate = "";
   var prompt = "";
   var plen = 0;
-  var ps1 = "> ";
-  var ps2 = "  ... ";
-  var utf8 = true;
+  const ps1 = "> ";
+  const ps2 = "  ... ";
+  const utf8 = true;
   var show_time = false;
-  var show_colors = hasColors();
+  const show_colors = hasColors();
 
   if (!show_colors) {
     for (const key of Object.keys(colors)) {
@@ -117,27 +126,28 @@ export function startRepl(lang) {
   var cursor_pos = 0;
   var last_cmd = "";
   var last_cursor_pos = 0;
-  var history_index;
-  var this_fun, last_fun;
+  var history_index: number;
+  var this_fun: ((...args: any) => any) | undefined;
+  var last_fun: ((...args: any) => any) | undefined;
   var quote_flag = false;
 
-  var term_fd;
-  var term_read_buf;
-  var term_width;
+  var term_fd: number;
+  var term_read_buf: Uint8Array;
+  var term_width: number;
   /* current X position of the cursor in the terminal */
   var term_cursor_x = 0;
 
   function termInit() {
-    var tab;
+    var winSize: [number, number] | null;
     term_fd = std.in.fileno();
 
     /* get the terminal size */
     term_width = 80;
     if (os.isatty(term_fd)) {
       if (os.ttyGetWinSize) {
-        tab = os.ttyGetWinSize(term_fd);
-        if (tab) {
-          term_width = tab[0];
+        winSize = os.ttyGetWinSize(term_fd);
+        if (winSize) {
+          term_width = winSize[0];
         }
       }
       if (os.ttySetRaw) {
@@ -160,82 +170,83 @@ export function startRepl(lang) {
   }
 
   function term_read_handler() {
-    var l, i;
-    l = os.read(term_fd, term_read_buf.buffer, 0, term_read_buf.length);
-    for (i = 0; i < l; i++) {
-      handle_byte(term_read_buf[i]);
+    var bytesRead: number;
+    bytesRead = os.read(
+      term_fd,
+      term_read_buf.buffer as ArrayBuffer,
+      0,
+      term_read_buf.length,
+    );
+    for (var idx = 0; idx < bytesRead; idx++) {
+      handle_byte(term_read_buf[idx]);
     }
   }
 
   var utf8_state = 0;
   var utf8_val = 0;
 
-  function handle_byte(c) {
+  function handle_byte(byte: number) {
     if (!utf8) {
-      handle_char(c);
-    } else if (utf8_state !== 0 && c >= 0x80 && c < 0xc0) {
-      utf8_val = (utf8_val << 6) | (c & 0x3f);
+      handle_char(byte);
+    } else if (utf8_state !== 0 && byte >= 0x80 && byte < 0xc0) {
+      utf8_val = (utf8_val << 6) | (byte & 0x3f);
       utf8_state--;
       if (utf8_state === 0) {
         handle_char(utf8_val);
       }
-    } else if (c >= 0xc0 && c < 0xf8) {
-      utf8_state = 1 + (c >= 0xe0) + (c >= 0xf0);
-      utf8_val = c & ((1 << (6 - utf8_state)) - 1);
+    } else if (byte >= 0xc0 && byte < 0xf8) {
+      utf8_state = 1 + Number(byte >= 0xe0) + Number(byte >= 0xf0);
+      utf8_val = byte & ((1 << (6 - utf8_state)) - 1);
     } else {
       utf8_state = 0;
-      handle_char(c);
+      handle_char(byte);
     }
   }
 
-  function is_alpha(c) {
+  function is_alpha(char: string) {
     return (
-      typeof c === "string" &&
-      ((c >= "A" && c <= "Z") || (c >= "a" && c <= "z"))
+      typeof char === "string" &&
+      ((char >= "A" && char <= "Z") || (char >= "a" && char <= "z"))
     );
   }
 
-  function is_digit(c) {
-    return typeof c === "string" && c >= "0" && c <= "9";
+  function is_digit(char: string) {
+    return typeof char === "string" && char >= "0" && char <= "9";
   }
 
-  function is_word(c) {
+  function is_word(char: string) {
     return (
-      typeof c === "string" &&
-      (is_alpha(c) || is_digit(c) || c == "_" || c == "$")
+      typeof char === "string" &&
+      (is_alpha(char) || is_digit(char) || char == "_" || char == "$")
     );
   }
 
-  function ucs_length(str) {
-    var len,
-      c,
-      i,
-      str_len = str.length;
-    len = 0;
+  function ucs_length(str: string) {
+    var length = 0;
+    const str_len = str.length;
     /* we never count the trailing surrogate to have the
          following property: ucs_length(str) =
          ucs_length(str.substring(0, a)) + ucs_length(str.substring(a,
          str.length)) for 0 <= a <= str.length */
-    for (i = 0; i < str_len; i++) {
-      c = str.charCodeAt(i);
-      if (c < 0xdc00 || c >= 0xe000) {
-        len++;
+    for (var idx = 0; idx < str_len; idx++) {
+      const charCode = str.charCodeAt(idx);
+      if (charCode < 0xdc00 || charCode >= 0xe000) {
+        length++;
       }
     }
-    return len;
+    return length;
   }
 
-  function is_trailing_surrogate(c) {
-    var d;
-    if (typeof c !== "string") {
+  function is_trailing_surrogate(char: string) {
+    if (typeof char !== "string") {
       return false;
     }
-    d = c.codePointAt(0); /* can be NaN if empty string */
-    return d >= 0xdc00 && d < 0xe000;
+    const codePoint = char.codePointAt(0);
+    return codePoint != null && codePoint >= 0xdc00 && codePoint < 0xe000;
   }
 
-  function is_balanced(a, b) {
-    switch (a + b) {
+  function is_balanced(open: string, close: string) {
+    switch (open + close) {
       case "()":
       case "[]":
       case "{}":
@@ -244,26 +255,26 @@ export function startRepl(lang) {
     return false;
   }
 
-  function print_color_text(str, start, style_names) {
-    var i, j;
-    for (j = start; j < str.length; ) {
-      var style = style_names[(i = j)];
-      while (++j < str.length && style_names[j] == style) {
+  function print_color_text(str: string, start: number, style_names: string[]) {
+    for (var spanEnd = start; spanEnd < str.length; ) {
+      var spanStart: number;
+      var style = style_names[(spanStart = spanEnd)];
+      while (++spanEnd < str.length && style_names[spanEnd] == style) {
         continue;
       }
       std.puts(colors[styles[style] || "default"]);
-      std.puts(str.substring(i, j));
+      std.puts(str.substring(spanStart, spanEnd));
       std.puts(colors["none"]);
     }
   }
 
-  function print_csi(n, code) {
-    std.puts("\x1b[" + (n != 1 ? n : "") + code);
+  function print_csi(count: number, code: string) {
+    std.puts("\x1b[" + (count != 1 ? count : "") + code);
   }
 
   /* XXX: handle double-width characters */
-  function move_cursor(delta) {
-    var i, l;
+  function move_cursor(delta: number) {
+    var step: number;
     if (delta > 0) {
       while (delta != 0) {
         if (term_cursor_x == term_width - 1) {
@@ -271,10 +282,10 @@ export function startRepl(lang) {
           term_cursor_x = 0;
           delta--;
         } else {
-          l = Math.min(term_width - 1 - term_cursor_x, delta);
-          print_csi(l, "C"); /* right */
-          delta -= l;
-          term_cursor_x += l;
+          step = Math.min(term_width - 1 - term_cursor_x, delta);
+          print_csi(step, "C"); /* right */
+          delta -= step;
+          term_cursor_x += step;
         }
       }
     } else {
@@ -286,17 +297,16 @@ export function startRepl(lang) {
           delta--;
           term_cursor_x = term_width - 1;
         } else {
-          l = Math.min(delta, term_cursor_x);
-          print_csi(l, "D"); /* left */
-          delta -= l;
-          term_cursor_x -= l;
+          step = Math.min(delta, term_cursor_x);
+          print_csi(step, "D"); /* left */
+          delta -= step;
+          term_cursor_x -= step;
         }
       }
     }
   }
 
   function update() {
-    var i, cmd_len;
     /* cursor_pos is the position in 16 bit characters inside the
            UTF-16 string 'cmd' */
     if (cmd != last_cmd) {
@@ -311,9 +321,9 @@ export function startRepl(lang) {
         /* goto the start of the line */
         move_cursor(-ucs_length(last_cmd.substring(0, last_cursor_pos)));
         if (show_colors) {
-          var str = mexpr ? mexpr + "\n" + cmd : cmd;
-          var start = str.length - cmd.length;
-          var colorstate = colorize_js(str);
+          const str = mexpr ? mexpr + "\n" + cmd : cmd;
+          const start = str.length - cmd.length;
+          const colorstate = colorize_js(str);
           print_color_text(str, start, colorstate[2]);
         } else {
           std.puts(cmd);
@@ -339,34 +349,34 @@ export function startRepl(lang) {
   }
 
   /* editing commands */
-  function insert(str) {
+  function insert(str: string) {
     if (str) {
       cmd = cmd.substring(0, cursor_pos) + str + cmd.substring(cursor_pos);
       cursor_pos += str.length;
     }
   }
 
-  function quoted_insert() {
+  function quoted_insert(_keys?: string) {
     quote_flag = true;
   }
 
-  function abort() {
+  function abort(_keys?: string) {
     cmd = "";
     cursor_pos = 0;
-    return -2;
+    return CommandResult.Abort;
   }
 
-  function alert() {}
+  function alert(_keys?: string) {}
 
-  function beginning_of_line() {
+  function beginning_of_line(_keys?: string) {
     cursor_pos = 0;
   }
 
-  function end_of_line() {
+  function end_of_line(_keys?: string) {
     cursor_pos = cmd.length;
   }
 
-  function forward_char() {
+  function forward_char(_keys?: string) {
     if (cursor_pos < cmd.length) {
       cursor_pos++;
       while (is_trailing_surrogate(cmd.charAt(cursor_pos))) {
@@ -375,7 +385,7 @@ export function startRepl(lang) {
     }
   }
 
-  function backward_char() {
+  function backward_char(_keys?: string) {
     if (cursor_pos > 0) {
       cursor_pos--;
       while (is_trailing_surrogate(cmd.charAt(cursor_pos))) {
@@ -384,7 +394,7 @@ export function startRepl(lang) {
     }
   }
 
-  function skip_word_forward(pos) {
+  function skip_word_forward(pos: number) {
     while (pos < cmd.length && !is_word(cmd.charAt(pos))) {
       pos++;
     }
@@ -394,7 +404,7 @@ export function startRepl(lang) {
     return pos;
   }
 
-  function skip_word_backward(pos) {
+  function skip_word_backward(pos: number) {
     while (pos > 0 && !is_word(cmd.charAt(pos - 1))) {
       pos--;
     }
@@ -404,22 +414,22 @@ export function startRepl(lang) {
     return pos;
   }
 
-  function forward_word() {
+  function forward_word(_keys?: string) {
     cursor_pos = skip_word_forward(cursor_pos);
   }
 
-  function backward_word() {
+  function backward_word(_keys?: string) {
     cursor_pos = skip_word_backward(cursor_pos);
   }
 
-  function accept_line() {
+  function accept_line(_keys?: string) {
     std.puts("\n");
     history_add(cmd);
-    return -1;
+    return CommandResult.AcceptLine;
   }
 
-  let last_history_line = null;
-  function history_add(str) {
+  let last_history_line: string | null = null;
+  function history_add(str: string) {
     if (str && str !== last_history_line) {
       history.push(str);
       historyFile.append(str);
@@ -428,7 +438,7 @@ export function startRepl(lang) {
     history_index = history.length;
   }
 
-  function previous_history() {
+  function previous_history(_keys?: string) {
     if (history_index > 0) {
       if (history_index == history.length && cmd !== "") {
         history.push(cmd);
@@ -439,7 +449,7 @@ export function startRepl(lang) {
     }
   }
 
-  function next_history() {
+  function next_history(_keys?: string) {
     if (history_index < history.length - 1) {
       history_index++;
       cmd = history[history_index];
@@ -450,10 +460,10 @@ export function startRepl(lang) {
     }
   }
 
-  function history_search(dir) {
-    var pos = cursor_pos;
+  function history_search(dir: Direction) {
+    const pos = cursor_pos;
     for (var i = 1; i <= history.length; i++) {
-      var index = (history.length + i * dir + history_index) % history.length;
+      const index = (history.length + i * dir + history_index) % history.length;
       if (history[index].substring(0, pos) == cmd.substring(0, pos)) {
         history_index = index;
         cmd = history[index];
@@ -462,16 +472,17 @@ export function startRepl(lang) {
     }
   }
 
-  function history_search_backward() {
-    return history_search(-1);
+  function history_search_backward(_keys?: string) {
+    return history_search(Direction.Backward);
   }
 
-  function history_search_forward() {
-    return history_search(1);
+  function history_search_forward(_keys?: string) {
+    return history_search(Direction.Forward);
   }
 
-  function delete_char_dir(dir) {
-    var start, end;
+  function delete_char_dir(dir: Direction) {
+    var start: number;
+    var end: number;
 
     start = cursor_pos;
     if (dir < 0) {
@@ -495,24 +506,24 @@ export function startRepl(lang) {
     }
   }
 
-  function delete_char() {
-    delete_char_dir(1);
+  function delete_char(_keys?: string) {
+    delete_char_dir(Direction.Forward);
   }
 
-  function control_d() {
+  function control_d(_keys?: string) {
     if (cmd.length == 0) {
       std.puts("\n");
-      return -3; /* exit read eval print loop */
+      return CommandResult.Exit;
     } else {
-      delete_char_dir(1);
+      delete_char_dir(Direction.Forward);
     }
   }
 
-  function backward_delete_char() {
-    delete_char_dir(-1);
+  function backward_delete_char(_keys?: string) {
+    delete_char_dir(Direction.Backward);
   }
 
-  function transpose_chars() {
+  function transpose_chars(_keys?: string) {
     var pos = cursor_pos;
     if (cmd.length > 1 && pos > 0) {
       if (pos == cmd.length) {
@@ -527,46 +538,51 @@ export function startRepl(lang) {
     }
   }
 
-  function transpose_words() {
-    var p1 = skip_word_backward(cursor_pos);
-    var p2 = skip_word_forward(p1);
-    var p4 = skip_word_forward(cursor_pos);
-    var p3 = skip_word_backward(p4);
+  function transpose_words(_keys?: string) {
+    const word1Start = skip_word_backward(cursor_pos);
+    const word1End = skip_word_forward(word1Start);
+    const word2End = skip_word_forward(cursor_pos);
+    const word2Start = skip_word_backward(word2End);
 
-    if (p1 < p2 && p2 <= cursor_pos && cursor_pos <= p3 && p3 < p4) {
+    if (
+      word1Start < word1End &&
+      word1End <= cursor_pos &&
+      cursor_pos <= word2Start &&
+      word2Start < word2End
+    ) {
       cmd =
-        cmd.substring(0, p1) +
-        cmd.substring(p3, p4) +
-        cmd.substring(p2, p3) +
-        cmd.substring(p1, p2);
-      cursor_pos = p4;
+        cmd.substring(0, word1Start) +
+        cmd.substring(word2Start, word2End) +
+        cmd.substring(word1End, word2Start) +
+        cmd.substring(word1Start, word1End);
+      cursor_pos = word2End;
     }
   }
 
-  function upcase_word() {
-    var end = skip_word_forward(cursor_pos);
+  function upcase_word(_keys?: string) {
+    const end = skip_word_forward(cursor_pos);
     cmd =
       cmd.substring(0, cursor_pos) +
       cmd.substring(cursor_pos, end).toUpperCase() +
       cmd.substring(end);
   }
 
-  function downcase_word() {
-    var end = skip_word_forward(cursor_pos);
+  function downcase_word(_keys?: string) {
+    const end = skip_word_forward(cursor_pos);
     cmd =
       cmd.substring(0, cursor_pos) +
       cmd.substring(cursor_pos, end).toLowerCase() +
       cmd.substring(end);
   }
 
-  function kill_region(start, end, dir) {
-    var s = cmd.substring(start, end);
+  function kill_region(start: number, end: number, dir: Direction) {
+    const killed = cmd.substring(start, end);
     if (last_fun !== kill_region) {
-      clip_board = s;
+      clip_board = killed;
     } else if (dir < 0) {
-      clip_board = s + clip_board;
+      clip_board = killed + clip_board;
     } else {
-      clip_board = clip_board + s;
+      clip_board = clip_board + killed;
     }
 
     cmd = cmd.substring(0, start) + cmd.substring(end);
@@ -578,27 +594,27 @@ export function startRepl(lang) {
     this_fun = kill_region;
   }
 
-  function kill_line() {
-    kill_region(cursor_pos, cmd.length, 1);
+  function kill_line(_keys?: string) {
+    kill_region(cursor_pos, cmd.length, Direction.Forward);
   }
 
-  function backward_kill_line() {
-    kill_region(0, cursor_pos, -1);
+  function backward_kill_line(_keys?: string) {
+    kill_region(0, cursor_pos, Direction.Backward);
   }
 
-  function kill_word() {
-    kill_region(cursor_pos, skip_word_forward(cursor_pos), 1);
+  function kill_word(_keys?: string) {
+    kill_region(cursor_pos, skip_word_forward(cursor_pos), Direction.Forward);
   }
 
-  function backward_kill_word() {
-    kill_region(skip_word_backward(cursor_pos), cursor_pos, -1);
+  function backward_kill_word(_keys?: string) {
+    kill_region(skip_word_backward(cursor_pos), cursor_pos, Direction.Backward);
   }
 
-  function yank() {
+  function yank(_keys?: string) {
     insert(clip_board);
   }
 
-  function control_c() {
+  function control_c(_keys?: string) {
     if (last_fun === control_c) {
       std.puts("\n");
       cmdline.exit(0);
@@ -608,21 +624,23 @@ export function startRepl(lang) {
     }
   }
 
-  function reset() {
+  function reset(_keys?: string) {
     cmd = "";
     cursor_pos = 0;
   }
 
-  function get_context_word(line, pos) {
-    var s = "";
+  function get_context_word(line: string, pos: number) {
+    var word = "";
     while (pos > 0 && is_word(line[pos - 1])) {
       pos--;
-      s = line[pos] + s;
+      word = line[pos] + word;
     }
-    return s;
+    return word;
   }
-  function get_context_object(line, pos) {
-    var obj, base, c;
+  function get_context_object(line: string, pos: number): any {
+    var obj: any;
+    var base: string;
+    var char: string;
     if (pos <= 0 || " ~!%^&*(-+={[|:;,<>?/".indexOf(line[pos - 1]) >= 0) {
       return globalThis;
     }
@@ -630,7 +648,7 @@ export function startRepl(lang) {
     if (pos >= 2 && line[pos - 1] === ".") {
       pos--;
       obj = {};
-      switch ((c = line[pos - 1])) {
+      switch ((char = line[pos - 1])) {
         case "'":
         case '"':
           return "a";
@@ -641,7 +659,7 @@ export function startRepl(lang) {
         case "/":
           return / /;
         default:
-          if (is_word(c)) {
+          if (is_word(char)) {
             base = get_context_word(line, pos);
             if (
               ["true", "false", "null", "this"].includes(base) ||
@@ -665,117 +683,128 @@ export function startRepl(lang) {
     return void 0;
   }
 
-  function get_completions(line, pos) {
-    var s, obj, ctx_obj, r, i, j;
+  function get_completions(line: string, pos: number) {
+    var prefix: string;
+    var obj: any;
+    var ctx_obj: any;
+    var results: string[];
+    var jdx: number;
 
-    s = get_context_word(line, pos);
-    ctx_obj = get_context_object(line, pos - s.length);
-    r = [];
+    prefix = get_context_word(line, pos);
+    ctx_obj = get_context_object(line, pos - prefix.length);
+    results = [];
     // enumerate properties from object and its prototype chain,
-    // add non-numeric regular properties with s as e prefix
-    for (i = 0, obj = ctx_obj; i < 10 && obj !== null && obj !== void 0; i++) {
-      var props = Object.getOwnPropertyNames(obj);
+    // add non-numeric regular properties with prefix as a prefix
+    obj = ctx_obj;
+    for (var idx = 0; idx < 10 && obj !== null && obj !== void 0; idx++) {
+      const props = Object.getOwnPropertyNames(obj);
       /* add non-numeric regular properties */
-      for (j = 0; j < props.length; j++) {
-        var prop = props[j];
+      for (const prop of props) {
         if (
           typeof prop == "string" &&
           String(Number(prop)) != prop &&
-          prop.startsWith(s)
+          prop.startsWith(prefix)
         ) {
-          r.push(prop);
+          results.push(prop);
         }
       }
       obj = Object.getPrototypeOf(obj);
     }
-    if (r.length > 1) {
-      /* sort list with internal names last and remove duplicates */
-      function symcmp(a, b) {
-        if (a[0] != b[0]) {
-          if (a[0] == "_") {
-            return 1;
-          }
-          if (b[0] == "_") {
-            return -1;
-          }
+    /* sort list with internal names last and remove duplicates */
+    function symcmp(left: string, right: string) {
+      if (left[0] != right[0]) {
+        if (left[0] == "_") {
+          return 1;
         }
-        if (a < b) {
+        if (right[0] == "_") {
           return -1;
         }
-        if (a > b) {
-          return +1;
-        }
-        return 0;
       }
-      r.sort(symcmp);
-      for (i = j = 1; i < r.length; i++) {
-        if (r[i] != r[i - 1]) {
-          r[j++] = r[i];
+      if (left < right) {
+        return -1;
+      }
+      if (left > right) {
+        return +1;
+      }
+      return 0;
+    }
+    if (results.length > 1) {
+      results.sort(symcmp);
+      for (var idx = (jdx = 1); idx < results.length; idx++) {
+        if (results[idx] != results[idx - 1]) {
+          results[jdx++] = results[idx];
         }
       }
-      r.length = j;
+      results.length = jdx;
     }
     /* 'tab' = list of completions, 'pos' = cursor position inside
            the completions */
-    return { tab: r, pos: s.length, ctx: ctx_obj };
+    return { tab: results, pos: prefix.length, ctx: ctx_obj };
   }
 
-  function completion() {
-    var tab, res, s, i, j, len, t, max_width, col, n_cols, row, n_rows;
+  function completion(_keys?: string) {
+    var tab: string[];
+    var res: { tab: string[]; pos: number; ctx: any };
+    var candidate: string;
+    var matchLen: number;
+    var entry: string;
+    var max_width: number;
+    var n_cols: number;
+    var n_rows: number;
     res = get_completions(cmd, cursor_pos);
     tab = res.tab;
     if (tab.length === 0) {
       return;
     }
-    s = tab[0];
-    len = s.length;
+    candidate = tab[0];
+    matchLen = candidate.length;
     /* add the chars which are identical in all the completions */
-    for (i = 1; i < tab.length; i++) {
-      t = tab[i];
-      for (j = 0; j < len; j++) {
-        if (t[j] !== s[j]) {
-          len = j;
+    for (var idx = 1; idx < tab.length; idx++) {
+      entry = tab[idx];
+      for (var jdx = 0; jdx < matchLen; jdx++) {
+        if (entry[jdx] !== candidate[jdx]) {
+          matchLen = jdx;
           break;
         }
       }
     }
-    for (i = res.pos; i < len; i++) {
-      insert(s[i]);
+    for (var idx = res.pos; idx < matchLen; idx++) {
+      insert(candidate[idx]);
     }
     if (last_fun === completion && tab.length == 1) {
       /* append parentheses to function names */
-      var m = res.ctx[tab[0]];
-      if (typeof m == "function") {
+      const member = res.ctx[tab[0]];
+      if (typeof member == "function") {
         insert("(");
-        if (m.length == 0) {
+        if (member.length == 0) {
           insert(")");
         }
-      } else if (typeof m == "object") {
+      } else if (typeof member == "object") {
         insert(".");
       }
     }
     /* show the possible completions */
     if (last_fun === completion && tab.length >= 2) {
       max_width = 0;
-      for (i = 0; i < tab.length; i++) {
-        max_width = Math.max(max_width, tab[i].length);
+      for (const item of tab) {
+        max_width = Math.max(max_width, item.length);
       }
       max_width += 2;
       n_cols = Math.max(1, Math.floor((term_width + 1) / max_width));
       n_rows = Math.ceil(tab.length / n_cols);
       std.puts("\n");
       /* display the sorted list column-wise */
-      for (row = 0; row < n_rows; row++) {
-        for (col = 0; col < n_cols; col++) {
-          i = col * n_rows + row;
-          if (i >= tab.length) {
+      for (var row = 0; row < n_rows; row++) {
+        for (var col = 0; col < n_cols; col++) {
+          const cellIdx = col * n_rows + row;
+          if (cellIdx >= tab.length) {
             break;
           }
-          s = tab[i];
+          candidate = tab[cellIdx];
           if (col != n_cols - 1) {
-            s = s.padEnd(max_width);
+            candidate = candidate.padEnd(max_width);
           }
-          std.puts(s);
+          std.puts(candidate);
         }
         std.puts("\n");
       }
@@ -785,7 +814,7 @@ export function startRepl(lang) {
   }
 
   /* command table */
-  var commands = {
+  const commands = {
     "\x01": beginning_of_line /* ^A - bol */,
     "\x02": backward_char /* ^B - backward-char */,
     "\x03": control_c /* ^C - abort */,
@@ -837,17 +866,9 @@ export function startRepl(lang) {
     "\x7f": backward_delete_char /* ^? - delete */,
   };
 
-  function dupstr(str, count) {
-    var res = "";
-    while (count-- > 0) {
-      res += str;
-    }
-    return res;
-  }
-
-  var readline_keys;
-  var readline_state;
-  var readline_cb;
+  var readline_keys: string;
+  var readline_state: number;
+  var readline_cb: (expr: string | null) => void;
 
   function readline_print_prompt() {
     std.puts(prompt);
@@ -856,7 +877,7 @@ export function startRepl(lang) {
     last_cursor_pos = 0;
   }
 
-  function readline_start(defstr, cb) {
+  function readline_start(defstr: string, cb: (expr: string | null) => void) {
     cmd = defstr || "";
     cursor_pos = cmd.length;
     history_index = history.length;
@@ -865,15 +886,17 @@ export function startRepl(lang) {
     prompt = pstate;
 
     if (mexpr) {
-      prompt += dupstr(" ", plen - prompt.length);
+      prompt += " ".repeat(plen - prompt.length);
       prompt += ps2;
     } else {
       if (show_time) {
-        var t = Math.round(eval_time) + " ";
+        var timeStr = Math.round(eval_time) + " ";
         eval_time = 0;
-        t = dupstr("0", 5 - t.length) + t;
+        timeStr = "0".repeat(5 - timeStr.length) + timeStr;
         prompt +=
-          t.substring(0, t.length - 4) + "." + t.substring(t.length - 4);
+          timeStr.substring(0, timeStr.length - 4) +
+          "." +
+          timeStr.substring(timeStr.length - 4);
       }
       plen = prompt.length;
       prompt += ps1;
@@ -883,24 +906,23 @@ export function startRepl(lang) {
     readline_state = 0;
   }
 
-  function handle_char(c1) {
-    var c;
-    c = String.fromCodePoint(c1);
+  function handle_char(codePoint: number) {
+    const char = String.fromCodePoint(codePoint);
     switch (readline_state) {
       case 0:
-        if (c == "\x1b") {
+        if (char == "\x1b") {
           /* '^[' - ESC */
-          readline_keys = c;
+          readline_keys = char;
           readline_state = 1;
         } else {
-          handle_key(c);
+          handle_key(char);
         }
         break;
       case 1 /* '^[ */:
-        readline_keys += c;
-        if (c == "[") {
+        readline_keys += char;
+        if (char == "[") {
           readline_state = 2;
-        } else if (c == "O") {
+        } else if (char == "O") {
           readline_state = 3;
         } else {
           handle_key(readline_keys);
@@ -908,22 +930,22 @@ export function startRepl(lang) {
         }
         break;
       case 2 /* '^[[' - CSI */:
-        readline_keys += c;
-        if (!(c == ";" || (c >= "0" && c <= "9"))) {
+        readline_keys += char;
+        if (!(char == ";" || (char >= "0" && char <= "9"))) {
           handle_key(readline_keys);
           readline_state = 0;
         }
         break;
       case 3 /* '^[O' - ESC2 */:
-        readline_keys += c;
+        readline_keys += char;
         handle_key(readline_keys);
         readline_state = 0;
         break;
     }
   }
 
-  function handle_key(keys) {
-    var fun;
+  function handle_key(keys: string) {
+    var fun: ((_keys?: string) => CommandResult | void) | undefined;
 
     if (quote_flag) {
       if (ucs_length(keys) === 1) {
@@ -933,13 +955,13 @@ export function startRepl(lang) {
     } else if ((fun = commands[keys])) {
       this_fun = fun;
       switch (fun(keys)) {
-        case -1:
+        case CommandResult.AcceptLine:
           readline_cb(cmd);
           return;
-        case -2:
+        case CommandResult.Abort:
           readline_cb(null);
           return;
-        case -3:
+        case CommandResult.Exit:
           /* uninstall a Ctrl-C signal handler */
           os.signal(os.SIGINT, null);
           /* uninstall the stdin read handler */
@@ -959,23 +981,20 @@ export function startRepl(lang) {
     update();
   }
 
-  function extract_directive(a) {
-    var pos;
-    if (a[0] !== "\\") {
+  function extract_directive(input: string) {
+    if (input[0] !== "\\") {
       return "";
     }
-    for (pos = 1; pos < a.length; pos++) {
-      if (!is_alpha(a[pos])) {
+    for (var pos = 1; pos < input.length; pos++) {
+      if (!is_alpha(input[pos])) {
         break;
       }
     }
-    return a.substring(1, pos);
+    return input.substring(1, pos);
   }
 
   /* return true if the string after cmd can be evaluted as JS */
-  function handle_directive(cmd, expr) {
-    var param, prec1, expBits1;
-
+  function handle_directive(cmd: string, expr: string) {
     if (cmd === "h" || cmd === "?" || cmd == "help") {
       help();
     } else if (cmd === "load") {
@@ -990,7 +1009,7 @@ export function startRepl(lang) {
     } else if (cmd === "clear") {
       std.puts("\x1b[H\x1b[J");
     } else if (cmd === "q") {
-      std.exit(0);
+      cmdline.exit(0);
     } else {
       std.puts("Unknown directive: " + cmd + "\n");
       return false;
@@ -999,8 +1018,8 @@ export function startRepl(lang) {
   }
 
   function help() {
-    function sel(n) {
-      return n ? "*" : " ";
+    function sel(active: boolean) {
+      return active ? "*" : " ";
     }
     std.puts(
       "\\h          this help\n" +
@@ -1015,8 +1034,8 @@ export function startRepl(lang) {
   const eval_filename =
     os.getcwd() + (os.platform === "win32" ? "\\" : "/") + "<evalScript>";
 
-  function eval_and_print(expr) {
-    var result;
+  function eval_and_print(expr: string) {
+    var result: any;
 
     try {
       const newExpr = compileExpression(expr);
@@ -1027,7 +1046,7 @@ export function startRepl(lang) {
         std.puts("\n");
         expr = newExpr;
       }
-      var now = new Date().getTime();
+      const now = new Date().getTime();
       /* eval as a script */
       result = engine.evalScript(expr, {
         backtraceBarrier: true,
@@ -1051,16 +1070,17 @@ export function startRepl(lang) {
   }
 
   function cmd_readline_start() {
-    readline_start(dupstr("    ", level), readline_handle_cmd);
+    readline_start("    ".repeat(level), readline_handle_cmd);
   }
 
-  function readline_handle_cmd(expr) {
+  function readline_handle_cmd(expr: string | null) {
     handle_cmd(expr);
     cmd_readline_start();
   }
 
-  function handle_cmd(expr) {
-    var colorstate, cmd;
+  function handle_cmd(expr: string | null) {
+    var colorstate: [string, number, Array<string>];
+    var cmd: string;
 
     if (expr === null) {
       expr = "";
@@ -1100,36 +1120,36 @@ export function startRepl(lang) {
     engine.gc();
   }
 
-  function colorize_js(str) {
-    var i,
-      c,
-      start,
-      n = str.length;
-    var style,
-      state = "",
-      level = 0;
+  function colorize_js(str: string): [string, number, Array<string>] {
+    var idx: number;
+    var char: string;
+    var tokenStart: number;
+    const len = str.length;
+    var style: string | null;
+    var state = "";
+    var level = 0;
     var can_regex = 1;
-    var r = [];
+    var styleArray: string[] = [];
 
-    function push_state(c) {
-      state += c;
+    function push_state(ch: string) {
+      state += ch;
     }
-    function last_state(c) {
+    function last_state() {
       return state.substring(state.length - 1);
     }
-    function pop_state(c) {
-      var c = last_state();
+    function pop_state() {
+      const prev = last_state();
       state = state.substring(0, state.length - 1);
-      return c;
+      return prev;
     }
 
     function parse_block_comment() {
       style = "comment";
       push_state("/");
-      for (i++; i < n - 1; i++) {
-        if (str[i] == "*" && str[i + 1] == "/") {
-          i += 2;
-          pop_state("/");
+      for (idx++; idx < len - 1; idx++) {
+        if (str[idx] == "*" && str[idx + 1] == "/") {
+          idx += 2;
+          pop_state();
           break;
         }
       }
@@ -1137,28 +1157,28 @@ export function startRepl(lang) {
 
     function parse_line_comment() {
       style = "comment";
-      for (i++; i < n; i++) {
-        if (str[i] == "\n") {
+      for (idx++; idx < len; idx++) {
+        if (str[idx] == "\n") {
           break;
         }
       }
     }
 
-    function parse_string(delim) {
+    function parse_string(delim: string) {
       style = "string";
       push_state(delim);
-      while (i < n) {
-        c = str[i++];
-        if (c == "\n") {
+      while (idx < len) {
+        char = str[idx++];
+        if (char == "\n") {
           style = "error";
           continue;
         }
-        if (c == "\\") {
-          if (i >= n) {
+        if (char == "\\") {
+          if (idx >= len) {
             break;
           }
-          i++;
-        } else if (c == delim) {
+          idx++;
+        } else if (char == delim) {
           pop_state();
           break;
         }
@@ -1168,36 +1188,36 @@ export function startRepl(lang) {
     function parse_regex() {
       style = "regex";
       push_state("/");
-      while (i < n) {
-        c = str[i++];
-        if (c == "\n") {
+      while (idx < len) {
+        char = str[idx++];
+        if (char == "\n") {
           style = "error";
           continue;
         }
-        if (c == "\\") {
-          if (i < n) {
-            i++;
+        if (char == "\\") {
+          if (idx < len) {
+            idx++;
           }
           continue;
         }
         if (last_state() == "[") {
-          if (c == "]") {
+          if (char == "]") {
             pop_state();
           }
           // ECMA 5: ignore '/' inside char classes
           continue;
         }
-        if (c == "[") {
+        if (char == "[") {
           push_state("[");
-          if (str[i] == "[" || str[i] == "]") {
-            i++;
+          if (str[idx] == "[" || str[idx] == "]") {
+            idx++;
           }
           continue;
         }
-        if (c == "/") {
+        if (char == "/") {
           pop_state();
-          while (i < n && is_word(str[i])) {
-            i++;
+          while (idx < len && is_word(str[idx])) {
+            idx++;
           }
           break;
         }
@@ -1207,17 +1227,17 @@ export function startRepl(lang) {
     function parse_number() {
       style = "number";
       while (
-        i < n &&
-        (is_word(str[i]) ||
-          (str[i] == "." && (i == n - 1 || str[i + 1] != ".")))
+        idx < len &&
+        (is_word(str[idx]) ||
+          (str[idx] == "." && (idx == len - 1 || str[idx + 1] != ".")))
       ) {
-        i++;
+        idx++;
       }
     }
 
-    var js_literals = "|true|false|null|undefined";
+    const js_literals = "|true|false|null|undefined";
 
-    var js_keywords =
+    const js_keywords =
       "|" +
       "break|case|catch|continue|debugger|default|delete|do|" +
       "else|finally|for|function|if|in|instanceof|new|" +
@@ -1230,20 +1250,20 @@ export function startRepl(lang) {
       "void|var|" +
       "await|";
 
-    var js_no_regex =
+    const js_no_regex =
       "|this|super|undefined|null|true|false|Infinity|NaN|arguments|";
 
     function parse_identifier() {
       can_regex = 1;
 
-      while (i < n && is_word(str[i])) {
-        i++;
+      while (idx < len && is_word(str[idx])) {
+        idx++;
       }
 
-      var w = "|" + str.substring(start, i) + "|";
+      const delimitedWord = "|" + str.substring(tokenStart, idx) + "|";
 
-      const isLiteral = js_literals.indexOf(w) >= 0;
-      const isKeyword = js_keywords.indexOf(w) >= 0;
+      const isLiteral = js_literals.indexOf(delimitedWord) >= 0;
+      const isKeyword = js_keywords.indexOf(delimitedWord) >= 0;
 
       if (isLiteral || isKeyword) {
         if (isLiteral) {
@@ -1252,18 +1272,18 @@ export function startRepl(lang) {
           style = "keyword";
         }
 
-        if (js_no_regex.indexOf(w) >= 0) {
+        if (js_no_regex.indexOf(delimitedWord) >= 0) {
           can_regex = 0;
         }
         return;
       }
 
-      var i1 = i;
-      while (i1 < n && str[i1] == " ") {
-        i1++;
+      var lookahead = idx;
+      while (lookahead < len && str[lookahead] == " ") {
+        lookahead++;
       }
 
-      if (i1 < n && str[i1] == "(") {
+      if (lookahead < len && str[lookahead] == "(") {
         style = "function";
         return;
       }
@@ -1272,19 +1292,19 @@ export function startRepl(lang) {
       can_regex = 0;
     }
 
-    function set_style(from, to) {
-      while (r.length < from) {
-        r.push("default");
+    function set_style(from: number, to: number) {
+      while (styleArray.length < from) {
+        styleArray.push("default");
       }
-      while (r.length < to) {
-        r.push(style);
+      while (styleArray.length < to) {
+        styleArray.push(style!);
       }
     }
 
-    for (i = 0; i < n; ) {
+    for (idx = 0; idx < len; ) {
       style = null;
-      start = i;
-      switch ((c = str[i++])) {
+      tokenStart = idx;
+      switch ((char = str[idx++])) {
         case " ":
         case "\t":
         case "\r":
@@ -1292,19 +1312,19 @@ export function startRepl(lang) {
           continue;
         case "+":
         case "-":
-          if (i < n && str[i] == c) {
-            i++;
+          if (idx < len && str[idx] == char) {
+            idx++;
             continue;
           }
           can_regex = 1;
           continue;
         case "/":
-          if (i < n && str[i] == "*") {
+          if (idx < len && str[idx] == "*") {
             // block comment
             parse_block_comment();
             break;
           }
-          if (i < n && str[i] == "/") {
+          if (idx < len && str[idx] == "/") {
             // line comment
             parse_line_comment();
             break;
@@ -1319,7 +1339,7 @@ export function startRepl(lang) {
         case "'":
         case '"':
         case "`":
-          parse_string(c);
+          parse_string(char);
           can_regex = 0;
           break;
         case "(":
@@ -1327,13 +1347,13 @@ export function startRepl(lang) {
         case "{":
           can_regex = 1;
           level++;
-          push_state(c);
+          push_state(char);
           continue;
         case ")":
         case "]":
         case "}":
           can_regex = 0;
-          if (level > 0 && is_balanced(last_state(), c)) {
+          if (level > 0 && is_balanced(last_state(), char)) {
             level--;
             pop_state();
             continue;
@@ -1341,12 +1361,12 @@ export function startRepl(lang) {
           style = "error";
           break;
         default:
-          if (is_digit(c)) {
+          if (is_digit(char)) {
             parse_number();
             can_regex = 0;
             break;
           }
-          if (is_word(c) || c == "$") {
+          if (is_word(char) || char == "$") {
             parse_identifier();
             break;
           }
@@ -1354,11 +1374,11 @@ export function startRepl(lang) {
           continue;
       }
       if (style) {
-        set_style(start, i);
+        set_style(tokenStart, idx);
       }
     }
-    set_style(n, n);
-    return [state, level, r];
+    set_style(len, len);
+    return [state, level, styleArray];
   }
 
   termInit();
