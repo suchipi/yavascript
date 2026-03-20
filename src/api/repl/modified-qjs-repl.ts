@@ -101,15 +101,15 @@ export function startRepl(lang: string) {
   const historyFile = new HistoryFile("yavascript_repl_history.txt");
 
   const history = historyFile.load();
-  var clip_board = "";
+  let clip_board = "";
 
-  var pstate = "";
-  var prompt = "";
-  var plen = 0;
+  let pstate = "";
+  let prompt = "";
+  let plen = 0;
   const ps1 = "> ";
   const ps2 = "  ... ";
   const utf8 = true;
-  var show_time = false;
+  let show_time = false;
   const show_colors = hasColors();
 
   if (!show_colors) {
@@ -118,27 +118,27 @@ export function startRepl(lang: string) {
     }
   }
 
-  var eval_time = 0;
+  let eval_time = 0;
 
-  var mexpr = "";
-  var level = 0;
-  var cmd = "";
-  var cursor_pos = 0;
-  var last_cmd = "";
-  var last_cursor_pos = 0;
-  var history_index: number;
-  var this_fun: ((...args: any) => any) | undefined;
-  var last_fun: ((...args: any) => any) | undefined;
-  var quote_flag = false;
+  let mexpr = "";
+  let level = 0;
+  let cmd = "";
+  let cursor_pos = 0;
+  let last_cmd = "";
+  let last_cursor_pos = 0;
+  let history_index: number;
+  let this_fun: ((...args: any) => any) | undefined;
+  let last_fun: ((...args: any) => any) | undefined;
+  let quote_flag = false;
 
-  var term_fd: number;
-  var term_read_buf: Uint8Array;
-  var term_width: number;
+  let term_fd: number;
+  let term_read_buf: Uint8Array;
+  let term_width: number;
   /* current X position of the cursor in the terminal */
-  var term_cursor_x = 0;
+  let term_cursor_x = 0;
 
   function termInit() {
-    var winSize: [number, number] | null;
+    let winSize: [number, number] | null;
     term_fd = std.in.fileno();
 
     /* get the terminal size */
@@ -170,20 +170,19 @@ export function startRepl(lang: string) {
   }
 
   function term_read_handler() {
-    var bytesRead: number;
-    bytesRead = os.read(
+    const bytesRead = os.read(
       term_fd,
       term_read_buf.buffer as ArrayBuffer,
       0,
       term_read_buf.length,
     );
-    for (var idx = 0; idx < bytesRead; idx++) {
+    for (let idx = 0; idx < bytesRead; idx++) {
       handle_byte(term_read_buf[idx]);
     }
   }
 
-  var utf8_state = 0;
-  var utf8_val = 0;
+  let utf8_state = 0;
+  let utf8_val = 0;
 
   function handle_byte(byte: number) {
     if (!utf8) {
@@ -222,13 +221,13 @@ export function startRepl(lang: string) {
   }
 
   function ucs_length(str: string) {
-    var length = 0;
+    let length = 0;
     const str_len = str.length;
     /* we never count the trailing surrogate to have the
          following property: ucs_length(str) =
          ucs_length(str.substring(0, a)) + ucs_length(str.substring(a,
          str.length)) for 0 <= a <= str.length */
-    for (var idx = 0; idx < str_len; idx++) {
+    for (let idx = 0; idx < str_len; idx++) {
       const charCode = str.charCodeAt(idx);
       if (charCode < 0xdc00 || charCode >= 0xe000) {
         length++;
@@ -256,9 +255,9 @@ export function startRepl(lang: string) {
   }
 
   function print_color_text(str: string, start: number, style_names: string[]) {
-    for (var spanEnd = start; spanEnd < str.length; ) {
-      var spanStart: number;
-      var style = style_names[(spanStart = spanEnd)];
+    for (let spanEnd = start; spanEnd < str.length; ) {
+      let spanStart: number;
+      const style = style_names[(spanStart = spanEnd)];
       while (++spanEnd < str.length && style_names[spanEnd] == style) {
         continue;
       }
@@ -274,7 +273,7 @@ export function startRepl(lang: string) {
 
   /* XXX: handle double-width characters */
   function move_cursor(delta: number) {
-    var step: number;
+    let step: number;
     if (delta > 0) {
       while (delta != 0) {
         if (term_cursor_x == term_width - 1) {
@@ -462,7 +461,7 @@ export function startRepl(lang: string) {
 
   function history_search(dir: Direction) {
     const pos = cursor_pos;
-    for (var i = 1; i <= history.length; i++) {
+    for (let i = 1; i <= history.length; i++) {
       const index = (history.length + i * dir + history_index) % history.length;
       if (history[index].substring(0, pos) == cmd.substring(0, pos)) {
         history_index = index;
@@ -481,8 +480,8 @@ export function startRepl(lang: string) {
   }
 
   function delete_char_dir(dir: Direction) {
-    var start: number;
-    var end: number;
+    let start: number;
+    let end: number;
 
     start = cursor_pos;
     if (dir < 0) {
@@ -524,7 +523,7 @@ export function startRepl(lang: string) {
   }
 
   function transpose_chars(_keys?: string) {
-    var pos = cursor_pos;
+    let pos = cursor_pos;
     if (cmd.length > 1 && pos > 0) {
       if (pos == cmd.length) {
         pos--;
@@ -630,7 +629,7 @@ export function startRepl(lang: string) {
   }
 
   function get_context_word(line: string, pos: number) {
-    var word = "";
+    let word = "";
     while (pos > 0 && is_word(line[pos - 1])) {
       pos--;
       word = line[pos] + word;
@@ -638,9 +637,9 @@ export function startRepl(lang: string) {
     return word;
   }
   function get_context_object(line: string, pos: number): any {
-    var obj: any;
-    var base: string;
-    var char: string;
+    let obj: any;
+    let base: string;
+    let char: string;
     if (pos <= 0 || " ~!%^&*(-+={[|:;,<>?/".indexOf(line[pos - 1]) >= 0) {
       return globalThis;
     }
@@ -684,19 +683,16 @@ export function startRepl(lang: string) {
   }
 
   function get_completions(line: string, pos: number) {
-    var prefix: string;
-    var obj: any;
-    var ctx_obj: any;
-    var results: string[];
-    var jdx: number;
+    let obj: any;
+    let jdx: number;
 
-    prefix = get_context_word(line, pos);
-    ctx_obj = get_context_object(line, pos - prefix.length);
-    results = [];
+    const prefix = get_context_word(line, pos);
+    const ctx_obj = get_context_object(line, pos - prefix.length);
+    const results: string[] = [];
     // enumerate properties from object and its prototype chain,
     // add non-numeric regular properties with prefix as a prefix
     obj = ctx_obj;
-    for (var idx = 0; idx < 10 && obj !== null && obj !== void 0; idx++) {
+    for (let idx = 0; idx < 10 && obj !== null && obj !== void 0; idx++) {
       const props = Object.getOwnPropertyNames(obj);
       /* add non-numeric regular properties */
       for (const prop of props) {
@@ -730,7 +726,7 @@ export function startRepl(lang: string) {
     }
     if (results.length > 1) {
       results.sort(symcmp);
-      for (var idx = (jdx = 1); idx < results.length; idx++) {
+      for (let idx = (jdx = 1); idx < results.length; idx++) {
         if (results[idx] != results[idx - 1]) {
           results[jdx++] = results[idx];
         }
@@ -743,32 +739,30 @@ export function startRepl(lang: string) {
   }
 
   function completion(_keys?: string) {
-    var tab: string[];
-    var res: { tab: string[]; pos: number; ctx: any };
-    var candidate: string;
-    var matchLen: number;
-    var entry: string;
-    var max_width: number;
-    var n_cols: number;
-    var n_rows: number;
-    res = get_completions(cmd, cursor_pos);
-    tab = res.tab;
+    let candidate: string;
+    let matchLen: number;
+    let entry: string;
+    let max_width: number;
+    let n_cols: number;
+    let n_rows: number;
+    const res = get_completions(cmd, cursor_pos);
+    const tab = res.tab;
     if (tab.length === 0) {
       return;
     }
     candidate = tab[0];
     matchLen = candidate.length;
     /* add the chars which are identical in all the completions */
-    for (var idx = 1; idx < tab.length; idx++) {
+    for (let idx = 1; idx < tab.length; idx++) {
       entry = tab[idx];
-      for (var jdx = 0; jdx < matchLen; jdx++) {
+      for (let jdx = 0; jdx < matchLen; jdx++) {
         if (entry[jdx] !== candidate[jdx]) {
           matchLen = jdx;
           break;
         }
       }
     }
-    for (var idx = res.pos; idx < matchLen; idx++) {
+    for (let idx = res.pos; idx < matchLen; idx++) {
       insert(candidate[idx]);
     }
     if (last_fun === completion && tab.length == 1) {
@@ -794,8 +788,8 @@ export function startRepl(lang: string) {
       n_rows = Math.ceil(tab.length / n_cols);
       std.puts("\n");
       /* display the sorted list column-wise */
-      for (var row = 0; row < n_rows; row++) {
-        for (var col = 0; col < n_cols; col++) {
+      for (let row = 0; row < n_rows; row++) {
+        for (let col = 0; col < n_cols; col++) {
           const cellIdx = col * n_rows + row;
           if (cellIdx >= tab.length) {
             break;
@@ -866,9 +860,9 @@ export function startRepl(lang: string) {
     "\x7f": backward_delete_char /* ^? - delete */,
   };
 
-  var readline_keys: string;
-  var readline_state: number;
-  var readline_cb: (expr: string | null) => void;
+  let readline_keys: string;
+  let readline_state: number;
+  let readline_cb: (expr: string | null) => void;
 
   function readline_print_prompt() {
     std.puts(prompt);
@@ -890,7 +884,7 @@ export function startRepl(lang: string) {
       prompt += ps2;
     } else {
       if (show_time) {
-        var timeStr = Math.round(eval_time) + " ";
+        let timeStr = Math.round(eval_time) + " ";
         eval_time = 0;
         timeStr = "0".repeat(5 - timeStr.length) + timeStr;
         prompt +=
@@ -945,7 +939,7 @@ export function startRepl(lang: string) {
   }
 
   function handle_key(keys: string) {
-    var fun: ((_keys?: string) => CommandResult | void) | undefined;
+    let fun: ((_keys?: string) => CommandResult | void) | undefined;
 
     if (quote_flag) {
       if (ucs_length(keys) === 1) {
@@ -985,7 +979,8 @@ export function startRepl(lang: string) {
     if (input[0] !== "\\") {
       return "";
     }
-    for (var pos = 1; pos < input.length; pos++) {
+    let pos: number;
+    for (pos = 1; pos < input.length; pos++) {
       if (!is_alpha(input[pos])) {
         break;
       }
@@ -998,7 +993,7 @@ export function startRepl(lang: string) {
     if (cmd === "h" || cmd === "?" || cmd == "help") {
       help();
     } else if (cmd === "load") {
-      var filename = expr.substring(cmd.length + 1).trim();
+      let filename = expr.substring(cmd.length + 1).trim();
       if (filename.lastIndexOf(".") <= filename.lastIndexOf("/")) {
         filename += ".js";
       }
@@ -1035,7 +1030,7 @@ export function startRepl(lang: string) {
     os.getcwd() + (os.platform === "win32" ? "\\" : "/") + "<evalScript>";
 
   function eval_and_print(expr: string) {
-    var result: any;
+    let result: any;
 
     try {
       const newExpr = compileExpression(expr);
@@ -1079,8 +1074,8 @@ export function startRepl(lang: string) {
   }
 
   function handle_cmd(expr: string | null) {
-    var colorstate: [string, number, Array<string>];
-    var cmd: string;
+    let colorstate: [string, number, Array<string>];
+    let directive: string;
 
     if (expr === null) {
       expr = "";
@@ -1090,12 +1085,12 @@ export function startRepl(lang: string) {
       help();
       return;
     }
-    cmd = extract_directive(expr);
-    if (cmd.length > 0) {
-      if (!handle_directive(cmd, expr)) {
+    directive = extract_directive(expr);
+    if (directive.length > 0) {
+      if (!handle_directive(directive, expr)) {
         return;
       }
-      expr = expr.substring(cmd.length + 1);
+      expr = expr.substring(directive.length + 1);
     }
     if (expr === "") {
       return;
@@ -1121,15 +1116,15 @@ export function startRepl(lang: string) {
   }
 
   function colorize_js(str: string): [string, number, Array<string>] {
-    var idx: number;
-    var char: string;
-    var tokenStart: number;
+    let idx: number;
+    let char: string;
+    let tokenStart: number;
     const len = str.length;
-    var style: string | null;
-    var state = "";
-    var level = 0;
-    var can_regex = 1;
-    var styleArray: string[] = [];
+    let style: string | null;
+    let state = "";
+    let level = 0;
+    let can_regex = 1;
+    const styleArray: string[] = [];
 
     function push_state(ch: string) {
       state += ch;
@@ -1278,7 +1273,7 @@ export function startRepl(lang: string) {
         return;
       }
 
-      var lookahead = idx;
+      let lookahead = idx;
       while (lookahead < len && str[lookahead] == " ") {
         lookahead++;
       }
