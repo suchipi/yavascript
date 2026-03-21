@@ -115,6 +115,7 @@ test("exec - child process receives args", async () => {
      "stderr": "exec: <yavascript binary> -e scriptArgs bla blah -- haha
    ",
      "stdout": "[
+     Frozen
      "<yavascript binary>"
      "-e"
      "scriptArgs"

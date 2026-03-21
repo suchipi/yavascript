@@ -135,7 +135,7 @@ test("globals", async () => {
    setInterval: function (CWE)
    clearInterval: function (CWE)
    __qjsbootstrap_offset: number readonly ()
-   scriptArgs: object (CWE)
+   scriptArgs: frozen object (CWE)
    require: function (CWE)
    __kame_instances__: object (CWE)
    std: object (GSCE)
