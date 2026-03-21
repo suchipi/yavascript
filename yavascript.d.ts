@@ -5728,6 +5728,9 @@ declare module "quickjs:std" {
   /** Constant for {@link FILE.setvbuf}. Declares that the buffer mode should be 'no buffering'. */
   export var _IONBF: number;
 
+  /** The default buffer size for a buffered FILE. Useful for passing into {@link FILE.setvbuf}. */
+  export var BUFSIZ: number;
+
   /** Return the value of the environment variable `name` or `undefined` if it is not defined. */
   export function getenv(name: string): string | undefined;
 

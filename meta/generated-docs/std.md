@@ -38,6 +38,7 @@
   - ["quickjs:std".\_IOFBF (exported number)](#quickjsstd_iofbf-exported-number)
   - ["quickjs:std".\_IOLBF (exported number)](#quickjsstd_iolbf-exported-number)
   - ["quickjs:std".\_IONBF (exported number)](#quickjsstd_ionbf-exported-number)
+  - ["quickjs:std".BUFSIZ (exported number)](#quickjsstdbufsiz-exported-number)
   - ["quickjs:std".getenv (exported function)](#quickjsstdgetenv-exported-function)
   - ["quickjs:std".setenv (exported function)](#quickjsstdsetenv-exported-function)
   - ["quickjs:std".unsetenv (exported function)](#quickjsstdunsetenv-exported-function)
@@ -308,6 +309,7 @@ declare module "quickjs:std" {
   export var _IOFBF: number;
   export var _IOLBF: number;
   export var _IONBF: number;
+  export var BUFSIZ: number;
   export function getenv(name: string): string | undefined;
   export function setenv(name: string, value: string): void;
   export function unsetenv(name: string): void;
@@ -576,6 +578,14 @@ Constant for [FILE.setvbuf](/meta/generated-docs/std.md#filesetvbuf-method). Dec
 
 ```ts
 var _IONBF: number;
+```
+
+## "quickjs:std".BUFSIZ (exported number)
+
+The default buffer size for a buffered FILE. Useful for passing into [FILE.setvbuf](/meta/generated-docs/std.md#filesetvbuf-method).
+
+```ts
+var BUFSIZ: number;
 ```
 
 ## "quickjs:std".getenv (exported function)
