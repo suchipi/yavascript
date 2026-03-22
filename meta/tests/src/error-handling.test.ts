@@ -10,7 +10,7 @@ test("prints thrown errors to stderr", async () => {
      at somewhere
    {
      fileName: "<internal>/quickjs.c"
-     lineNumber: 6787
+     lineNumber: <redacted>
    }
    ",
      "stdout": "",

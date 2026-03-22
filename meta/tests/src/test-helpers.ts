@@ -61,8 +61,14 @@ export function inspect(value: any): string {
   return print(value, inspectOptions.forPrint());
 }
 
+// TODO: use first-base's builtin system for this instead
 export function cleanOutput(input: string): string {
   return stripAnsi(input)
+    .replace(
+      // quickjs C file line number augmented stack trace properties
+      /(fileName: "<internal>[^\n]+\n\s*lineNumber): \d+/g,
+      "$1: <redacted>",
+    )
     .split("\n")
     .map((line) => {
       if (/  at ([A-Za-z0-9\-_$<>]+)/g.test(line)) {
@@ -80,8 +86,8 @@ export function cleanOutput(input: string): string {
     .replace(new RegExp(TMP, "g"), "/tmp")
     .replace(new RegExp(binaryPath, "g"), "<yavascript binary>")
     .replace(new RegExp(rootDir(), "g"), "<rootDir>")
-    .replace(new RegExp(/pid: \d+/, "g"), "pid: <redacted>")
-    .replace(new RegExp(/oldPid: \d+/, "g"), "oldPid: <redacted>");
+    .replace(/pid: \d+/g, "pid: <redacted>")
+    .replace(/oldPid: \d+/g, "oldPid: <redacted>");
 }
 
 export function cleanResult(input: EvaluateResult): EvaluateResult {
