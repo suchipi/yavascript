@@ -10,7 +10,7 @@
     "@suchipi/dtsmd": "^1.4.0",
     "@suchipi/macaroni": "^0.3.0",
     "@suchipi/print": "^2.5.0",
-    "@suchipi/quickjs": "^0.12.0",
+    "@suchipi/quickjs": "^0.12.1",
     "@suchipi/shinobi": "^1.4.3",
     "@types/coffeescript": "^2.5.7",
     "@types/minimatch": "^5.1.2",
