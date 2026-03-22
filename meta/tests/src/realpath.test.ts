@@ -60,7 +60,7 @@ test("realpath against dead link throws error", async () => {
      at somewhere
    {
      fileName: "<internal>/quickjs-os.c"
-     lineNumber: 977
+     lineNumber: 978
      errno: 2
      path: "./dead-link"
    }
@@ -82,7 +82,7 @@ test("realpath against non-existent target throws error", async () => {
      at somewhere
    {
      fileName: "<internal>/quickjs-os.c"
-     lineNumber: 977
+     lineNumber: 978
      errno: 2
      path: "./this doesn't exist, bro"
    }
