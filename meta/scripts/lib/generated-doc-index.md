@@ -155,7 +155,7 @@ The following QuickJS builtin modules are available via `import`/`require`:
 - [`"quickjs:engine"`]: APIs relating to the builtin JS engine and module loader
 - [`"quickjs:encoding"`]: Utility functions for converting between binary and UTF-8.
 - [`"quickjs:cmdline"`]: Command-line app utils; get argv, set exit code, exit
-- [`"quickjs:timers"`]: setTimeout/setInterval
+- [`"quickjs:timers"`]: setTimeout and setInterval
 
 ## QuickJS Module Namespace Globals
 

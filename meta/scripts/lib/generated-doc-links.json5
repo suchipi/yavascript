@@ -180,7 +180,7 @@
   "Path.prototype.relativeTo": "/meta/generated-docs/path.md#pathprototyperelativeto-method",
   "Path.prototype.extname": "/meta/generated-docs/path.md#pathprototypeextname-method",
   getpwuid: "/meta/generated-docs/std.md#quickjsstdgetpwuid-exported-function",
-  CreateProcess: "/meta/generated-docs/os.md#quickjs-createprocess-open-exported-value",
+  CreateProcess: "/meta/generated-docs/os.md#quickjsoscreateprocess-exported-value",
 
   '"quickjs:std"': "/meta/generated-docs/std.md#quickjsstd-namespace",
   '"quickjs:os"': "/meta/generated-docs/os.md#quickjsos-namespace",

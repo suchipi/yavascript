@@ -1234,7 +1234,7 @@ onmessage: null | ((event: {
 An opaque wrapper around a Win32 HANDLE.
 
 Win32Handle objects cannot be created directly from JavaScript code.
-They are created by native functions like [CreateProcess](/meta/generated-docs/os.md#quickjs-createprocess-open-exported-value).
+They are created by native functions like [CreateProcess](/meta/generated-docs/os.md#quickjsoscreateprocess-exported-value).
 
 On non-Windows platforms, this class exists but no instances will ever
 be created.

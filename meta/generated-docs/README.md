@@ -155,7 +155,7 @@ The following QuickJS builtin modules are available via `import`/`require`:
 - [`"quickjs:engine"`]: APIs relating to the builtin JS engine and module loader
 - [`"quickjs:encoding"`]: Utility functions for converting between binary and UTF-8.
 - [`"quickjs:cmdline"`]: Command-line app utils; get argv, set exit code, exit
-- [`"quickjs:timers"`]: setTimeout/setInterval
+- [`"quickjs:timers"`]: setTimeout and setInterval
 
 ## QuickJS Module Namespace Globals
 
@@ -319,7 +319,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`Path.prototype.relativeTo`]: /meta/generated-docs/path.md#pathprototyperelativeto-method
 [`Path.prototype.extname`]: /meta/generated-docs/path.md#pathprototypeextname-method
 [`getpwuid`]: /meta/generated-docs/std.md#quickjsstdgetpwuid-exported-function
-[`CreateProcess`]: /meta/generated-docs/os.md#quickjs-createprocess-open-exported-value
+[`CreateProcess`]: /meta/generated-docs/os.md#quickjsoscreateprocess-exported-value
 [`"quickjs:std"`]: /meta/generated-docs/std.md#quickjsstd-namespace
 [`"quickjs:os"`]: /meta/generated-docs/os.md#quickjsos-namespace
 [`"quickjs:bytecode"`]: /meta/generated-docs/bytecode.md#quickjsbytecode-namespace
