@@ -5,7 +5,7 @@
   "author": "Lily Skye <me@suchipi.com>",
   "license": "MIT",
   "devDependencies": {
-    "@danielx/civet": "^0.11.1",
+    "@danielx/civet": "^0.11.5",
     "@iarna/toml": "^2.2.5",
     "@suchipi/dtsmd": "^1.4.0",
     "@suchipi/macaroni": "^0.3.0",
@@ -29,14 +29,14 @@
     "papaparse": "^5.5.3",
     "path-less-traveled": "^2.2.1",
     "pheno": "^1.13.0",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.1",
     "resolve-everything": "^0.1.3",
     "string-dedent": "^3.0.2",
     "strip-ansi": "^6.0.1",
     "sucrase": "^3.35.1",
     "typescript": "^5.9.3",
     "typescript-assert-utils": "^1.1.0",
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.3"
   },
   "scripts": {
     "build": "meta/build.sh",
