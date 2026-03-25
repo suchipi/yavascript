@@ -516,6 +516,8 @@ export function startRepl(lang: string) {
     } else {
       delete_char_dir(Direction.Forward);
     }
+
+    return undefined;
   }
 
   function backward_delete_char(_keys?: string) {
