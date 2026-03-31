@@ -403,6 +403,63 @@ exports[`importing-json.js 1`] = `
 }
 `;
 
+exports[`importing-toml.js 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  title: "TOML Example"
+  owner: {
+    name: "Someone"
+  }
+  database: {
+    enabled: true
+    ports: [
+      8000
+      8001
+      8002
+    ]
+  }
+}
+",
+}
+`;
+
+exports[`importing-yaml.js 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  greeting: "hello"
+  target: "there"
+  nested: {
+    key: "value"
+  }
+  items: [
+    "one"
+    "two"
+    "three"
+  ]
+}
+",
+}
+`;
+
+exports[`importing-yml.js 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "{
+  short: "extension"
+  works: true
+}
+",
+}
+`;
+
 exports[`npm-proto-import-error.js 1`] = `
 {
   "code": 1,
@@ -594,6 +651,15 @@ false
 }
 `;
 
+exports[`some-toml.toml 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "",
+}
+`;
+
 exports[`some-tsx.tsx 1`] = `
 {
   "code": 0,
@@ -624,6 +690,24 @@ object
 path: <rootDir>/meta/tests/fixtures/scripts
 Path { <rootDir>/meta/tests/fixtures/scripts }
 ",
+}
+`;
+
+exports[`some-yaml.yaml 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "",
+}
+`;
+
+exports[`some-yml.yml 1`] = `
+{
+  "code": 0,
+  "error": false,
+  "stderr": "",
+  "stdout": "",
 }
 `;
 

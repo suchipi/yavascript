@@ -1,0 +1,8 @@
+greeting: hello
+target: there
+nested:
+  key: value
+items:
+  - one
+  - two
+  - three

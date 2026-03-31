@@ -8,8 +8,10 @@ import "./empty";
 import "./js";
 import "./json";
 import "./jsx";
+import "./toml";
 import "./ts";
 import "./tsx";
+import "./yaml";
 
 ModuleDelegate.searchExtensions = [
   ".civet",
