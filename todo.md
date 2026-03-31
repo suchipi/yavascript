@@ -53,5 +53,5 @@
   - [ ] this was done but needs to be done again cause we use nice-path for Path now and clef-parse uses an older version of nice-path
 - [ ] make it so `quickjs:context`s can get yavascript globals bound to their global intrinsics
 - [x] repl: don't add contiguous duplicate entries to history
-- [ ] repl: don't tab-autocomplete variable names for "did you mean" reference error forwarder getter stubs
+- [x] repl: don't tab-autocomplete variable names for "did you mean" reference error forwarder getter stubs
 - [ ] see if windows qjsbootstrap build works with bytecode now that the atom values are consistent across platforms

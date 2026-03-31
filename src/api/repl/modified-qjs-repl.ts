@@ -35,6 +35,7 @@ import * as esmToRequire from "../../esm-to-require";
 import { langToCompiler } from "../../langs";
 import { HistoryFile } from "./history-file";
 import { hasColors } from "../../has-colors";
+import _stubs from "../commands/_stubs";
 
 enum Direction {
   Forward = 1,
@@ -684,6 +685,8 @@ export function startRepl(lang: string) {
     return void 0;
   }
 
+  const globalStubsToNotAutocomplete = new Set(Object.keys(_stubs));
+
   function get_completions(line: string, pos: number) {
     let obj: any;
     let jdx: number;
@@ -703,7 +706,13 @@ export function startRepl(lang: string) {
           String(Number(prop)) != prop &&
           prop.startsWith(prefix)
         ) {
-          results.push(prop);
+          if (obj === globalThis) {
+            if (!globalStubsToNotAutocomplete.has(prop)) {
+              results.push(prop);
+            }
+          } else {
+            results.push(prop);
+          }
         }
       }
       obj = Object.getPrototypeOf(obj);
