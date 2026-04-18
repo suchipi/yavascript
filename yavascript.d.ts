@@ -148,6 +148,15 @@ declare const yavascript: {
       options?: { filename?: string; expression?: boolean },
     ): string;
   };
+
+  /**
+   * Returns the .d.ts types for all the APIs in this version of yavascript as a
+   * string.
+   *
+   * It's the same string that gets logged when you run yavascript with the
+   * `--print-types` command-line flag.
+   */
+  getTypesDts(): string;
 };
 
 /**

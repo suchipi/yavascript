@@ -10,6 +10,7 @@
     - [yavascript.compilers.coffee (method)](#yavascriptcompilerscoffee-method)
     - [yavascript.compilers.civet (method)](#yavascriptcompilerscivet-method)
     - [yavascript.compilers.autodetect (method)](#yavascriptcompilersautodetect-method)
+  - [yavascript.getTypesDts (method)](#yavascriptgettypesdts-method)
 
 # yavascript (object)
 
@@ -73,6 +74,7 @@ const yavascript: {
       },
     ): string;
   };
+  getTypesDts(): string;
 };
 ```
 
@@ -264,4 +266,16 @@ autodetect(code: string, options?: {
   filename?: string;
   expression?: boolean;
 }): string;
+```
+
+## yavascript.getTypesDts (method)
+
+Returns the .d.ts types for all the APIs in this version of yavascript as a
+string.
+
+It's the same string that gets logged when you run yavascript with the
+`--print-types` command-line flag.
+
+```ts
+getTypesDts(): string;
 ```
