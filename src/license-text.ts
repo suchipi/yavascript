@@ -555,6 +555,14 @@ Copyright (c) 2019-2024 Lily Skye
 
 ${MIT}
 
+====== lz-string ======
+
+MIT License
+
+Copyright (c) 2013 pieroxy <pieroxy@pieroxy.net>
+
+${MIT}
+
 ====== yavascript ======
 
 YavaScript script interpreter

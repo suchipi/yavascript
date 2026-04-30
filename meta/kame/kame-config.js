@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { defaultResolver, Runtime, defaultLoader } = require("kame");
+const { compress } = require("lz-string");
 
 const stubPath = path.resolve(__dirname, "kame-module-stub.js");
 
@@ -55,6 +56,15 @@ exports.resolve = (id, fromFilePath) => {
         );
       }
 
+      if (id.endsWith("?lzStringCompressed")) {
+        return (
+          defaultResolver.resolve(
+            id.replace(/\?lzStringCompressed$/, ""),
+            fromFilePath,
+          ) + "?lzStringCompressed"
+        );
+      }
+
       if (id.endsWith("?evalAtBuildTime")) {
         return (
           defaultResolver.resolve(
@@ -81,6 +91,11 @@ exports.load = (filename) => {
     return loadAsString(filename);
   } else if (filename.endsWith("?contentString")) {
     return loadAsString(filename.replace(/\?contentString$/, ""));
+  } else if (filename.endsWith("?lzStringCompressed")) {
+    const realFileName = filename.replace(/\?lzStringCompressed$/, "");
+    const content = fs.readFileSync(realFileName, "utf-8");
+    const compressed = compress(content);
+    return `module.exports = ${JSON.stringify(compressed)};`;
   } else if (filename.endsWith("?evalAtBuildTime")) {
     const modulePath = filename.replace(/\?evalAtBuildTime$/, "");
 

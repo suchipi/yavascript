@@ -1,6 +1,6 @@
 import { version, arch } from "../../hardcoded";
 import compilers from "../../compilers";
-import { dtsText } from "../../targets/print-types";
+import { getDtsText } from "../../targets/print-types";
 
 export const yavascript = {
   version,
@@ -8,6 +8,6 @@ export const yavascript = {
   ecmaVersion: "ES2020",
   compilers,
   getTypesDts() {
-    return dtsText;
+    return getDtsText();
   },
 };

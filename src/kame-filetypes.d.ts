@@ -13,6 +13,11 @@ declare module "*?contentString" {
   export = content;
 }
 
+declare module "*?lzStringCompressed" {
+  const content: string;
+  export = content;
+}
+
 declare module "*?evalAtBuildTime" {
   const result: any;
   export = result;

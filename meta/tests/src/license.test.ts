@@ -139,6 +139,7 @@ test("license attribution doesn't include stuff that isn't in the bundle", async
     "qjsbootstrap",
     "quickjs repl",
     "@suchipi/print", // included within quickjs
+    "lz-string", // vendored
     "yavascript", // we put its license at the end but it isn't a dep of itself
   ]);
 
