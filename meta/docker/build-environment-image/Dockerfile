@@ -1,6 +1,6 @@
 FROM node:22.8.0-bookworm
 
-RUN apt-get update && apt-get -y install ninja-build
+RUN apt-get update && apt-get -y install ninja-build libcurl4
 
 # the intent is that you volume-mount the repo here
 WORKDIR /opt/yavascript

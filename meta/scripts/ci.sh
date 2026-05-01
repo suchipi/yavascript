@@ -2,7 +2,7 @@
 set -ex
 
 # install ninja
-sudo apt-get install -y ninja-build
+sudo apt-get install -y ninja-build libcurl4
 
 export NVM_DIR="$HOME/.nvm"
 # this is really chatty...
