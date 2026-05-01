@@ -9,13 +9,13 @@ test("__filename and __dirname", async () => {
     { cwd: __dirname },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "<rootDir>/meta/tests/src/<evalScript>
-    <rootDir>/meta/tests/src
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "<rootDir>/meta/tests/src/<evalScript>
+   <rootDir>/meta/tests/src
+   ",
+   }
   `);
 });

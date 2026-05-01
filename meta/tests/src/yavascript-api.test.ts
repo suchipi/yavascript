@@ -16,12 +16,12 @@ test("yavascript (global API)", async () => {
   expect(result).toMatchInlineSnapshot(`
    {
      "code": 0,
-     "error": false,
+     "error": null,
      "stderr": "",
      "stdout": "{
      version: "omitted from snapshot due to variance"
      arch: "omitted from snapshot due to variance"
-     ecmaVersion: "ES2020"
+     ecmaVersion: "ES2023"
      compilers: {
        js: Function "js" {}
        tsx: Function "tsx" {}
@@ -50,7 +50,7 @@ test("yavascript (global API)", async () => {
   expect(result).toMatchInlineSnapshot(`
    {
      "code": 0,
-     "error": false,
+     "error": null,
      "stderr": "",
      "stdout": "// ===============
    // ---------------

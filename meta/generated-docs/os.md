@@ -99,6 +99,7 @@
     - [ExecOptions.uid (number property)](#execoptionsuid-number-property)
     - [ExecOptions.gid (number property)](#execoptionsgid-number-property)
   - ["quickjs:os".exec (exported function)](#quickjsosexec-exported-function)
+  - ["quickjs:os".getpid (exported function)](#quickjsosgetpid-exported-function)
   - ["quickjs:os".waitpid (exported function)](#quickjsoswaitpid-exported-function)
   - ["quickjs:os".WNOHANG (exported number)](#quickjsoswnohang-exported-number)
   - ["quickjs:os".WUNTRACED (exported number)](#quickjsoswuntraced-exported-number)
@@ -113,6 +114,7 @@
   - ["quickjs:os".dup2 (exported function)](#quickjsosdup2-exported-function)
   - ["quickjs:os".pipe (exported function)](#quickjsospipe-exported-function)
   - ["quickjs:os".sleep (exported function)](#quickjsossleep-exported-function)
+  - ["quickjs:os".now (exported function)](#quickjsosnow-exported-function)
   - ["quickjs:os".platform (exported value)](#quickjsosplatform-exported-value)
   - ["quickjs:os".StructuredClonable (exported type)](#quickjsosstructuredclonable-exported-type)
   - ["quickjs:os".Worker (exported class)](#quickjsosworker-exported-class)
@@ -121,6 +123,7 @@
     - [Worker.prototype.postMessage (method)](#workerprototypepostmessage-method)
     - [Worker.prototype.terminate (method)](#workerprototypeterminate-method)
     - [Worker.prototype.onmessage (property)](#workerprototypeonmessage-property)
+    - [Worker.prototype.onerror (property)](#workerprototypeonerror-property)
   - ["quickjs:os".Win32Handle (exported class)](#quickjsoswin32handle-exported-class)
     - [Win32Handle (constructor)](#win32handle-constructor)
   - ["quickjs:os".CreateProcessOptions (exported type)](#quickjsoscreateprocessoptions-exported-type)
@@ -282,6 +285,7 @@ declare module "quickjs:os" {
     gid?: number;
   };
   export function exec(args: Array<string>, options?: ExecOptions): number;
+  export function getpid(): number;
   export function waitpid(pid: number, options?: number): [number, number];
   export var WNOHANG: number;
   export var WUNTRACED: number;
@@ -296,6 +300,7 @@ declare module "quickjs:os" {
   export function dup2(oldfd: number, newfd: number): number;
   export function pipe(): [number, number];
   export function sleep(delay_ms: number): void;
+  export function now(): number;
   export var platform:
     | "win32"
     | "darwin"
@@ -338,6 +343,14 @@ declare module "quickjs:os" {
     postMessage(msg: StructuredClonable): void;
     terminate(): void;
     onmessage: null | ((event: { data: StructuredClonable }) => void);
+    onerror:
+      | null
+      | ((event: {
+          message: string;
+          filename: string;
+          lineno: number;
+          error: Error | null;
+        }) => void);
   }
   export class Win32Handle {
     private constructor();
@@ -1053,6 +1066,14 @@ gid?: number;
 export function exec(args: Array<string>, options?: ExecOptions): number;
 ```
 
+## "quickjs:os".getpid (exported function)
+
+Return the current process ID.
+
+```ts
+export function getpid(): number;
+```
+
 ## "quickjs:os".waitpid (exported function)
 
 ```ts
@@ -1137,6 +1158,16 @@ export function pipe(): [number, number];
 export function sleep(delay_ms: number): void;
 ```
 
+## "quickjs:os".now (exported function)
+
+Return a timestamp in milliseconds with more precision than
+`Date.now()`. The time origin is unspecified and is normally not
+impacted by system clock adjustments.
+
+```ts
+export function now(): number;
+```
+
 ## "quickjs:os".platform (exported value)
 
 ```ts
@@ -1192,6 +1223,14 @@ class Worker {
   postMessage(msg: StructuredClonable): void;
   terminate(): void;
   onmessage: null | ((event: { data: StructuredClonable }) => void);
+  onerror:
+    | null
+    | ((event: {
+        message: string;
+        filename: string;
+        lineno: number;
+        error: Error | null;
+      }) => void);
 }
 ```
 
@@ -1226,6 +1265,53 @@ terminate(): void;
 ```ts
 onmessage: null | ((event: {
   data: StructuredClonable;
+}) => void);
+```
+
+### Worker.prototype.onerror (property)
+
+Fires on the parent side whenever an uncaught exception escapes
+anywhere in the worker: top-level errors at startup, the worker's
+global `onmessage` throwing, timer / I/O / signal callbacks
+throwing, microtask rejections, and unhandled promise rejections.
+
+The event is a plain object shaped like a WHATWG `ErrorEvent`
+(minus `colno`, which this event does not surface):
+
+- `message` — the error's message, or `String(reason)` for a
+  non-Error throw.
+- `filename` — from the error's `fileName` own-prop when present,
+  otherwise the worker's entry-module filename.
+- `lineno` — from the error's `lineNumber` own-prop, otherwise `0`.
+- `error` — a real `Error` instance when the worker threw an
+  Error (one of the nine recognized classes: `Error`, `TypeError`,
+  `RangeError`, `SyntaxError`, `ReferenceError`, `URIError`,
+  `EvalError`, `AggregateError`, `InternalError`, with user
+  subclasses reified to base `Error` with `.name` preserved).
+  `null` when the thrown value was not an Error.
+
+Cycles and shared references in the error graph (e.g.
+`err.cause === err`, or shared nodes inside
+`AggregateError.errors[]`) are preserved, matching the HTML
+structured-clone algorithm.
+
+A handler assigned same-tick as `new Worker(...)` is guaranteed
+to be in place before any error dispatch: the parent's event
+loop cannot drain and dispatch error-pipe messages until the
+current synchronous tick finishes, and the error-port
+registration (on which dispatch is gated) happens synchronously
+in the Worker ctor. Cross-tick late assignment (`setTimeout(() =>
+w.onerror = fn, 100)`) is still racy with any error that fires
+before the timeout — such errors fall through to the stderr
+fallback. When `onerror` is unset, errors print to stderr in the
+same format as an uncaught exception would.
+
+```ts
+onerror: null | ((event: {
+  message: string;
+  filename: string;
+  lineno: number;
+  error: Error | null;
 }) => void);
 ```
 

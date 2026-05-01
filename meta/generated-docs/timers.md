@@ -4,6 +4,7 @@
   - ["quickjs:timers".clearTimeout (exported function)](#quickjstimerscleartimeout-exported-function)
   - ["quickjs:timers".setInterval (exported function)](#quickjstimerssetinterval-exported-function)
   - ["quickjs:timers".clearInterval (exported function)](#quickjstimersclearinterval-exported-function)
+  - ["quickjs:timers".sleepAsync (exported function)](#quickjstimerssleepasync-exported-function)
 - [Timer (type)](#timer-type)
 - [setTimeout (value)](#settimeout-value)
 - [clearTimeout (value)](#cleartimeout-value)
@@ -24,6 +25,7 @@ declare module "quickjs:timers" {
     delay: number,
   ): Timer;
   export function clearInterval(handle: Timer): void;
+  export function sleepAsync(delay_ms: number): Promise<void>;
 }
 ```
 
@@ -65,6 +67,15 @@ Cancel an interval timer.
 
 ```ts
 export function clearInterval(handle: Timer): void;
+```
+
+## "quickjs:timers".sleepAsync (exported function)
+
+Asynchronous sleep. Returns a Promise that resolves after `delay_ms`
+milliseconds. Intended for use with `await`.
+
+```ts
+export function sleepAsync(delay_ms: number): Promise<void>;
 ```
 
 # Timer (type)

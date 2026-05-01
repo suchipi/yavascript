@@ -1,10 +1,4 @@
-import {
-  evaluate,
-  binaryPath,
-  inspect,
-  cleanResult,
-  TMP,
-} from "./test-helpers";
+import { evaluate } from "./test-helpers";
 
 test("sync stuff", async () => {
   const result = await evaluate(`
@@ -14,16 +8,16 @@ test("sync stuff", async () => {
     console.log(result);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      status: 0
-      signal: undefined
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     status: 0
+     signal: undefined
+   }
+   ",
+   }
   `);
 });
 
@@ -39,27 +33,27 @@ test("async stuff", async () => {
     console.log("after", child.state);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "before {
-      id: "UNSTARTED"
-    }
-    immediately after start {
-      id: "STARTED"
-      pid: <redacted>
-    }
-    during {
-      id: "STARTED"
-      pid: <redacted>
-    }
-    after {
-      id: "EXITED"
-      oldPid: <redacted>
-      status: 0
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "before {
+     id: "UNSTARTED"
+   }
+   immediately after start {
+     id: "STARTED"
+     pid: <redacted>
+   }
+   during {
+     id: "STARTED"
+     pid: <redacted>
+   }
+   after {
+     id: "EXITED"
+     oldPid: <redacted>
+     status: 0
+   }
+   ",
+   }
   `);
 });

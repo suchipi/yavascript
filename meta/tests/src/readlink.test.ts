@@ -8,16 +8,16 @@ test("readlink", async () => {
     { cwd: symlinksFixturesDir },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "[
-      Path { ./nowhere-real }
-      Path { ./some-file }
-      Path { ./some-folder }
-    ]
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "[
+     Path { ./nowhere-real }
+     Path { ./some-file }
+     Path { ./some-folder }
+   ]
+   ",
+   }
   `);
 });

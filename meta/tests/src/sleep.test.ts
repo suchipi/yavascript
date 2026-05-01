@@ -9,13 +9,13 @@ test("sleep", async () => {
     `,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Promise {}
-    hi
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Promise {}
+   hi
+   ",
+   }
   `);
 });

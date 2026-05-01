@@ -1,4 +1,4 @@
-import { evaluate, cleanResult, rootDir, EvaluateResult } from "./test-helpers";
+import { evaluate, rootDir, EvaluateResult } from "./test-helpers";
 
 const globDir = rootDir("meta/tests/fixtures/glob");
 const symlinksDir = rootDir("meta/tests/fixtures/symlinks");
@@ -34,11 +34,10 @@ function testGlob(
 
     expect(result).toMatchObject({
       code: 0,
-      error: false,
+      error: null,
     });
 
-    const cleaned = cleanResult(result);
-    compareResult(cleaned, expected);
+    compareResult(result, expected);
   });
 }
 
@@ -195,24 +194,22 @@ test("error reading dead link does not stop search", async () => {
     "<rootDir>/meta/tests/fixtures/symlinks/some-file",
   ];
 
-  const cleaned = cleanResult(result);
-
   const resWithoutStdout = {
-    ...cleaned,
+    ...result,
     stdout: "",
   };
   expect(resWithoutStdout).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "glob: expanding ["**/*"]
-    glob encountered error: No such file or directory (errno = 2, path = <rootDir>/meta/tests/fixtures/symlinks/dead-link, linkpath = ./nowhere-real)
-    ",
-      "stdout": "",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "glob: expanding ["**/*"]
+   glob encountered error: No such file or directory (errno = 2, path = <rootDir>/meta/tests/fixtures/symlinks/dead-link, linkpath = ./nowhere-real)
+   ",
+     "stdout": "",
+   }
   `);
 
-  compareResult(cleaned, expected);
+  compareResult(result, expected);
 });
 
 testGlob(
@@ -264,24 +261,15 @@ test("using trace", async () => {
     "<rootDir>/meta/tests/fixtures/glob/hi/there.txt",
   ];
 
-  // for when you need to update the trace output
-  // console.log(
-  //   cleanResult(result)
-  //     .stderr.split("\n")
-  //     .map((line) => "`" + line + "`,")
-  //     .join("\n")
-  // );
-
-  const cleaned = cleanResult(result);
-  expect(cleaned).toMatchObject({
+  expect(result).toMatchObject({
     code: 0,
-    error: false,
+    error: null,
   });
 
-  compareResult(cleaned, expectedResult);
+  compareResult(result, expectedResult);
 
   // message order varies with OS
-  const traceMessages = cleaned.stderr.split("\n").sort().join("\n");
+  const traceMessages = result.stderr.split("\n").sort().join("\n");
   expect(traceMessages).toMatchInlineSnapshot(`
     "
     checking <rootDir>/meta/tests/fixtures/glob/cabana

@@ -4,7 +4,7 @@ test("Path.OS_SEGMENT_SEPARATOR", async () => {
   const result = await evaluate(`Path.OS_SEGMENT_SEPARATOR`);
   expect(result).toMatchObject({
     code: 0,
-    error: false,
+    error: null,
     stderr: "",
   });
 
@@ -30,57 +30,57 @@ test("Path.splitToSegments", async () => {
 
   const result = await evaluate(script);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "[
-      ""
-      "some"
-      "path"
-      "some"
-      "where"
-    ]
-    [
-      ""
-      "with"
-      "trailing"
-      "slash"
-    ]
-    [
-      "."
-      "this"
-      "one's"
-      "relative"
-    ]
-    [
-      ".."
-    ]
-    [
-      ".."
-      "yeah"
-    ]
-    [
-      "hi"
-    ]
-    [
-      "hello"
-      "mario"
-    ]
-    [
-      ""
-      "what"
-    ]
-    [
-      ""
-      "who"
-      "tf"
-      "keeps putting"
-      "double"
-      "slashes"
-    ]
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "[
+     ""
+     "some"
+     "path"
+     "some"
+     "where"
+   ]
+   [
+     ""
+     "with"
+     "trailing"
+     "slash"
+   ]
+   [
+     "."
+     "this"
+     "one's"
+     "relative"
+   ]
+   [
+     ".."
+   ]
+   [
+     ".."
+     "yeah"
+   ]
+   [
+     "hi"
+   ]
+   [
+     "hello"
+     "mario"
+   ]
+   [
+     ""
+     "what"
+   ]
+   [
+     ""
+     "who"
+     "tf"
+     "keeps putting"
+     "double"
+     "slashes"
+   ]
+   ",
+   }
   `);
 });
 
@@ -100,64 +100,64 @@ test("Path.splitToSegments (windows-style paths)", async () => {
 
   const result = await evaluate(script);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "[
-      "C:"
-      "some"
-      "path"
-      "some"
-      "where"
-    ]
-    [
-      "D:"
-      "with"
-      "trailing"
-      "slash"
-    ]
-    [
-      "."
-      "this"
-      "one's"
-      "relative"
-    ]
-    [
-      ".."
-    ]
-    [
-      ".."
-      "yeah"
-    ]
-    [
-      "hi"
-    ]
-    [
-      "hello"
-      "mario"
-    ]
-    [
-      "E:"
-      "what"
-    ]
-    [
-      "Z:"
-      "who"
-      "tf"
-      "keeps putting"
-      "double"
-      "slashes"
-    ]
-    [
-      ""
-      ""
-      "SERVERNAME"
-      "ShareName$"
-      "file.txt"
-    ]
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "[
+     "C:"
+     "some"
+     "path"
+     "some"
+     "where"
+   ]
+   [
+     "D:"
+     "with"
+     "trailing"
+     "slash"
+   ]
+   [
+     "."
+     "this"
+     "one's"
+     "relative"
+   ]
+   [
+     ".."
+   ]
+   [
+     ".."
+     "yeah"
+   ]
+   [
+     "hi"
+   ]
+   [
+     "hello"
+     "mario"
+   ]
+   [
+     "E:"
+     "what"
+   ]
+   [
+     "Z:"
+     "who"
+     "tf"
+     "keeps putting"
+     "double"
+     "slashes"
+   ]
+   [
+     ""
+     ""
+     "SERVERNAME"
+     "ShareName$"
+     "file.txt"
+   ]
+   ",
+   }
   `);
 });
 
@@ -171,107 +171,107 @@ test("Path.detectSeparator", async () => {
 
   const result = await evaluate(script);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "/
-    \\
-    /
-    null
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "/
+   \\
+   /
+   null
+   ",
+   }
   `);
 });
 
 test("Path.normalize with absolute path with . and ..s in it", async () => {
   const result = await evaluate(`Path.normalize("/hi/./there/yeah/../yup/./")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { /hi/there/yup }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { /hi/there/yup }
+   ",
+   }
   `);
 });
 
 test("Path.normalize with non-absolute path with . and ..s in it", async () => {
   const result = await evaluate(`Path.normalize("hi/./there/yeah/../yup/./")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { hi/there/yup }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { hi/there/yup }
+   ",
+   }
   `);
 });
 
 test("Path.normalize with already-absolute path", async () => {
   const result = await evaluate(`Path.normalize("/hi/there/yeah")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { /hi/there/yeah }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { /hi/there/yeah }
+   ",
+   }
   `);
 });
 
 test("Path.normalize with non-absolute path with no . or .. in it", async () => {
   const result = await evaluate(`Path.normalize("hi/there/yeah")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { hi/there/yeah }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { hi/there/yeah }
+   ",
+   }
   `);
 });
 
 test("Path.normalize with non-absolute path with leading .", async () => {
   const result = await evaluate(`Path.normalize("./hi/there/yeah")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { ./hi/there/yeah }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { ./hi/there/yeah }
+   ",
+   }
   `);
 });
 
 test("Path.normalize with non-absolute path with leading ..", async () => {
   const result = await evaluate(`Path.normalize("../hi/there/yeah")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { ../hi/there/yeah }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { ../hi/there/yeah }
+   ",
+   }
   `);
 });
 
 test("Path.normalize with non-absolute path with two leading ..", async () => {
   const result = await evaluate(`Path.normalize("../../hi/there/yeah")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { ../../hi/there/yeah }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { ../../hi/there/yeah }
+   ",
+   }
   `);
 });
 
@@ -291,22 +291,22 @@ test("Path.relativeTo", async () => {
     ]
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "[
-      "./a/b/c"
-      "./tmp/a/b/c"
-      "../.."
-      "../../../c"
-      "./src/index.ts"
-      "src/index.ts"
-      "../something/src/index.ts"
-      "../something/src/index.ts"
-    ]
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "[
+     "./a/b/c"
+     "./tmp/a/b/c"
+     "../.."
+     "../../../c"
+     "./src/index.ts"
+     "src/index.ts"
+     "../something/src/index.ts"
+     "../something/src/index.ts"
+   ]
+   ",
+   }
   `);
 });
 
@@ -318,16 +318,16 @@ test("Path.toJSON", async () => {
     JSON.stringify({path, path2}, null, 2);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      "path": "/tmp/something/somewhere",
-      "path2": "C:\\\\Users\\\\user"
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     "path": "/tmp/something/somewhere",
+     "path2": "C:\\\\Users\\\\user"
+   }
+   ",
+   }
   `);
 });
 
@@ -339,16 +339,16 @@ test("Path constructor with fs root strings", async () => {
     ({ path, path2 });
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      path: Path { / }
-      path2: Path { \\ }
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     path: Path { / }
+     path2: Path { \\ }
+   }
+   ",
+   }
   `);
 });
 
@@ -360,16 +360,16 @@ test("Path constructor with absolute paths", async () => {
     ({ path, path2 });
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      path: Path { /tmp }
-      path2: Path { \\\\SERVERNAME\\ShareName }
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     path: Path { /tmp }
+     path2: Path { \\\\SERVERNAME\\ShareName }
+   }
+   ",
+   }
   `);
 });
 
@@ -381,13 +381,13 @@ test("printing of normal Path object", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { <rootDir>/something }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { <rootDir>/something }
+   ",
+   }
   `);
 });
 
@@ -399,16 +399,16 @@ test("printing of empty Path object", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path {
-      segments: []
-      separator: "/"
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path {
+     segments: []
+     separator: "/"
+   }
+   ",
+   }
   `);
 });
 
@@ -422,17 +422,17 @@ test("printing of Path object with extra props", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path {
-      <rootDir>/something
-      
-      something: true
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path {
+     <rootDir>/something
+     
+     something: true
+   }
+   ",
+   }
   `);
 });
 
@@ -446,16 +446,16 @@ test("printing of frozen Path object", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path {
-      Frozen
-      <rootDir>/something
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path {
+     Frozen
+     <rootDir>/something
+   }
+   ",
+   }
   `);
 });
 
@@ -470,17 +470,17 @@ test("printing of Path object with a child path object attached to it", async ()
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path {
-      <rootDir>/something
-      
-      p2: Path { <rootDir>/something-else }
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path {
+     <rootDir>/something
+     
+     p2: Path { <rootDir>/something-else }
+   }
+   ",
+   }
   `);
 });
 
@@ -510,22 +510,22 @@ test("Path.startsWith", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    true
-    true
-    true
-    true
-    true
-    false
-    false
-    false
-    true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   true
+   true
+   true
+   true
+   true
+   false
+   false
+   false
+   true
+   ",
+   }
   `);
 });
 
@@ -552,19 +552,19 @@ test("Path.endsWith", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    true
-    true
-    false
-    false
-    false
-    true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   true
+   true
+   false
+   false
+   false
+   true
+   ",
+   }
   `);
 });
 
@@ -589,21 +589,21 @@ test("Path.indexOf", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "[
-      -1
-      0
-      1
-      4
-      2
-      -1
-      4
-    ]
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "[
+     -1
+     0
+     1
+     4
+     2
+     -1
+     4
+   ]
+   ",
+   }
   `);
 });
 
@@ -623,19 +623,19 @@ test("Path.replace", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "[
-      Path { <rootDir>/something-else/yup/yeah }
-      Path { <rootDir>/something/nah/yeah }
-      Path { <rootDir>/something-again/yeah }
-      Path { /tmp/something/yup/yeah }
-      Path { <rootDir>/mhm }
-    ]
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "[
+     Path { <rootDir>/something-else/yup/yeah }
+     Path { <rootDir>/something/nah/yeah }
+     Path { <rootDir>/something-again/yeah }
+     Path { /tmp/something/yup/yeah }
+     Path { <rootDir>/mhm }
+   ]
+   ",
+   }
   `);
 });
 
@@ -651,14 +651,14 @@ test("Path.replaceAll", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { /nine/ten/two/three/two/nine/ten/zero }
-    Path { /one/two/three/two/one/zero }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { /nine/ten/two/three/two/nine/ten/zero }
+   Path { /one/two/three/two/one/zero }
+   ",
+   }
   `);
 });
 
@@ -671,13 +671,13 @@ test("Path.replaceLast", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { /one/two/three/two/one/twenty-two }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { /one/two/three/two/one/twenty-two }
+   ",
+   }
   `);
 });
 
@@ -690,13 +690,13 @@ test("Path.basename", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "zero.help.txt
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "zero.help.txt
+   ",
+   }
   `);
 });
 
@@ -709,13 +709,13 @@ test("Path.extname", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": ".txt
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": ".txt
+   ",
+   }
   `);
 });
 
@@ -728,13 +728,13 @@ test("Path.extname full", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": ".help.txt
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": ".help.txt
+   ",
+   }
   `);
 });
 
@@ -747,13 +747,13 @@ test("Path.dirname", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { /one/two/three/two/one }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { /one/two/three/two/one }
+   ",
+   }
   `);
 });
 
@@ -771,17 +771,17 @@ test("Path.clone", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "p Path { /one/two/three/two/one/zero.help.txt }
-    p2 Path { /one/two/three/two/one/zero.help.txt }
-    p === p2 false
-    p.segments === p2.segments false
-    p.separator === p2.separator true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "p Path { /one/two/three/two/one/zero.help.txt }
+   p2 Path { /one/two/three/two/one/zero.help.txt }
+   p === p2 false
+   p.segments === p2.segments false
+   p.separator === p2.separator true
+   ",
+   }
   `);
 });
 
@@ -805,26 +805,26 @@ test("Path.equals", async () => {
 
   const result = await evaluate(script);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path {
-      segments: []
-      separator: "/"
-    } Path {
-      segments: []
-      separator: "/"
-    } equals true
-    Path { / } Path { / } equals true
-    Path { /abc/d } Path { /abc/d } equals true
-    Path { /abc/d } Path { abc/d } equals false
-    Path { abc/d } Path { abc/d } equals true
-    Path { /123/4 } Path { abc/d } equals false
-    Path { \\a\\b\\c } Path { /a/b/c } equals false
-    Path { a\\b\\c } Path { a/b/c } equals false
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path {
+     segments: []
+     separator: "/"
+   } Path {
+     segments: []
+     separator: "/"
+   } equals true
+   Path { / } Path { / } equals true
+   Path { /abc/d } Path { /abc/d } equals true
+   Path { /abc/d } Path { abc/d } equals false
+   Path { abc/d } Path { abc/d } equals true
+   Path { /123/4 } Path { abc/d } equals false
+   Path { \\a\\b\\c } Path { /a/b/c } equals false
+   Path { a\\b\\c } Path { a/b/c } equals false
+   ",
+   }
   `);
 });
 
@@ -848,25 +848,25 @@ test("Path.hasEqualSegments", async () => {
 
   const result = await evaluate(script);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path {
-      segments: []
-      separator: "/"
-    } Path {
-      segments: []
-      separator: "/"
-    } hasEqualSegments true
-    Path { / } Path { / } hasEqualSegments true
-    Path { /abc/d } Path { /abc/d } hasEqualSegments true
-    Path { /abc/d } Path { abc/d } hasEqualSegments false
-    Path { abc/d } Path { abc/d } hasEqualSegments true
-    Path { /123/4 } Path { abc/d } hasEqualSegments false
-    Path { \\a\\b\\c } Path { /a/b/c } hasEqualSegments true
-    Path { a\\b\\c } Path { a/b/c } hasEqualSegments true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path {
+     segments: []
+     separator: "/"
+   } Path {
+     segments: []
+     separator: "/"
+   } hasEqualSegments true
+   Path { / } Path { / } hasEqualSegments true
+   Path { /abc/d } Path { /abc/d } hasEqualSegments true
+   Path { /abc/d } Path { abc/d } hasEqualSegments false
+   Path { abc/d } Path { abc/d } hasEqualSegments true
+   Path { /123/4 } Path { abc/d } hasEqualSegments false
+   Path { \\a\\b\\c } Path { /a/b/c } hasEqualSegments true
+   Path { a\\b\\c } Path { a/b/c } hasEqualSegments true
+   ",
+   }
   `);
 });

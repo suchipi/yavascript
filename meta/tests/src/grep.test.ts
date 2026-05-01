@@ -20,94 +20,95 @@ test("grepString", async () => {
         result5,
       });
     `,
+    { cleanResult: false },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      result1: [
-        "blah bla"
-        "one two bl"
-      ]
-      result2: [
-        "rah rah bb"
-        "twot"
-        ""
-      ]
-      result3: [
-        {
-          lineNumber: 1
-          lineContent: "blah bla"
-          matches: [
-            "bl"
-            "bl"
-          ]
-        }
-        {
-          lineNumber: 2
-          lineContent: "one two bl"
-          matches: [
-            "bl"
-          ]
-        }
-      ]
-      result4: [
-        {
-          lineNumber: 3
-          lineContent: "rah rah bb"
-          matches: null
-        }
-        {
-          lineNumber: 4
-          lineContent: "twot"
-          matches: null
-        }
-        {
-          lineNumber: 5
-          lineContent: ""
-          matches: null
-        }
-      ]
-      result5: [
-        {
-          lineNumber: 1
-          lineContent: "blah bla"
-          matches: [
-            "bl"
-            
-            groups: undefined
-            index: 0
-            input: "blah bla"
-          ]
-        }
-        {
-          lineNumber: 2
-          lineContent: "one two bl"
-          matches: [
-            "bl"
-            
-            groups: undefined
-            index: 8
-            input: "one two bl"
-          ]
-        }
-        {
-          lineNumber: 3
-          lineContent: "rah rah bb"
-          matches: [
-            "bb"
-            
-            groups: undefined
-            index: 8
-            input: "rah rah bb"
-          ]
-        }
-      ]
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     result1: [
+       "blah bla"
+       "one two bl"
+     ]
+     result2: [
+       "rah rah bb"
+       "twot"
+       ""
+     ]
+     result3: [
+       {
+         lineNumber: 1
+         lineContent: "blah bla"
+         matches: [
+           "bl"
+           "bl"
+         ]
+       }
+       {
+         lineNumber: 2
+         lineContent: "one two bl"
+         matches: [
+           "bl"
+         ]
+       }
+     ]
+     result4: [
+       {
+         lineNumber: 3
+         lineContent: "rah rah bb"
+         matches: null
+       }
+       {
+         lineNumber: 4
+         lineContent: "twot"
+         matches: null
+       }
+       {
+         lineNumber: 5
+         lineContent: ""
+         matches: null
+       }
+     ]
+     result5: [
+       {
+         lineNumber: 1
+         lineContent: "blah bla"
+         matches: [
+           "bl"
+           
+           groups: undefined
+           index: 0
+           input: "blah bla"
+         ]
+       }
+       {
+         lineNumber: 2
+         lineContent: "one two bl"
+         matches: [
+           "bl"
+           
+           groups: undefined
+           index: 8
+           input: "one two bl"
+         ]
+       }
+       {
+         lineNumber: 3
+         lineContent: "rah rah bb"
+         matches: [
+           "bb"
+           
+           groups: undefined
+           index: 8
+           input: "rah rah bb"
+         ]
+       }
+     ]
+   }
+   ",
+   }
   `);
 });
 
@@ -131,92 +132,92 @@ test("String.prototype.grep", async () => {
     `,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      result1: [
-        "blah bla"
-        "one two bl"
-      ]
-      result2: [
-        "rah rah bb"
-        "twot"
-        ""
-      ]
-      result3: [
-        {
-          lineNumber: 1
-          lineContent: "blah bla"
-          matches: [
-            "bl"
-            "bl"
-          ]
-        }
-        {
-          lineNumber: 2
-          lineContent: "one two bl"
-          matches: [
-            "bl"
-          ]
-        }
-      ]
-      result4: [
-        {
-          lineNumber: 3
-          lineContent: "rah rah bb"
-          matches: null
-        }
-        {
-          lineNumber: 4
-          lineContent: "twot"
-          matches: null
-        }
-        {
-          lineNumber: 5
-          lineContent: ""
-          matches: null
-        }
-      ]
-      result5: [
-        {
-          lineNumber: 1
-          lineContent: "blah bla"
-          matches: [
-            "bl"
-            
-            groups: undefined
-            index: 0
-            input: "blah bla"
-          ]
-        }
-        {
-          lineNumber: 2
-          lineContent: "one two bl"
-          matches: [
-            "bl"
-            
-            groups: undefined
-            index: 8
-            input: "one two bl"
-          ]
-        }
-        {
-          lineNumber: 3
-          lineContent: "rah rah bb"
-          matches: [
-            "bb"
-            
-            groups: undefined
-            index: 8
-            input: "rah rah bb"
-          ]
-        }
-      ]
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     result1: [
+       "blah bla"
+       "one two bl"
+     ]
+     result2: [
+       "rah rah bb"
+       "twot"
+       ""
+     ]
+     result3: [
+       {
+         lineNumber: <redacted>
+         lineContent: "blah bla"
+         matches: [
+           "bl"
+           "bl"
+         ]
+       }
+       {
+         lineNumber: <redacted>
+         lineContent: "one two bl"
+         matches: [
+           "bl"
+         ]
+       }
+     ]
+     result4: [
+       {
+         lineNumber: <redacted>
+         lineContent: "rah rah bb"
+         matches: null
+       }
+       {
+         lineNumber: <redacted>
+         lineContent: "twot"
+         matches: null
+       }
+       {
+         lineNumber: <redacted>
+         lineContent: ""
+         matches: null
+       }
+     ]
+     result5: [
+       {
+         lineNumber: <redacted>
+         lineContent: "blah bla"
+         matches: [
+           "bl"
+           
+           groups: undefined
+           index: 0
+           input: "blah bla"
+         ]
+       }
+       {
+         lineNumber: <redacted>
+         lineContent: "one two bl"
+         matches: [
+           "bl"
+           
+           groups: undefined
+           index: 8
+           input: "one two bl"
+         ]
+       }
+       {
+         lineNumber: <redacted>
+         lineContent: "rah rah bb"
+         matches: [
+           "bb"
+           
+           groups: undefined
+           index: 8
+           input: "rah rah bb"
+         ]
+       }
+     ]
+   }
+   ",
+   }
   `);
 });
 
@@ -240,91 +241,91 @@ test("grepFile", async () => {
     `,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      result1: [
-        "blah bla"
-        "one two bl"
-      ]
-      result2: [
-        "rah rah bb"
-        "twot"
-        ""
-      ]
-      result3: [
-        {
-          lineNumber: 1
-          lineContent: "blah bla"
-          matches: [
-            "bl"
-            "bl"
-          ]
-        }
-        {
-          lineNumber: 2
-          lineContent: "one two bl"
-          matches: [
-            "bl"
-          ]
-        }
-      ]
-      result4: [
-        {
-          lineNumber: 3
-          lineContent: "rah rah bb"
-          matches: null
-        }
-        {
-          lineNumber: 4
-          lineContent: "twot"
-          matches: null
-        }
-        {
-          lineNumber: 5
-          lineContent: ""
-          matches: null
-        }
-      ]
-      result5: [
-        {
-          lineNumber: 1
-          lineContent: "blah bla"
-          matches: [
-            "bl"
-            
-            groups: undefined
-            index: 0
-            input: "blah bla"
-          ]
-        }
-        {
-          lineNumber: 2
-          lineContent: "one two bl"
-          matches: [
-            "bl"
-            
-            groups: undefined
-            index: 8
-            input: "one two bl"
-          ]
-        }
-        {
-          lineNumber: 3
-          lineContent: "rah rah bb"
-          matches: [
-            "bb"
-            
-            groups: undefined
-            index: 8
-            input: "rah rah bb"
-          ]
-        }
-      ]
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     result1: [
+       "blah bla"
+       "one two bl"
+     ]
+     result2: [
+       "rah rah bb"
+       "twot"
+       ""
+     ]
+     result3: [
+       {
+         lineNumber: <redacted>
+         lineContent: "blah bla"
+         matches: [
+           "bl"
+           "bl"
+         ]
+       }
+       {
+         lineNumber: <redacted>
+         lineContent: "one two bl"
+         matches: [
+           "bl"
+         ]
+       }
+     ]
+     result4: [
+       {
+         lineNumber: <redacted>
+         lineContent: "rah rah bb"
+         matches: null
+       }
+       {
+         lineNumber: <redacted>
+         lineContent: "twot"
+         matches: null
+       }
+       {
+         lineNumber: <redacted>
+         lineContent: ""
+         matches: null
+       }
+     ]
+     result5: [
+       {
+         lineNumber: <redacted>
+         lineContent: "blah bla"
+         matches: [
+           "bl"
+           
+           groups: undefined
+           index: 0
+           input: "blah bla"
+         ]
+       }
+       {
+         lineNumber: <redacted>
+         lineContent: "one two bl"
+         matches: [
+           "bl"
+           
+           groups: undefined
+           index: 8
+           input: "one two bl"
+         ]
+       }
+       {
+         lineNumber: <redacted>
+         lineContent: "rah rah bb"
+         matches: [
+           "bb"
+           
+           groups: undefined
+           index: 8
+           input: "rah rah bb"
+         ]
+       }
+     ]
+   }
+   ",
+   }
   `);
 });

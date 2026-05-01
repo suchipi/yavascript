@@ -5,12 +5,12 @@ test("assert.type - global constructor, pass", async () => {
     assert.type(2, number);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "",
+   }
   `);
 });
 
@@ -19,12 +19,12 @@ test("assert.type - types namespace, pass", async () => {
     assert.type(2, types.number);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "",
+   }
   `);
 });
 
@@ -33,14 +33,19 @@ test("assert.type - global constructor, fail", async () => {
     assert.type(2, string);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 1,
-      "error": false,
-      "stderr": "TypeError: Expected value of type string, but received 2
-      at somewhere
-    ",
-      "stdout": "",
-    }
+   {
+     "code": 1,
+     "error": null,
+     "stderr": "TypeError: Expected value of type string, but received 2
+     at somewhere
+   {
+     fileName: "yavascript-internal.js"
+     lineNumber: <redacted>
+     columnNumber: <redacted>
+   }
+   ",
+     "stdout": "",
+   }
   `);
 });
 
@@ -49,14 +54,19 @@ test("assert.type - types.namespace, fail", async () => {
     assert.type(2, types.string);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 1,
-      "error": false,
-      "stderr": "TypeError: Expected value of type string, but received 2
-      at somewhere
-    ",
-      "stdout": "",
-    }
+   {
+     "code": 1,
+     "error": null,
+     "stderr": "TypeError: Expected value of type string, but received 2
+     at somewhere
+   {
+     fileName: "yavascript-internal.js"
+     lineNumber: <redacted>
+     columnNumber: <redacted>
+   }
+   ",
+     "stdout": "",
+   }
   `);
 });
 
@@ -68,12 +78,12 @@ test("assert.type - custom class, pass", async () => {
     assert.type(something, Something);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "",
+   }
   `);
 });
 
@@ -83,13 +93,18 @@ test("assert.type - custom class, fail", async () => {
     assert.type(null, Something);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 1,
-      "error": false,
-      "stderr": "TypeError: Expected value of type instanceOf(Something), but received null
-      at somewhere
-    ",
-      "stdout": "",
-    }
+   {
+     "code": 1,
+     "error": null,
+     "stderr": "TypeError: Expected value of type instanceOf(Something), but received null
+     at somewhere
+   {
+     fileName: "yavascript-internal.js"
+     lineNumber: <redacted>
+     columnNumber: <redacted>
+   }
+   ",
+     "stdout": "",
+   }
   `);
 });

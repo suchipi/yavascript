@@ -27,24 +27,24 @@ test("realpath resolution behavior", async () => {
 
   const result = await evaluate(script, { cwd: rootDir() });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Path { /tmp }
-    Path { <rootDir>/meta/tests/fixtures/symlinks }
-    Path { <rootDir>/meta/tests/fixtures }
-    Path { <rootDir>/meta/tests/fixtures/symlinks/some-folder }
-    Path { <rootDir>/meta/tests/fixtures/symlinks/some-file }
-    Path { <rootDir>/meta/tests/fixtures/symlinks/some-folder }
-    Path { <rootDir>/meta/tests/fixtures/symlinks/some-file }
-    Path { <rootDir>/meta/tests/fixtures/symlinks/some-folder }
-    Path { <rootDir>/meta/tests/fixtures/symlinks/some-file }
-    Path { <rootDir>/meta/tests/fixtures/symlinks/some-folder }
-    Path { <rootDir>/meta/tests/fixtures/symlinks/some-file }
-    Path { <rootDir> }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Path { /tmp }
+   Path { <rootDir>/meta/tests/fixtures/symlinks }
+   Path { <rootDir>/meta/tests/fixtures }
+   Path { <rootDir>/meta/tests/fixtures/symlinks/some-folder }
+   Path { <rootDir>/meta/tests/fixtures/symlinks/some-file }
+   Path { <rootDir>/meta/tests/fixtures/symlinks/some-folder }
+   Path { <rootDir>/meta/tests/fixtures/symlinks/some-file }
+   Path { <rootDir>/meta/tests/fixtures/symlinks/some-folder }
+   Path { <rootDir>/meta/tests/fixtures/symlinks/some-file }
+   Path { <rootDir>/meta/tests/fixtures/symlinks/some-folder }
+   Path { <rootDir>/meta/tests/fixtures/symlinks/some-file }
+   Path { <rootDir> }
+   ",
+   }
   `);
 });
 
@@ -55,12 +55,13 @@ test("realpath against dead link throws error", async () => {
   expect(result).toMatchInlineSnapshot(`
    {
      "code": 1,
-     "error": false,
+     "error": null,
      "stderr": "Error: No such file or directory (errno = 2, path = ./dead-link)
      at somewhere
    {
      fileName: "<internal>/quickjs-os.c"
      lineNumber: <redacted>
+     columnNumber: <redacted>
      errno: 2
      path: "./dead-link"
    }
@@ -77,12 +78,13 @@ test("realpath against non-existent target throws error", async () => {
   expect(result).toMatchInlineSnapshot(`
    {
      "code": 1,
-     "error": false,
+     "error": null,
      "stderr": "Error: No such file or directory (errno = 2, path = ./this doesn't exist, bro)
      at somewhere
    {
      fileName: "<internal>/quickjs-os.c"
      lineNumber: <redacted>
+     columnNumber: <redacted>
      errno: 2
      path: "./this doesn't exist, bro"
    }

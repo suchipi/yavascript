@@ -1,4 +1,4 @@
-import { evaluate, binaryPath, cleanResult } from "./test-helpers";
+import { evaluate, binaryPath } from "./test-helpers";
 
 test("parseScriptArgs", async () => {
   const result = await evaluate(`
@@ -24,44 +24,44 @@ test("parseScriptArgs", async () => {
     ])
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      flags: {
-        somePath: Path { <rootDir>/blah }
-        someNumber: 32
-        someBool: true
-        someString: "hi"
-        unexpectedFlag1: 73
-        unexpectedFlag2: true
-      }
-      args: [
-        "yeah hi"
-      ]
-      metadata: {
-        keys: {
-          --some-path: "somePath"
-          --some-number: "someNumber"
-          --some-bool: "someBool"
-          --some-string: "someString"
-          --unexpected-flag-1: "unexpectedFlag1"
-          --unexpected-flag-2: "unexpectedFlag2"
-        }
-        hints: {
-          somePath: "path"
-          someNumber: "number"
-          someBool: "boolean"
-          someString: "string"
-        }
-        guesses: {
-          unexpectedFlag1: "number"
-          unexpectedFlag2: "boolean"
-        }
-      }
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     flags: {
+       somePath: Path { <rootDir>/blah }
+       someNumber: 32
+       someBool: true
+       someString: "hi"
+       unexpectedFlag1: 73
+       unexpectedFlag2: true
+     }
+     args: [
+       "yeah hi"
+     ]
+     metadata: {
+       keys: {
+         --some-path: "somePath"
+         --some-number: "someNumber"
+         --some-bool: "someBool"
+         --some-string: "someString"
+         --unexpected-flag-1: "unexpectedFlag1"
+         --unexpected-flag-2: "unexpectedFlag2"
+       }
+       hints: {
+         somePath: "path"
+         someNumber: "number"
+         someBool: "boolean"
+         someString: "string"
+       }
+       guesses: {
+         unexpectedFlag1: "number"
+         unexpectedFlag2: "boolean"
+       }
+     }
+   }
+   ",
+   }
   `);
 });

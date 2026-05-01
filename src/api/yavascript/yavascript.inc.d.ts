@@ -32,10 +32,7 @@ declare const yavascript: {
    * The version of the ecma262 standard supported by the currently-running
    * yavascript binary.
    *
-   * Currently, this is always "ES2020", but if future versions of yavascript
-   * support a newer version of the standard, this will change. In that event,
-   * this property will always be in the format of "ES" + a year, and will never
-   * be lower than ES2020.
+   * Possible values (depending on yavascript version): "ES2020", "ES2023".
    */
   ecmaVersion: string;
 

@@ -17,7 +17,7 @@ async function getPackagesInBinary() {
   };
   expect(partialResult).toMatchObject({
     code: 0,
-    error: false,
+    error: null,
     stderr: "",
   });
 
@@ -58,7 +58,7 @@ async function getLicenseTextFromBinary() {
   };
   expect(partialResult).toMatchObject({
     code: 0,
-    error: false,
+    error: null,
     stderr: "",
   });
 

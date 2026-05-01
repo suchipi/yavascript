@@ -1,4 +1,4 @@
-import { evaluate, cleanResult } from "./test-helpers";
+import { evaluate } from "./test-helpers";
 
 test("globals", async () => {
   const result = await evaluate(`
@@ -58,10 +58,10 @@ test("globals", async () => {
       console.log(logLine);
     }
   `);
-  expect(cleanResult(result)).toMatchInlineSnapshot(`
+  expect(result).toMatchInlineSnapshot(`
    {
      "code": 0,
-     "error": false,
+     "error": null,
      "stderr": "",
      "stdout": "
    Object: function (CW)
@@ -89,7 +89,6 @@ test("globals", async () => {
    Infinity: number readonly ()
    NaN: number readonly ()
    undefined: undefined readonly ()
-   __date_clock: function (CW)
    Number: function (CW)
    Boolean: function (CW)
    String: function (CW)
@@ -98,6 +97,7 @@ test("globals", async () => {
    Symbol: function (CW)
    eval: function (CW)
    globalThis: object readonly (CW)
+   BigInt: function (CW)
    Date: function (CW)
    RegExp: function (CW)
    JSON: object (CW)
@@ -122,11 +122,6 @@ test("globals", async () => {
    DataView: function (CW)
    Atomics: object (CW)
    Promise: function (CW)
-   BigInt: function (CW)
-   BigFloat: function (CW)
-   BigFloatEnv: function (CW)
-   BigDecimal: function (CW)
-   Operators: function (CW)
    inspect: function (CWE)
    print: function (GSCE)
    console: object (GSCE)
@@ -134,6 +129,7 @@ test("globals", async () => {
    clearTimeout: function (CWE)
    setInterval: function (CWE)
    clearInterval: function (CWE)
+   performance: object (CWE)
    __qjsbootstrap_offset: number readonly ()
    scriptArgs: frozen object (CWE)
    require: function (CWE)
@@ -254,25 +250,25 @@ test("globals", async () => {
 test("overriding yavascript api globals works", async () => {
   const result = await evaluate(`glob = true; console.log(glob)`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
 test("overriding yavascript api stubs works", async () => {
   const result = await evaluate(`ensureDir = mkdirp; console.log(ensureDir)`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "Function "mkdirp" {}
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "Function "mkdirp" {}
+   ",
+   }
   `);
 });

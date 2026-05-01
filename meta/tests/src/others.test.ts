@@ -11,11 +11,11 @@ test("global constructor aliases", async () => {
     `,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "",
+   }
   `);
 });

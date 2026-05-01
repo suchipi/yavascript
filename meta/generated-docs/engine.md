@@ -22,6 +22,7 @@ declare module "quickjs:engine" {
     options?: {
       backtraceBarrier?: boolean;
       filename?: string;
+      async?: boolean;
     },
   ): any;
   export function runScript(filename: string): any;
@@ -78,7 +79,8 @@ Evaluate the string `code` as a script (global eval).
 - `@param` _options_ — An optional object containing the following optional properties:
 - `@property` _backtraceBarrier_ — Boolean (default = false). If true, error backtraces do not list the stack frames below the evalScript.
 - `@property` _filename_ — String (default = "<evalScript>"). The filename to associate with the code being executed.
-- `@returns` The result of the evaluation.
+- `@property` _async_ — Boolean (default = false). If true, `await` is accepted at the top level of `code` and a Promise is returned.
+- `@returns` The result of the evaluation. If `async` is true, a Promise.
 
 ```ts
 export function evalScript(
@@ -86,6 +88,7 @@ export function evalScript(
   options?: {
     backtraceBarrier?: boolean;
     filename?: string;
+    async?: boolean;
   },
 ): any;
 ```

@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { evaluate, inspect, cleanResult, rootDir } from "./test-helpers";
+import { evaluate, inspect, rootDir } from "./test-helpers";
 
 const symlinksFixturesDir = rootDir("meta/tests/fixtures/symlinks");
 const fileContentFixturesDir = rootDir("meta/tests/fixtures/file_content");
@@ -11,17 +11,17 @@ test("readlink", async () => {
     { cwd: symlinksFixturesDir },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "[
-      Path { ./nowhere-real }
-      Path { ./some-file }
-      Path { ./some-folder }
-    ]
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "[
+     Path { ./nowhere-real }
+     Path { ./some-file }
+     Path { ./some-folder }
+   ]
+   ",
+   }
   `);
 });
 
@@ -30,14 +30,14 @@ test("readFile - string", async () => {
     `readFile("${fileContentFixturesDir}/hello.txt")`,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "hello, world!!! :D
-    あ
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "hello, world!!! :D
+   あ
+   ",
+   }
   `);
 });
 
@@ -46,16 +46,16 @@ test("readFile - binary", async () => {
     `readFile("${fileContentFixturesDir}/hello.txt", { binary: true })`,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "ArrayBuffer {
-      │0x00000000│ 68 65 6C 6C 6F 2C 20 77 6F 72 6C 64 21 21 21 20
-      │0x00000010│ 3A 44 0A E3 81 82
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "ArrayBuffer {
+     │0x00000000│ 68 65 6C 6C 6F 2C 20 77 6F 72 6C 64 21 21 21 20
+     │0x00000010│ 3A 44 0A E3 81 82
+   }
+   ",
+   }
   `);
 });
 
@@ -69,9 +69,9 @@ test("writeFile", async () => {
   const result = await evaluate(
     `writeFile(${JSON.stringify(targetFile)}, "hiiii~!!! :D あ")`,
   );
-  expect(cleanResult(result)).toEqual({
+  expect(result).toEqual({
     code: 0,
-    error: false,
+    error: null,
     stderr: "",
     stdout: "",
   });
@@ -85,26 +85,26 @@ test("writeFile", async () => {
 test("isDir - on dir", async () => {
   const result = await evaluate(`isDir("./meta/tests/fixtures/glob/cabana")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
 test("isDir - on file", async () => {
   const result = await evaluate(`isDir("./meta/tests/fixtures/glob/hi.txt")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "false
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "false
+   ",
+   }
   `);
 });
 
@@ -113,13 +113,13 @@ test("isDir - on link to folder", async () => {
     `isDir("./meta/tests/fixtures/symlinks/link-to-folder")`,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
@@ -128,13 +128,13 @@ test("isDir - on link to file", async () => {
     `isDir("./meta/tests/fixtures/symlinks/link-to-file")`,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "false
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "false
+   ",
+   }
   `);
 });
 
@@ -143,39 +143,39 @@ test("isDir - on dead link", async () => {
     `isDir("./meta/tests/fixtures/symlinks/dead-link")`,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "false
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "false
+   ",
+   }
   `);
 });
 
 test("isLink - on dir", async () => {
   const result = await evaluate(`isLink("./meta/tests/fixtures/glob/cabana")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "false
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "false
+   ",
+   }
   `);
 });
 
 test("isLink - on file", async () => {
   const result = await evaluate(`isLink("./meta/tests/fixtures/glob/hi.txt")`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "false
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "false
+   ",
+   }
   `);
 });
 
@@ -184,13 +184,13 @@ test("isLink - on link to folder", async () => {
     `isLink("./meta/tests/fixtures/symlinks/link-to-folder")`,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
@@ -199,13 +199,13 @@ test("isLink - on link to file", async () => {
     `isLink("./meta/tests/fixtures/symlinks/link-to-file")`,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
@@ -214,13 +214,13 @@ test("isLink - on dead link", async () => {
     `isLink("./meta/tests/fixtures/symlinks/dead-link")`,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
@@ -232,9 +232,9 @@ test("remove - on file", async () => {
   expect(fs.existsSync(target)).toBe(true);
 
   const result = await evaluate(`remove(${JSON.stringify(target)})`);
-  expect(cleanResult(result)).toEqual({
+  expect(result).toEqual({
     code: 0,
-    error: false,
+    error: null,
     stderr: "",
     stdout: "",
   });
@@ -253,9 +253,9 @@ test("remove - on empty dir", async () => {
   expect(fs.existsSync(targetDir)).toBe(true);
 
   const result = await evaluate(`remove(${JSON.stringify(targetDir)})`);
-  expect(cleanResult(result)).toEqual({
+  expect(result).toEqual({
     code: 0,
-    error: false,
+    error: null,
     stderr: "",
     stdout: "",
   });
@@ -287,9 +287,9 @@ test("remove - on dir with content", async () => {
   fs.writeFileSync(path.join(targetDir, "something.js"), "console.log(2 + 2);");
 
   const result = await evaluate(`remove(${JSON.stringify(targetDir)})`);
-  expect(cleanResult(result)).toEqual({
+  expect(result).toEqual({
     code: 0,
-    error: false,
+    error: null,
     stderr: "",
     stdout: "",
   });
@@ -304,13 +304,13 @@ test("exists - existent target file", async () => {
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
@@ -321,13 +321,13 @@ test("exists - existent target dir", async () => {
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
@@ -338,13 +338,13 @@ test("exists - nonexistent target", async () => {
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "false
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "false
+   ",
+   }
   `);
 });
 
@@ -355,13 +355,13 @@ test("exists - link to file", async () => {
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
@@ -372,13 +372,13 @@ test("exists - link to dir", async () => {
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
@@ -391,13 +391,13 @@ test("exists - dead link", async () => {
 
   const result = await evaluate(`exists(${JSON.stringify(target)})`);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "false
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "false
+   ",
+   }
   `);
 });
 
@@ -418,14 +418,14 @@ test("copy", async () => {
   const result = await evaluate(
     `copy(${JSON.stringify(source)}, ${JSON.stringify(target)})`,
   );
-  expect(cleanResult(result)).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "copy: meta/tests/fixtures/copy/blah/blah2/hi.txt -> meta/tests/fixtures/copy/blah_copy/blah2/hi.txt
-    ",
-      "stdout": "",
-    }
+  expect(result).toMatchInlineSnapshot(`
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "copy: meta/tests/fixtures/copy/blah/blah2/hi.txt -> meta/tests/fixtures/copy/blah_copy/blah2/hi.txt
+   ",
+     "stdout": "",
+   }
   `);
 
   const blah2 = path.join(target, "blah2");

@@ -1,5 +1,5 @@
 import { spawn } from "first-base";
-import { binaryPath, cleanResult, rootDir } from "./test-helpers";
+import { binaryPath, rootDir } from "./test-helpers";
 
 const loggingFixture = rootDir.concat("meta/tests/fixtures/logging");
 
@@ -15,14 +15,14 @@ describe("file preloading", () => {
         ]);
         await run.completion;
         expect(run.result).toMatchInlineSnapshot(`
-          {
-            "code": 0,
-            "error": false,
-            "stderr": "",
-            "stdout": "1
-          hi
-          ",
-          }
+         {
+           "code": 0,
+           "error": null,
+           "stderr": "",
+           "stdout": "1
+         hi
+         ",
+         }
         `);
       });
     });
@@ -41,16 +41,16 @@ describe("file preloading", () => {
         ]);
         await run.completion;
         expect(run.result).toMatchInlineSnapshot(`
-          {
-            "code": 0,
-            "error": false,
-            "stderr": "",
-            "stdout": "two
-          three
-          1
-          hi
-          ",
-          }
+         {
+           "code": 0,
+           "error": null,
+           "stderr": "",
+           "stdout": "two
+         three
+         1
+         hi
+         ",
+         }
         `);
       });
     });
@@ -65,17 +65,17 @@ describe("file preloading", () => {
         await run.outputContains("Press Ctrl-C again");
         run.kill("SIGINT");
         await run.completion;
-        expect(cleanResult(run.result)).toMatchInlineSnapshot(`
-          {
-            "code": 0,
-            "error": false,
-            "stderr": "",
-            "stdout": "1
-          > 
-          (Press Ctrl-C again to quit)
-          > 
-          ",
-          }
+        expect(run.cleanResult()).toMatchInlineSnapshot(`
+         {
+           "code": 0,
+           "error": null,
+           "stderr": "",
+           "stdout": "1
+         > 
+         (Press Ctrl-C again to quit)
+         > 
+         ",
+         }
         `);
       });
     });
@@ -95,19 +95,19 @@ describe("file preloading", () => {
         await run.outputContains("Press Ctrl-C again");
         run.kill("SIGINT");
         await run.completion;
-        expect(cleanResult(run.result)).toMatchInlineSnapshot(`
-          {
-            "code": 0,
-            "error": false,
-            "stderr": "",
-            "stdout": "two
-          three
-          1
-          > 
-          (Press Ctrl-C again to quit)
-          > 
-          ",
-          }
+        expect(run.cleanResult()).toMatchInlineSnapshot(`
+         {
+           "code": 0,
+           "error": null,
+           "stderr": "",
+           "stdout": "two
+         three
+         1
+         > 
+         (Press Ctrl-C again to quit)
+         > 
+         ",
+         }
         `);
       });
     });
@@ -123,14 +123,14 @@ describe("file preloading", () => {
         ]);
         await run.completion;
         expect(run.result).toMatchInlineSnapshot(`
-          {
-            "code": 0,
-            "error": false,
-            "stderr": "",
-            "stdout": "1
-          two
-          ",
-          }
+         {
+           "code": 0,
+           "error": null,
+           "stderr": "",
+           "stdout": "1
+         two
+         ",
+         }
         `);
       });
     });
@@ -146,15 +146,15 @@ describe("file preloading", () => {
         ]);
         await run.completion;
         expect(run.result).toMatchInlineSnapshot(`
-          {
-            "code": 0,
-            "error": false,
-            "stderr": "",
-            "stdout": "two
-          three
-          1
-          ",
-          }
+         {
+           "code": 0,
+           "error": null,
+           "stderr": "",
+           "stdout": "two
+         three
+         1
+         ",
+         }
         `);
       });
     });

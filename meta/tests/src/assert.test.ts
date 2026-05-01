@@ -5,12 +5,12 @@ test("assert - truthy value", async () => {
     assert(2 + 2 === 4);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "",
+   }
   `);
 });
 
@@ -19,16 +19,19 @@ test("assert - falsy value", async () => {
     assert(2 + 2 === 5);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 1,
-      "error": false,
-      "stderr": "Error: Assertion failed (value = false)
-      at somewhere
-    {
-      value: false
-    }
-    ",
-      "stdout": "",
-    }
+   {
+     "code": 1,
+     "error": null,
+     "stderr": "Error: Assertion failed (value = false)
+     at somewhere
+   {
+     fileName: "yavascript-internal.js"
+     lineNumber: <redacted>
+     columnNumber: <redacted>
+     value: false
+   }
+   ",
+     "stdout": "",
+   }
   `);
 });

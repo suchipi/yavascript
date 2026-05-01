@@ -45,42 +45,42 @@ test("which", async () => {
 
   const result = await evaluate(script, { env });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "which: Searching for "sample" in "<rootDir>/meta/tests/fixtures/which/bin1"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/bin1/sample"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/bin1/sample.one"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/bin1/sample.two"
-    which: Searching for "sample" in "<rootDir>/meta/tests/fixtures/which/bin2"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/bin2/sample"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/bin2/sample.one"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/bin2/sample.two"
-    which: Searching for "sample" in "<rootDir>/meta/tests/fixtures/which/usr/bin3"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/usr/bin3/sample"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/usr/bin3/sample.one"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/usr/bin3/sample.two"
-    which: Failed to find "sample"...
-    which: Searching for "program2" in "<rootDir>/meta/tests/fixtures/which/bin1"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/bin1/program2"
-    which: Searching for "program2" in "<rootDir>/meta/tests/fixtures/which/bin2"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/bin2/program2"
-    which: Searching for "program2" in "<rootDir>/meta/tests/fixtures/which/usr/bin3"
-    which: Checking for "<rootDir>/meta/tests/fixtures/which/usr/bin3/program2"
-    which: Found "program2" at "<rootDir>/meta/tests/fixtures/which/usr/bin3/program2"!
-    ",
-      "stdout": "[
-      Path { <rootDir>/meta/tests/fixtures/which/bin1/program }
-      Path { <rootDir>/meta/tests/fixtures/which/usr/bin3/program2 }
-      Path { <rootDir>/meta/tests/fixtures/which/bin2/program3 }
-      null
-      Path { <rootDir>/meta/tests/fixtures/which/bin2/program }
-      null
-      Path { <rootDir>/meta/tests/fixtures/which/bin1/something.bat }
-      null
-      Path { <rootDir>/meta/tests/fixtures/which/usr/bin3/program2 }
-    ]
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "which: Searching for "sample" in "<rootDir>/meta/tests/fixtures/which/bin1"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/bin1/sample"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/bin1/sample.one"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/bin1/sample.two"
+   which: Searching for "sample" in "<rootDir>/meta/tests/fixtures/which/bin2"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/bin2/sample"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/bin2/sample.one"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/bin2/sample.two"
+   which: Searching for "sample" in "<rootDir>/meta/tests/fixtures/which/usr/bin3"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/usr/bin3/sample"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/usr/bin3/sample.one"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/usr/bin3/sample.two"
+   which: Failed to find "sample"...
+   which: Searching for "program2" in "<rootDir>/meta/tests/fixtures/which/bin1"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/bin1/program2"
+   which: Searching for "program2" in "<rootDir>/meta/tests/fixtures/which/bin2"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/bin2/program2"
+   which: Searching for "program2" in "<rootDir>/meta/tests/fixtures/which/usr/bin3"
+   which: Checking for "<rootDir>/meta/tests/fixtures/which/usr/bin3/program2"
+   which: Found "program2" at "<rootDir>/meta/tests/fixtures/which/usr/bin3/program2"!
+   ",
+     "stdout": "[
+     Path { <rootDir>/meta/tests/fixtures/which/bin1/program }
+     Path { <rootDir>/meta/tests/fixtures/which/usr/bin3/program2 }
+     Path { <rootDir>/meta/tests/fixtures/which/bin2/program3 }
+     null
+     Path { <rootDir>/meta/tests/fixtures/which/bin2/program }
+     null
+     Path { <rootDir>/meta/tests/fixtures/which/bin1/something.bat }
+     null
+     Path { <rootDir>/meta/tests/fixtures/which/usr/bin3/program2 }
+   ]
+   ",
+   }
   `);
 });

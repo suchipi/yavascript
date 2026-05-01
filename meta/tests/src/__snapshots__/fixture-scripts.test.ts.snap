@@ -3,7 +3,7 @@
 exports[`__filename-and-__dirname.js 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "{
   __filename: "<rootDir>/meta/tests/fixtures/scripts/__filename-and-__dirname.js"
@@ -20,7 +20,7 @@ exports[`__filename-and-__dirname.js 1`] = `
 exports[`__filename-and-__dirname-2.js 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "",
 }
@@ -29,7 +29,7 @@ exports[`__filename-and-__dirname-2.js 1`] = `
 exports[`child-process-state.js 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "ChildProcess.start: [
   "sleep"
   "2"
@@ -57,10 +57,13 @@ after waitUntilComplete EXITED
 exports[`http-import-error.js 1`] = `
 {
   "code": 1,
-  "error": false,
+  "error": null,
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "http://suchipi.com/there-is-nothing-at-this-path")
   at somewhere
 {
+  fileName: "yavascript-internal.js"
+  lineNumber: <redacted>
+  columnNumber: <redacted>
   httpStatusCode: 404
   url: "http://suchipi.com/there-is-nothing-at-this-path"
   httpResponseHeaders: <redacted>
@@ -74,10 +77,13 @@ exports[`http-import-error.js 1`] = `
 exports[`https-import-error.js 1`] = `
 {
   "code": 1,
-  "error": false,
+  "error": null,
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "https://suchipi.com/there-is-nothing-at-this-path")
   at somewhere
 {
+  fileName: "yavascript-internal.js"
+  lineNumber: <redacted>
+  columnNumber: <redacted>
   httpStatusCode: 404
   url: "https://suchipi.com/there-is-nothing-at-this-path"
   httpResponseHeaders: <redacted>
@@ -91,7 +97,7 @@ exports[`https-import-error.js 1`] = `
 exports[`importing-from-npm-protocol.js 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "{
   Null prototype
@@ -394,7 +400,7 @@ exports[`importing-from-npm-protocol.js 1`] = `
 exports[`importing-json.js 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "{
   hello: "there"
@@ -406,7 +412,7 @@ exports[`importing-json.js 1`] = `
 exports[`importing-toml.js 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "{
   title: "TOML Example"
@@ -429,7 +435,7 @@ exports[`importing-toml.js 1`] = `
 exports[`importing-yaml.js 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "{
   greeting: "hello"
@@ -450,7 +456,7 @@ exports[`importing-yaml.js 1`] = `
 exports[`importing-yml.js 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "{
   short: "extension"
@@ -463,10 +469,13 @@ exports[`importing-yml.js 1`] = `
 exports[`npm-proto-import-error.js 1`] = `
 {
   "code": 1,
-  "error": false,
+  "error": null,
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "https://cdn.skypack.dev/@suchipi/this-package-does-not-exist")
   at somewhere
 {
+  fileName: "yavascript-internal.js"
+  lineNumber: <redacted>
+  columnNumber: <redacted>
   httpStatusCode: 404
   url: "https://cdn.skypack.dev/@suchipi/this-package-does-not-exist"
   httpResponseHeaders: <redacted>
@@ -480,7 +489,7 @@ exports[`npm-proto-import-error.js 1`] = `
 exports[`requiring-with-npm-proto.js 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "{
   get $ApiFunctions: Function "$ApiFunctions" {}
@@ -589,7 +598,7 @@ exports[`requiring-with-npm-proto.js 1`] = `
 exports[`some-civet.civet 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "object
 object
@@ -613,7 +622,7 @@ false
 exports[`some-coffeescript.coffee 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "object
 object
@@ -625,7 +634,7 @@ false
 exports[`some-json.json 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "",
 }
@@ -634,7 +643,7 @@ exports[`some-json.json 1`] = `
 exports[`some-jsx.jsx 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "{
   $$typeof: Symbol(JSX.Element)
@@ -654,7 +663,7 @@ false
 exports[`some-toml.toml 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "",
 }
@@ -663,7 +672,7 @@ exports[`some-toml.toml 1`] = `
 exports[`some-tsx.tsx 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "{
   $$typeof: Symbol(JSX.Element)
@@ -683,7 +692,7 @@ false
 exports[`some-typescript.ts 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "undefined
 object
@@ -696,7 +705,7 @@ Path { <rootDir>/meta/tests/fixtures/scripts }
 exports[`some-yaml.yaml 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "",
 }
@@ -705,7 +714,7 @@ exports[`some-yaml.yaml 1`] = `
 exports[`some-yml.yml 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "",
 }
@@ -775,7 +784,7 @@ exports[`toplevel-await-and-export-together.js 1`] = `
 exports[`type-coercion-via-assert.ts 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "no error message from hi String
 Expected value of type string, but received null
@@ -791,7 +800,7 @@ no error message from 42 Number
 exports[`type-coercion-via-is.ts 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "true
 false

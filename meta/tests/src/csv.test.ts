@@ -19,38 +19,38 @@ test("CSV", async () => {
     `,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      table: [
-        [
-          "a"
-          "b"
-          "c"
-        ]
-        [
-          "d"
-          "e"
-          "f"
-        ]
-      ]
-      csv: "a,b,c\\r\\nd,e,f"
-      reparsed: [
-        [
-          "a"
-          "b"
-          "c"
-        ]
-        [
-          "d"
-          "e"
-          "f"
-        ]
-      ]
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     table: [
+       [
+         "a"
+         "b"
+         "c"
+       ]
+       [
+         "d"
+         "e"
+         "f"
+       ]
+     ]
+     csv: "a,b,c\\r\\nd,e,f"
+     reparsed: [
+       [
+         "a"
+         "b"
+         "c"
+       ]
+       [
+         "d"
+         "e"
+         "f"
+       ]
+     ]
+   }
+   ",
+   }
   `);
 });

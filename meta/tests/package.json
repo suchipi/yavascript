@@ -5,7 +5,7 @@
     "test": "jest --config=./jest/config.js"
   },
   "dependencies": {
-    "first-base": "^1.5.2",
+    "first-base": "3.0.1",
     "jest": "^30.2.0"
   },
   "devDependencies": {

@@ -30,6 +30,18 @@ program(
 );
 program(
   "yavascript",
+  "x86_64-unknown-linux-gnu",
+  "qjsbootstrap-bytecode",
+  "dist/bytecode/index-x86_64.bin",
+);
+program(
+  "yavascript",
+  "x86_64-unknown-linux-musl",
+  "qjsbootstrap-bytecode",
+  "dist/bytecode/index-x86_64.bin",
+);
+program(
+  "yavascript",
   "x86_64-unknown-freebsd-15",
   "qjsbootstrap-bytecode",
   "dist/bytecode/index-x86_64.bin",
@@ -61,6 +73,18 @@ program(
 );
 program(
   "yavascript",
+  "aarch64-unknown-linux-gnu",
+  "qjsbootstrap-bytecode",
+  "dist/bytecode/index-arm64.bin",
+);
+program(
+  "yavascript",
+  "aarch64-unknown-linux-musl",
+  "qjsbootstrap-bytecode",
+  "dist/bytecode/index-arm64.bin",
+);
+program(
+  "yavascript",
   "aarch64-unknown-freebsd-15",
   "qjsbootstrap-bytecode",
   "dist/bytecode/index-arm64.bin",
@@ -76,6 +100,18 @@ program(
 program(
   "yavascript-bootstrap",
   "x86_64-unknown-linux-static",
+  "qjsbootstrap",
+  "dist/bundles/primordials-x86_64.js",
+);
+program(
+  "yavascript-bootstrap",
+  "x86_64-unknown-linux-gnu",
+  "qjsbootstrap",
+  "dist/bundles/primordials-x86_64.js",
+);
+program(
+  "yavascript-bootstrap",
+  "x86_64-unknown-linux-musl",
   "qjsbootstrap",
   "dist/bundles/primordials-x86_64.js",
 );
@@ -100,6 +136,18 @@ program(
 program(
   "yavascript-bootstrap",
   "aarch64-unknown-linux-static",
+  "qjsbootstrap",
+  "dist/bundles/primordials-arm64.js",
+);
+program(
+  "yavascript-bootstrap",
+  "aarch64-unknown-linux-gnu",
+  "qjsbootstrap",
+  "dist/bundles/primordials-arm64.js",
+);
+program(
+  "yavascript-bootstrap",
+  "aarch64-unknown-linux-musl",
   "qjsbootstrap",
   "dist/bundles/primordials-arm64.js",
 );

@@ -1,4 +1,4 @@
-import { evaluate, cleanResult, rootDir } from "./test-helpers";
+import { evaluate, rootDir } from "./test-helpers";
 
 const globFixturesDir = rootDir("meta/tests/fixtures/glob");
 const symlinksFixturesDir = rootDir("meta/tests/fixtures/symlinks");
@@ -7,14 +7,13 @@ test("ls - no args", async () => {
   const result = await evaluate(`JSON.stringify(ls())`, {
     cwd: globFixturesDir,
   });
-  const cleaned = cleanResult(result);
-  expect(cleaned).toMatchObject({
+  expect(result).toMatchObject({
     code: 0,
-    error: false,
+    error: null,
     stderr: "",
   });
 
-  expect(JSON.parse(cleaned.stdout).sort()).toEqual(
+  expect(JSON.parse(result.stdout).sort()).toEqual(
     [
       "<rootDir>/meta/tests/fixtures/glob/hi.something.js",
       "<rootDir>/meta/tests/fixtures/glob/potato",
@@ -30,14 +29,13 @@ test("ls - no args (different process cwd)", async () => {
   const result = await evaluate(`JSON.stringify(ls())`, {
     cwd: symlinksFixturesDir,
   });
-  const cleaned = cleanResult(result);
-  expect(cleaned).toMatchObject({
+  expect(result).toMatchObject({
     code: 0,
-    error: false,
+    error: null,
     stderr: "",
   });
 
-  expect(JSON.parse(cleaned.stdout).sort()).toEqual(
+  expect(JSON.parse(result.stdout).sort()).toEqual(
     [
       "<rootDir>/meta/tests/fixtures/symlinks/some-folder",
       "<rootDir>/meta/tests/fixtures/symlinks/link-to-file",
@@ -52,14 +50,13 @@ test("ls - specifying dir", async () => {
   const result = await evaluate(`JSON.stringify(ls("./potato"))`, {
     cwd: globFixturesDir,
   });
-  const cleaned = cleanResult(result);
-  expect(cleaned).toMatchObject({
+  expect(result).toMatchObject({
     code: 0,
-    error: false,
+    error: null,
     stderr: "",
   });
 
-  expect(JSON.parse(cleaned.stdout).sort()).toEqual(
+  expect(JSON.parse(result.stdout).sort()).toEqual(
     [
       //
       "<rootDir>/meta/tests/fixtures/glob/potato/banana",

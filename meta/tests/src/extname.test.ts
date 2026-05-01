@@ -21,23 +21,23 @@ test("extname", async () => {
 
   const result = await evaluate(script);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": ".js
-    .js
-    .js
-    .js
-    .test.js
-    .test.js
-    .js
-    .js
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": ".js
+   .js
+   .js
+   .js
+   .test.js
+   .test.js
+   .js
+   .js
 
 
 
-    ",
-    }
+   ",
+   }
   `);
 });
 
@@ -51,15 +51,15 @@ test("extname (windows-style path)", async () => {
 
   const result = await evaluate(script);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": ".js
-    .js
-    .test.js
-    .js
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": ".js
+   .js
+   .test.js
+   .js
+   ",
+   }
   `);
 });

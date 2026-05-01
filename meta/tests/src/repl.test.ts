@@ -11,18 +11,18 @@ describe("repl", () => {
     await run.outputContains("Press Ctrl-C again");
     run.kill("SIGINT");
     await run.completion;
-    expect(run.result).toMatchInlineSnapshot(`
-      {
-        "code": 0,
-        "error": false,
-        "stderr": "",
-        "stdout": "> 2 + 2
-      4
-      > 
-      (Press Ctrl-C again to quit)
-      > 
-      ",
-      }
+    expect(run.cleanResult()).toMatchInlineSnapshot(`
+     {
+       "code": 0,
+       "error": null,
+       "stderr": "",
+       "stdout": "> 2 + 2
+     4
+     > 
+     (Press Ctrl-C again to quit)
+     > 
+     ",
+     }
     `);
   });
 });

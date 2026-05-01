@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { evaluate, cleanResult, rootDir } from "./test-helpers";
+import { evaluate, rootDir } from "./test-helpers";
 
 const workDir = rootDir.concat("meta/tests/fixtures/mkdir");
 
@@ -25,14 +25,14 @@ describe("non-recursive", () => {
       `mkdir(${JSON.stringify(target)}, { logging: { info: console.error } })`,
       { cwd: rootDir() },
     );
-    expect(cleanResult(result)).toMatchInlineSnapshot(`
-      {
-        "code": 0,
-        "error": false,
-        "stderr": "mkdir: 'meta/tests/fixtures/mkdir/relative'
-      ",
-        "stdout": "",
-      }
+    expect(result).toMatchInlineSnapshot(`
+     {
+       "code": 0,
+       "error": null,
+       "stderr": "mkdir: 'meta/tests/fixtures/mkdir/relative'
+     ",
+       "stdout": "",
+     }
     `);
 
     expect(fs.existsSync(target)).toBe(true);
@@ -44,14 +44,14 @@ describe("non-recursive", () => {
     expect(fs.existsSync(target)).toBe(false);
 
     const result = await evaluate(`mkdir(${JSON.stringify(target)})`);
-    expect(cleanResult(result)).toMatchInlineSnapshot(`
-      {
-        "code": 0,
-        "error": false,
-        "stderr": "mkdir: '<rootDir>/meta/tests/fixtures/mkdir/relative'
-      ",
-        "stdout": "",
-      }
+    expect(result).toMatchInlineSnapshot(`
+     {
+       "code": 0,
+       "error": null,
+       "stderr": "mkdir: '<rootDir>/meta/tests/fixtures/mkdir/relative'
+     ",
+       "stdout": "",
+     }
     `);
 
     expect(fs.existsSync(target)).toBe(true);
@@ -68,17 +68,20 @@ describe("non-recursive", () => {
 
     const result = await evaluate(`mkdir(${JSON.stringify(target)})`);
     expect(result).toMatchInlineSnapshot(`
-      {
-        "code": 1,
-        "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/collision/file' because there is an existing file with that name. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/collision/file })
-        at somewhere
-      {
-        path: Path { <rootDir>/meta/tests/fixtures/mkdir/collision/file }
-      }
-      ",
-        "stdout": "",
-      }
+     {
+       "code": 1,
+       "error": null,
+       "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/collision/file' because there is an existing file with that name. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/collision/file })
+       at somewhere
+     {
+       fileName: "yavascript-internal.js"
+       lineNumber: <redacted>
+       columnNumber: <redacted>
+       path: Path { <rootDir>/meta/tests/fixtures/mkdir/collision/file }
+     }
+     ",
+       "stdout": "",
+     }
     `);
   });
 
@@ -92,18 +95,21 @@ describe("non-recursive", () => {
 
     const result = await evaluate(`mkdir(${JSON.stringify(target)})`);
     expect(result).toMatchInlineSnapshot(`
-      {
-        "code": 1,
-        "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/parent_collision/file' because its parent '<rootDir>/meta/tests/fixtures/mkdir/parent_collision' exists but is not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/parent_collision/file }, parentPath = Path { <rootDir>/meta/tests/fixtures/mkdir/parent_collision })
-        at somewhere
-      {
-        path: Path { <rootDir>/meta/tests/fixtures/mkdir/parent_collision/file }
-        parentPath: Path { <rootDir>/meta/tests/fixtures/mkdir/parent_collision }
-      }
-      ",
-        "stdout": "",
-      }
+     {
+       "code": 1,
+       "error": null,
+       "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/parent_collision/file' because its parent '<rootDir>/meta/tests/fixtures/mkdir/parent_collision' exists but is not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/parent_collision/file }, parentPath = Path { <rootDir>/meta/tests/fixtures/mkdir/parent_collision })
+       at somewhere
+     {
+       fileName: "yavascript-internal.js"
+       lineNumber: <redacted>
+       columnNumber: <redacted>
+       path: Path { <rootDir>/meta/tests/fixtures/mkdir/parent_collision/file }
+       parentPath: Path { <rootDir>/meta/tests/fixtures/mkdir/parent_collision }
+     }
+     ",
+       "stdout": "",
+     }
     `);
   });
 });
@@ -121,13 +127,13 @@ describe("recursive via option", () => {
       `mkdir(${JSON.stringify(target)}, { recursive: true })`,
       { cwd: rootDir() },
     );
-    expect(cleanResult(result)).toMatchInlineSnapshot(`
-      {
-        "code": 0,
-        "error": false,
-        "stderr": "",
-        "stdout": "",
-      }
+    expect(result).toMatchInlineSnapshot(`
+     {
+       "code": 0,
+       "error": null,
+       "stderr": "",
+       "stdout": "",
+     }
     `);
 
     expect(fs.existsSync(outerTarget)).toBe(true);
@@ -143,13 +149,13 @@ describe("recursive via option", () => {
     const result = await evaluate(
       `mkdir(${JSON.stringify(target)}, { recursive: true })`,
     );
-    expect(cleanResult(result)).toMatchInlineSnapshot(`
-      {
-        "code": 0,
-        "error": false,
-        "stderr": "",
-        "stdout": "",
-      }
+    expect(result).toMatchInlineSnapshot(`
+     {
+       "code": 0,
+       "error": null,
+       "stderr": "",
+       "stdout": "",
+     }
     `);
 
     expect(fs.existsSync(outerTarget)).toBe(true);
@@ -169,18 +175,21 @@ describe("recursive via option", () => {
       `mkdir(${JSON.stringify(target)}, { recursive: true })`,
     );
     expect(result).toMatchInlineSnapshot(`
-      {
-        "code": 1,
-        "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file' because '<rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file })
-        at somewhere
-      {
-        path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file }
-        pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file }
-      }
-      ",
-        "stdout": "",
-      }
+     {
+       "code": 1,
+       "error": null,
+       "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file' because '<rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file })
+       at somewhere
+     {
+       fileName: "yavascript-internal.js"
+       lineNumber: <redacted>
+       columnNumber: <redacted>
+       path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file }
+       pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file }
+     }
+     ",
+       "stdout": "",
+     }
     `);
   });
 
@@ -196,18 +205,21 @@ describe("recursive via option", () => {
       `mkdir(${JSON.stringify(target)}, { recursive: true })`,
     );
     expect(result).toMatchInlineSnapshot(`
-      {
-        "code": 1,
-        "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision/file' because '<rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision/file }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision })
-        at somewhere
-      {
-        path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision/file }
-        pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision }
-      }
-      ",
-        "stdout": "",
-      }
+     {
+       "code": 1,
+       "error": null,
+       "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision/file' because '<rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision/file }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision })
+       at somewhere
+     {
+       fileName: "yavascript-internal.js"
+       lineNumber: <redacted>
+       columnNumber: <redacted>
+       path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision/file }
+       pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/parent_collision }
+     }
+     ",
+       "stdout": "",
+     }
     `);
   });
 });
@@ -224,13 +236,13 @@ describe("recursive via mkdirp", () => {
     const result = await evaluate(`mkdirp(${JSON.stringify(target)})`, {
       cwd: rootDir(),
     });
-    expect(cleanResult(result)).toMatchInlineSnapshot(`
-      {
-        "code": 0,
-        "error": false,
-        "stderr": "",
-        "stdout": "",
-      }
+    expect(result).toMatchInlineSnapshot(`
+     {
+       "code": 0,
+       "error": null,
+       "stderr": "",
+       "stdout": "",
+     }
     `);
 
     expect(fs.existsSync(outerTarget)).toBe(true);
@@ -244,13 +256,13 @@ describe("recursive via mkdirp", () => {
     expect(fs.existsSync(outerTarget)).toBe(false);
 
     const result = await evaluate(`mkdirp(${JSON.stringify(target)})`);
-    expect(cleanResult(result)).toMatchInlineSnapshot(`
-      {
-        "code": 0,
-        "error": false,
-        "stderr": "",
-        "stdout": "",
-      }
+    expect(result).toMatchInlineSnapshot(`
+     {
+       "code": 0,
+       "error": null,
+       "stderr": "",
+       "stdout": "",
+     }
     `);
 
     expect(fs.existsSync(outerTarget)).toBe(true);
@@ -268,18 +280,21 @@ describe("recursive via mkdirp", () => {
 
     const result = await evaluate(`mkdirp(${JSON.stringify(target)})`);
     expect(result).toMatchInlineSnapshot(`
-      {
-        "code": 1,
-        "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file' because '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file })
-        at somewhere
-      {
-        path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file }
-        pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file }
-      }
-      ",
-        "stdout": "",
-      }
+     {
+       "code": 1,
+       "error": null,
+       "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file' because '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file })
+       at somewhere
+     {
+       fileName: "yavascript-internal.js"
+       lineNumber: <redacted>
+       columnNumber: <redacted>
+       path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file }
+       pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file }
+     }
+     ",
+       "stdout": "",
+     }
     `);
   });
 
@@ -293,18 +308,21 @@ describe("recursive via mkdirp", () => {
 
     const result = await evaluate(`mkdirp(${JSON.stringify(target)})`);
     expect(result).toMatchInlineSnapshot(`
-      {
-        "code": 1,
-        "error": false,
-        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision/file' because '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision/file }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision })
-        at somewhere
-      {
-        path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision/file }
-        pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision }
-      }
-      ",
-        "stdout": "",
-      }
+     {
+       "code": 1,
+       "error": null,
+       "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision/file' because '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision/file }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision })
+       at somewhere
+     {
+       fileName: "yavascript-internal.js"
+       lineNumber: <redacted>
+       columnNumber: <redacted>
+       path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision/file }
+       pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/parent_collision }
+     }
+     ",
+       "stdout": "",
+     }
     `);
   });
 });

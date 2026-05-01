@@ -7,11 +7,11 @@ test("printf", async () => {
     `,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "bla hi blah 009 yeah 0x0064",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "bla hi blah 009 yeah 0x0064",
+   }
   `);
 });

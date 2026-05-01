@@ -11,19 +11,19 @@ test("whoami", async () => {
     console.log("gid:", typeof result.gid);
   `);
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "[
-      "name"
-      "uid"
-      "gid"
-    ]
-    name: string
-    uid: number
-    gid: number
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "[
+     "name"
+     "uid"
+     "gid"
+   ]
+   name: string
+   uid: number
+   gid: number
+   ",
+   }
   `);
 });

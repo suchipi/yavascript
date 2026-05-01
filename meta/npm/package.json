@@ -6,5 +6,8 @@
   "types": "yavascript.d.ts",
   "author": "Lily Skye <me@suchipi.com>",
   "license": "MIT",
-  "repository": "suchipi/yavascript"
+  "repository": "suchipi/yavascript",
+  "dependencies": {
+    "detect-libc": "^2.1.2"
+  }
 }

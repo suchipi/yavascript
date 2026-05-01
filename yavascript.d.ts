@@ -51,10 +51,7 @@ declare const yavascript: {
    * The version of the ecma262 standard supported by the currently-running
    * yavascript binary.
    *
-   * Currently, this is always "ES2020", but if future versions of yavascript
-   * support a newer version of the standard, this will change. In that event,
-   * this property will always be in the format of "ES" + a year, and will never
-   * be lower than ES2020.
+   * Possible values (depending on yavascript version): "ES2020", "ES2023".
    */
   ecmaVersion: string;
 
@@ -4531,113 +4528,6 @@ interface SymbolConstructor {
    *   determining the result of the `typeof` operation (it'll ignore it).
    */
   readonly typeofValue: unique symbol;
-
-  /**
-   * To override operators (+, -, ==, etc) for an object, set its
-   * `Symbol.operatorSet` property to an `OperatorSet` object, which can be
-   * created via `Operators.create`.
-   */
-  readonly operatorSet: unique symbol;
-}
-
-/**
- * An object that, if placed on another object's `Symbol.operatorSet` property,
- * will overload its operators to behave as defined by the functions this
- * OperatorSet was constructed with.
- *
- * You can create an OperatorSet via `Operators(...)` or
- * `Operators.create(...)`.
- */
-declare type OperatorSet = {
-  /**
-   * This property is not here at runtime; we just use it to make this type
-   * differ from an empty object.
-   */
-  __is__: "OperatorSet";
-};
-
-interface OperatorFunctions<Left, Right> {
-  "+": (left: Left, right: Right) => any;
-  "-": (left: Left, right: Right) => any;
-  "*": (left: Left, right: Right) => any;
-  "/": (left: Left, right: Right) => any;
-  "%": (left: Left, right: Right) => any;
-  "**": (left: Left, right: Right) => any;
-  "|": (left: Left, right: Right) => any;
-  "&": (left: Left, right: Right) => any;
-  "^": (left: Left, right: Right) => any;
-  "<<": (left: Left, right: Right) => any;
-  ">>": (left: Left, right: Right) => any;
-  ">>>": (left: Left, right: Right) => any;
-  "==": (left: Left, right: Right) => any;
-  "<": (left: Left, right: Right) => any;
-  pos: (left: Left, right: Right) => any;
-  neg: (left: Left, right: Right) => any;
-  "++": (left: Left, right: Right) => any;
-  "--": (left: Left, right: Right) => any;
-  "~": (left: Left, right: Right) => any;
-}
-
-interface SelfOperators<T> extends Partial<OperatorFunctions<T, T>> {
-  left?: undefined;
-  right?: undefined;
-}
-
-interface LeftOperators<T, Left> extends Partial<OperatorFunctions<Left, T>> {
-  left: {};
-  right?: undefined;
-}
-
-interface RightOperators<T, Right>
-  extends Partial<OperatorFunctions<T, Right>> {
-  left?: undefined;
-  right: {};
-}
-
-interface OperatorsConstructor {
-  /**
-   * Creates a new OperatorSet object, which should be placed on an object's
-   * Symbol.operatorSet property.
-   */
-  <T>(
-    selfOperators?: SelfOperators<T>,
-    ...otherOperators: Array<LeftOperators<T, any> | RightOperators<T, any>>
-  ): OperatorSet;
-
-  /**
-   * Creates a new OperatorSet object, which should be placed on an object's
-   * Symbol.operatorSet property.
-   */
-  create: <T>(
-    selfOperators?: SelfOperators<T>,
-    ...otherOperators: Array<LeftOperators<T, any> | RightOperators<T, any>>
-  ) => OperatorSet;
-
-  /**
-   * In math mode, the BigInt division and power operators can be overloaded by
-   * using this function.
-   */
-  updateBigIntOperators(
-    ops: Pick<OperatorFunctions<BigInt, BigInt>, "/" | "**">
-  ): void;
-}
-
-declare var Operators: OperatorsConstructor;
-
-interface Number {
-  [Symbol.operatorSet]: OperatorSet;
-}
-
-interface Boolean {
-  [Symbol.operatorSet]: OperatorSet;
-}
-
-interface String {
-  [Symbol.operatorSet]: OperatorSet;
-}
-
-interface BigInt {
-  [Symbol.operatorSet]: OperatorSet;
 }
 
 interface BigIntConstructor {
@@ -4731,623 +4621,6 @@ interface BigIntConstructor {
   ctz(a: bigint): bigint;
 }
 
-declare type BigFloatRoundingMode = number & {
-  /**
-   * This property is not here at runtime; we just use it to make this type
-   * differ from a normal number
-   */
-  __is__: "BigFloatRoundingMode";
-};
-
-interface BigFloatEnvConstructor {
-  /**
-   * Creates a new floating point environment. Its status flags are reset.
-   *
-   * - If unspecified, `precision` defaults to the precision from the global floating point environment.
-   * - If unspecified, `roundingMode` defaults to RNDN.
-   */
-  new (precision?: number, roundingMode?: BigFloatRoundingMode): BigFloatEnv;
-
-  /**
-   * The mantissa precision in bits of the global floating point environment.
-   *
-   * The initial value is 113.
-   */
-  get prec(): number;
-
-  /**
-   * The exponent size in bits of the global floating point environment,
-   * assuming an IEEE 754 representation.
-   *
-   * The initial value is 15.
-   */
-  get expBits(): number;
-
-  /**
-   * Sets the mantissa precision of the global floating point environment to
-   * `prec` and the exponent size to `expBits`, then calls the function `func`.
-   * Then the precision and exponent size are reset to their previous values
-   * and the return value of `func` is returned (or an exception is raised if
-   * `func` raised an exception).
-   *
-   * If expBits is undefined, it is set to {@link BigFloatEnv.expBitsMax}.
-   *
-   * @param func The function to call within the modified environment
-   * @param prec The mantissa precision (in bits) to use in the modified environment
-   * @param expBits The exponent size (in bits) to use in the modified environment. Defaults to {@link BigFloatEnv.expBitsMax}.
-   */
-  setPrec<Ret>(func: () => Ret, prec: number, expBits?: number): Ret;
-
-  /**
-   * Integer; the minimum allowed precision. Must be at least 2.
-   */
-  readonly precMin: number;
-
-  /**
-   * Integer; the maximum allowed precision. Must be at least 113.
-   */
-  readonly precMax: number;
-
-  /**
-   * Integer; the minimum allowed exponent size in bits. Must be at least 3.
-   */
-  readonly expBitsMin: number;
-
-  /**
-   * Integer; the maximum allowed exponent size in bits. Must be at least 15.
-   */
-  readonly expBitsMax: number;
-
-  /**
-   * Round to nearest, with ties to even rounding mode.
-   */
-  readonly RNDN: BigFloatRoundingMode;
-
-  /**
-   * Round to zero rounding mode.
-   */
-  readonly RNDZ: BigFloatRoundingMode;
-
-  /**
-   * Round to -Infinity rounding mode.
-   */
-  readonly RNDD: BigFloatRoundingMode;
-
-  /**
-   * Round to +Infinity rounding mode.
-   */
-  readonly RNDU: BigFloatRoundingMode;
-
-  /**
-   * Round to nearest, with ties away from zero rounding mode.
-   */
-  readonly RNDNA: BigFloatRoundingMode;
-
-  /**
-   * Round away from zero rounding mode.
-   */
-  readonly RNDA: BigFloatRoundingMode;
-
-  /**
-   * Faithful rounding mode. The result is non-deterministically rounded to
-   * -Infinity or +Infinity.
-   *
-   * This rounding mode usually gives a faster and deterministic running time
-   * for the floating point operations.
-   */
-  readonly RNDF: BigFloatRoundingMode;
-
-  prototype: BigFloatEnv;
-}
-
-declare var BigFloatEnv: BigFloatEnvConstructor;
-
-/**
- * A BigFloatEnv contains:
- *
- * - the mantissa precision in bits
- * - the exponent size in bits assuming an IEEE 754 representation;
- * - the subnormal flag (if true, subnormal floating point numbers can be generated by the floating point operations).
- * - the rounding mode
- * - the floating point status. The status flags can only be set by the floating point operations. They can be reset with BigFloatEnv.prototype.clearStatus() or with the various status flag setters.
- */
-interface BigFloatEnv {
-  /**
-   * The mantissa precision, in bits.
-   *
-   * If precision was not specified as an argument to the BigFloatEnv
-   * constructor, defaults to the precision value of the global floating-point
-   * environment ({@link BigFloatEnv.prec}).
-   */
-  get prec(): number;
-  set prec(newValue: number);
-
-  /**
-   * The exponent size in bits assuming an IEEE 754 representation.
-   *
-   * Defaults to the exponent size of the global floating-point environment
-   * ({@link BigFloatEnv.expBits}).
-   */
-  get expBits(): number;
-  set expBits(newValue: number);
-
-  /**
-   * The rounding mode.
-   *
-   * If the rounding mode was not specified as an argument to the BigFloatEnv
-   * constructor, defaults to {@link BigFloatEnv.RNDN}.
-   */
-  get rndMode(): BigFloatRoundingMode;
-  set rndMode(newMode: BigFloatRoundingMode);
-
-  /** subnormal flag. It is false when expBits = expBitsMax. Defaults to false. */
-  get subnormal(): boolean;
-  set subnormal(newValue: boolean);
-
-  /** Status flag; cleared by `clearStatus`. */
-  get invalidOperation(): boolean;
-  set invalidOperation(newValue: boolean);
-
-  /** Status flag; cleared by `clearStatus`. */
-  get divideByZero(): boolean;
-  set divideByZero(newValue: boolean);
-
-  /** Status flag; cleared by `clearStatus`. */
-  get overflow(): boolean;
-  set overflow(newValue: boolean);
-
-  /** Status flag; cleared by `clearStatus`. */
-  get underflow(): boolean;
-  set underflow(newValue: boolean);
-
-  /** Status flag; cleared by `clearStatus`. */
-  get inexact(): boolean;
-  set inexact(newValue: boolean);
-
-  /**
-   * Clear the status flags (invalidOperation, divideByZero, overflow,
-   * underflow, and inexact).
-   */
-  clearStatus(): void;
-}
-
-interface BigFloatConstructor {
-  /**
-   * If `value` is a numeric type, it is converted to BigFloat without rounding.
-   *
-   * If `value`` is a string, it is converted to BigFloat using the precision of the global floating point environment ({@link BigFloatEnv.prec}).
-   */
-  (value: number | string | bigint | BigFloat): BigFloat;
-
-  prototype: BigFloat;
-
-  /**
-   * The value of {@link Math.LN2} rounded to nearest, ties to even with the
-   * current global precision.
-   *
-   * The constant values are cached for small precisions.
-   */
-  get LN2(): BigFloat;
-
-  /**
-   * The value of {@link Math.PI} rounded to nearest, ties to even with
-   * the current global precision.
-   *
-   * The constant values are cached for small precisions.
-   */
-  get PI(): BigFloat;
-
-  /**
-   * The value of {@link Number.MIN_VALUE} as a BigFloat.
-   */
-  get MIN_VALUE(): BigFloat;
-
-  /**
-   * The value of {@link Number.MAX_VALUE} as a BigFloat.
-   */
-  get MAX_VALUE(): BigFloat;
-
-  /**
-   * The value of {@link Number.EPSILON} as a BigFloat.
-   */
-  get EPSILON(): BigFloat;
-
-  /**
-   * Rounds the floating point number `a` according to the floating point
-   * environment `e` or the global environment if `e` is undefined.
-   */
-  fpRound(a: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Parses the string `a` as a floating point number in radix `radix`.
-   *
-   * The radix is 0 (default) or from 2 to 36. The radix 0 means radix 10
-   * unless there is a hexadecimal or binary prefix.
-   *
-   * The result is rounded according to the floating point environment `e` or
-   * the global environment if `e` is undefined.
-   */
-  parseFloat(a: string, radix?: number, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns true if `a` is a finite bigfloat. Returns false otherwise.
-   */
-  isFinite(a: BigFloat): boolean;
-
-  /**
-   * Returns true if a is a NaN bigfloat. Returns false otherwise.
-   */
-  isNaN(a: BigFloat): boolean;
-
-  /**
-   * Adds `a` and `b` together and rounds the resulting floating point number
-   * according to the floating point environment `e`, or the global environment
-   * if e is undefined.
-   *
-   * If `e` is specified, the floating point status flags on `e` are updated.
-   */
-  add(a: BigFloat, b: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Subtracts `b` from `a` and rounds the resulting floating point number
-   * according to the floating point environment `e`, or the global environment
-   * if e is undefined.
-   *
-   * If `e` is specified, the floating point status flags on `e` are updated.
-   */
-  sub(a: BigFloat, b: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Multiplies `a` and `b` together and rounds the resulting floating point
-   * number according to the floating point environment `e`, or the global
-   * environment if e is undefined.
-   *
-   * If `e` is specified, the floating point status flags on `e` are updated.
-   */
-  mul(a: BigFloat, b: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Divides `a` by `b` and rounds the resulting floating point number
-   * according to the floating point environment `e`, or the global environment
-   * if e is undefined.
-   *
-   * If `e` is specified, the floating point status flags on `e` are updated.
-   */
-  div(a: BigFloat, b: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Rounds `x` down to the nearest integer.
-   *
-   * No additional rounding (ie. BigFloatEnv-related rounding) is performed.
-   */
-  floor(x: BigFloat): BigFloat;
-
-  /**
-   * Rounds `x` up to the nearest integer.
-   *
-   * No additional rounding (ie. BigFloatEnv-related rounding) is performed.
-   */
-  ceil(x: BigFloat): BigFloat;
-
-  /**
-   * Rounds `x` to the nearest integer.
-   *
-   * No additional rounding (ie. BigFloatEnv-related rounding) is performed.
-   */
-  round(x: BigFloat): BigFloat;
-
-  /**
-   * Truncates the fractional part of `x`, resulting in an integer.
-   *
-   * No additional rounding (ie. BigFloatEnv-related rounding) is performed.
-   */
-  trunc(x: BigFloat): BigFloat;
-
-  /**
-   * Returns the absolute value of `x`.
-   *
-   * No additional rounding (ie. BigFloatEnv-related rounding) is performed.
-   */
-  abs(x: BigFloat): BigFloat;
-
-  /**
-   * Floating point remainder. The quotient is truncated to zero.
-   *
-   * `e` is an optional floating point environment.
-   */
-  fmod(x: BigFloat, y: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Floating point remainder. The quotient is rounded to the nearest integer
-   * with ties to even.
-   *
-   * `e` is an optional floating point environment.
-   */
-  remainder(x: BigFloat, y: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Square root. Returns a rounded floating point number.
-   *
-   * e is an optional floating point environment.
-   */
-  sqrt(x: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns a rounded floating point number.
-   *
-   * `e` is an optional floating point environment.
-   */
-  sin(x: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns a rounded floating point number.
-   *
-   * `e` is an optional floating point environment.
-   */
-  cos(x: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns a rounded floating point number.
-   *
-   * `e` is an optional floating point environment.
-   */
-  tan(x: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns a rounded floating point number.
-   *
-   * `e` is an optional floating point environment.
-   */
-  asin(x: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns a rounded floating point number.
-   *
-   * `e` is an optional floating point environment.
-   */
-  acos(x: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns a rounded floating point number.
-   *
-   * `e` is an optional floating point environment.
-   */
-  atan(x: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns a rounded floating point number.
-   *
-   * `e` is an optional floating point environment.
-   */
-  atan2(x: BigFloat, y: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns a rounded floating point number.
-   *
-   * `e` is an optional floating point environment.
-   */
-  exp(x: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns a rounded floating point number.
-   *
-   * `e` is an optional floating point environment.
-   */
-  log(x: BigFloat, e?: BigFloatEnv): BigFloat;
-
-  /**
-   * Returns a rounded floating point number.
-   *
-   * `e` is an optional floating point environment.
-   */
-  pow(x: BigFloat, y: BigFloat, e?: BigFloatEnv): BigFloat;
-}
-
-declare var BigFloat: BigFloatConstructor;
-
-/**
- * The BigFloat type represents floating point numbers in base 2 with the IEEE 754 semantics.
- *
- * A floating point number is represented as a sign, mantissa and exponent.
- *
- * The special values NaN, +/-Infinity, +0 and -0 are supported.
- *
- * The mantissa and exponent can have any bit length with an implementation specific minimum and maximum.
- */
-interface BigFloat {
-  valueOf(): BigFloat;
-
-  /** radix must be between 2 and 36 */
-  toString(radix?: number): string;
-
-  /**
-   * Returns a string containing a number represented either in exponential or
-   * fixed-point notation with a specified number of digits.
-   *
-   * @param precision Number of significant digits. There is no range limit on this number.
-   * @param roundingMode The rounding mode to use when representing the value. Defaults to {@link BigFloatEnv.RNDNA}.
-   * @param radix The base to use when representing the value. Must be an integer between 2 and 36. Defaults to 10.
-   */
-  toPrecision(
-    precision: number,
-    roundingMode?: BigFloatRoundingMode,
-    radix?: number
-  ): string;
-
-  /**
-   * Returns a string representing a number in fixed-point notation.
-   *
-   * @param fractionDigits Number of digits after the decimal point. There is no range limit on this number.
-   * @param roundingMode The rounding mode to use when representing the value. Defaults to {@link BigFloatEnv.RNDNA}.
-   * @param radix The base to use when representing the value. Must be an integer between 2 and 36. Defaults to 10.
-   */
-  toFixed(
-    fractionDigits: number,
-    roundingMode?: BigFloatRoundingMode,
-    radix?: number
-  ): string;
-
-  /**
-   * Returns a string containing a number represented in exponential notation.
-   *
-   * @param fractionDigits Number of digits after the decimal point. Must be in the range 0 - 20, inclusive.
-   * @param roundingMode The rounding mode to use when representing the value. Defaults to {@link BigFloatEnv.RNDNA}.
-   * @param radix The base to use when representing the value. Must be an integer between 2 and 36. Defaults to 10.
-   */
-  toExponential(
-    fractionDigits: number,
-    roundingMode?: BigFloatRoundingMode,
-    radix?: number
-  ): string;
-
-  [Symbol.typeofValue]: () => "bigfloat";
-}
-
-declare type BigDecimalRoundingMode =
-  | "floor"
-  | "ceiling"
-  | "down"
-  | "up"
-  | "half-even"
-  | "half-up";
-
-declare type BigDecimalRoundingObject =
-  | {
-      /** must be >= 1 */
-      maximumSignificantDigits: number;
-      roundingMode: BigDecimalRoundingMode;
-    }
-  | {
-      /** must be >= 0 */
-      maximumFractionDigits: number;
-      roundingMode: BigDecimalRoundingMode;
-    };
-
-interface BigDecimalConstructor {
-  (): BigDecimal;
-  (value: number | string | bigint | BigFloat): BigDecimal;
-
-  /**
-   * Adds together `a` and `b` and rounds the result according to the rounding
-   * object `e`. If the rounding object is not present, the operation is
-   * executed with infinite precision; in other words, no rounding occurs when
-   * the rounding object is not present.
-   */
-  add(a: BigDecimal, b: BigDecimal, e?: BigDecimalRoundingObject): BigDecimal;
-
-  /**
-   * Subtracts `b` from `a` and rounds the result according to the rounding
-   * object `e`. If the rounding object is not present, the operation is
-   * executed with infinite precision; in other words, no rounding occurs when
-   * the rounding object is not present.
-   */
-  sub(a: BigDecimal, b: BigDecimal, e?: BigDecimalRoundingObject): BigDecimal;
-
-  /**
-   * Multiplies together `a` and `b` and rounds the result according to the
-   * rounding object `e`. If the rounding object is not present, the operation
-   * is executed with infinite precision; in other words, no rounding occurs
-   * when the rounding object is not present.
-   */
-  mul(a: BigDecimal, b: BigDecimal, e?: BigDecimalRoundingObject): BigDecimal;
-
-  /**
-   * Divides `a` by `b` and rounds the result according to the rounding object
-   * `e`.
-   *
-   * If the rounding object is not present, an attempt is made to perform the
-   * operation with infinite precision. However, not all quotients can be
-   * represented with infinite precision. If the quotient cannot be represented
-   * with infinite precision, a RangeError is thrown.
-   *
-   * A RangeError is thrown when dividing by zero.
-   */
-  div(a: BigDecimal, b: BigDecimal, e?: BigDecimalRoundingObject): BigDecimal;
-
-  /**
-   * Perform the modulo operation of `a` by `b` and round the result according
-   * to the rounding object `e`. If the rounding object is not present, the
-   * operation is executed with infinite precision; in other words, no rounding
-   * occurs when the rounding object is not present.
-   */
-  mod(a: BigDecimal, b: BigDecimal, e?: BigDecimalRoundingObject): BigDecimal;
-
-  /**
-   * Obtain the square root of `a`, rounding the result according to the
-   * rounding object `e`.
-   *
-   * If `a` is less than zero, a RangeError will be thrown.
-   *
-   * Note that the rounding object is *required*.
-   */
-  sqrt(a: BigDecimal, e: BigDecimalRoundingObject): BigDecimal;
-
-  /**
-   * Rounds `a` using the rounding object `e`.
-   */
-  round(a: BigDecimal, e: BigDecimalRoundingObject): BigDecimal;
-
-  prototype: BigDecimal;
-}
-
-declare var BigDecimal: BigDecimalConstructor;
-
-/**
- * The BigDecimal type represents floating point numbers in base 10.
- *
- * It is inspired from the proposal available at https://github.com/littledan/proposal-bigdecimal.
- *
- * The BigDecimal floating point numbers are always normalized and finite.
- * There is no concept of -0, Infinity or NaN. By default, all the computations
- * are done with infinite precision.
- */
-interface BigDecimal {
-  /**
-   * Returns the bigdecimal primitive value corresponding to this BigDecimal.
-   */
-  valueOf(): BigDecimal;
-
-  /**
-   * Converts this BigDecimal to a string with infinite precision in base 10.
-   */
-  toString(): string;
-
-  /**
-   * Returns a string containing a number represented either in exponential or
-   * fixed-point notation with a specified number of digits.
-   *
-   * @param precision Number of significant digits. There is no range limit on this number.
-   * @param roundingMode The rounding mode to use when representing the value. Defaults to "half-up".
-   */
-  toPrecision(precision: number, roundingMode?: BigDecimalRoundingMode): string;
-
-  /**
-   * Returns a string representing a number in fixed-point notation.
-   *
-   * @param fractionDigits Number of digits after the decimal point. There is no range limit on this number.
-   * @param roundingMode The rounding mode to use when representing the value. Defaults to "half-up".
-   */
-  toFixed(
-    fractionDigits: number,
-    roundingMode?: BigDecimalRoundingMode
-  ): string;
-
-  /**
-   * Returns a string containing a number represented in exponential notation.
-   *
-   * @param fractionDigits Number of digits after the decimal point. Must be in the range 0 - 20, inclusive.
-   * @param roundingMode The rounding mode to use when representing the value. Defaults to "half-up".
-   */
-  toExponential(
-    fractionDigits: number,
-    roundingMode?: BigDecimalRoundingMode
-  ): string;
-}
-
-// Note that BigFloat and BigDecimal have custom operator overloads defined in
-// QuickJS, but TypeScript does not support operator overloading. As such,
-// TypeScript will not understand or handle unary/binary operators for BigFloat
-// and BigDecimal properly.
 
 /** npm: @suchipi/print@2.5.0. License: ISC */
 /* (with some QuickJS-specific modifications) */
@@ -5516,6 +4789,12 @@ declare module "quickjs:timers" {
 
   /** Cancel an interval timer. */
   export function clearInterval(handle: Timer): void;
+
+  /**
+   * Asynchronous sleep. Returns a Promise that resolves after `delay_ms`
+   * milliseconds. Intended for use with `await`.
+   */
+  export function sleepAsync(delay_ms: number): Promise<void>;
 }
 
 /** An opaque timer handle returned by setTimeout/setInterval */
@@ -6080,6 +5359,10 @@ declare module "quickjs:os" {
   };
 
   export function exec(args: Array<string>, options?: ExecOptions): number;
+
+  /** Return the current process ID. */
+  export function getpid(): number;
+
   export function waitpid(pid: number, options?: number): [number, number];
 
   export var WNOHANG: number;
@@ -6097,6 +5380,13 @@ declare module "quickjs:os" {
   export function dup2(oldfd: number, newfd: number): number;
   export function pipe(): [number, number];
   export function sleep(delay_ms: number): void;
+
+  /**
+   * Return a timestamp in milliseconds with more precision than
+   * `Date.now()`. The time origin is unspecified and is normally not
+   * impacted by system clock adjustments.
+   */
+  export function now(): number;
 
   // keep in sync with quickjs-os.c
   export var platform:
@@ -6144,6 +5434,49 @@ declare module "quickjs:os" {
      */
     terminate(): void;
     onmessage: null | ((event: { data: StructuredClonable }) => void);
+    /**
+     * Fires on the parent side whenever an uncaught exception escapes
+     * anywhere in the worker: top-level errors at startup, the worker's
+     * global `onmessage` throwing, timer / I/O / signal callbacks
+     * throwing, microtask rejections, and unhandled promise rejections.
+     *
+     * The event is a plain object shaped like a WHATWG `ErrorEvent`
+     * (minus `colno`, which this event does not surface):
+     *
+     * - `message` — the error's message, or `String(reason)` for a
+     *   non-Error throw.
+     * - `filename` — from the error's `fileName` own-prop when present,
+     *   otherwise the worker's entry-module filename.
+     * - `lineno` — from the error's `lineNumber` own-prop, otherwise `0`.
+     * - `error` — a real `Error` instance when the worker threw an
+     *   Error (one of the nine recognized classes: `Error`, `TypeError`,
+     *   `RangeError`, `SyntaxError`, `ReferenceError`, `URIError`,
+     *   `EvalError`, `AggregateError`, `InternalError`, with user
+     *   subclasses reified to base `Error` with `.name` preserved).
+     *   `null` when the thrown value was not an Error.
+     *
+     * Cycles and shared references in the error graph (e.g.
+     *   `err.cause === err`, or shared nodes inside
+     *   `AggregateError.errors[]`) are preserved, matching the HTML
+     *   structured-clone algorithm.
+     *
+     * A handler assigned same-tick as `new Worker(...)` is guaranteed
+     * to be in place before any error dispatch: the parent's event
+     * loop cannot drain and dispatch error-pipe messages until the
+     * current synchronous tick finishes, and the error-port
+     * registration (on which dispatch is gated) happens synchronously
+     * in the Worker ctor. Cross-tick late assignment (`setTimeout(() =>
+     * w.onerror = fn, 100)`) is still racy with any error that fires
+     * before the timeout — such errors fall through to the stderr
+     * fallback. When `onerror` is unset, errors print to stderr in the
+     * same format as an uncaught exception would.
+     */
+    onerror: null | ((event: {
+      message: string;
+      filename: string;
+      lineno: number;
+      error: Error | null;
+    }) => void);
   }
 
   /**
@@ -6583,11 +5916,12 @@ declare module "quickjs:engine" {
    * @param options - An optional object containing the following optional properties:
    * @property backtraceBarrier - Boolean (default = false). If true, error backtraces do not list the stack frames below the evalScript.
    * @property filename - String (default = "<evalScript>"). The filename to associate with the code being executed.
-   * @returns The result of the evaluation.
+   * @property async - Boolean (default = false). If true, `await` is accepted at the top level of `code` and a Promise is returned.
+   * @returns The result of the evaluation. If `async` is true, a Promise.
    */
   export function evalScript(
     code: string,
-    options?: { backtraceBarrier?: boolean; filename?: string }
+    options?: { backtraceBarrier?: boolean; filename?: string; async?: boolean }
   ): any;
 
   /**
@@ -6669,21 +6003,87 @@ declare module "quickjs:bytecode" {
       byteSwap?: boolean;
       sourceType?: "module" | "script";
       encodedFileName?: string;
+      /**
+       * Strip diagnostic information from compiled function bytecode.
+       *
+       * - `false` (or omitted): keep everything — full source text,
+       *   filename, line numbers, and pc-to-line mapping.
+       * - `"source"`: drop the source-text storage from compiled
+       *   function bytecode. Stack frames still know their filename
+       *   and line numbers, but `Function.prototype.toString` on
+       *   those functions returns a synthetic `[native code]`-style
+       *   body instead of the original source.
+       * - `"debug"`: drop ALL debug info — filename, line numbers,
+       *   pc-to-line mapping, and source text. Subsumes `"source"`.
+       *   Stack traces lose file/line attribution. Use only for
+       *   size-sensitive deployments where diagnostic frames don't
+       *   matter.
+       */
+      strip?: "source" | "debug" | false;
     }
   ): ArrayBuffer;
 
   /**
    * Convert the provided value into bytecode. Doesn't work with all values.
+   *
+   * By default, cycles and shared references are preserved — if the same
+   * inner object appears at two positions in `value`, the result
+   * deserialized via `toValue` will have those positions referencing a
+   * single object. Self-referential graphs (e.g. `obj.self = obj`) round-
+   * trip correctly. To opt out and produce a stream that errors on
+   * cycles, pass `preserveReferences: false`.
+   *
+   * To serialize Error instances (including `TypeError`, `RangeError`,
+   * `SyntaxError`, `ReferenceError`, `URIError`, `EvalError`,
+   * `AggregateError`, and `InternalError`), pass `serializeErrors: true`.
+   * Without it, attempting to serialize any Error instance throws
+   * "unsupported object class".
    */
   export function fromValue(
     value: any,
-    options?: { byteSwap?: boolean }
+    options?: {
+      byteSwap?: boolean;
+      /**
+       * Preserve shared references and cycles in the serialized output.
+       * When true (the default), object graphs with cycles or shared
+       * inner objects are encoded with back-references so they round-
+       * trip via `toValue` with identity preserved. When false, the
+       * serializer throws on encountering a cycle. The matching
+       * `preserveReferences` option on `toValue` must be set to decode
+       * a stream produced with this flag on.
+       */
+      preserveReferences?: boolean;
+      /**
+       * Permit `Error` instances (and the native Error subclasses) to be
+       * serialized. Defaults to `false` for backward compatibility. When
+       * deserializing the resulting bytecode via `toValue`, pass the
+       * matching option so the Error is reified to a real instance.
+       */
+      serializeErrors?: boolean;
+    }
   ): ArrayBuffer;
 
   /**
    * Convert the provided bytecode into a value.
+   *
+   * Pass `preserveReferences: false` (the default is true) to reject
+   * streams that contain back-references — attempting to decode such a
+   * stream throws "invalid tag". Streams produced by `fromValue` with
+   * its default settings (or with `preserveReferences: true` explicitly)
+   * require the reader's `preserveReferences` to be true as well.
+   *
+   * Pass `serializeErrors: true` to reify any serialized Error frames
+   * (see `fromValue`) back into real Error instances. Attempting to
+   * deserialize a bytecode stream that contains an Error frame without
+   * this option throws "invalid tag".
    */
-  export function toValue(bytecode: ArrayBuffer): any;
+  export function toValue(
+    bytecode: ArrayBuffer,
+    options?: {
+      preserveReferences?: boolean;
+      serializeErrors?: boolean;
+    }
+  ): any;
 }
 
 declare module "quickjs:context" {
@@ -6723,7 +6123,6 @@ declare module "quickjs:context" {
      * - Infinity
      * - NaN
      * - undefined
-     * - __date_clock
      * - Number
      * - Boolean
      * - String
@@ -6792,29 +6191,6 @@ declare module "quickjs:context" {
        * Defaults to `true`.
        */
       promise?: boolean;
-
-      /** Enables `BigInt`. Defaults to `true`. */
-      bigint?: boolean;
-
-      /** Enables `BigFloat`. Defaults to `true`. */
-      bigfloat?: boolean;
-
-      /** Enables `BigDecimal`. Defaults to `true`. */
-      bigdecimal?: boolean;
-
-      /**
-       * Enables:
-       *
-       * - Operators
-       * - OperatorSet creation
-       * - operator overloading
-       *
-       * Defaults to `true`.
-       */
-      operators?: boolean;
-
-      /** Enables `"use math"`. Defaults to `true`. */
-      useMath?: boolean;
 
       /** Enables `inspect`. Defaults to `true`. */
       inspect?: boolean;

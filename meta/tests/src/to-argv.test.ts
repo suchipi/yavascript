@@ -1,4 +1,4 @@
-import { evaluate, binaryPath, inspect, cleanResult } from "./test-helpers";
+import { evaluate, binaryPath, inspect } from "./test-helpers";
 
 async function toArgv(str: string) {
   const result = await evaluate(

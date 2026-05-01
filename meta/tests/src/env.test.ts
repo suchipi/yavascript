@@ -5,13 +5,13 @@ test("reading env", async () => {
     env: { BLAH_BLAH: "yeah" },
   });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "yeah
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "yeah
+   ",
+   }
   `);
 });
 
@@ -20,13 +20,13 @@ test("setting env", async () => {
     env: { BLAH_BLAH: "yeah" },
   });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "yes
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "yes
+   ",
+   }
   `);
 });
 
@@ -40,14 +40,14 @@ test("setting env affects child processes", async () => {
     },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "exec: <yavascript binary> -e "env.BLAH_BLAH"
-    ",
-      "stdout": "yes
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "exec: <yavascript binary> -e "env.BLAH_BLAH"
+   ",
+     "stdout": "yes
+   ",
+   }
   `);
 });
 
@@ -56,13 +56,13 @@ test("clearing env", async () => {
     env: { BLAH_BLAH: "yeah" },
   });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "undefined
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "undefined
+   ",
+   }
   `);
 });
 
@@ -71,16 +71,16 @@ test("env is printable", async () => {
     env: { BLAH_BLAH: "yeah", woohoo: "yes" },
   });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      BLAH_BLAH: "yeah"
-      woohoo: "yes"
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     BLAH_BLAH: "yeah"
+     woohoo: "yes"
+   }
+   ",
+   }
   `);
 });
 
@@ -89,13 +89,13 @@ test("own keys of env object", async () => {
     env: { BLAH_BLAH: "yeah", woohoo: "yes" },
   });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "["BLAH_BLAH","woohoo"]
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "["BLAH_BLAH","woohoo"]
+   ",
+   }
   `);
 });
 
@@ -115,7 +115,7 @@ test("readEnvBool - normative case", async () => {
     });
     expect(result).toMatchObject({
       code: 0,
-      error: false,
+      error: null,
       stderr: "",
     });
     expect(result.stdout.trim()).toBe(String(expectedReturn));
@@ -127,13 +127,13 @@ test("readEnvBool - unset var", async () => {
     env: {},
   });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "null
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "null
+   ",
+   }
   `);
 
   const result2 = await evaluate(
@@ -147,13 +147,13 @@ test("readEnvBool - unset var", async () => {
     },
   );
   expect(result2).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   ",
+   }
   `);
 });
 
@@ -164,14 +164,14 @@ test("readEnvBool - invalid value", async () => {
     },
   });
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "readEnvBool: environment variable "BLAH_BLAH" was "potato", which doesn't look like a boolean. Returning the fallback value of null.
-    ",
-      "stdout": "null
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "readEnvBool: environment variable "BLAH_BLAH" was "potato", which doesn't look like a boolean. Returning the fallback value of null.
+   ",
+     "stdout": "null
+   ",
+   }
   `);
 });
 
@@ -185,14 +185,14 @@ test("readEnvBool - invalid value with logging override", async () => {
     },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "readEnvBool: environment variable "BLAH_BLAH" was "potato", which doesn't look like a boolean. Returning the fallback value of null.
-    null
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "readEnvBool: environment variable "BLAH_BLAH" was "potato", which doesn't look like a boolean. Returning the fallback value of null.
+   null
+   ",
+   }
   `);
 });
 
@@ -212,14 +212,14 @@ test("setting env interacts with readEnvBool as expected", async () => {
     },
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "true
-    false
-    null
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "true
+   false
+   null
+   ",
+   }
   `);
 });

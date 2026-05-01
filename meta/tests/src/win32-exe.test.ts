@@ -1,4 +1,4 @@
-import { cleanResult, rootDir } from "./test-helpers";
+import { rootDir } from "./test-helpers";
 import { spawn } from "first-base";
 
 // skipping this for now until I can get a reliable wine-in-docker working
@@ -31,10 +31,10 @@ test.skip("win32 exe smoke test (via docker)", async () => {
     result.stderr = "";
   }
 
-  expect(cleanResult(result)).toMatchInlineSnapshot(`
+  expect(result).toMatchInlineSnapshot(`
     {
       "code": 1,
-      "error": false,
+      "error": null,
       "stderr": "<3>WSL (1) ERROR: ConfigInitializeEntry:1554: Failed to mount (null) at /dev as devtmpfs 1
     ",
       "stdout": "",

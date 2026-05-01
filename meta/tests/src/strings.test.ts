@@ -23,10 +23,10 @@ function testFn(
         : JSON.stringify(input)
     })`;
 
-    const result = await evaluate(code);
+    const result = await evaluate(code, { cleanResult: false });
     expect(result).toEqual({
       code: 0,
-      error: false,
+      error: null,
       stderr: "",
       stdout: expected + "\n",
     });

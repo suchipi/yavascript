@@ -17,21 +17,21 @@ test("TOML.parse", async () => {
     `,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "{
-      ayo: 99
-      something: {
-        yeah: 4
-        mhm: {
-          yes: 99
-        }
-      }
-    }
-    ",
-    }
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     ayo: 99
+     something: {
+       yeah: 4
+       mhm: {
+         yes: 99
+       }
+     }
+   }
+   ",
+   }
   `);
 });
 
@@ -52,19 +52,19 @@ test("TOML.stringify", async () => {
     `,
   );
   expect(result).toMatchInlineSnapshot(`
-    {
-      "code": 0,
-      "error": false,
-      "stderr": "",
-      "stdout": "ayo = 99
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "ayo = 99
 
-    [something]
-    yeah = 4
+   [something]
+   yeah = 4
 
-      [something.mhm]
-      yes = 99
+     [something.mhm]
+     yes = 99
 
-    ",
-    }
+   ",
+   }
   `);
 });
