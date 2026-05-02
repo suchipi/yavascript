@@ -49,6 +49,8 @@ rule("kame", {
       `$in $out`,
       // to have clearer stack trace in filenames
       `yavascript-internal.js`,
+      "--strip",
+      "source",
     ],
     description: "TO-BYTECODE $out",
     implicitInputs: [quickjsRunBinPath, fileToByteCodePath],
