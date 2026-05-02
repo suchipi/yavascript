@@ -1,5 +1,9 @@
 {
   "extends": ["../../tsconfig.json"],
+  "compilerOptions": {
+    "rootDir": "../..",
+    "types": ["node", "jest"]
+  },
   "files": [],
   "include": ["./**/*.ts"],
   "exclude": ["./fixtures/**/*"]

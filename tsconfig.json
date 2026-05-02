@@ -12,6 +12,7 @@
     "declaration": true,
     "lib": ["es2022"],
     "target": "es2020",
+    "rootDir": ".",
     "module": "es2022",
     "outDir": "dist",
     "skipLibCheck": true,
@@ -27,9 +28,8 @@
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "downlevelIteration": true,
 
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "resolveJsonModule": true
   }
