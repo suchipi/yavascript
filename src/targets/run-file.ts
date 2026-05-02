@@ -1,6 +1,5 @@
 import * as engine from "quickjs:engine";
 import { langToCompiler } from "../langs";
-import compilers from "../compilers";
 import { extname } from "../api/commands/extname";
 import { Path } from "../api/path";
 import { pwd } from "../api/commands/pwd";
@@ -55,45 +54,6 @@ export default async function runFileTarget(
   if (asMain) {
     engine.setMainModule(absFileToRun);
   }
-  try {
-    engine.importModule(absFileToRun, "./<cwd>");
-  } catch (err: any) {
-    if (
-      typeof err === "object" &&
-      err != null &&
-      err.name === "SyntaxError" &&
-      err.message === "unexpected 'await' keyword"
-    ) {
-      overrideCompiler(absFileToRun, (filename, content, defaultBehavior) => {
-        const asJs = defaultBehavior(filename, content);
-        const asCjs = compilers.esmToCjs(asJs, { filename });
-        return `export const __toplevel_await_promise__ = (async function topLevelAwaitWrapper() { ${asCjs} }).call(this);`;
-      });
 
-      let result: any;
-      try {
-        const exp = engine.importModule(absFileToRun, "./<cwd>");
-        result = exp.__toplevel_await_promise__;
-      } catch (err: any) {
-        if (
-          typeof err === "object" &&
-          err != null &&
-          err.name === "SyntaxError" &&
-          err.message === "unsupported keyword: export"
-        ) {
-          const err: any = new Error(
-            `You cannot use toplevel await and export in the same file. Either remove the toplevel await (by wrapping stuff with an immediately-invoked async function) or remove the exports.`,
-          );
-          err.filename = absFileToRun;
-          throw err;
-        } else {
-          throw err;
-        }
-      }
-
-      await result;
-    } else {
-      throw err;
-    }
-  }
+  await import(absFileToRun);
 }

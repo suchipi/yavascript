@@ -723,7 +723,7 @@ exports[`some-yml.yml 1`] = `
 exports[`toplevel-await.coffee 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "4 Function "open" {}
 ",
@@ -733,7 +733,7 @@ exports[`toplevel-await.coffee 1`] = `
 exports[`toplevel-await.js 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "4 Function "open" {}
 ",
@@ -743,9 +743,14 @@ exports[`toplevel-await.js 1`] = `
 exports[`toplevel-await.ts 1`] = `
 {
   "code": 1,
-  "error": false,
+  "error": null,
   "stderr": "Error: nope!
   at somewhere
+{
+  fileName: "<rootDir>/meta/tests/fixtures/scripts/toplevel-await.ts"
+  lineNumber: <redacted>
+  columnNumber: <redacted>
+}
 ",
   "stdout": "",
 }
@@ -754,7 +759,7 @@ exports[`toplevel-await.ts 1`] = `
 exports[`toplevel-await.tsx 1`] = `
 {
   "code": 0,
-  "error": false,
+  "error": null,
   "stderr": "",
   "stdout": "{
   $$typeof: Symbol(JSX.Element)
@@ -769,14 +774,9 @@ Function "open" {}
 
 exports[`toplevel-await-and-export-together.js 1`] = `
 {
-  "code": 1,
-  "error": false,
-  "stderr": "Error: You cannot use toplevel await and export in the same file. Either remove the toplevel await (by wrapping stuff with an immediately-invoked async function) or remove the exports.
-  at somewhere
-{
-  filename: "<rootDir>/meta/tests/fixtures/scripts/toplevel-await-and-export-together.js"
-}
-",
+  "code": 0,
+  "error": null,
+  "stderr": "",
   "stdout": "",
 }
 `;
