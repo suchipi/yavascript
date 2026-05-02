@@ -140,8 +140,7 @@ You can put this comment at the top of your script to instruct VS Code to load t
 ## QuickJS
 
 YavaScript is powered by a fork of the QuickJS JavaScript Engine, originally
-written by Fabrice Bellard. QuickJS is a small, fast JavaScript engine
-supporting the ES2020 specification.
+written by Fabrice Bellard. QuickJS is a small, fast JavaScript engine.
 
 - Original QuickJS engine: https://bellard.org/quickjs/
 - The fork we use: https://github.com/suchipi/quickjs/

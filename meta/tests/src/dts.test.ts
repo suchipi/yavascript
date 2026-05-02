@@ -10,7 +10,7 @@ describe("yavascript.d.ts", () => {
     const sourceFile = ts.createSourceFile(
       "yavascript.d.ts",
       content,
-      ts.ScriptTarget.ES2020,
+      ts.ScriptTarget.ES2023,
     );
 
     // @ts-ignore this function is there, but it isn't in the type defs
