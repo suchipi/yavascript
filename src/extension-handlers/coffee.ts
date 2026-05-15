@@ -5,3 +5,5 @@ ModuleDelegate.compilers[".coffee"] = (filename: string, content: string) => {
   const compiled = compilers.coffee(content, { filename });
   return compiled;
 };
+// import attribute version
+ModuleDelegate.compilers["coffeescript"] = ModuleDelegate.compilers[".coffee"];

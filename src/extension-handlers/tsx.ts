@@ -5,3 +5,5 @@ ModuleDelegate.compilers[".tsx"] = (filename: string, content: string) => {
   const compiled = compilers.tsx(content, { filename });
   return compiled;
 };
+// import attribute version
+ModuleDelegate.compilers["tsx"] = ModuleDelegate.compilers[".tsx"];

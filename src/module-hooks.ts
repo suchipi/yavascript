@@ -106,7 +106,7 @@ export function installModuleHooks() {
   };
 
   const originalRead = ModuleDelegate.read;
-  ModuleDelegate.read = (modulePath) => {
+  ModuleDelegate.read = (modulePath, attributes) => {
     if (protos.npm.handlesModulePath(modulePath)) {
       return protos.npm.readModule(modulePath);
     }
@@ -119,6 +119,6 @@ export function installModuleHooks() {
       return protos.http.readModule(modulePath);
     }
 
-    return originalRead(modulePath);
+    return originalRead(modulePath, attributes);
   };
 }

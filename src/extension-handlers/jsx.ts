@@ -5,3 +5,5 @@ ModuleDelegate.compilers[".jsx"] = (filename: string, content: string) => {
   const compiled = compilers.jsx(content, { filename });
   return compiled;
 };
+// import attribute version
+ModuleDelegate.compilers["jsx"] = ModuleDelegate.compilers[".jsx"];

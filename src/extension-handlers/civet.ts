@@ -5,3 +5,5 @@ ModuleDelegate.compilers[".civet"] = (filename: string, content: string) => {
   const compiled = compilers.civet(content, { filename });
   return compiled;
 };
+// import attribute version
+ModuleDelegate.compilers["civet"] = ModuleDelegate.compilers[".civet"];

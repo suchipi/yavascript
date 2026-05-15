@@ -1,0 +1,7 @@
+something(<a />);
+
+function something(a: JSX.Element) {
+  console.log(a);
+}
+
+export default <link />;

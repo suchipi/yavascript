@@ -1,0 +1,6 @@
+function something(a: string) {
+  console.log(a);
+  return a;
+}
+
+export default "yeah";

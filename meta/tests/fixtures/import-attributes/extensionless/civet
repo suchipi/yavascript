@@ -1,0 +1,6 @@
+console.log 2 + 2
+
+const something = (a: string) ->
+  a
+
+export default something("yeah")

@@ -1,0 +1,6 @@
+console.log 2 + 2
+
+something = (a) ->
+  a
+
+export default something("yeah")

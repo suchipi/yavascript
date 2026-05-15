@@ -16,3 +16,7 @@ const compiler = (filename: string, content: string) => {
 
 ModuleDelegate.compilers[".yaml"] = compiler;
 ModuleDelegate.compilers[".yml"] = compiler;
+
+// import attribute version
+ModuleDelegate.compilers["yaml"] = compiler;
+ModuleDelegate.compilers["yml"] = compiler;

@@ -13,3 +13,5 @@ ModuleDelegate.compilers[".toml"] = (filename: string, content: string) => {
   const data = TOML.parse(content);
   return template(data);
 };
+// import attribute version
+ModuleDelegate.compilers["toml"] = ModuleDelegate.compilers[".toml"];

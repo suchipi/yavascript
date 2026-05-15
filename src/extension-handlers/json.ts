@@ -11,6 +11,9 @@ export const __cjsExports = data;
 `;
 
 ModuleDelegate.compilers[".json"] = (filename: string, content: string) => {
+  // Note: JSON files are loaded as JSON5
   const data = std.parseExtJSON(content);
   return template(data);
 };
+ModuleDelegate.compilers[".json5"] = ModuleDelegate.compilers[".json"];
+// QuickJS already registers import attributes versions
