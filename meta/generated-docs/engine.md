@@ -10,6 +10,8 @@
   - ["quickjs:engine".defineBuiltinModule (exported function)](#quickjsenginedefinebuiltinmodule-exported-function)
   - ["quickjs:engine".ModuleDelegate (exported ModuleDelegate)](#quickjsenginemoduledelegate-exported-moduledelegate)
   - ["quickjs:engine".gc (exported function)](#quickjsenginegc-exported-function)
+  - ["quickjs:engine".formatValue (exported function)](#quickjsengineformatvalue-exported-function)
+  - ["quickjs:engine".\_\_printObject (exported function)](#quickjsengine__printobject-exported-function)
 
 # "quickjs:engine" (namespace)
 
@@ -29,10 +31,19 @@ declare module "quickjs:engine" {
   export function importModule(
     filename: string,
     basename?: string,
+    options?: {
+      with?: Record<string, string>;
+    },
   ): {
     [key: string]: any;
   };
-  export function resolveModule(filename: string, basename?: string): string;
+  export function resolveModule(
+    filename: string,
+    basename?: string,
+    options?: {
+      with?: Record<string, string>;
+    },
+  ): string;
   export function getFileNameFromStack(stackLevels?: number): string;
   export function isModuleNamespace(target: any): boolean;
   export function defineBuiltinModule(
@@ -43,6 +54,18 @@ declare module "quickjs:engine" {
   ): void;
   export const ModuleDelegate: ModuleDelegate;
   export function gc(): void;
+  export function formatValue(
+    value: any,
+    options?: {
+      showHidden?: boolean;
+      showClosure?: boolean;
+      rawDump?: boolean;
+      maxDepth?: number;
+      maxStringLength?: number;
+      maxItemCount?: number;
+    },
+  ): string;
+  export function __printObject(value: any): void;
 }
 ```
 
@@ -110,12 +133,16 @@ Evaluate the file `filename` as a module. Effectively a synchronous dynamic `imp
 
 - `@param` _filename_ — The relative or absolute path to the file to import. Relative paths are resolved relative to the file calling `importModule`, or `basename` if present.
 - `@param` _basename_ — If present and `filename` is a relative path, `filename` will be resolved relative to this basename.
+- `@param` _options_ — Mirrors the second argument of dynamic `import()`. Its `with` property carries import attributes, eg `{ with: { type: "json" } }`.
 - `@returns` The result of the evaluation (module namespace object).
 
 ```ts
 export function importModule(
   filename: string,
   basename?: string,
+  options?: {
+    with?: Record<string, string>;
+  },
 ): {
   [key: string]: any;
 };
@@ -127,10 +154,17 @@ Return the resolved path to a module.
 
 - `@param` _filename_ — The relative or absolute path to the file to import. Relative paths are resolved relative to the file calling `importModule`, or `basename` if present.
 - `@param` _basename_ — If present and `filename` is a relative path, `filename` will be resolved relative to this basename.
+- `@param` _options_ — Mirrors the second argument of dynamic `import()`. Its `with` property carries import attributes, eg `{ with: { type: "json" } }`.
 - `@returns` The resolved module path.
 
 ```ts
-export function resolveModule(filename: string, basename?: string): string;
+export function resolveModule(
+  filename: string,
+  basename?: string,
+  options?: {
+    with?: Record<string, string>;
+  },
+): string;
 ```
 
 ## "quickjs:engine".getFileNameFromStack (exported function)
@@ -185,4 +219,65 @@ function is useful in case of specific memory constraints or for testing.
 
 ```ts
 export function gc(): void;
+```
+
+## "quickjs:engine".formatValue (exported function)
+
+Format a value for debugging using QuickJS's built-in C-level printer.
+
+This is a parallel formatter to [inspect](/meta/generated-docs/inspect.md#inspect-inspectfunction) — it uses the engine's
+internal pretty-printer (the same one used by `JS_PrintValue` in the C
+API). It can show things JS cannot, like the closure variables of a
+function (with `showClosure: true`), and runs without invoking any
+user-defined `toString` / `[Symbol.toPrimitive]` / Proxy traps in
+`rawDump` mode.
+
+For typical script-level value formatting, `inspect()` is usually a
+better choice — it is more configurable, handles cycles via path
+strings, and supports custom formatters via `inspect.custom`. Reach for
+`formatValue` when you need C-level introspection (closure access) or
+a side-effect-free dump (`rawDump`).
+
+- `@param` _value_ — The value to format.
+- `@param` _options_ — Optional formatting options.
+- `@property` _showHidden_ — Boolean (default = false). Include non-enumerable properties.
+- `@property` _showClosure_ — Boolean (default = false). For functions, include closure variables and home object.
+- `@property` _rawDump_ — Boolean (default = false). Skip toString/toPrimitive/Proxy traps; print raw structural info.
+- `@property` _maxDepth_ — Number (default = 2, hard cap = 8). Recursion limit. Set to 0 for the hard cap.
+- `@property` _maxStringLength_ — Number (default = 1000). Truncate strings longer than this. Set to 0 for unlimited.
+- `@property` _maxItemCount_ — Number (default = 100). Truncate arrays/objects with more entries than this. Set to 0 for unlimited.
+- `@returns` The formatted string.
+
+```ts
+export function formatValue(
+  value: any,
+  options?: {
+    showHidden?: boolean;
+    showClosure?: boolean;
+    rawDump?: boolean;
+    maxDepth?: number;
+    maxStringLength?: number;
+    maxItemCount?: number;
+  },
+): string;
+```
+
+## "quickjs:engine".\_\_printObject (exported function)
+
+Format a value using QuickJS's built-in C-level printer and write the
+result directly to stdout (no trailing newline).
+
+Equivalent in spirit to `process.stdout.write(formatValue(value))`,
+but writes directly via the C API without building a JS string in
+between. Provided for API parity with the underlying `JS_PrintValue`
+C API.
+
+The `__` prefix marks this as a direct mirror of upstream QuickJS's
+`std.__printObject` API (relocated to `quickjs:engine` in this fork
+because the fork has been moving `std` helpers to `engine`).
+
+- `@param` _value_ — The value to print.
+
+```ts
+export function __printObject(value: any): void;
 ```

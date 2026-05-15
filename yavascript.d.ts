@@ -4507,29 +4507,6 @@ interface StringConstructor {
   ): string;
 }
 
-interface SymbolConstructor {
-  /**
-   * A method that changes the result of using the `typeof` operator on the
-   * object. Called by the semantics of the typeof operator.
-   *
-   * Note that the following semantics will come into play when use of the
-   * `typeof` operator causes the engine to call a `Symbol.typeofValue` method
-   * on an object:
-   *
-   * - If the method returns any value other than one of the string values
-   *   which are normally the result of using the `typeof` operator, the engine
-   *   behaves as if no `Symbol.typeofValue` method was present on the object.
-   * - If an error is thrown from this method, or an error is thrown while
-   *   accessing this property, the error will be silently ignored, and the
-   *   engine will behave as if no `Symbol.typeofValue` method was present on
-   *   the object.
-   * - If this property is present on an object, but the value of that property
-   *   is not a function, the engine will not consider that value when
-   *   determining the result of the `typeof` operation (it'll ignore it).
-   */
-  readonly typeofValue: unique symbol;
-}
-
 interface BigIntConstructor {
   /**
    * Return trunc(a/b).
@@ -5316,7 +5293,24 @@ declare module "quickjs:os" {
   export function utimes(path: string, atime: number, mtime: number): void;
   export function symlink(target: string, linkpath: string): void;
   export function readlink(path: string): string;
+  /**
+   * Register a function to be called when `fd` becomes readable.
+   * Pass `null` as `func` to unregister.
+   *
+   * **Windows:** only `fd === 0` (stdin) is supported. Calling with any
+   * other fd throws — the underlying Windows event loop has no plumbing
+   * for arbitrary fds (it special-cases the stdin console handle), so
+   * registering would silently never fire.
+   */
   export function setReadHandler(fd: number, func: null | (() => void)): void;
+  /**
+   * Register a function to be called when `fd` becomes writable.
+   * Pass `null` as `func` to unregister.
+   *
+   * **Windows:** not supported — the Windows event loop has no plumbing
+   * for write readiness on any fd. Calling this with a non-`null`
+   * handler throws on Windows.
+   */
   export function setWriteHandler(fd: number, func: null | (() => void)): void;
 
   export function signal(
@@ -5739,12 +5733,19 @@ interface ModuleDelegate {
    * User-defined functions which will handle getting the JavaScript code
    * associated with a module.
    *
-   * The key for each property in this object should be a file extension
-   * string with a leading dot, eg `".jsx"`. The value for each property should
-   * be a function which receives (1) the filepath to a module, and (2) that
-   * file's content as a UTF-8 string, and the function should return a string
-   * containing JavaScript code that corresponds to that module. In most cases,
-   * these functions will compile the contents of the file from one format into JavaScript.
+   * Keys in this object can take one of two forms:
+   * - `".ext"` (with a leading dot) — matches files whose name ends with
+   *   `.ext`. Selected by file extension during normal module loading.
+   * - `"type"` (no leading dot) — matches imports written with
+   *   `import x from "..." with { type: "<key>" }`. Selected by
+   *   import-attributes type, regardless of file extension.
+   *
+   * The value for each property is a function which receives (1) the filepath
+   * to a module, (2) that file's content as a UTF-8 string, and (3) the
+   * import attributes object (or `undefined` when no `with { ... }` clause was
+   * used). The function should return a string containing JavaScript code that
+   * corresponds to that module. In most cases, these functions will compile
+   * the contents of the file from one format into JavaScript.
    *
    * The function does not have to use the second 'content' argument it
    * receives (ie. when loading binary files).
@@ -5753,6 +5754,23 @@ interface ModuleDelegate {
    * filetypes; compile-to-JS languages like JSX, TypeScript, and CoffeeScript
    * can be compiled at import time, and asset files like .txt files or .png
    * files can be converted into an appropriate data structure at import time.
+   *
+   * `compilers["json"]` is pre-registered, which turns JSON file content
+   * into a JS module source of the form
+   * `export default JSON.parse(<escaped content>);`. To make `.json`
+   * files load by extension alone (without `with { type: "json" }`),
+   * register the same loader under the dot-prefixed key:
+   *
+   * ```js
+   * ModuleDelegate.compilers[".json"] = ModuleDelegate.compilers["json"];
+   * ```
+   *
+   * `compilers["json5"]` is also pre-registered, which turns JSON5
+   * file content (JSON with comments, trailing commas, unquoted keys,
+   * single quotes, NaN/Infinity, `.N` decimals, multi-line strings,
+   * and the `\v` escape) into a JS module source that parses the
+   * content via `std.parseExtJSON`. It matches
+   * `import x from "..." with { type: "json5" }` by default.
    *
    * As an example, to make it possible to import .txt files, you might do:
    * ```js
@@ -5771,11 +5789,15 @@ interface ModuleDelegate {
    *
    * And `names` will be a string containing the contents of names.txt.
    *
-   * NOTE: When adding to this object, you may also wish to add to
+   * NOTE: When adding a dot-prefixed key, you may also wish to add to
    * {@link searchExtensions}.
    */
   compilers: {
-    [extensionWithDot: string]: (filename: string, content: string) => string;
+    [key: string]: (
+      filename: string,
+      content: string,
+      attributes?: Record<string, string>
+    ) => string;
   };
 
   /**
@@ -5791,21 +5813,34 @@ interface ModuleDelegate {
    * Resolves a require/import request from `fromFile` into a canonicalized
    * path.
    *
+   * `attributes` is the import-attributes object (passed via the
+   * `with { ... }` clause), or `undefined` when no `with` clause was used.
+   *
    * To change native module resolution behavior, replace this function with
    * your own implementation. Note that you must handle
    * `ModuleDelegate.searchExtensions` yourself in your replacement
    * implementation.
    */
-  resolve(name: string, fromFile: string): string;
+  resolve(
+    name: string,
+    fromFile: string,
+    attributes?: Record<string, string>
+  ): string;
 
   /**
    * Reads the contents of the given resolved module name into a string.
+   *
+   * `attributes` is the import-attributes object (passed via the
+   * `with { ... }` clause), or `undefined` when no `with` clause was used.
    *
    * To change native module loading behavior, replace this function with your
    * own implementation. Note that you must handle `ModuleDelegate.compilers`
    * yourself in your replacement implementation.
    */
-  read(modulePath: string): string;
+  read(
+    modulePath: string,
+    attributes?: Record<string, string>
+  ): string;
 }
 
 interface RequireFunction {
@@ -5840,13 +5875,24 @@ interface RequireFunction {
    * If you add more extensions to `ModuleDelegate.searchExtensions`, then the
    * engine will use those, too. It will search in the same order as the strings
    * appear in the `ModuleDelegate.searchExtensions` array.
+   *
+   * The optional `options` argument matches the second argument of
+   * dynamic `import()`. Its `with` property carries import attributes,
+   * eg `require("./data.json", { with: { type: "json" } })`.
    */
-  (source: string): any;
+  (source: string, options?: { with?: Record<string, string> }): any;
 
   /**
    * Resolves the normalized path to a modules, relative to the calling file.
+   *
+   * The optional `options` argument matches the shape of dynamic
+   * `import()`'s second argument. Its `with` property carries import
+   * attributes which are passed through to `ModuleDelegate.resolve`.
    */
-  resolve: (source: string) => string;
+  resolve: (
+    source: string,
+    options?: { with?: Record<string, string> }
+  ) => string;
 }
 
 // global added by QJMS_InitContext
@@ -5887,6 +5933,23 @@ interface ImportMeta {
    * `ModuleDelegate.read` to work with URL strings.
    */
   resolve: RequireFunction["resolve"];
+
+  /**
+   * The `with { ... }` clause that was used to import this module, if any.
+   *
+   * - `undefined` when the module was imported without a `with` clause.
+   * - An object whose enumerable own properties are the attribute key/value
+   *   pairs from the `with` clause when one was used. The object is
+   *   non-extensible, and each own property is non-writable and
+   *   non-configurable.
+   * - The `attributes` property itself is also non-writable and
+   *   non-configurable.
+   *
+   * The undefined-vs-empty-object distinction is meaningful: a module body can
+   * tell whether it was imported with a (possibly empty) attribute clause vs
+   * no clause at all.
+   */
+  attributes: Record<string, string> | undefined;
 }
 
 declare module "quickjs:engine" {
@@ -5937,11 +6000,13 @@ declare module "quickjs:engine" {
    *
    * @param filename - The relative or absolute path to the file to import. Relative paths are resolved relative to the file calling `importModule`, or `basename` if present.
    * @param basename - If present and `filename` is a relative path, `filename` will be resolved relative to this basename.
+   * @param options - Mirrors the second argument of dynamic `import()`. Its `with` property carries import attributes, eg `{ with: { type: "json" } }`.
    * @returns The result of the evaluation (module namespace object).
    */
   export function importModule(
     filename: string,
-    basename?: string
+    basename?: string,
+    options?: { with?: Record<string, string> }
   ): { [key: string]: any };
 
   /**
@@ -5949,9 +6014,14 @@ declare module "quickjs:engine" {
    *
    * @param filename - The relative or absolute path to the file to import. Relative paths are resolved relative to the file calling `importModule`, or `basename` if present.
    * @param basename - If present and `filename` is a relative path, `filename` will be resolved relative to this basename.
+   * @param options - Mirrors the second argument of dynamic `import()`. Its `with` property carries import attributes, eg `{ with: { type: "json" } }`.
    * @returns The resolved module path.
    */
-  export function resolveModule(filename: string, basename?: string): string;
+  export function resolveModule(
+    filename: string,
+    basename?: string,
+    options?: { with?: Record<string, string> }
+  ): string;
 
   /**
    * Read the script of module filename from an active stack frame, then return it as a string.
@@ -5989,6 +6059,61 @@ declare module "quickjs:engine" {
    * function is useful in case of specific memory constraints or for testing.
    */
   export function gc(): void;
+
+  /**
+   * Format a value for debugging using QuickJS's built-in C-level printer.
+   *
+   * This is a parallel formatter to {@link inspect} — it uses the engine's
+   * internal pretty-printer (the same one used by `JS_PrintValue` in the C
+   * API). It can show things JS cannot, like the closure variables of a
+   * function (with `showClosure: true`), and runs without invoking any
+   * user-defined `toString` / `[Symbol.toPrimitive]` / Proxy traps in
+   * `rawDump` mode.
+   *
+   * For typical script-level value formatting, `inspect()` is usually a
+   * better choice — it is more configurable, handles cycles via path
+   * strings, and supports custom formatters via `inspect.custom`. Reach for
+   * `formatValue` when you need C-level introspection (closure access) or
+   * a side-effect-free dump (`rawDump`).
+   *
+   * @param value - The value to format.
+   * @param options - Optional formatting options.
+   * @property showHidden - Boolean (default = false). Include non-enumerable properties.
+   * @property showClosure - Boolean (default = false). For functions, include closure variables and home object.
+   * @property rawDump - Boolean (default = false). Skip toString/toPrimitive/Proxy traps; print raw structural info.
+   * @property maxDepth - Number (default = 2, hard cap = 8). Recursion limit. Set to 0 for the hard cap.
+   * @property maxStringLength - Number (default = 1000). Truncate strings longer than this. Set to 0 for unlimited.
+   * @property maxItemCount - Number (default = 100). Truncate arrays/objects with more entries than this. Set to 0 for unlimited.
+   * @returns The formatted string.
+   */
+  export function formatValue(
+    value: any,
+    options?: {
+      showHidden?: boolean;
+      showClosure?: boolean;
+      rawDump?: boolean;
+      maxDepth?: number;
+      maxStringLength?: number;
+      maxItemCount?: number;
+    }
+  ): string;
+
+  /**
+   * Format a value using QuickJS's built-in C-level printer and write the
+   * result directly to stdout (no trailing newline).
+   *
+   * Equivalent in spirit to `process.stdout.write(formatValue(value))`,
+   * but writes directly via the C API without building a JS string in
+   * between. Provided for API parity with the underlying `JS_PrintValue`
+   * C API.
+   *
+   * The `__` prefix marks this as a direct mirror of upstream QuickJS's
+   * `std.__printObject` API (relocated to `quickjs:engine` in this fork
+   * because the fork has been moving `std` helpers to `engine`).
+   *
+   * @param value - The value to print.
+   */
+  export function __printObject(value: any): void;
 }
 
 declare module "quickjs:bytecode" {

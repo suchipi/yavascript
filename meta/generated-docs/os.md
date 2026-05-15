@@ -852,11 +852,26 @@ export function readlink(path: string): string;
 
 ## "quickjs:os".setReadHandler (exported function)
 
+Register a function to be called when `fd` becomes readable.
+Pass `null` as `func` to unregister.
+
+**Windows:** only `fd === 0` (stdin) is supported. Calling with any
+other fd throws — the underlying Windows event loop has no plumbing
+for arbitrary fds (it special-cases the stdin console handle), so
+registering would silently never fire.
+
 ```ts
 export function setReadHandler(fd: number, func: null | (() => void)): void;
 ```
 
 ## "quickjs:os".setWriteHandler (exported function)
+
+Register a function to be called when `fd` becomes writable.
+Pass `null` as `func` to unregister.
+
+**Windows:** not supported — the Windows event loop has no plumbing
+for write readiness on any fd. Calling this with a non-`null`
+handler throws on Windows.
 
 ```ts
 export function setWriteHandler(fd: number, func: null | (() => void)): void;
