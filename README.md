@@ -101,8 +101,8 @@ There are several other projects that bring a shell-like environment to JS, such
   - Intel Processors (x86_64)
   - Apple Silicon (aarch64)
 - Linux
-  - aarch64
-  - x86_64
+  - aarch64 (gnu, musl, or static)
+  - x86_64 (gnu, musl, or static)
 - Windows (MinGW)
   - x86_64
 - FreeBSD
