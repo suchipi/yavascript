@@ -78,9 +78,9 @@ test("grepString", async () => {
          matches: [
            "bl"
            
-           groups: undefined
            index: 0
            input: "blah bla"
+           groups: undefined
          ]
        }
        {
@@ -89,9 +89,9 @@ test("grepString", async () => {
          matches: [
            "bl"
            
-           groups: undefined
            index: 8
            input: "one two bl"
+           groups: undefined
          ]
        }
        {
@@ -100,9 +100,9 @@ test("grepString", async () => {
          matches: [
            "bb"
            
-           groups: undefined
            index: 8
            input: "rah rah bb"
+           groups: undefined
          ]
        }
      ]
@@ -187,9 +187,9 @@ test("String.prototype.grep", async () => {
          matches: [
            "bl"
            
-           groups: undefined
            index: 0
            input: "blah bla"
+           groups: undefined
          ]
        }
        {
@@ -198,9 +198,9 @@ test("String.prototype.grep", async () => {
          matches: [
            "bl"
            
-           groups: undefined
            index: 8
            input: "one two bl"
+           groups: undefined
          ]
        }
        {
@@ -209,9 +209,9 @@ test("String.prototype.grep", async () => {
          matches: [
            "bb"
            
-           groups: undefined
            index: 8
            input: "rah rah bb"
+           groups: undefined
          ]
        }
      ]
@@ -296,9 +296,9 @@ test("grepFile", async () => {
          matches: [
            "bl"
            
-           groups: undefined
            index: 0
            input: "blah bla"
+           groups: undefined
          ]
        }
        {
@@ -307,9 +307,9 @@ test("grepFile", async () => {
          matches: [
            "bl"
            
-           groups: undefined
            index: 8
            input: "one two bl"
+           groups: undefined
          ]
        }
        {
@@ -318,9 +318,9 @@ test("grepFile", async () => {
          matches: [
            "bb"
            
-           groups: undefined
            index: 8
            input: "rah rah bb"
+           groups: undefined
          ]
        }
      ]
