@@ -13,7 +13,8 @@ if [[ ! -e dist/yavascript.d.ts ]]; then
   touch dist/yavascript.d.ts
 fi
 
-env BUILDDIR=dist npx --no-install shinobi \
+env BUILDDIR=dist MSYS2_ARG_CONV_EXCL='*' npx --no-install shinobi \
+  --path-separator / \
   ./meta/ninja/**/*.ninja.js \
   -o dist/build.ninja
 
