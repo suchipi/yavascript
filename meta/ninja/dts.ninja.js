@@ -11,10 +11,14 @@ includeFiles.forEach((match) => {
 const includePaths = [
   ...dtsFolderPaths,
   "src/templates",
-  "node_modules/@suchipi/quickjs/build/dts",
+  // I accidentally forgot to deduplicate the dts files with the 0.15.0 publish.
+  // It doesn't matter which platform's dts files we use; they're all the same.
+  "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts",
 ];
 
-const quickjsDtsFiles = glob("node_modules/@suchipi/quickjs/build/dts/*");
+const quickjsDtsFiles = glob(
+  "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/*",
+);
 
 const dtsRaw = build({
   rule: "macaroni",

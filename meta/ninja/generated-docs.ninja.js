@@ -49,19 +49,30 @@ for (const dtsFile of dtsIncFiles) {
 }
 
 const quickjsDtsFilesMap = {
-  inspect: "node_modules/@suchipi/quickjs/build/dts/quickjs-inspect.d.ts",
-  timers: "node_modules/@suchipi/quickjs/build/dts/quickjs-timers.d.ts",
-  bytecode: "node_modules/@suchipi/quickjs/build/dts/quickjs-bytecode.d.ts",
-  std: "node_modules/@suchipi/quickjs/build/dts/quickjs-std.d.ts",
-  os: "node_modules/@suchipi/quickjs/build/dts/quickjs-os.d.ts",
-  cmdline: "node_modules/@suchipi/quickjs/build/dts/quickjs-cmdline.d.ts",
-  encoding: "node_modules/@suchipi/quickjs/build/dts/quickjs-encoding.d.ts",
-  engine: "node_modules/@suchipi/quickjs/build/dts/quickjs-engine.d.ts",
-  context: "node_modules/@suchipi/quickjs/build/dts/quickjs-context.d.ts",
+  // I accidentally forgot to deduplicate the dts files with the 0.15.0 publish.
+  // It doesn't matter which platform's dts files we use; they're all the same.
+  inspect:
+    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs-inspect.d.ts",
+  timers:
+    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs-timers.d.ts",
+  bytecode:
+    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs-bytecode.d.ts",
+  std: "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs-std.d.ts",
+  os: "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs-os.d.ts",
+  cmdline:
+    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs-cmdline.d.ts",
+  encoding:
+    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs-encoding.d.ts",
+  engine:
+    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs-engine.d.ts",
+  context:
+    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs-context.d.ts",
   // skipping pointer
-  modulesys: "node_modules/@suchipi/quickjs/build/dts/quickjs-modulesys.d.ts",
+  modulesys:
+    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs-modulesys.d.ts",
   // skipping print as we redefine it
-  "quickjs-extensions": "node_modules/@suchipi/quickjs/build/dts/quickjs.d.ts",
+  "quickjs-extensions":
+    "node_modules/@suchipi/quickjs/build/aarch64-apple-darwin/dts/quickjs.d.ts",
 };
 
 for (const [outputName, quickjsDtsPath] of Object.entries(quickjsDtsFilesMap)) {

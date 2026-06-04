@@ -4598,7 +4598,6 @@ interface BigIntConstructor {
   ctz(a: bigint): bigint;
 }
 
-
 /** npm: @suchipi/print@2.5.0. License: ISC */
 /* (with some QuickJS-specific modifications) */
 
@@ -4750,10 +4749,7 @@ declare module "quickjs:timers" {
   export type Timer = { [Symbol.toStringTag]: "Timer" };
 
   /** Call the function func after delay ms. Return a handle to the timer. */
-  export function setTimeout(
-    func: (...args: any) => any,
-    delay: number
-  ): Timer;
+  export function setTimeout(func: (...args: any) => any, delay: number): Timer;
 
   /** Cancel a timer. */
   export function clearTimeout(handle: Timer): void;
@@ -5125,7 +5121,10 @@ declare module "quickjs:std" {
      * - `responseHeaders`: headers separated by CRLF (string)
      * - `status`: status code (number)
      */
-    (url: string, options: { full: true }): {
+    (
+      url: string,
+      options: { full: true }
+    ): {
       status: number;
       response: string;
       responseHeaders: string;
@@ -5140,7 +5139,10 @@ declare module "quickjs:std" {
      * - `responseHeaders`: headers separated by CRLF (string)
      * - `status`: status code (number)
      */
-    (url: string, options: { full: true; binary: false }): {
+    (
+      url: string,
+      options: { full: true; binary: false }
+    ): {
       status: number;
       response: string;
       responseHeaders: string;
@@ -5155,7 +5157,10 @@ declare module "quickjs:std" {
      * - `responseHeaders`: headers separated by CRLF (string)
      * - `status`: status code (number)
      */
-    (url: string, options: { full: true; binary: true }): {
+    (
+      url: string,
+      options: { full: true; binary: true }
+    ): {
       status: number;
       response: ArrayBuffer;
       responseHeaders: string;
@@ -5420,7 +5425,17 @@ declare module "quickjs:os" {
     | { [key: string | number]: StructuredClonable };
 
   export class Worker {
+    /**
+     * Create a Worker which runs the module at `moduleFilename`.
+     */
     constructor(moduleFilename: string);
+    /**
+     * Create a Worker which runs a synthetic module with filename
+     * `fakeModuleFilename` and source code `overrideCode` (JS source code
+     * string). `fakeModuleFilename` is not read from disk and is only used as
+     * the module's assigned filename for import.meta, module resolution, etc.
+     */
+    constructor(fakeModuleFilename: string, overrideCode: string);
     static parent: Worker;
     postMessage(msg: StructuredClonable): void;
     /**
@@ -5465,12 +5480,14 @@ declare module "quickjs:os" {
      * fallback. When `onerror` is unset, errors print to stderr in the
      * same format as an uncaught exception would.
      */
-    onerror: null | ((event: {
-      message: string;
-      filename: string;
-      lineno: number;
-      error: Error | null;
-    }) => void);
+    onerror:
+      | null
+      | ((event: {
+          message: string;
+          filename: string;
+          lineno: number;
+          error: Error | null;
+        }) => void);
   }
 
   /**
@@ -5837,10 +5854,7 @@ interface ModuleDelegate {
    * own implementation. Note that you must handle `ModuleDelegate.compilers`
    * yourself in your replacement implementation.
    */
-  read(
-    modulePath: string,
-    attributes?: Record<string, string>
-  ): string;
+  read(modulePath: string, attributes?: Record<string, string>): string;
 }
 
 interface RequireFunction {
@@ -5984,7 +5998,11 @@ declare module "quickjs:engine" {
    */
   export function evalScript(
     code: string,
-    options?: { backtraceBarrier?: boolean; filename?: string; async?: boolean }
+    options?: {
+      backtraceBarrier?: boolean;
+      filename?: string;
+      async?: boolean;
+    }
   ): any;
 
   /**
