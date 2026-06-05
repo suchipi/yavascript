@@ -69,7 +69,7 @@ declare const yavascript: {
      */
     js(
       code: string,
-      options?: { filename?: string; expression?: boolean },
+      options?: { filename?: string | Path; expression?: boolean },
     ): string;
 
     /**
@@ -79,7 +79,7 @@ declare const yavascript: {
      */
     tsx(
       code: string,
-      options?: { filename?: string; expression?: boolean },
+      options?: { filename?: string | Path; expression?: boolean },
     ): string;
 
     /**
@@ -89,7 +89,7 @@ declare const yavascript: {
      */
     ts(
       code: string,
-      options?: { filename?: string; expression?: boolean },
+      options?: { filename?: string | Path; expression?: boolean },
     ): string;
 
     /**
@@ -102,7 +102,7 @@ declare const yavascript: {
      */
     jsx(
       code: string,
-      options?: { filename?: string; expression?: boolean },
+      options?: { filename?: string | Path; expression?: boolean },
     ): string;
 
     /**
@@ -112,7 +112,7 @@ declare const yavascript: {
      */
     coffee(
       code: string,
-      options?: { filename?: string; expression?: boolean },
+      options?: { filename?: string | Path; expression?: boolean },
     ): string;
 
     /**
@@ -122,7 +122,7 @@ declare const yavascript: {
      */
     civet(
       code: string,
-      options?: { filename?: string; expression?: boolean },
+      options?: { filename?: string | Path; expression?: boolean },
     ): string;
 
     /**
@@ -142,7 +142,7 @@ declare const yavascript: {
      */
     autodetect(
       code: string,
-      options?: { filename?: string; expression?: boolean },
+      options?: { filename?: string | Path; expression?: boolean },
     ): string;
   };
 
@@ -4467,6 +4467,8 @@ declare var process: {
    */
   exit(code?: number | null | undefined): void;
 };
+
+declare class Worker extends import("quickjs:os").Worker {}
 
 
 // ==========================================

@@ -2,34 +2,53 @@ import * as engine from "quickjs:engine";
 import * as os from "quickjs:os";
 import { readFile } from "../filesystem";
 import compilers from "../../compilers";
+import { Path } from "../path";
 
 export class Worker extends os.Worker {
   constructor(
     ...args:
-      | [modulePath: string]
-      | [fakeModuleFilename: string, overrideCode: string]
+      | [modulePath: string | Path]
+      | [fakeModuleFilename: string | Path, overrideCode: string]
   ) {
-    if (args.length === 2) {
-      super(...args);
-    } else if (args.length === 1) {
-      const [modulePath] = args;
+    const requestedModulePath = args[0];
 
-      const absModulePath = engine.resolveModule(
-        modulePath,
-        engine.getFileNameFromStack(1),
+    let absoluteModulePath: Path;
+    if (Path.isAbsolute(requestedModulePath)) {
+      absoluteModulePath = Path.isPath(requestedModulePath)
+        ? requestedModulePath
+        : new Path(requestedModulePath);
+    } else {
+      absoluteModulePath = new Path(
+        engine.resolveModule(
+          requestedModulePath.toString(),
+          engine.getFileNameFromStack(1),
+        ),
       );
-      const rawCode = readFile(absModulePath);
-      const compiledCode = compilers.autodetect(rawCode, {
-        filename: absModulePath,
-      });
-      super(
-        absModulePath,
-        compiledCode + ";\nglobalThis.Worker = require('quickjs:os').Worker",
-      );
+    }
+
+    let rawCode: string;
+    if (args.length === 2) {
+      rawCode = args[1];
+    } else if (args.length === 1) {
+      rawCode = readFile(absoluteModulePath);
     } else {
       throw new Error(
         "Incorrect number of arguments given to Worker constructor",
       );
     }
+
+    const extensionWithDot = absoluteModulePath.extname();
+    const compilerForExtension: (typeof compilers)[keyof typeof compilers] =
+      compilers[extensionWithDot.replace(/^\./, "").toLowerCase()] ??
+      compilers.autodetect;
+
+    const compiledCode = compilerForExtension(rawCode, {
+      filename: absoluteModulePath.toString(),
+    });
+    super(
+      absoluteModulePath.toString(),
+      // TODO: other YS APIs
+      "globalThis.Worker = require('quickjs:os').Worker;" + compiledCode,
+    );
   }
 }

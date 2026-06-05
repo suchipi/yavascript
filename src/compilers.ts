@@ -1,6 +1,7 @@
 import { memoizeFn } from "./lazy-load";
 import * as CJS from "./cjs-interop";
 import * as npmProto from "./module-protocols/npm";
+import { Path } from "./api/path";
 
 const getSucrase: () => typeof import("sucrase") = memoizeFn(() =>
   require("sucrase"),
@@ -13,7 +14,7 @@ const getCivet: () => typeof import("@danielx/civet") = memoizeFn(() =>
 );
 
 export type CompilerOptions = {
-  filename?: string;
+  filename?: string | Path;
   expression?: boolean;
 };
 
@@ -36,7 +37,7 @@ function compileUsingSucrase(
   sucraseOptions: import("sucrase").Options,
 ) {
   if (options?.filename) {
-    sucraseOptions.filePath = options.filename;
+    sucraseOptions.filePath = options.filename.toString();
   }
 
   // All this does is make jsx elements not have __self and __fileName,
@@ -71,7 +72,8 @@ const compilers = {
   js(code: string, options?: CompilerOptions): string {
     if (
       options?.expression ||
-      (options?.filename && npmProto.handlesModulePath(options.filename)) ||
+      (options?.filename &&
+        npmProto.handlesModulePath(options.filename.toString())) ||
       !CJS.looksLikeCommonJS(code)
     ) {
       return code;
@@ -116,7 +118,7 @@ const compilers = {
   coffee(code: string, options?: CompilerOptions): string {
     const compiled = getCoffeeScript().compile(stripShebangs(code), {
       bare: true,
-      filename: options?.filename,
+      filename: options?.filename?.toString(),
     });
     return compilers.js(compiled, options);
   },
@@ -124,7 +126,7 @@ const compilers = {
   civet(code: string, options?: CompilerOptions): string {
     const compiled = getCivet().compile(code, {
       js: true,
-      filename: options?.filename,
+      filename: options?.filename?.toString(),
       sync: true,
     });
     return compilers.jsx(compiled, options);

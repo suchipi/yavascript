@@ -27,49 +27,49 @@ const yavascript: {
     js(
       code: string,
       options?: {
-        filename?: string;
+        filename?: string | Path;
         expression?: boolean;
       },
     ): string;
     tsx(
       code: string,
       options?: {
-        filename?: string;
+        filename?: string | Path;
         expression?: boolean;
       },
     ): string;
     ts(
       code: string,
       options?: {
-        filename?: string;
+        filename?: string | Path;
         expression?: boolean;
       },
     ): string;
     jsx(
       code: string,
       options?: {
-        filename?: string;
+        filename?: string | Path;
         expression?: boolean;
       },
     ): string;
     coffee(
       code: string,
       options?: {
-        filename?: string;
+        filename?: string | Path;
         expression?: boolean;
       },
     ): string;
     civet(
       code: string,
       options?: {
-        filename?: string;
+        filename?: string | Path;
         expression?: boolean;
       },
     ): string;
     autodetect(
       code: string,
       options?: {
-        filename?: string;
+        filename?: string | Path;
         expression?: boolean;
       },
     ): string;
@@ -130,31 +130,31 @@ Each function returns a JavaScript source code string.
 ```ts
 compilers: {
   js(code: string, options?: {
-    filename?: string;
+    filename?: string | Path;
     expression?: boolean;
   }): string;
   tsx(code: string, options?: {
-    filename?: string;
+    filename?: string | Path;
     expression?: boolean;
   }): string;
   ts(code: string, options?: {
-    filename?: string;
+    filename?: string | Path;
     expression?: boolean;
   }): string;
   jsx(code: string, options?: {
-    filename?: string;
+    filename?: string | Path;
     expression?: boolean;
   }): string;
   coffee(code: string, options?: {
-    filename?: string;
+    filename?: string | Path;
     expression?: boolean;
   }): string;
   civet(code: string, options?: {
-    filename?: string;
+    filename?: string | Path;
     expression?: boolean;
   }): string;
   autodetect(code: string, options?: {
-    filename?: string;
+    filename?: string | Path;
     expression?: boolean;
   }): string;
 };
@@ -169,7 +169,7 @@ Module interop transformations here.
 
 ```ts
 js(code: string, options?: {
-  filename?: string;
+  filename?: string | Path;
   expression?: boolean;
 }): string;
 ```
@@ -182,7 +182,7 @@ yavascript uses [Sucrase 3.35.0](https://sucrase.io/) to load TypeScript JSX syn
 
 ```ts
 tsx(code: string, options?: {
-  filename?: string;
+  filename?: string | Path;
   expression?: boolean;
 }): string;
 ```
@@ -195,7 +195,7 @@ yavascript uses [Sucrase 3.35.0](https://sucrase.io/) to load TypeScript syntax.
 
 ```ts
 ts(code: string, options?: {
-  filename?: string;
+  filename?: string | Path;
   expression?: boolean;
 }): string;
 ```
@@ -211,7 +211,7 @@ default `createElement` implementation, etc.
 
 ```ts
 jsx(code: string, options?: {
-  filename?: string;
+  filename?: string | Path;
   expression?: boolean;
 }): string;
 ```
@@ -224,7 +224,7 @@ yavascript embeds CoffeeScript 2.7.0.
 
 ```ts
 coffee(code: string, options?: {
-  filename?: string;
+  filename?: string | Path;
   expression?: boolean;
 }): string;
 ```
@@ -237,7 +237,7 @@ yavascript embeds Civet 0.9.0.
 
 ```ts
 civet(code: string, options?: {
-  filename?: string;
+  filename?: string | Path;
   expression?: boolean;
 }): string;
 ```
@@ -260,7 +260,7 @@ that a syntax error can be reported to the user.
 
 ```ts
 autodetect(code: string, options?: {
-  filename?: string;
+  filename?: string | Path;
   expression?: boolean;
 }): string;
 ```
