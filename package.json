@@ -26,7 +26,7 @@
     "mark-applier": "^0.5.2",
     "mdtocs": "^1.0.5",
     "minimatch": "^5.1.0",
-    "nice-path": "^3.2.2",
+    "nice-path": "3.2.2",
     "papaparse": "^5.5.3",
     "path-less-traveled": "^2.2.1",
     "pheno": "^1.13.0",
@@ -38,6 +38,9 @@
     "typescript": "^5.9.3",
     "typescript-assert-utils": "^1.1.0",
     "yaml": "^2.9.0"
+  },
+  "overrides": {
+    "nice-path": "3.2.2"
   },
   "scripts": {
     "build": "meta/build.sh",
