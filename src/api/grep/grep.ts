@@ -24,7 +24,7 @@ export function grepArray<T>(
     typeof pattern === "string" ? new RegExp(escape(pattern), "g") : pattern;
 
   const outLines: Array<
-    | string
+    | T
     | {
         lineNumber: number;
         lineContent: T;
