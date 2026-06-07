@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { defaultResolver, Runtime, defaultLoader } = require("kame");
 const { compress } = require("lz-string");
+const rootDir = require("../root-dir");
 
 const stubPath = path.resolve(__dirname, "kame-module-stub.js");
 
@@ -74,7 +75,15 @@ exports.resolve = (id, fromFilePath) => {
         );
       }
 
-      return defaultResolver.resolve(id, fromFilePath);
+      const result = defaultResolver.resolve(id, fromFilePath);
+      switch (result) {
+        case rootDir("node_modules/sucrase/dist/parser/plugins/flow.js"): {
+          return stubPath;
+        }
+        default: {
+          return result;
+        }
+      }
     }
   }
 };
