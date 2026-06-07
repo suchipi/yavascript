@@ -1,3 +1,5 @@
+<!-- meta/generated-docs/README.md is generated from meta/scripts/lib/generated-doc-index.md. Do not make edits to meta/generated-docs/README.md; instead, make them to meta/scripts/lib/generated-doc-index.md and then re-run the build. -->
+
 # YavaScript API Documentation Index
 
 Here is a list of all of YavaScript's builtin APIs, aside from those normally found in ECMAScript.
@@ -46,6 +48,7 @@ Here is a list of all of YavaScript's builtin APIs, aside from those normally fo
 - [`which`]: Find the path to a program on the system
 - [`grepFile`]: Search for matches in a file
 - [`grepString`]: Search for matches in a string
+- [`grepArray`]: Search for matches in an Array
 - [`whoami`]: Get user name/uid/gid
 - [`openUrl`]: Open a file/url using your operating system's default application for that file/url
 
@@ -201,6 +204,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`which`]: /meta/generated-docs/which.md#which-function
 [`grepFile`]: /meta/generated-docs/grep.md#grepfile-function
 [`grepString`]: /meta/generated-docs/grep.md#grepstring-function
+[`grepArray`]: /meta/generated-docs/grep.md#greparray-function
 [`whoami`]: /meta/generated-docs/whoami.md#whoami-function
 [`openUrl`]: /meta/generated-docs/open-url.md#openurl-function
 [`Path`]: /meta/generated-docs/path.md#path-class
@@ -257,6 +261,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`JSX`]: /meta/generated-docs/jsx.md#jsx-namespace
 [`yavascript.compilers`]: /meta/generated-docs/yavascript.md#yavascriptcompilers-object-property
 [`String.prototype.grep`]: /meta/generated-docs/grep.md#stringgrep-function-property
+[`Array.prototype.grep`]: /meta/generated-docs/grep.md#arraygrep-function-property
 [`RegExp.escape`]: /meta/generated-docs/regexp-escape.md#regexpconstructorescape-method
 [`String.dedent`]: /meta/generated-docs/string-dedent.md#stringconstructordedent-function-property
 [`bigint`]: /meta/generated-docs/others.md#bigint-bigintconstructor

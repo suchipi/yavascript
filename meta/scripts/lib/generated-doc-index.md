@@ -1,3 +1,5 @@
+<!-- meta/generated-docs/README.md is generated from meta/scripts/lib/generated-doc-index.md. Do not make edits to meta/generated-docs/README.md; instead, make them to meta/scripts/lib/generated-doc-index.md and then re-run the build. -->
+
 # YavaScript API Documentation Index
 
 Here is a list of all of YavaScript's builtin APIs, aside from those normally found in ECMAScript.
@@ -46,6 +48,7 @@ Here is a list of all of YavaScript's builtin APIs, aside from those normally fo
 - [`which`]: Find the path to a program on the system
 - [`grepFile`]: Search for matches in a file
 - [`grepString`]: Search for matches in a string
+- [`grepArray`]: Search for matches in an Array
 - [`whoami`]: Get user name/uid/gid
 - [`openUrl`]: Open a file/url using your operating system's default application for that file/url
 
