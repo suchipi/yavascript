@@ -1,6 +1,7 @@
 /// <reference types="@suchipi/shinobi/globals.d.ts" />
 const path = require("path");
 const { walkJsDeps } = require("../scripts/lib/walk");
+const rootDir = require("../root-dir");
 
 rule("copy", {
   command: "cp -R $in $out",
@@ -106,4 +107,10 @@ rule("markdown-toc", {
 rule("combine", {
   command: `cat $in > $out`,
   description: "COMBINE $out",
+});
+
+rule("minify-js", {
+  command: `npx --no-install terser $in $TERSER_OPTIONS -o $out`,
+  description: "TERSER $out",
+  implicitInputs: [rootDir("node_modules/terser/package.json")],
 });

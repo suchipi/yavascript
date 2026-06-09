@@ -10,6 +10,12 @@ const primordialsBase = build({
   output: builddir("bundles/primordials-base.js"),
 });
 
+const primordialsBaseMin = build({
+  rule: "minify-js",
+  inputs: [primordialsBase],
+  output: builddir("bundles/primordials-base.min.js"),
+});
+
 const primordialsWorker = build({
   rule: "kame",
   inputs: "src/primordials-worker.ts",

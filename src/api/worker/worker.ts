@@ -4,7 +4,9 @@ import { readFile } from "../filesystem";
 import compilers from "../../compilers";
 import { Path } from "../path";
 
-import primordialsBundleCode from "../../../dist/bundles/primordials-base.js?contentString";
+import primordialsBundleCode from "../../../dist/bundles/primordials-base.min.js?contentString";
+
+declare var yavascript: typeof import("../yavascript").yavascript;
 
 export class Worker extends os.Worker {
   constructor(
@@ -47,13 +49,17 @@ export class Worker extends os.Worker {
     const compiledCode = compilerForExtension(rawCode, {
       filename: absoluteModulePath.toString(),
     });
+
     super(
       absoluteModulePath.toString(),
       [
         primordialsBundleCode,
+        // We just need Worker.parent to resolve. The yavascript-specific
+        // constructor override doesn't matter because Workers aren't allowed to
+        // make sub-Workers.
         `;globalThis.Worker = require('quickjs:os').Worker;`,
-        `globalThis.yavascript.version = ${JSON.stringify(globalThis.yavascript.version)};`,
-        `globalThis.yavascript.arch = ${JSON.stringify(globalThis.yavascript.arch)};`,
+        `globalThis.yavascript.version = ${JSON.stringify(yavascript.version)};`,
+        `globalThis.yavascript.arch = ${JSON.stringify(yavascript.arch)};`,
         compiledCode,
       ].join("\n"),
     );
