@@ -2,7 +2,9 @@ import * as std from "quickjs:std";
 import * as cmdline from "quickjs:cmdline";
 import printError from "./print-error";
 
-import "./primordials";
+import "./primordials-base";
+import "./primordials-worker";
+// primordials-hardcoded gets appended on later as part of the build
 
 import determineTarget from "./determine-target";
 

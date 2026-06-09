@@ -47,6 +47,12 @@ exports.resolve = (id, fromFilePath) => {
       return path.resolve(__dirname, "kame-ts-interface-checker-stub.js");
     }
 
+    case "../../../dist/bundles/primordials-base.js?contentString": {
+      // We need this to resolve even when the file doesn't exist so
+      // meta/scripts/lib/walk.js works.
+      return rootDir("dist/bundles/primordials-base.js?contentString");
+    }
+
     default: {
       if (id.endsWith("?contentString")) {
         return (

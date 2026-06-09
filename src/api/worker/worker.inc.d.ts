@@ -1,1 +1,1 @@
-declare class Worker extends import("quickjs:os").Worker {}
+declare var Worker: typeof import("quickjs:os").Worker;

@@ -4,6 +4,8 @@ import { readFile } from "../filesystem";
 import compilers from "../../compilers";
 import { Path } from "../path";
 
+import primordialsBundleCode from "../../../dist/bundles/primordials-base.js?contentString";
+
 export class Worker extends os.Worker {
   constructor(
     ...args:
@@ -47,8 +49,13 @@ export class Worker extends os.Worker {
     });
     super(
       absoluteModulePath.toString(),
-      // TODO: other YS APIs
-      "globalThis.Worker = require('quickjs:os').Worker;" + compiledCode,
+      [
+        primordialsBundleCode,
+        `;globalThis.Worker = require('quickjs:os').Worker;`,
+        `globalThis.yavascript.version = ${JSON.stringify(globalThis.yavascript.version)};`,
+        `globalThis.yavascript.arch = ${JSON.stringify(globalThis.yavascript.arch)};`,
+        compiledCode,
+      ].join("\n"),
     );
   }
 }

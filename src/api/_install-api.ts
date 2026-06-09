@@ -177,10 +177,6 @@ const tomlProps = makeGetterPropertyDescriptorMap({
   TOML: () => require("./toml").TOML,
 });
 
-const workerProps = makeGetterPropertyDescriptorMap({
-  Worker: () => require("./worker").Worker,
-});
-
 import { get__filename, get__dirname } from "./__filename-and-__dirname";
 
 export default function installApi(target: typeof globalThis) {
@@ -211,7 +207,6 @@ export default function installApi(target: typeof globalThis) {
     ...yavascriptProps,
     ...helpProps,
     ...tomlProps,
-    ...workerProps,
 
     __filename: {
       get() {

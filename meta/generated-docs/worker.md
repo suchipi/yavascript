@@ -1,7 +1,7 @@
-- [Worker (class)](#worker-class)
+- [Worker (value)](#worker-value)
 
-# Worker (class)
+# Worker (value)
 
 ```ts
-declare class Worker extends import("quickjs:os").Worker {}
+var Worker: typeof import("quickjs:os").Worker;
 ```
