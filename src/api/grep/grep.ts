@@ -11,20 +11,32 @@ export function grepString(
   options: { inverse?: boolean; details?: boolean } = {},
 ) {
   const lines = str.split("\n");
+
+  return grepArray(lines, pattern, options);
+}
+
+export function grepArray<T>(
+  targetArray: Array<T>,
+  pattern: string | RegExp,
+  options: { inverse?: boolean; details?: boolean } = {},
+) {
   const regexp =
     typeof pattern === "string" ? new RegExp(escape(pattern), "g") : pattern;
 
   const outLines: Array<
-    | string
+    | T
     | {
         lineNumber: number;
-        lineContent: string;
+        lineContent: T;
         matches: RegExpMatchArray | null;
+
+        index: number; // same as lineNumber - 1
+        content: T; // same as lineContent
       }
   > = [];
 
-  lines.forEach((line, index) => {
-    const matches = line.match(regexp);
+  targetArray.forEach((item, index) => {
+    const matches = String(item).match(regexp);
     let shouldInclude = matches != null;
     if (options.inverse) {
       shouldInclude = !shouldInclude;
@@ -35,11 +47,14 @@ export function grepString(
     if (options.details) {
       outLine = {
         lineNumber: index + 1,
-        lineContent: line,
+        lineContent: item,
         matches,
+
+        index,
+        content: item,
       };
     } else {
-      outLine = line;
+      outLine = item;
     }
     outLines.push(outLine);
   });
@@ -72,5 +87,14 @@ export function installToStringProto(stringProto: any) {
     options?: { inverse?: boolean; lineNumbers?: boolean },
   ) {
     return grepString(this as string, pattern, options);
+  };
+}
+
+export function installToArrayProto(arrayProto: any) {
+  arrayProto.grep = function grep(
+    pattern: string | RegExp,
+    options?: { inverse?: boolean; lineNumbers?: boolean },
+  ) {
+    return grepArray(this, pattern, options);
   };
 }

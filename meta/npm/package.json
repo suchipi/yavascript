@@ -2,11 +2,16 @@
   "name": "yavascript",
   "version": "0.0.0-git",
   "main": "lib/index.js",
-  "bin": "lib/cli.js",
+  "bin": {
+    "yavascript": "lib/cli.js"
+  },
   "types": "yavascript.d.ts",
   "author": "Lily Skye <me@suchipi.com>",
   "license": "MIT",
-  "repository": "suchipi/yavascript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suchipi/yavascript.git"
+  },
   "dependencies": {
     "detect-libc": "^2.1.2"
   }

@@ -8,6 +8,8 @@ import {
   grepFile,
   grepString,
   installToStringProto as installGrepToStringProto,
+  grepArray,
+  installToArrayProto as installGrepToArrayProto,
 } from "./grep";
 import { install as installRegexpEscape } from "./regexp-escape";
 import { install as installStringDedent } from "./string-dedent";
@@ -232,9 +234,12 @@ export default function installApi(target: typeof globalThis) {
   Object.assign(target, {
     grepFile,
     grepString,
+    grepArray,
   });
 
   installGrepToStringProto(target.String.prototype);
+  installGrepToArrayProto(target.Array.prototype);
+
   installRegexpEscape(target.RegExp);
   installStringDedent(target.String);
   installModuleHooks();

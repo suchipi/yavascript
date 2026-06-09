@@ -19,7 +19,7 @@ export default makeGetterPropertyDescriptorMap(
     },
     grep() {
       throw new ReferenceError(
-        "'grep' is not defined. Maybe you want 'grepFile', 'grepString', or 'String.prototype.grep'?",
+        "'grep' is not defined. Maybe you want 'grepFile', 'grepString', 'grepArray', 'String.prototype.grep', or 'Array.prototype.grep'?",
       );
     },
     man() {

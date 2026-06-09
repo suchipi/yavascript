@@ -1,6 +1,21 @@
-import { evaluate, rootDir } from "./test-helpers";
+import {
+  evaluate,
+  removeSanitizer,
+  restoreSanitizer,
+  rootDir,
+} from "./test-helpers";
 
 const grepFixture = rootDir("meta/tests/fixtures/grep/stuff.txt");
+
+beforeAll(() => {
+  removeSanitizer("omitThrowLineNumber");
+  removeSanitizer("redactLineAndColumnNumbers");
+});
+
+afterAll(() => {
+  restoreSanitizer("omitThrowLineNumber");
+  restoreSanitizer("redactLineAndColumnNumbers");
+});
 
 test("grepString", async () => {
   const result = await evaluate(
@@ -45,6 +60,8 @@ test("grepString", async () => {
            "bl"
            "bl"
          ]
+         index: 0
+         content: "blah bla"
        }
        {
          lineNumber: 2
@@ -52,6 +69,8 @@ test("grepString", async () => {
          matches: [
            "bl"
          ]
+         index: 1
+         content: "one two bl"
        }
      ]
      result4: [
@@ -59,16 +78,22 @@ test("grepString", async () => {
          lineNumber: 3
          lineContent: "rah rah bb"
          matches: null
+         index: 2
+         content: "rah rah bb"
        }
        {
          lineNumber: 4
          lineContent: "twot"
          matches: null
+         index: 3
+         content: "twot"
        }
        {
          lineNumber: 5
          lineContent: ""
          matches: null
+         index: 4
+         content: ""
        }
      ]
      result5: [
@@ -82,6 +107,8 @@ test("grepString", async () => {
            input: "blah bla"
            groups: undefined
          ]
+         index: 0
+         content: "blah bla"
        }
        {
          lineNumber: 2
@@ -93,6 +120,8 @@ test("grepString", async () => {
            input: "one two bl"
            groups: undefined
          ]
+         index: 1
+         content: "one two bl"
        }
        {
          lineNumber: 3
@@ -104,6 +133,8 @@ test("grepString", async () => {
            input: "rah rah bb"
            groups: undefined
          ]
+         index: 2
+         content: "rah rah bb"
        }
      ]
    }
@@ -148,41 +179,51 @@ test("String.prototype.grep", async () => {
      ]
      result3: [
        {
-         lineNumber: <redacted>
+         lineNumber: 1
          lineContent: "blah bla"
          matches: [
            "bl"
            "bl"
          ]
+         index: 0
+         content: "blah bla"
        }
        {
-         lineNumber: <redacted>
+         lineNumber: 2
          lineContent: "one two bl"
          matches: [
            "bl"
          ]
+         index: 1
+         content: "one two bl"
        }
      ]
      result4: [
        {
-         lineNumber: <redacted>
+         lineNumber: 3
          lineContent: "rah rah bb"
          matches: null
+         index: 2
+         content: "rah rah bb"
        }
        {
-         lineNumber: <redacted>
+         lineNumber: 4
          lineContent: "twot"
          matches: null
+         index: 3
+         content: "twot"
        }
        {
-         lineNumber: <redacted>
+         lineNumber: 5
          lineContent: ""
          matches: null
+         index: 4
+         content: ""
        }
      ]
      result5: [
        {
-         lineNumber: <redacted>
+         lineNumber: 1
          lineContent: "blah bla"
          matches: [
            "bl"
@@ -191,9 +232,11 @@ test("String.prototype.grep", async () => {
            input: "blah bla"
            groups: undefined
          ]
+         index: 0
+         content: "blah bla"
        }
        {
-         lineNumber: <redacted>
+         lineNumber: 2
          lineContent: "one two bl"
          matches: [
            "bl"
@@ -202,9 +245,11 @@ test("String.prototype.grep", async () => {
            input: "one two bl"
            groups: undefined
          ]
+         index: 1
+         content: "one two bl"
        }
        {
-         lineNumber: <redacted>
+         lineNumber: 3
          lineContent: "rah rah bb"
          matches: [
            "bb"
@@ -213,6 +258,8 @@ test("String.prototype.grep", async () => {
            input: "rah rah bb"
            groups: undefined
          ]
+         index: 2
+         content: "rah rah bb"
        }
      ]
    }
@@ -257,41 +304,51 @@ test("grepFile", async () => {
      ]
      result3: [
        {
-         lineNumber: <redacted>
+         lineNumber: 1
          lineContent: "blah bla"
          matches: [
            "bl"
            "bl"
          ]
+         index: 0
+         content: "blah bla"
        }
        {
-         lineNumber: <redacted>
+         lineNumber: 2
          lineContent: "one two bl"
          matches: [
            "bl"
          ]
+         index: 1
+         content: "one two bl"
        }
      ]
      result4: [
        {
-         lineNumber: <redacted>
+         lineNumber: 3
          lineContent: "rah rah bb"
          matches: null
+         index: 2
+         content: "rah rah bb"
        }
        {
-         lineNumber: <redacted>
+         lineNumber: 4
          lineContent: "twot"
          matches: null
+         index: 3
+         content: "twot"
        }
        {
-         lineNumber: <redacted>
+         lineNumber: 5
          lineContent: ""
          matches: null
+         index: 4
+         content: ""
        }
      ]
      result5: [
        {
-         lineNumber: <redacted>
+         lineNumber: 1
          lineContent: "blah bla"
          matches: [
            "bl"
@@ -300,9 +357,11 @@ test("grepFile", async () => {
            input: "blah bla"
            groups: undefined
          ]
+         index: 0
+         content: "blah bla"
        }
        {
-         lineNumber: <redacted>
+         lineNumber: 2
          lineContent: "one two bl"
          matches: [
            "bl"
@@ -311,9 +370,11 @@ test("grepFile", async () => {
            input: "one two bl"
            groups: undefined
          ]
+         index: 1
+         content: "one two bl"
        }
        {
-         lineNumber: <redacted>
+         lineNumber: 3
          lineContent: "rah rah bb"
          matches: [
            "bb"
@@ -322,7 +383,290 @@ test("grepFile", async () => {
            input: "rah rah bb"
            groups: undefined
          ]
+         index: 2
+         content: "rah rah bb"
        }
+     ]
+   }
+   ",
+   }
+  `);
+});
+
+test("grepArray", async () => {
+  const result = await evaluate(
+    `
+      const targetArray = readFile(${JSON.stringify(grepFixture)}).split("\\n");
+      const result1 = grepArray(targetArray, "bl");
+      const result2 = grepArray(targetArray, "bl", { inverse: true });
+      const result3 = grepArray(targetArray, "bl", { details: true });
+      const result4 = grepArray(targetArray, "bl", { details: true, inverse: true });
+      const result5 = grepArray(targetArray, /b\\w/, { details: true });
+
+      // non-strings are coerced to strings
+      const result6 = grepArray([2, "ab2", "b2d", "def", "2at"], /2/i);
+      const result7 = grepArray([[], {}, new Set()], "Object");
+
+      console.log({
+        result1,
+        result2,
+        result3,
+        result4,
+        result5,
+        result6,
+        result7,
+      });
+    `,
+    { cleanResult: false },
+  );
+  expect(result).toMatchInlineSnapshot(`
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     result1: [
+       "blah bla"
+       "one two bl"
+     ]
+     result2: [
+       "rah rah bb"
+       "twot"
+       ""
+     ]
+     result3: [
+       {
+         lineNumber: 1
+         lineContent: "blah bla"
+         matches: [
+           "bl"
+           "bl"
+         ]
+         index: 0
+         content: "blah bla"
+       }
+       {
+         lineNumber: 2
+         lineContent: "one two bl"
+         matches: [
+           "bl"
+         ]
+         index: 1
+         content: "one two bl"
+       }
+     ]
+     result4: [
+       {
+         lineNumber: 3
+         lineContent: "rah rah bb"
+         matches: null
+         index: 2
+         content: "rah rah bb"
+       }
+       {
+         lineNumber: 4
+         lineContent: "twot"
+         matches: null
+         index: 3
+         content: "twot"
+       }
+       {
+         lineNumber: 5
+         lineContent: ""
+         matches: null
+         index: 4
+         content: ""
+       }
+     ]
+     result5: [
+       {
+         lineNumber: 1
+         lineContent: "blah bla"
+         matches: [
+           "bl"
+           
+           index: 0
+           input: "blah bla"
+           groups: undefined
+         ]
+         index: 0
+         content: "blah bla"
+       }
+       {
+         lineNumber: 2
+         lineContent: "one two bl"
+         matches: [
+           "bl"
+           
+           index: 8
+           input: "one two bl"
+           groups: undefined
+         ]
+         index: 1
+         content: "one two bl"
+       }
+       {
+         lineNumber: 3
+         lineContent: "rah rah bb"
+         matches: [
+           "bb"
+           
+           index: 8
+           input: "rah rah bb"
+           groups: undefined
+         ]
+         index: 2
+         content: "rah rah bb"
+       }
+     ]
+     result6: [
+       2
+       "ab2"
+       "b2d"
+       "2at"
+     ]
+     result7: [
+       {}
+     ]
+   }
+   ",
+   }
+  `);
+});
+
+test("Array.prototype.grep", async () => {
+  const result = await evaluate(
+    `
+      const targetArray = readFile(${JSON.stringify(grepFixture)}).split("\\n");
+      const result1 = targetArray.grep("bl");
+      const result2 = targetArray.grep("bl", { inverse: true });
+      const result3 = targetArray.grep("bl", { details: true });
+      const result4 = targetArray.grep("bl", { details: true, inverse: true });
+      const result5 = targetArray.grep(/b\\w/, { details: true });
+
+      // non-strings are coerced to strings
+      const result6 = [2, "ab2", "b2d", "def", "2at"].grep(/2/i);
+      const result7 = [[], {}, new Set()].grep("Object");
+
+      console.log({
+        result1,
+        result2,
+        result3,
+        result4,
+        result5,
+        result6,
+        result7,
+      });
+    `,
+  );
+  expect(result).toMatchInlineSnapshot(`
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "{
+     result1: [
+       "blah bla"
+       "one two bl"
+     ]
+     result2: [
+       "rah rah bb"
+       "twot"
+       ""
+     ]
+     result3: [
+       {
+         lineNumber: 1
+         lineContent: "blah bla"
+         matches: [
+           "bl"
+           "bl"
+         ]
+         index: 0
+         content: "blah bla"
+       }
+       {
+         lineNumber: 2
+         lineContent: "one two bl"
+         matches: [
+           "bl"
+         ]
+         index: 1
+         content: "one two bl"
+       }
+     ]
+     result4: [
+       {
+         lineNumber: 3
+         lineContent: "rah rah bb"
+         matches: null
+         index: 2
+         content: "rah rah bb"
+       }
+       {
+         lineNumber: 4
+         lineContent: "twot"
+         matches: null
+         index: 3
+         content: "twot"
+       }
+       {
+         lineNumber: 5
+         lineContent: ""
+         matches: null
+         index: 4
+         content: ""
+       }
+     ]
+     result5: [
+       {
+         lineNumber: 1
+         lineContent: "blah bla"
+         matches: [
+           "bl"
+           
+           index: 0
+           input: "blah bla"
+           groups: undefined
+         ]
+         index: 0
+         content: "blah bla"
+       }
+       {
+         lineNumber: 2
+         lineContent: "one two bl"
+         matches: [
+           "bl"
+           
+           index: 8
+           input: "one two bl"
+           groups: undefined
+         ]
+         index: 1
+         content: "one two bl"
+       }
+       {
+         lineNumber: 3
+         lineContent: "rah rah bb"
+         matches: [
+           "bb"
+           
+           index: 8
+           input: "rah rah bb"
+           groups: undefined
+         ]
+         index: 2
+         content: "rah rah bb"
+       }
+     ]
+     result6: [
+       2
+       "ab2"
+       "b2d"
+       "2at"
+     ]
+     result7: [
+       {}
      ]
    }
    ",

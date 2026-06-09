@@ -242,6 +242,7 @@ test("globals", async () => {
    __dirname: string set throws error (GS)
    grepFile: function (CWE)
    grepString: function (CWE)
+   grepArray: function (CWE)
    global: object (CW)
    process: object (CW)
    ",
