@@ -17,7 +17,13 @@ export class Worker extends os.Worker {
   constructor(
     ...args:
       | [modulePath: string | Path]
-      | [fakeModuleFilename: string | Path, overrideCode: string]
+      | [
+          fakeModuleFilename: string | Path,
+          options: {
+            overrideCode?: string;
+            initialData?: StructuredClonable;
+          },
+        ]
   ) {
     const requestedModulePath = args[0];
 
@@ -36,8 +42,19 @@ export class Worker extends os.Worker {
     }
 
     let rawCode: string;
+    let initialData: undefined;
     if (args.length === 2) {
-      rawCode = args[1];
+      if (args[1].overrideCode) {
+        rawCode = args[1].overrideCode;
+      } else {
+        rawCode = readFile(absoluteModulePath);
+      }
+
+      if ("initialData" in args[1]) {
+        initialData = initialData;
+      } else {
+        initialData = undefined;
+      }
     } else if (args.length === 1) {
       rawCode = readFile(absoluteModulePath);
     } else {
@@ -59,6 +76,7 @@ export class Worker extends os.Worker {
       initialData: {
         __bytecode_primordials_base,
         __bytecode_primordials_hardcoded,
+        userInitialData: initialData,
       },
       overrideCode: [
         // We just need Worker.parent to resolve. The yavascript-specific
@@ -67,6 +85,7 @@ export class Worker extends os.Worker {
         `globalThis.Worker = require('quickjs:os').Worker;`,
         `require("quickjs:bytecode").toValue(Worker.initialData.__bytecode_primordials_base)();`,
         `require("quickjs:bytecode").toValue(Worker.initialData.__bytecode_primordials_hardcoded)();`,
+        `Object.defineProperty(Worker, "initialData", { value: Worker.initialData.userInitialData });`,
         compiledCode,
       ].join(" "),
     });
