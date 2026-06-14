@@ -1,6 +1,6 @@
 # ![YavaScript logo](meta/assets/logo.png)
 
-YavaScript is a cross-platform bash-like script runner and repl which is distributed as a single statically-linked program, weighing in at about 4MB. Scripts can be written in [JavaScript](https://en.wikipedia.org/wiki/JavaScript) or [JS-related languages](#languages).
+YavaScript is a cross-platform bash-like script runner and repl which is distributed as a single statically-linked program, weighing in at about 7MB. Scripts can be written in [JavaScript](https://en.wikipedia.org/wiki/JavaScript) or [JS-related languages](#languages).
 
 > YavaScript is the name of the program. YavaScript is not a new language. YavaScript uses normal JavaScript.
 
@@ -8,7 +8,7 @@ YavaScript is a cross-platform bash-like script runner and repl which is distrib
 
 YavaScript exists as an alternative to bash scripts. Instead of writing scripts using shell syntax and running them with bash, you write them in JavaScript and run them with YavaScript.
 
-At only ~4MB and with no dependencies (not even Node.js), YavaScript is easy to install or include in a Docker image. As such, it's suitable for use in all the places you would use shell scripts now. It's a great fit for those sort of "environment-level infrastructure" scripts that every Git repo ends up needing, like "build the app", "pull the latest docker images", "install/use the correct versions of languages and tools", etc.
+At only ~7MB and with no dependencies (not even Node.js), YavaScript is easy to install or include in a Docker image. As such, it's suitable for use in all the places you would use shell scripts now. It's a great fit for those sort of "environment-level infrastructure" scripts that every Git repo ends up needing, like "build the app", "pull the latest docker images", "install/use the correct versions of languages and tools", etc.
 
 YavaScript has built-in APIs for all the things you'd normally want to do in a bash script, such as:
 

@@ -124,6 +124,9 @@
   string: "/meta/generated-docs/others.md#string-stringconstructor",
   symbol: "/meta/generated-docs/others.md#symbol-symbolconstructor",
 
+  // Multi-threading APIs
+  "Worker": "/meta/generated-docs/worker.md",
+
   // QuickJS Module Namespace Globals
   std: "/meta/generated-docs/std.md#quickjsstd-namespace",
   os: "/meta/generated-docs/os.md#quickjsos-namespace",
@@ -143,6 +146,7 @@
   "FILE.setvbuf": "/meta/generated-docs/std.md#filesetvbuf-method",
   open: "/meta/generated-docs/os.md#quickjsosopen-exported-function",
   access: "/meta/generated-docs/os.md#quickjsosaccess-exported-function",
+  "os.Worker": "/meta/generated-docs/os.md#quickjsosworker-exported-class",
   R_OK: "/meta/generated-docs/os.md#quickjsosr_ok-exported-number",
   W_OK: "/meta/generated-docs/os.md#quickjsosw_ok-exported-number",
   X_OK: "/meta/generated-docs/os.md#quickjsosx_ok-exported-number",

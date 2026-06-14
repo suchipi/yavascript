@@ -147,6 +147,10 @@ There are several lowercase aliases for builtin constructors, so that certain ty
 - [`string`]: Alias for `String`
 - [`symbol`]: Alias for `Symbol`
 
+## Multi-threading APIs
+
+- [`Worker`]: Web-Worker-like multithreading API
+
 ## QuickJS Modules
 
 The following QuickJS builtin modules are available via `import`/`require`:
@@ -269,6 +273,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`number`]: /meta/generated-docs/others.md#number-numberconstructor
 [`string`]: /meta/generated-docs/others.md#string-stringconstructor
 [`symbol`]: /meta/generated-docs/others.md#symbol-symbolconstructor
+[`Worker`]: /meta/generated-docs/worker.md
 [`std`]: /meta/generated-docs/std.md#quickjsstd-namespace
 [`os`]: /meta/generated-docs/os.md#quickjsos-namespace
 [`JSX.pragmaFrag`]: /meta/generated-docs/jsx.md#jsxpragmafrag-exported-string
@@ -285,6 +290,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`FILE.setvbuf`]: /meta/generated-docs/std.md#filesetvbuf-method
 [`open`]: /meta/generated-docs/os.md#quickjsosopen-exported-function
 [`access`]: /meta/generated-docs/os.md#quickjsosaccess-exported-function
+[`os.Worker`]: /meta/generated-docs/os.md#quickjsosworker-exported-class
 [`R_OK`]: /meta/generated-docs/os.md#quickjsosr_ok-exported-number
 [`W_OK`]: /meta/generated-docs/os.md#quickjsosw_ok-exported-number
 [`X_OK`]: /meta/generated-docs/os.md#quickjsosx_ok-exported-number

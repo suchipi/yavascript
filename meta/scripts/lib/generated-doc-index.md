@@ -147,6 +147,10 @@ There are several lowercase aliases for builtin constructors, so that certain ty
 - [`string`]: Alias for `String`
 - [`symbol`]: Alias for `Symbol`
 
+## Multi-threading APIs
+
+- [`Worker`]: Web-Worker-like multithreading API
+
 ## QuickJS Modules
 
 The following QuickJS builtin modules are available via `import`/`require`:
