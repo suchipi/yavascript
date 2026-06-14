@@ -1,12 +1,17 @@
 import * as engine from "quickjs:engine";
 import * as os from "quickjs:os";
-import { readFile } from "../filesystem";
-import compilers from "../../compilers";
-import { Path } from "../path";
 
-import primordialsBundleCode from "../../../dist/bundles/primordials-base.min.js?contentString";
+// Note: unlike most files in API, we intentionally avoid importing stuff into
+// this bundle and rely on accessing everything via globals instead, so that
+// this bundle doesn't duplicate stuff from the primordials bundles (since this
+// API is NOT included in the primordials bundles, since it depends on the
+// primordial bundles)
 
 declare var yavascript: typeof import("../yavascript").yavascript;
+declare var __bytecode_primordials_base: ArrayBuffer;
+declare var __bytecode_primordials_hardcoded: ArrayBuffer;
+
+const compilers = yavascript.compilers;
 
 export class Worker extends os.Worker {
   constructor(
@@ -50,18 +55,20 @@ export class Worker extends os.Worker {
       filename: absoluteModulePath.toString(),
     });
 
-    super(
-      absoluteModulePath.toString(),
-      [
-        primordialsBundleCode,
+    super(absoluteModulePath.toString(), {
+      initialData: {
+        __bytecode_primordials_base,
+        __bytecode_primordials_hardcoded,
+      },
+      overrideCode: [
         // We just need Worker.parent to resolve. The yavascript-specific
         // constructor override doesn't matter because Workers aren't allowed to
         // make sub-Workers.
-        `;globalThis.Worker = require('quickjs:os').Worker;`,
-        `globalThis.yavascript.version = ${JSON.stringify(yavascript.version)};`,
-        `globalThis.yavascript.arch = ${JSON.stringify(yavascript.arch)};`,
+        `globalThis.Worker = require('quickjs:os').Worker;`,
+        `require("quickjs:bytecode").toValue(Worker.initialData.__bytecode_primordials_base)();`,
+        `require("quickjs:bytecode").toValue(Worker.initialData.__bytecode_primordials_hardcoded)();`,
         compiledCode,
-      ].join("\n"),
-    );
+      ].join(" "),
+    });
   }
 }

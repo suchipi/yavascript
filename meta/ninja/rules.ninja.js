@@ -114,3 +114,11 @@ rule("minify-js", {
   description: "TERSER $out",
   implicitInputs: [rootDir("node_modules/terser/package.json")],
 });
+
+// NOTE: must define GLOBAL_NAME
+rule("make-array-buffer-script", {
+  command:
+    "node meta/scripts/make-array-buffer-script.js $in $GLOBAL_NAME $out",
+  description: "MAKE-ARRAY-BUFFER-SCRIPT $out",
+  implicitInputs: walkJsDeps("meta/scripts/make-array-buffer-script.js"),
+});

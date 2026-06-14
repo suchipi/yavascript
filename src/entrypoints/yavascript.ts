@@ -1,12 +1,16 @@
 import * as std from "quickjs:std";
 import * as cmdline from "quickjs:cmdline";
-import printError from "./print-error";
+import * as Bytecode from "quickjs:bytecode";
+import printError from "../print-error";
+import determineTarget from "../determine-target";
 
-import "./primordials-base";
-import "./primordials-worker";
-// primordials-hardcoded gets appended on later as part of the build
+declare var __bytecode_primordials_base: ArrayBuffer;
+declare var __bytecode_primordials_hardcoded: ArrayBuffer;
 
-import determineTarget from "./determine-target";
+Bytecode.toValue(__bytecode_primordials_base)();
+Bytecode.toValue(__bytecode_primordials_hardcoded)();
+
+globalThis.Worker = require("../api/worker").Worker;
 
 async function main(): Promise<void> {
   const targetInfo = determineTarget(scriptArgs);
@@ -14,31 +18,31 @@ async function main(): Promise<void> {
   switch (targetInfo.target) {
     case "eval": {
       if (targetInfo.filesToLoadFirst.length > 0) {
-        const runFileTarget: typeof import("./targets/run-file").default =
-          require("./targets/run-file").default;
+        const runFileTarget: typeof import("../targets/run-file").default =
+          require("../targets/run-file").default;
 
         for (const file of targetInfo.filesToLoadFirst) {
           await runFileTarget(file, null, false);
         }
       }
 
-      const evalTarget: typeof import("./targets/eval").default =
-        require("./targets/eval").default;
+      const evalTarget: typeof import("../targets/eval").default =
+        require("../targets/eval").default;
 
       const { code, lang } = targetInfo;
       evalTarget(code, lang ?? "javascript");
       return;
     }
     case "help": {
-      const helpTarget: typeof import("./targets/help").default =
-        require("./targets/help").default;
+      const helpTarget: typeof import("../targets/help").default =
+        require("../targets/help").default;
 
       helpTarget();
       return;
     }
     case "invalid": {
-      const invalidTarget: typeof import("./targets/invalid").default =
-        require("./targets/invalid").default;
+      const invalidTarget: typeof import("../targets/invalid").default =
+        require("../targets/invalid").default;
 
       const { message } = targetInfo;
       invalidTarget(message);
@@ -46,39 +50,39 @@ async function main(): Promise<void> {
       return;
     }
     case "license": {
-      const licenseTarget: typeof import("./targets/license").default =
-        require("./targets/license").default;
+      const licenseTarget: typeof import("../targets/license").default =
+        require("../targets/license").default;
 
       licenseTarget();
       return;
     }
     case "print-types": {
-      const printTypesTarget: typeof import("./targets/print-types").default =
-        require("./targets/print-types").default;
+      const printTypesTarget: typeof import("../targets/print-types").default =
+        require("../targets/print-types").default;
 
       printTypesTarget();
       return;
     }
     case "repl": {
       if (targetInfo.filesToLoadFirst.length > 0) {
-        const runFileTarget: typeof import("./targets/run-file").default =
-          require("./targets/run-file").default;
+        const runFileTarget: typeof import("../targets/run-file").default =
+          require("../targets/run-file").default;
 
         for (const file of targetInfo.filesToLoadFirst) {
           await runFileTarget(file, null, false);
         }
       }
 
-      const replTarget: typeof import("./targets/repl").default =
-        require("./targets/repl").default;
+      const replTarget: typeof import("../targets/repl").default =
+        require("../targets/repl").default;
 
       const { lang } = targetInfo;
       replTarget(lang ?? "javascript");
       return;
     }
     case "run-file": {
-      const runFileTarget: typeof import("./targets/run-file").default =
-        require("./targets/run-file").default;
+      const runFileTarget: typeof import("../targets/run-file").default =
+        require("../targets/run-file").default;
 
       for (const file of targetInfo.filesToLoadFirst) {
         await runFileTarget(file, null, false);
@@ -89,8 +93,8 @@ async function main(): Promise<void> {
       return;
     }
     case "version": {
-      const versionTarget: typeof import("./targets/version").default =
-        require("./targets/version").default;
+      const versionTarget: typeof import("../targets/version").default =
+        require("../targets/version").default;
 
       versionTarget();
       return;
