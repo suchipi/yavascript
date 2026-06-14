@@ -5483,16 +5483,39 @@ declare module "quickjs:os" {
   export class Worker {
     /**
      * Create a Worker which runs the module at `moduleFilename`.
+     *
+     * If `options.overrideCode` is present, the Worker instead runs a synthetic
+     * module with filename `moduleFilename` and source code
+     * `options.overrideCode` (JS source code string). In this case,
+     * `moduleFilename` is not read from disk and is only used as the module's
+     * assigned filename for import.meta, module resolution, etc.
+     *
+     * If `options.initialData` is present, it'll be available within the worker
+     * as the static `initialData` property on the Worker constructor.
      */
-    constructor(moduleFilename: string);
+    constructor(
+      moduleFilename: string,
+      options?: {
+        overrideCode?: string;
+        initialData?: StructuredClonable;
+      }
+    );
+
     /**
-     * Create a Worker which runs a synthetic module with filename
-     * `fakeModuleFilename` and source code `overrideCode` (JS source code
-     * string). `fakeModuleFilename` is not read from disk and is only used as
-     * the module's assigned filename for import.meta, module resolution, etc.
+     * If accessed within a Worker, and the Worker was constructed with
+     * non-undefined `initialData`, then this will be a structured clone of that
+     * initial data.
+     *
+     * Outside of a worker, this is always `undefined`.
      */
-    constructor(fakeModuleFilename: string, overrideCode: string);
-    static parent: Worker;
+    static initialData: StructuredClonable;
+
+    /**
+     * Worker-side communication channel back to the parent context that invoked
+     * it (ie. the main thread).
+     */
+    static parent: Pick<Worker, "postMessage" | "onmessage">;
+
     postMessage(msg: StructuredClonable): void;
     /**
      * Terminate the worker thread. Equivalent to setting `onmessage` to `null`.
@@ -6559,8 +6582,4 @@ declare module "quickjs:encoding" {
 
 declare const std: typeof import("quickjs:std");
 declare const os: typeof import("quickjs:os");
-
-// undocumented from quickjs, but it's there
-/** Get the current unix timestamp with microsecond precision. */
-declare function __date_clock(): number;
 
