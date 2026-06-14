@@ -42,7 +42,7 @@ export class Worker extends os.Worker {
     }
 
     let rawCode: string;
-    let initialData: undefined;
+    let initialData: StructuredClonable | undefined;
     if (args.length === 2) {
       if (args[1].overrideCode) {
         rawCode = args[1].overrideCode;
@@ -51,7 +51,7 @@ export class Worker extends os.Worker {
       }
 
       if ("initialData" in args[1]) {
-        initialData = initialData;
+        initialData = args[1].initialData;
       } else {
         initialData = undefined;
       }
