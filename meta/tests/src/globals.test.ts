@@ -135,6 +135,8 @@ test("globals", async () => {
    __qjsbootstrap_offset: number readonly ()
    scriptArgs: frozen object (CWE)
    require: function (CWE)
+   __bytecode_primordials_base: object (CWE)
+   __bytecode_primordials_hardcoded: object (CWE)
    __kame_instances__: object (CWE)
    std: object (GSCE)
    os: object (GSCE)
@@ -245,6 +247,7 @@ test("globals", async () => {
    grepArray: function (CWE)
    global: object (CW)
    process: object (CW)
+   Worker: function (CWE)
    ",
    }
   `);

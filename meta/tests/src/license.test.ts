@@ -4,10 +4,15 @@ async function getPackagesInBinary() {
   // Funky way of getting a list of all the files that made it into the bundle
   const result = await evaluate(
     `
-    const instanceKey = Object.keys(__kame_instances__)[0];
-    const kameInstance = __kame_instances__[instanceKey];
-    const files = Object.keys(kameInstance.modules);
-    console.log(JSON.stringify(files, null, 2));
+    const instanceKeys = Object.keys(__kame_instances__);
+    const files = new Set();
+    for (const instanceKey of instanceKeys) {
+      const kameInstance = __kame_instances__[instanceKey];
+      for (const fileName of Object.keys(kameInstance.modules)) {
+        files.add(fileName);
+      }
+    }
+    console.log(JSON.stringify(Array.from(files).sort(), null, 2));
   `,
   );
   const partialResult = {

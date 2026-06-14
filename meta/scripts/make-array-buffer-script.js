@@ -30,6 +30,13 @@ async function main() {
     });
   }
 
+  // The fork of QuickJS we use has a syntax extension for ArrayBuffer literals
+  // with arbitrary binary data encoded directly into the JS source code.
+  //
+  // See heading "New syntax: binary ArrayBuffer literals" in
+  // node_modules/@suchipi/quickjs/README.md
+  // for more info.
+
   await writeAsync(
     outputStream,
     `globalThis[${JSON.stringify(globalName)}] = \x01${inputSize}\x02`,
