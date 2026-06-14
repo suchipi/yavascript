@@ -1,7 +1,5 @@
-import * as os from "quickjs:os";
-
 console.log("in main");
-const w = new os.Worker("./worker.js");
+const w = new Worker("./worker.js");
 
 w.onmessage = (event) => {
   console.log("message from worker", event);
