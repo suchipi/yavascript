@@ -39,18 +39,6 @@ const yavascript_x86_64_js = build({
   output: builddir("bundles/yavascript-x86_64.js"),
 });
 
-// so you can click-to-position in stack traces.
-// first two newlines are standing in for the two bytecode global definitions' lines
-build({
-  rule: "combine",
-  inputs: [
-    "meta/scripts/lib/newline.txt",
-    "meta/scripts/lib/newline.txt",
-    yavascript_bundle_js,
-  ],
-  output: "yavascript-internal.js",
-});
-
 // ====================
 // ===== Bytecode =====
 // ====================

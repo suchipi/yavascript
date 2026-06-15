@@ -49,7 +49,7 @@ rule("kame", {
       JSON.stringify(fileToByteCodePath),
       `$in $out`,
       // to have clearer stack trace in filenames
-      `yavascript-internal.js`,
+      `yavascript-internals/$in`,
       "--strip",
       "source",
     ],

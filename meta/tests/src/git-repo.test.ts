@@ -58,7 +58,7 @@ test("attempting to call findRoot with relative path throws an error", async () 
      "stderr": "Error: Could not resolve "." into an absolute path
      at somewhere
    {
-     fileName: "yavascript-internal.js"
+     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
    }
@@ -120,7 +120,7 @@ test("attempting to construct a GitRepo to a folder which isn't a git repo throw
      "stderr": "Error: The 'repoPath' provided to the GitRepo constructor doesn't appear to refer to a git repository; namely, "<rootDir>/meta/tests/src/.git" doesn't exist. (repoDir = "<rootDir>/meta/tests/src", dotGitDir = Path { <rootDir>/meta/tests/src/.git })
      at somewhere
    {
-     fileName: "yavascript-internal.js"
+     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
      repoDir: "<rootDir>/meta/tests/src"
@@ -147,7 +147,7 @@ test("passing absolute path outside repo root to isIgnored throws an error", asy
      "stderr": "Error: Path passed to GitRepo.isIgnored is outside of the GitRepo object's repoDir. (path = "/tmp/something", resolvedPath = "/tmp/something", cwd = Path { <rootDir>/meta/tests/src }, repoDir = "<rootDir>")
      at somewhere
    {
-     fileName: "yavascript-internal.js"
+     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
      path: "/tmp/something"
@@ -176,7 +176,7 @@ test("passing path with newline to isIgnored throws error", async () => {
      "stderr": "Error: GitRepo.isIgnored does not support paths with line breaks in them. GitRepo.isIgnored cannot be used to check multiple paths. (path = "a\\nb", resolvedPath = "<rootDir>/a\\nb", cwd = Path { <rootDir>/meta/tests/src }, repoDir = "<rootDir>")
      at somewhere
    {
-     fileName: "yavascript-internal.js"
+     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
      path: "a\\nb"

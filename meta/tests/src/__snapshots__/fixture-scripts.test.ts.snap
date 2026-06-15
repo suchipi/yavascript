@@ -61,7 +61,7 @@ exports[`http-import-error.js 1`] = `
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "http://suchipi.com/there-is-nothing-at-this-path")
   at somewhere
 {
-  fileName: "yavascript-internal.js"
+  fileName: "yavascript-internals/dist/bundles/primordials-base.js"
   lineNumber: <redacted>
   columnNumber: <redacted>
   httpStatusCode: 404
@@ -81,7 +81,7 @@ exports[`https-import-error.js 1`] = `
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "https://suchipi.com/there-is-nothing-at-this-path")
   at somewhere
 {
-  fileName: "yavascript-internal.js"
+  fileName: "yavascript-internals/dist/bundles/primordials-base.js"
   lineNumber: <redacted>
   columnNumber: <redacted>
   httpStatusCode: 404
@@ -473,7 +473,7 @@ exports[`npm-proto-import-error.js 1`] = `
   "stderr": "Error: Failed to load module (httpStatusCode = 404, url = "https://cdn.skypack.dev/@suchipi/this-package-does-not-exist")
   at somewhere
 {
-  fileName: "yavascript-internal.js"
+  fileName: "yavascript-internals/dist/bundles/primordials-base.js"
   lineNumber: <redacted>
   columnNumber: <redacted>
   httpStatusCode: 404

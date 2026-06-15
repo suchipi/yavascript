@@ -49,7 +49,7 @@ test("exec false - string", async () => {
    Error: Command failed: "false" (status = 1, signal = undefined)
      at somewhere
    {
-     fileName: "yavascript-internal.js"
+     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
      status: 1
@@ -71,7 +71,7 @@ test("exec false - array", async () => {
    Error: Command failed: ["false"] (status = 1, signal = undefined)
      at somewhere
    {
-     fileName: "yavascript-internal.js"
+     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
      status: 1
@@ -93,7 +93,7 @@ test("exec false - Path", async () => {
    Error: Command failed: "/usr/bin/false" (status = 1, signal = undefined)
      at somewhere
    {
-     fileName: "yavascript-internal.js"
+     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
      status: 1
@@ -358,7 +358,7 @@ test("$ false", async () => {
    Error: Command failed: "false" (status = 1, signal = undefined)
      at somewhere
    {
-     fileName: "yavascript-internal.js"
+     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
      status: 1

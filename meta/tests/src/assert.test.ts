@@ -25,7 +25,7 @@ test("assert - falsy value", async () => {
      "stderr": "Error: Assertion failed (value = false)
      at somewhere
    {
-     fileName: "yavascript-internal.js"
+     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
      value: false
