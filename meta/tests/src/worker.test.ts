@@ -23,7 +23,6 @@ test("worker cannot call std.exit", async () => {
    ",
      "stdout": "in main
    in main, sending try-to-exit
-   in worker
    in worker, received: {
    	data: "try-to-exit"
    }
