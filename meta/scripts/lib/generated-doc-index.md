@@ -150,6 +150,7 @@ There are several lowercase aliases for builtin constructors, so that certain ty
 ## Multi-threading APIs
 
 - [`Worker`]: Web-Worker-like multithreading API
+- [`runInWorker`]: goroutine-like Worker wrapper function
 
 ## QuickJS Modules
 

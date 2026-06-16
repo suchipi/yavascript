@@ -1,1 +1,1 @@
-Layer 3: Worker global.
+Layer 3: Worker and runInWorker globals.

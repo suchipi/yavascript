@@ -150,6 +150,7 @@ There are several lowercase aliases for builtin constructors, so that certain ty
 ## Multi-threading APIs
 
 - [`Worker`]: Web-Worker-like multithreading API
+- [`runInWorker`]: goroutine-like Worker wrapper function
 
 ## QuickJS Modules
 
@@ -274,6 +275,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`string`]: /meta/generated-docs/others.md#string-stringconstructor
 [`symbol`]: /meta/generated-docs/others.md#symbol-symbolconstructor
 [`Worker`]: /meta/generated-docs/worker.md
+[`runInWorker`]: /meta/generated-docs/runInWorker.md
 [`std`]: /meta/generated-docs/std.md#quickjsstd-namespace
 [`os`]: /meta/generated-docs/os.md#quickjsos-namespace
 [`JSX.pragmaFrag`]: /meta/generated-docs/jsx.md#jsxpragmafrag-exported-string

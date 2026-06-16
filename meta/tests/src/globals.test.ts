@@ -246,6 +246,7 @@ test("globals", async () => {
    global: object (CW)
    process: object (CW)
    Worker: function (CWE)
+   runInWorker: function (CWE)
    ",
    }
   `);
