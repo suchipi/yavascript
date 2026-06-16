@@ -32,7 +32,7 @@ test("yavascript (global API)", async () => {
        autodetect: Function "autodetect" {}
        esmToCjs: Function "esmToCjs" {}
      }
-     getTypesDts: Function "getTypesDts" {}
+     getTypesDts: Function "getDtsText" {}
    }
    ",
    }

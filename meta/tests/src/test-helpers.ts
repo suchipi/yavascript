@@ -1,6 +1,6 @@
 import print from "@suchipi/print";
 import { sanitizers, spawn, Options as SpawnOptions } from "first-base";
-import * as inspectOptions from "../../../src/inspect-options";
+import * as inspectOptions from "../../../src/layer1/inspect-options";
 import rootDir from "../../root-dir";
 import { getBinaryPath, binaryPath } from "../jest/helpers";
 

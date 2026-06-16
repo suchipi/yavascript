@@ -1,4 +1,5 @@
 import * as engine from "quickjs:engine";
+import { __yavascript_layer1_internals } from "../layer-internals";
 
 const { langToCompiler } = __yavascript_layer1_internals;
 

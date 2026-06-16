@@ -1,4 +1,4 @@
-import { transform } from "../../../src/esm-to-require";
+import { transform } from "../../../src/layer1/esm-to-require";
 
 test("ignores non-esm", async () => {
   expect(transform("2 + 2 == 4")).toBe("2 + 2 == 4");

@@ -39,7 +39,7 @@ test("assert.type - global constructor, fail", async () => {
      "stderr": "TypeError: Expected value of type string, but received 2
      at somewhere
    {
-     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
+     fileName: "yavascript-internals/dist/bundles/layer1.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
    }
@@ -60,7 +60,7 @@ test("assert.type - types.namespace, fail", async () => {
      "stderr": "TypeError: Expected value of type string, but received 2
      at somewhere
    {
-     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
+     fileName: "yavascript-internals/dist/bundles/layer1.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
    }
@@ -99,7 +99,7 @@ test("assert.type - custom class, fail", async () => {
      "stderr": "TypeError: Expected value of type instanceOf(Something), but received null
      at somewhere
    {
-     fileName: "yavascript-internals/dist/bundles/primordials-base.js"
+     fileName: "yavascript-internals/dist/bundles/layer1.js"
      lineNumber: <redacted>
      columnNumber: <redacted>
    }

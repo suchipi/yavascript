@@ -1,4 +1,8 @@
 import * as std from "quickjs:std";
+import {
+  __yavascript_layer1_internals,
+  __yavascript_layer2_internals,
+} from "../layer-internals";
 
 const { hasColors } = __yavascript_layer1_internals;
 const { version, arch } = __yavascript_layer2_internals;

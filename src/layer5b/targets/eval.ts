@@ -1,5 +1,6 @@
 import * as engine from "quickjs:engine";
 import * as os from "quickjs:os";
+import { __yavascript_layer1_internals } from "../layer-internals";
 
 const { esmToRequire, NOTHING, langToCompiler } = __yavascript_layer1_internals;
 

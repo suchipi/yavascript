@@ -1,4 +1,10 @@
-import determineTarget from "../../../src/determine-target";
+// layer5b/determine-target depends on __yavascript_layer1_internals.LANGS.
+globalThis.__yavascript_layer1_internals = {
+  LANGS: require("../../../src/layer1/langs").LANGS,
+};
+
+const determineTarget =
+  require("../../../src/layer5b/determine-target").default;
 
 const inputs: Array<Array<string>> = [
   [], // repl
