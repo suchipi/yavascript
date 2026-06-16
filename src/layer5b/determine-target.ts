@@ -1,4 +1,3 @@
-declare var __yavascript_layer1_internals: import("../layer1/index").__yavascript_layer1_internals;
 const { LANGS } = __yavascript_layer1_internals;
 
 type TargetInfo<Name extends string, Rest = {}> = { target: Name } & Rest;

@@ -1,6 +1,5 @@
 import * as engine from "quickjs:engine";
 
-declare var __yavascript_layer1_internals: import("../../layer1/index").__yavascript_layer1_internals;
 const { langToCompiler } = __yavascript_layer1_internals;
 
 function overrideCompiler(

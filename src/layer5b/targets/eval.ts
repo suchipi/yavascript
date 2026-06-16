@@ -1,7 +1,6 @@
 import * as engine from "quickjs:engine";
 import * as os from "quickjs:os";
 
-declare var __yavascript_layer1_internals: import("../../layer1/index").__yavascript_layer1_internals;
 const { esmToRequire, NOTHING, langToCompiler } = __yavascript_layer1_internals;
 
 export default function evalTarget(inputCode: string, lang: string) {

@@ -1,7 +1,6 @@
 import * as cmdline from "quickjs:cmdline";
 import determineTarget from "./determine-target";
 
-declare var __yavascript_layer1_internals: import("../layer1/index").__yavascript_layer1_internals;
 const { printError } = __yavascript_layer1_internals;
 
 async function main(): Promise<void> {

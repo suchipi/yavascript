@@ -1,9 +1,6 @@
 import * as std from "quickjs:std";
 
-declare var __yavascript_layer1_internals: import("../../layer1/index").__yavascript_layer1_internals;
 const { hasColors } = __yavascript_layer1_internals;
-
-declare var __yavascript_layer2_internals: import("../../layer2/index").__yavascript_layer2_internals;
 const { version, arch } = __yavascript_layer2_internals;
 
 export default function helpTarget() {
