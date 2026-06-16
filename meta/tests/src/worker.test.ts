@@ -6,8 +6,6 @@ import { runYavascript, rootDir, binaryPath } from "./test-helpers";
 
 const workerFixturesDir = rootDir.concat("meta/tests/fixtures/worker");
 
-// TODO: Change to use yavascript `exit` instead of quickjs `std.exit`, once
-// workers get the yavascript globals
 test("worker cannot call std.exit", async () => {
   const result = await runYavascript([workerFixturesDir("main.js")]);
 
