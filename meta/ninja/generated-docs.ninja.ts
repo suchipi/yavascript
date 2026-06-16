@@ -1,0 +1,85 @@
+/// <reference types="@suchipi/shinobi/globals.d.ts" />
+/// <reference types="node" />
+
+import path from "path";
+
+const dtsIncFiles = glob("src/**/*.inc.d.ts", {});
+
+const newlineFile = rel("../scripts/lib/newline.txt");
+
+function dtsToMd(
+  inputFile: string,
+  outputFile: string,
+  name: string = path.basename(inputFile).replace(/(?:\.inc)?\.d\.ts$/, ""),
+) {
+  const mdWithoutToc = build({
+    rule: "dtsmd",
+    inputs: [inputFile],
+    output: builddir(`docs/${name}-no-toc.md`),
+  });
+
+  const toc = build({
+    rule: "markdown-toc",
+    inputs: [mdWithoutToc],
+    output: builddir(`docs/${name}-toc.md`),
+  });
+
+  const combined = build({
+    rule: "combine",
+    inputs: [toc, newlineFile, mdWithoutToc],
+    output: builddir(`docs/${name}-combined.md`),
+  });
+
+  build({
+    rule: "prettier",
+    ruleVariables: {
+      PRETTIER_FLAGS: "--parser markdown",
+    },
+    inputs: [combined],
+    output: outputFile,
+  });
+}
+
+for (const dtsFile of dtsIncFiles) {
+  const inputFile = dtsFile;
+  const outputFile = rel(
+    "../generated-docs/" +
+      path.basename(inputFile).replace(/\.inc\.d\.ts$/, ".md"),
+  );
+
+  dtsToMd(inputFile, outputFile);
+}
+
+const quickjsDtsFilesMap = {
+  inspect: "node_modules/@suchipi/quickjs/build/dts/quickjs-inspect.d.ts",
+  timers: "node_modules/@suchipi/quickjs/build/dts/quickjs-timers.d.ts",
+  bytecode: "node_modules/@suchipi/quickjs/build/dts/quickjs-bytecode.d.ts",
+  std: "node_modules/@suchipi/quickjs/build/dts/quickjs-std.d.ts",
+  os: "node_modules/@suchipi/quickjs/build/dts/quickjs-os.d.ts",
+  cmdline: "node_modules/@suchipi/quickjs/build/dts/quickjs-cmdline.d.ts",
+  encoding: "node_modules/@suchipi/quickjs/build/dts/quickjs-encoding.d.ts",
+  engine: "node_modules/@suchipi/quickjs/build/dts/quickjs-engine.d.ts",
+  context: "node_modules/@suchipi/quickjs/build/dts/quickjs-context.d.ts",
+  modulesys: "node_modules/@suchipi/quickjs/build/dts/quickjs-modulesys.d.ts",
+  // skipping print as we redefine it
+  "quickjs-extensions": "node_modules/@suchipi/quickjs/build/dts/quickjs.d.ts",
+};
+
+for (const [outputName, quickjsDtsPath] of Object.entries(quickjsDtsFilesMap)) {
+  const inputFile = quickjsDtsPath;
+  const outputFile = rel(`../generated-docs/${outputName}.md`);
+
+  dtsToMd(inputFile, outputFile, outputName);
+}
+
+const linkFooter = build({
+  rule: "md-links-from-json5",
+  inputs: [rel("../scripts/lib/generated-doc-links.json5")],
+  output: builddir("docs/link-footer.md"),
+});
+
+build({
+  rule: "combine",
+  inputs: [rel("../scripts/lib/generated-doc-index.md"), linkFooter],
+  output: rel("../generated-docs/README.md"),
+});

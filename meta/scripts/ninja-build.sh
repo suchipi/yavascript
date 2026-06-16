@@ -15,7 +15,7 @@ fi
 
 env BUILDDIR=dist MSYS2_ARG_CONV_EXCL='*' npx --no-install shinobi \
   --path-separator / \
-  ./meta/ninja/**/*.ninja.js \
+  ./meta/ninja/**/*.ninja.ts \
   -o dist/build.ninja
 
 ninja -f dist/build.ninja
