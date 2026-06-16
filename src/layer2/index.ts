@@ -1,7 +1,7 @@
 import { version, arch } from "./hardcoded";
 
-(globalThis as any).yavascript.version = version;
-(globalThis as any).yavascript.arch = arch;
+yavascript.version = version;
+yavascript.arch = arch as typeof yavascript.arch;
 
 const __yavascript_layer2_internals = {
   version,

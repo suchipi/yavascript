@@ -4,8 +4,8 @@ import * as os from "quickjs:os";
 declare var yavascript: typeof import("../layer1/api/yavascript").yavascript;
 
 // deref these now so we can delete them from the global later
-const __bytecode_layer1: ArrayBuffer = (globalThis as any).__bytecode_layer1;
-const __bytecode_layer2: ArrayBuffer = (globalThis as any).__bytecode_layer2;
+const __bytecode_layer1: ArrayBuffer = globalThis.__bytecode_layer1;
+const __bytecode_layer2: ArrayBuffer = globalThis.__bytecode_layer2;
 
 const compilers = yavascript.compilers;
 

@@ -2,19 +2,30 @@ const { LANGS } = __yavascript_layer1_internals;
 
 type TargetInfo<Name extends string, Rest = {}> = { target: Name } & Rest;
 
+type Lang =
+  | "js"
+  | "javascript"
+  | "ts"
+  | "typescript"
+  | "jsx"
+  | "tsx"
+  | "coffee"
+  | "coffeescript"
+  | "civet";
+
 export type TargetDetermination =
   | TargetInfo<"help">
   | TargetInfo<"version">
   | TargetInfo<"license">
   | TargetInfo<"print-types">
-  | TargetInfo<"repl", { lang: string | null; filesToLoadFirst: Array<string> }>
+  | TargetInfo<"repl", { lang: Lang | null; filesToLoadFirst: Array<string> }>
   | TargetInfo<
       "eval",
-      { code: string; lang: string | null; filesToLoadFirst: Array<string> }
+      { code: string; lang: Lang | null; filesToLoadFirst: Array<string> }
     >
   | TargetInfo<
       "run-file",
-      { file: string; lang: string | null; filesToLoadFirst: Array<string> }
+      { file: string; lang: Lang | null; filesToLoadFirst: Array<string> }
     >
   | TargetInfo<"invalid", { message: string }>;
 
@@ -96,7 +107,7 @@ export default function determineTarget(
   const info = {
     file: null as string | null,
     eval: null as string | null,
-    lang: null as string | null,
+    lang: null as Lang | null,
     preloadFiles: [] as Array<string>,
   };
 
@@ -149,7 +160,7 @@ export default function determineTarget(
         };
       }
 
-      info.lang = nextArg;
+      info.lang = nextArg as Lang;
       i++;
     } else if (info.eval == null && info.file == null) {
       info.file = arg;
