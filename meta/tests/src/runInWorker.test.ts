@@ -7,7 +7,25 @@ const runInWorkerFixturesDir = rootDir.concat(
 test("basic functionality", async () => {
   const result = await evaluate(`
     void runInWorker(2, function addThree(i) {
-      return i + 3; 
+      return i + 3;
+    }).then(console.log, console.error);
+  `);
+
+  expect(result).toMatchInlineSnapshot(`
+   {
+     "code": 0,
+     "error": null,
+     "stderr": "",
+     "stdout": "5
+   ",
+   }
+  `);
+});
+
+test("async", async () => {
+  const result = await evaluate(`
+    void runInWorker(2, function addThree(i) {
+      return Promise.resolve(i + 3);
     }).then(console.log, console.error);
   `);
 
