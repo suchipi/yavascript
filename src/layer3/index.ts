@@ -1,2 +1,3 @@
-globalThis.Worker = require("./worker").Worker;
-globalThis.runInWorker = require("./runInWorker").runInWorker;
+import { installLayer3Globals } from "./install-layer3-globals";
+
+installLayer3Globals(globalThis);

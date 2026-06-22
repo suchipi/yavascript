@@ -114,6 +114,7 @@ Methods which are useful when printing strings to a terminal (command-line) scre
 - [`InteractivePrompt`]: Create your own REPL
 - [`__filename`]: The absolute path to the currently-executing file
 - [`__dirname`]: The absolute path to the directory (folder) containing the currently-executing file
+- [`Context`]: Create constrained JS environments with a limited global scope and run code in them.
 
 ## Data Interchange Format helpers
 
@@ -259,6 +260,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`InteractivePrompt`]: /meta/generated-docs/interactive-prompt.md#interactiveprompt-interactivepromptconstructor
 [`__filename`]: /meta/generated-docs/__filename-and-__dirname.md#__filename-string
 [`__dirname`]: /meta/generated-docs/__filename-and-__dirname.md#__dirname-string
+[`Context`]: /meta/generated-docs/context.md#context-class
 [`CSV`]: /meta/generated-docs/csv.md#csv-object
 [`YAML`]: /meta/generated-docs/yaml.md#yaml-object
 [`TOML`]: /meta/generated-docs/toml.md#toml-object
@@ -336,7 +338,8 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`"quickjs:std"`]: /meta/generated-docs/std.md#quickjsstd-namespace
 [`"quickjs:os"`]: /meta/generated-docs/os.md#quickjsos-namespace
 [`"quickjs:bytecode"`]: /meta/generated-docs/bytecode.md#quickjsbytecode-namespace
-[`"quickjs:context"`]: /meta/generated-docs/context.md#quickjscontext-namespace
+[`"quickjs:context"`]: /meta/generated-docs/quickjs-context.md#quickjscontext-namespace
+[`import("quickjs:context")`]: /meta/generated-docs/quickjs-context.md#quickjscontext-namespace
 [`"quickjs:encoding"`]: /meta/generated-docs/encoding.md#quickjsencoding-namespace
 [`"quickjs:engine"`]: /meta/generated-docs/engine.md#quickjsengine-namespace
 [`"quickjs:cmdline"`]: /meta/generated-docs/cmdline.md#quickjscmdline-namespace

@@ -23,7 +23,7 @@
 - [ ] support source maps for compiled languages
 - [x] ~~pager for long help text (when using repl)~~
   - [x] invalidated since help text is browser-only now
-- [-] create solution for tracing `exec` and friends without it being crazy chatty. maybe log levels
+- [x] create solution for tracing `exec` and friends without it being crazy chatty. maybe log levels
 - [x] allow catting multiple files together, and do so as binary
 - [ ] jsx in the repl behaves weirdly because the repl autocomplete thinks the slash is a regexp literal
 - [ ] in windows powershell, numbers printed in the repl (ie from running `2 + 2`) aren't visible
@@ -31,7 +31,7 @@
 - [ ] in windows terminal git bash, in repl, pressing up for history doesn't work past the first item
 - [ ] repl sometimes needs you to press Ctrl+C more times than it should
 - [x] fix chmod so it has add/remove semantics and respects existing perms
-- [ ] yavascript globals aren't set up in workers
+- [x] yavascript globals aren't set up in workers
 - [ ] add `.on("exit")` support to node-compat `process` shim
 - [ ] make assert have nice messages when one isn't specified
 - [x] Path normalize handles `../../a` wrong; gives `a`, but should give `../../a`
@@ -41,7 +41,7 @@
   - [x] macOS
   - [x] linux
   - [ ] windows
-- [-] open/xdg-open
+- [x] open/xdg-open
   - [x] api added (as `openUrl` function)
   - [x] test on linux
   - [x] test on windows
@@ -50,8 +50,8 @@
 - [ ] move some of the static properties on Path to some sort of "os" thing, along with other similar helpers. maybe extension of the existing "quickjs:os" `os` global?
 - [x] there's something wrong with yavascript.d.ts that's making it not take effect
 - [x] deduplicate nice-path from clef-parse (make it use Path global instead)
-  - [ ] this was done but needs to be done again cause we use nice-path for Path now and clef-parse uses an older version of nice-path
-- [ ] make it so `quickjs:context`s can get yavascript globals bound to their global intrinsics
+  - [x] this was done but needs to be done again cause we use nice-path for Path now and clef-parse uses an older version of nice-path
+- [x] make it so `quickjs:context`s can get yavascript globals bound to their global intrinsics
 - [x] repl: don't add contiguous duplicate entries to history
 - [x] repl: don't tab-autocomplete variable names for "did you mean" reference error forwarder getter stubs
 - [x] see if windows qjsbootstrap build works with bytecode now that the atom values are consistent across platforms

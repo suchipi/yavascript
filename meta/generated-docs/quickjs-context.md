@@ -1,17 +1,52 @@
-- [Context (class)](#context-class)
-  - [Context (constructor)](#context-constructor)
-  - [Context.prototype.globalThis (property)](#contextprototypeglobalthis-property)
-  - [Context.prototype.eval (method)](#contextprototypeeval-method)
+- ["quickjs:context" (namespace)](#quickjscontext-namespace)
+  - ["quickjs:context".Context (exported class)](#quickjscontextcontext-exported-class)
+    - [Context (constructor)](#context-constructor)
+    - [Context.prototype.globalThis (property)](#contextprototypeglobalthis-property)
+    - [Context.prototype.eval (method)](#contextprototypeeval-method)
 
-# Context (class)
+# "quickjs:context" (namespace)
+
+```ts
+declare module "quickjs:context" {
+  export class Context {
+    constructor(options?: {
+      date?: boolean;
+      eval?: boolean;
+      stringNormalize?: boolean;
+      regExp?: boolean;
+      json?: boolean;
+      proxy?: boolean;
+      mapSet?: boolean;
+      typedArrays?: boolean;
+      promise?: boolean;
+      inspect?: boolean;
+      console?: boolean;
+      print?: boolean;
+      moduleGlobals?: boolean;
+      timers?: boolean;
+      modules?: {
+        "quickjs:bytecode"?: boolean;
+        "quickjs:cmdline"?: boolean;
+        "quickjs:context"?: boolean;
+        "quickjs:encoding"?: boolean;
+        "quickjs:engine"?: boolean;
+        "quickjs:os"?: boolean;
+        "quickjs:std"?: boolean;
+        "quickjs:timers"?: boolean;
+      };
+    });
+    globalThis: typeof globalThis;
+    eval(code: string): any;
+  }
+}
+```
+
+## "quickjs:context".Context (exported class)
 
 A separate global context (or 'realm') within which code can be executed.
 
-This is the same as [import("quickjs:context")](/meta/generated-docs/quickjs-context.md#quickjscontext-namespace), but with a
-`yavascriptGlobals` option added.
-
 ```ts
-declare class Context {
+class Context {
   constructor(options?: {
     date?: boolean;
     eval?: boolean;
@@ -27,7 +62,6 @@ declare class Context {
     print?: boolean;
     moduleGlobals?: boolean;
     timers?: boolean;
-    yavascriptGlobals?: boolean;
     modules?: {
       "quickjs:bytecode"?: boolean;
       "quickjs:cmdline"?: boolean;
@@ -44,7 +78,7 @@ declare class Context {
 }
 ```
 
-## Context (constructor)
+### Context (constructor)
 
 Create a new global context (or 'realm') within code can be executed.
 
@@ -106,7 +140,6 @@ constructor(options?: {
   print?: boolean;
   moduleGlobals?: boolean;
   timers?: boolean;
-  yavascriptGlobals?: boolean;
   modules?: {
     "quickjs:bytecode"?: boolean;
     "quickjs:cmdline"?: boolean;
@@ -120,7 +153,7 @@ constructor(options?: {
 });
 ```
 
-## Context.prototype.globalThis (property)
+### Context.prototype.globalThis (property)
 
 The `globalThis` object used by this context.
 
@@ -130,14 +163,11 @@ You can add to or remove from it to change what is visible to the context.
 globalThis: typeof globalThis;
 ```
 
-## Context.prototype.eval (method)
+### Context.prototype.eval (method)
 
 Runs code within the context and returns the result.
 
 - `@param` _code_ — The code to run.
-
-> NOTE: This function will work even if you created the Context with option
-> `eval: false` (which only disables eval _within_ the context).
 
 ```ts
 eval(code: string): any;

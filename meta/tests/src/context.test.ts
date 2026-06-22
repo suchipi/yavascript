@@ -4,11 +4,14 @@ const printGlobalsFixturePath = rootDir(
   "meta/tests/fixtures/globals/print-globals.ts",
 );
 
-test("globals", async () => {
+test("context globals", async () => {
   const result = await evaluate(`
+    const ctx = new Context();
+
     const { printGlobals } = require(${JSON.stringify(printGlobalsFixturePath)});
-    printGlobals(globalThis);
+    printGlobals(ctx.globalThis);
   `);
+
   expect(result).toMatchInlineSnapshot(`
    {
      "code": 0,
@@ -76,15 +79,12 @@ test("globals", async () => {
    Atomics: object (CW)
    Promise: function (CW)
    inspect: function (CWE)
-   print: function (GSCE)
    console: object (GSCE)
+   print: function (GSCE)
    setTimeout: function (CWE)
    clearTimeout: function (CWE)
    setInterval: function (CWE)
    clearInterval: function (CWE)
-   performance: object (CWE)
-   __qjsbootstrap_offset: number readonly ()
-   scriptArgs: frozen object (CWE)
    require: function (CWE)
    __kame_instances__: object (CWE)
    std: object (GSCE)
@@ -204,27 +204,121 @@ test("globals", async () => {
   `);
 });
 
-test("overriding yavascript api globals works", async () => {
-  const result = await evaluate(`glob = true; console.log(glob)`);
+test("minimal context globals", async () => {
+  const result = await evaluate(`
+    const ctx = new Context({
+      date: false,
+      eval: false,
+      stringNormalize: false,
+      regExp: false,
+      json: false,
+      proxy: false,
+      mapSet: false,
+      typedArrays: false,
+      promise: false,
+      inspect: false,
+      console: false,
+      print: false,
+      moduleGlobals: false,
+      timers: false,
+      yavascriptGlobals: false,
+      modules: {
+        "quickjs:bytecode": false,
+        "quickjs:cmdline": false,
+        "quickjs:context": false,
+        "quickjs:encoding": false,
+        "quickjs:engine": false,
+        "quickjs:os": false,
+        "quickjs:std": false,
+        "quickjs:timers": false,
+      },
+    });
+
+    const { printGlobals } = require(${JSON.stringify(printGlobalsFixturePath)});
+    printGlobals(ctx.globalThis);
+  `);
+
   expect(result).toMatchInlineSnapshot(`
    {
      "code": 0,
      "error": null,
      "stderr": "",
-     "stdout": "true
+     "stdout": "
+   Error: function (CW)
+   EvalError: function (CW)
+   RangeError: function (CW)
+   ReferenceError: function (CW)
+   SyntaxError: function (CW)
+   TypeError: function (CW)
+   URIError: function (CW)
+   InternalError: function (CW)
+   AggregateError: function (CW)
+   Array: function (CW)
+   Object: function (CW)
+   Function: function (CW)
+   Iterator: function (CW)
+   parseInt: function (CW)
+   parseFloat: function (CW)
+   isNaN: function (CW)
+   isFinite: function (CW)
+   decodeURI: function (CW)
+   decodeURIComponent: function (CW)
+   encodeURI: function (CW)
+   encodeURIComponent: function (CW)
+   escape: function (CW)
+   unescape: function (CW)
+   Infinity: number readonly ()
+   NaN: number readonly ()
+   undefined: undefined readonly ()
+   eval: function (CW)
+   Number: function (CW)
+   Boolean: function (CW)
+   String: function (CW)
+   Math: object (CW)
+   Reflect: object (CW)
+   Symbol: function (CW)
+   globalThis: object readonly (CW)
+   BigInt: function (CW)
    ",
    }
   `);
 });
 
-test("overriding yavascript api stubs works", async () => {
-  const result = await evaluate(`ensureDir = mkdirp; console.log(ensureDir)`);
+test("eval behavior when eval: false option is specified", async () => {
+  const result = await evaluate(`
+    const ctx = new Context({
+      eval: false,
+    });
+
+    console.log(ctx.eval("2 + 2"));
+    try {
+      console.log(ctx.eval("eval('2 + 2')"));
+    } catch (err) {
+      console.error(err);
+    }
+    try {
+      console.log(ctx.eval("new Function('return 2 + 2')()"));
+    } catch (err) {
+      console.error(err);
+    }
+  `);
+
   expect(result).toMatchInlineSnapshot(`
    {
      "code": 0,
      "error": null,
-     "stderr": "",
-     "stdout": "Function "mkdirp" {}
+     "stderr": "TypeError {
+     TypeError: eval is not supported
+       at somewhere
+     
+   }
+   TypeError {
+     TypeError: eval is not supported
+       at somewhere
+     
+   }
+   ",
+     "stdout": "4
    ",
    }
   `);

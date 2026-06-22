@@ -59,7 +59,8 @@ const quickjsDtsFilesMap = {
   cmdline: "node_modules/@suchipi/quickjs/build/dts/quickjs-cmdline.d.ts",
   encoding: "node_modules/@suchipi/quickjs/build/dts/quickjs-encoding.d.ts",
   engine: "node_modules/@suchipi/quickjs/build/dts/quickjs-engine.d.ts",
-  context: "node_modules/@suchipi/quickjs/build/dts/quickjs-context.d.ts",
+  "quickjs-context":
+    "node_modules/@suchipi/quickjs/build/dts/quickjs-context.d.ts",
   modulesys: "node_modules/@suchipi/quickjs/build/dts/quickjs-modulesys.d.ts",
   // skipping print as we redefine it
   "quickjs-extensions": "node_modules/@suchipi/quickjs/build/dts/quickjs.d.ts",

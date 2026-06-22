@@ -114,6 +114,7 @@ Methods which are useful when printing strings to a terminal (command-line) scre
 - [`InteractivePrompt`]: Create your own REPL
 - [`__filename`]: The absolute path to the currently-executing file
 - [`__dirname`]: The absolute path to the directory (folder) containing the currently-executing file
+- [`Context`]: Create constrained JS environments with a limited global scope and run code in them.
 
 ## Data Interchange Format helpers
 
