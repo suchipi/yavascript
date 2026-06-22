@@ -11,8 +11,6 @@
 - [x] ~~finish all the help docs!!!~~
   - [x] take all useful info from help docs and move it into the .inc.d.ts files
   - [x] remove the help docs and make the help function ~~use the dtsmd-generated files instead~~ print a link instead
-- [ ] spicy: override types for string-receiving methods to accept anything that can be converted to a string (if quickjs converts it)
-  - this is to make Paths easier to work with
 - [x] add frozen "initial pwd" somewhere
 - [x] expose "makeErrorWithProperties" somehow. new error constructor? overload base error constructor?
   - changed base Error constructor in QuickJS
