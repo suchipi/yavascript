@@ -289,6 +289,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`TypeValidator`]: /meta/generated-docs/types.md#typevalidator-type
 [`JSX.pragma`]: /meta/generated-docs/jsx.md#jsxpragma-exported-string
 [`setMainModule`]: /meta/generated-docs/engine.md#quickjsenginesetmainmodule-exported-function
+[`setStackFrameMapper`]: /meta/generated-docs/engine.md#quickjsenginesetstackframemapper-exported-function
 [`setExitCode`]: /meta/generated-docs/cmdline.md#quickjsstdsetexitcode-exported-function
 [`FILE.seek`]: /meta/generated-docs/std.md#fileseek-method
 [`FILE.setvbuf`]: /meta/generated-docs/std.md#filesetvbuf-method

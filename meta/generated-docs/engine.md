@@ -10,6 +10,9 @@
   - ["quickjs:engine".defineBuiltinModule (exported function)](#quickjsenginedefinebuiltinmodule-exported-function)
   - ["quickjs:engine".ModuleDelegate (exported ModuleDelegate)](#quickjsenginemoduledelegate-exported-moduledelegate)
   - ["quickjs:engine".gc (exported function)](#quickjsenginegc-exported-function)
+  - ["quickjs:engine".StackFrameMapper (exported type)](#quickjsenginestackframemapper-exported-type)
+  - ["quickjs:engine".setStackFrameMapper (exported function)](#quickjsenginesetstackframemapper-exported-function)
+  - ["quickjs:engine".getStackFrameMapper (exported function)](#quickjsenginegetstackframemapper-exported-function)
   - ["quickjs:engine".formatValue (exported function)](#quickjsengineformatvalue-exported-function)
   - ["quickjs:engine".\_\_printObject (exported function)](#quickjsengine__printobject-exported-function)
 
@@ -54,6 +57,22 @@ declare module "quickjs:engine" {
   ): void;
   export const ModuleDelegate: ModuleDelegate;
   export function gc(): void;
+  export type StackFrameMapper = (
+    filename: string,
+    line: number,
+    column: number,
+  ) =>
+    | {
+        filename: string;
+        line: number;
+        column: number;
+      }
+    | null
+    | undefined;
+  export function setStackFrameMapper(
+    mapper: StackFrameMapper | null | undefined,
+  ): void;
+  export function getStackFrameMapper(): StackFrameMapper | null;
   export function formatValue(
     value: any,
     options?: {
@@ -219,6 +238,94 @@ function is useful in case of specific memory constraints or for testing.
 
 ```ts
 export function gc(): void;
+```
+
+## "quickjs:engine".StackFrameMapper (exported type)
+
+A callback that translates the location of a stack frame as an error's
+backtrace is built. See [setStackFrameMapper](/meta/generated-docs/engine.md#quickjsenginesetstackframemapper-exported-function) for details.
+
+`line` and `column` are 1-based, both for the values passed in and for the
+values returned. To change the frame's location, return an object
+containing all three of `filename`, `line`, and `column`. Return `null` or
+`undefined` (or an object missing any field) to leave the location
+unchanged.
+
+```ts
+type StackFrameMapper = (
+  filename: string,
+  line: number,
+  column: number,
+) =>
+  | {
+      filename: string;
+      line: number;
+      column: number;
+    }
+  | null
+  | undefined;
+```
+
+## "quickjs:engine".setStackFrameMapper (exported function)
+
+Register a callback that translates the location of each stack frame as an
+error's backtrace is built. This is the hook to use for source-map support:
+the engine itself knows nothing about source maps, so the callback is where
+you map a compiled `(filename, line, column)` back to its original source
+location.
+
+The callback is invoked once per frame while the backtrace string is being
+assembled. The location it returns is used both in the human-readable
+`error.stack` string AND in the `fileName` / `lineNumber` / `columnNumber`
+own properties set on the error object, so they stay consistent.
+
+`line` and `column` are 1-based, both for the values passed to the callback
+and for the values it returns.
+
+To take effect, the callback must return an object containing all three of
+`filename`, `line`, and `column`. If it instead returns `null` or
+`undefined`, returns an object missing any of those fields, returns a
+non-object, or throws, the frame's original location is kept unchanged (a
+thrown error is swallowed rather than propagated into backtrace
+construction).
+
+Only one mapper can be registered at a time; registering a new one replaces
+the previous one. Pass `null` or `undefined` to unregister, restoring the
+default behavior of reporting compiled locations.
+
+While the mapper is running, it is temporarily disabled for any error thrown
+from within it, so an error thrown inside the mapper will not recurse
+infinitely; that nested error's backtrace simply reports its original
+(unmapped) locations.
+
+- `@param` _mapper_ — The translation callback, or `null`/`undefined` to unregister.
+
+```ts
+export function setStackFrameMapper(
+  mapper: StackFrameMapper | null | undefined,
+): void;
+```
+
+## "quickjs:engine".getStackFrameMapper (exported function)
+
+Return the stack frame mapper currently registered via
+[setStackFrameMapper](/meta/generated-docs/engine.md#quickjsenginesetstackframemapper-exported-function), or `null` if none is registered.
+
+This is useful for composing mappers: read the existing one, then register
+a new mapper that adds your own behavior and delegates to the previous one.
+
+```js
+const previous = getStackFrameMapper();
+setStackFrameMapper((filename, line, column) => {
+  const mapped = previous ? previous(filename, line, column) : null;
+  const location = mapped ?? { filename, line, column };
+  // ...apply your own additional adjustments to `location`...
+  return location;
+});
+```
+
+```ts
+export function getStackFrameMapper(): StackFrameMapper | null;
 ```
 
 ## "quickjs:engine".formatValue (exported function)

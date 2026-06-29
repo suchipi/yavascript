@@ -6509,6 +6509,78 @@ declare module "quickjs:engine" {
   export function gc(): void;
 
   /**
+   * A callback that translates the location of a stack frame as an error's
+   * backtrace is built. See {@link setStackFrameMapper} for details.
+   *
+   * `line` and `column` are 1-based, both for the values passed in and for the
+   * values returned. To change the frame's location, return an object
+   * containing all three of `filename`, `line`, and `column`. Return `null` or
+   * `undefined` (or an object missing any field) to leave the location
+   * unchanged.
+   */
+  export type StackFrameMapper = (
+    filename: string,
+    line: number,
+    column: number
+  ) => { filename: string; line: number; column: number } | null | undefined;
+
+  /**
+   * Register a callback that translates the location of each stack frame as an
+   * error's backtrace is built. This is the hook to use for source-map support:
+   * the engine itself knows nothing about source maps, so the callback is where
+   * you map a compiled `(filename, line, column)` back to its original source
+   * location.
+   *
+   * The callback is invoked once per frame while the backtrace string is being
+   * assembled. The location it returns is used both in the human-readable
+   * `error.stack` string AND in the `fileName` / `lineNumber` / `columnNumber`
+   * own properties set on the error object, so they stay consistent.
+   *
+   * `line` and `column` are 1-based, both for the values passed to the callback
+   * and for the values it returns.
+   *
+   * To take effect, the callback must return an object containing all three of
+   * `filename`, `line`, and `column`. If it instead returns `null` or
+   * `undefined`, returns an object missing any of those fields, returns a
+   * non-object, or throws, the frame's original location is kept unchanged (a
+   * thrown error is swallowed rather than propagated into backtrace
+   * construction).
+   *
+   * Only one mapper can be registered at a time; registering a new one replaces
+   * the previous one. Pass `null` or `undefined` to unregister, restoring the
+   * default behavior of reporting compiled locations.
+   *
+   * While the mapper is running, it is temporarily disabled for any error thrown
+   * from within it, so an error thrown inside the mapper will not recurse
+   * infinitely; that nested error's backtrace simply reports its original
+   * (unmapped) locations.
+   *
+   * @param mapper - The translation callback, or `null`/`undefined` to unregister.
+   */
+  export function setStackFrameMapper(
+    mapper: StackFrameMapper | null | undefined
+  ): void;
+
+  /**
+   * Return the stack frame mapper currently registered via
+   * {@link setStackFrameMapper}, or `null` if none is registered.
+   *
+   * This is useful for composing mappers: read the existing one, then register
+   * a new mapper that adds your own behavior and delegates to the previous one.
+   *
+   * ```js
+   * const previous = getStackFrameMapper();
+   * setStackFrameMapper((filename, line, column) => {
+   *   const mapped = previous ? previous(filename, line, column) : null;
+   *   const location = mapped ?? { filename, line, column };
+   *   // ...apply your own additional adjustments to `location`...
+   *   return location;
+   * });
+   * ```
+   */
+  export function getStackFrameMapper(): StackFrameMapper | null;
+
+  /**
    * Format a value for debugging using QuickJS's built-in C-level printer.
    *
    * This is a parallel formatter to {@link inspect} — it uses the engine's
@@ -6609,8 +6681,7 @@ declare module "quickjs:bytecode" {
    * To serialize Error instances (including `TypeError`, `RangeError`,
    * `SyntaxError`, `ReferenceError`, `URIError`, `EvalError`,
    * `AggregateError`, and `InternalError`), pass `serializeErrors: true`.
-   * Without it, attempting to serialize any Error instance throws
-   * "unsupported object class".
+   * Without it, attempting to serialize any Error instance throws.
    */
   export function fromValue(
     value: any,
