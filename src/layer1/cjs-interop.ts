@@ -1,5 +1,6 @@
 import * as engine from "quickjs:engine";
 import { makeErrorWithProperties } from "./error-with-properties";
+import type { LineOffsetMapper } from "./source-maps";
 
 const hasOwn = Object.hasOwn;
 
@@ -90,6 +91,12 @@ export const __cjsExports = module.exports;
   .trim()
   .replace(/\n/g, " ");
 
-export function wrapCommonJSCode(code: string): string {
-  return `${cjsPreamble} ${code}\n${cjsPostamble}`;
+export function wrapCommonJSCode(code: string): {
+  code: string;
+  mapper: LineOffsetMapper;
+} {
+  return {
+    code: `${cjsPreamble}\n${code}\n${cjsPostamble}`,
+    mapper: { lineOffset: -1 },
+  };
 }

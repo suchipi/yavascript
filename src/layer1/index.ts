@@ -3,6 +3,13 @@
 import installApi from "./api/_install-api";
 installApi(globalThis);
 
+import { setStackFrameMapper } from "quickjs:engine";
+import { mapLocation } from "./source-maps";
+
+setStackFrameMapper((filename, line, column) =>
+  mapLocation(filename, line, column),
+);
+
 import "./extension-handlers/_load-all";
 
 import * as esmToRequire from "./esm-to-require";

@@ -7,6 +7,7 @@
   "devDependencies": {
     "@danielx/civet": "^0.11.9",
     "@iarna/toml": "^2.2.5",
+    "@jridgewell/trace-mapping": "^0.3.31",
     "@suchipi/dtsmd": "^1.4.0",
     "@suchipi/macaroni": "^0.3.0",
     "@suchipi/print": "^2.5.0",

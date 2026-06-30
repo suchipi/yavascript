@@ -18,7 +18,7 @@
 - [x] make string color/style functions accept Path objects (convert them to strings internally)
 - [ ] InteractivePrompt: screen contents can get messed up when hitting backspace repeatedly
 - [ ] InteractivePrompt: spawning one InteractivePrompt from within another results in both running at once. Problem? idk, but it makes it hard to use InteractivePrompt from a repl
-- [ ] support source maps for compiled languages
+- [x] support source maps for compiled languages
 - [x] ~~pager for long help text (when using repl)~~
   - [x] invalidated since help text is browser-only now
 - [x] create solution for tracing `exec` and friends without it being crazy chatty. maybe log levels

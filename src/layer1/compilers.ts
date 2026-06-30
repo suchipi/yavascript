@@ -2,6 +2,9 @@ import { memoizeFn } from "./lazy-load";
 import * as CJS from "./cjs-interop";
 import * as npmProto from "./module-protocols/npm";
 import { Path } from "./api/path";
+import { registerSourceMappers, Mapper } from "./source-maps";
+import { logger } from "./api/logger";
+import type { EncodedSourceMap } from "@jridgewell/trace-mapping";
 
 const getSucrase: () => typeof import("sucrase") = memoizeFn(() =>
   require("sucrase"),
@@ -12,6 +15,12 @@ const getCoffeeScript: () => typeof import("coffeescript") = memoizeFn(() =>
 const getCivet: () => typeof import("@danielx/civet") = memoizeFn(() =>
   require("@danielx/civet"),
 );
+
+// `mappers` is ordered outermost-generated -> innermost-source
+type CompileInternalResult = {
+  code: string;
+  mappers: Array<Mapper>;
+};
 
 export type CompilerOptions = {
   filename?: string | Path;
@@ -35,9 +44,10 @@ function compileUsingSucrase(
   code: string,
   options: CompilerOptions | undefined | null,
   sucraseOptions: import("sucrase").Options,
-) {
-  if (options?.filename) {
-    sucraseOptions.filePath = options.filename.toString();
+): { code: string; sourceMap?: EncodedSourceMap | undefined } {
+  const filename = options?.filename?.toString();
+  if (filename) {
+    sucraseOptions.filePath = filename;
   }
 
   // All this does is make jsx elements not have __self and __fileName,
@@ -58,31 +68,44 @@ function compileUsingSucrase(
       withoutTrailingSemi[withoutTrailingSemi.length - 1] === ")"
     ) {
       // unwrap parens we added
-      return withoutTrailingSemi.slice(1, -1);
+      return { code: withoutTrailingSemi.slice(1, -1) };
     } else {
-      return withoutTrailingSemi;
+      return { code: withoutTrailingSemi };
     }
   } else {
+    if (filename) {
+      sucraseOptions.sourceMapOptions = { compiledFilename: filename };
+    }
     const result = getSucrase().transform(code, sucraseOptions);
-    return result.code;
+    if (result.sourceMap != null) {
+      return {
+        code: result.code,
+        sourceMap: result.sourceMap as EncodedSourceMap,
+      };
+    } else {
+      return { code: result.code, sourceMap: undefined };
+    }
   }
 }
 
-const compilers = {
-  js(code: string, options?: CompilerOptions): string {
+// These don't register their mappers, so they can compose (eg. civet -> jsx ->
+// js) without clobbering each other.
+const compilersInternal = {
+  js(code: string, options?: CompilerOptions): CompileInternalResult {
     if (
       options?.expression ||
       (options?.filename &&
         npmProto.handlesModulePath(options.filename.toString())) ||
       !CJS.looksLikeCommonJS(code)
     ) {
-      return code;
+      return { code, mappers: [] };
     }
 
-    return CJS.wrapCommonJSCode(code);
+    const wrapped = CJS.wrapCommonJSCode(code);
+    return { code: wrapped.code, mappers: [wrapped.mapper] };
   },
 
-  tsx(code: string, options?: CompilerOptions): string {
+  tsx(code: string, options?: CompilerOptions): CompileInternalResult {
     const compiled = compileUsingSucrase(stripShebangs(code), options, {
       transforms: ["typescript", "jsx"],
       // We read this from the global because the user is allowed to
@@ -92,17 +115,31 @@ const compilers = {
       // change JSX.pragmaFrag to change this.
       jsxFragmentPragma: globalThis.JSX.pragmaFrag,
     });
-    return compilers.js(compiled, options);
+    const jsResult = compilersInternal.js(compiled.code, options);
+    return {
+      code: jsResult.code,
+      mappers: [
+        ...jsResult.mappers,
+        ...(compiled.sourceMap ? [compiled.sourceMap] : []),
+      ],
+    };
   },
 
-  ts(code: string, options?: CompilerOptions): string {
+  ts(code: string, options?: CompilerOptions): CompileInternalResult {
     const compiled = compileUsingSucrase(stripShebangs(code), options, {
       transforms: ["typescript"],
     });
-    return compilers.js(compiled, options);
+    const jsResult = compilersInternal.js(compiled.code, options);
+    return {
+      code: jsResult.code,
+      mappers: [
+        ...jsResult.mappers,
+        ...(compiled.sourceMap ? [compiled.sourceMap] : []),
+      ],
+    };
   },
 
-  jsx(code: string, options?: CompilerOptions): string {
+  jsx(code: string, options?: CompilerOptions): CompileInternalResult {
     const compiled = compileUsingSucrase(stripShebangs(code), options, {
       transforms: ["jsx"],
       // We read this from the global because the user is allowed to
@@ -112,52 +149,158 @@ const compilers = {
       // change JSX.pragmaFrag to change this.
       jsxFragmentPragma: globalThis.JSX.pragmaFrag,
     });
-    return compilers.js(compiled, options);
+    const jsResult = compilersInternal.js(compiled.code, options);
+    return {
+      code: jsResult.code,
+      mappers: [
+        ...jsResult.mappers,
+        ...(compiled.sourceMap ? [compiled.sourceMap] : []),
+      ],
+    };
   },
 
-  coffee(code: string, options?: CompilerOptions): string {
+  coffee(code: string, options?: CompilerOptions): CompileInternalResult {
     const compiled = getCoffeeScript().compile(stripShebangs(code), {
       bare: true,
       filename: options?.filename?.toString(),
+      sourceMap: true,
     });
-    return compilers.js(compiled, options);
+    let coffeeScriptSourceMap: EncodedSourceMap | undefined;
+    try {
+      coffeeScriptSourceMap = JSON.parse(
+        compiled.v3SourceMap,
+      ) as EncodedSourceMap;
+    } catch {
+      logger.warn("Failed to parse CoffeeScript source map as JSON");
+      logger.trace("Failed to parse CoffeeScript source map as JSON", {
+        code,
+        options,
+        compiled,
+      });
+      coffeeScriptSourceMap = undefined;
+    }
+    const jsResult = compilersInternal.js(compiled.js, options);
+    return {
+      code: jsResult.code,
+      mappers: [
+        ...jsResult.mappers,
+        ...(coffeeScriptSourceMap ? [coffeeScriptSourceMap] : []),
+      ],
+    };
   },
 
-  civet(code: string, options?: CompilerOptions): string {
+  civet(code: string, options?: CompilerOptions): CompileInternalResult {
+    const filename = options?.filename?.toString();
     const compiled = getCivet().compile(code, {
       js: true,
-      filename: options?.filename?.toString(),
+      filename,
       sync: true,
+      sourceMap: true,
     });
-    return compilers.jsx(compiled, options);
+    const civetMap = compiled.sourceMap.json(
+      filename ?? "",
+    ) as EncodedSourceMap;
+
+    const jsxResult = compilersInternal.jsx(compiled.code, options);
+    return { code: jsxResult.code, mappers: [...jsxResult.mappers, civetMap] };
   },
 
-  autodetect(code: string, options?: CompilerOptions): string {
+  autodetect(code: string, options?: CompilerOptions): CompileInternalResult {
     try {
-      return compilers.jsx(code, options);
+      return compilersInternal.jsx(code, options);
     } catch {
       try {
-        return compilers.tsx(code, options);
+        return compilersInternal.tsx(code, options);
       } catch {
         try {
-          return compilers.civet(code, options);
+          return compilersInternal.civet(code, options);
         } catch {
           try {
-            return compilers.coffee(code, options);
+            return compilersInternal.coffee(code, options);
           } catch {
-            return code;
+            return { code, mappers: [] };
           }
         }
       }
     }
   },
 
-  esmToCjs(code: string, options?: CompilerOptions): string {
+  esmToCjs(code: string, options?: CompilerOptions): CompileInternalResult {
     const compiled = compileUsingSucrase(stripShebangs(code), options, {
       transforms: ["imports"],
       preserveDynamicImport: true,
     });
-    return compilers.js(compiled, options);
+    const jsResult = compilersInternal.js(compiled.code, options);
+    return {
+      code: jsResult.code,
+      mappers: [
+        ...jsResult.mappers,
+        ...(compiled.sourceMap ? [compiled.sourceMap] : []),
+      ],
+    };
+  },
+};
+
+function registerMappersIfFilenameInOptions(
+  options: CompilerOptions | undefined | null,
+  maps: Array<Mapper>,
+): void {
+  const filename = options?.filename?.toString();
+  if (!filename || options?.expression || maps.length === 0) {
+    return;
+  }
+  registerSourceMappers(filename, maps);
+}
+
+// The public surface (see langToCompiler): same as the internal compilers, but
+// these register the assembled chain and return just the code string.
+const compilers = {
+  js(code: string, options?: CompilerOptions): string {
+    const result = compilersInternal.js(code, options);
+    registerMappersIfFilenameInOptions(options, result.mappers);
+    return result.code;
+  },
+
+  tsx(code: string, options?: CompilerOptions): string {
+    const result = compilersInternal.tsx(code, options);
+    registerMappersIfFilenameInOptions(options, result.mappers);
+    return result.code;
+  },
+
+  ts(code: string, options?: CompilerOptions): string {
+    const result = compilersInternal.ts(code, options);
+    registerMappersIfFilenameInOptions(options, result.mappers);
+    return result.code;
+  },
+
+  jsx(code: string, options?: CompilerOptions): string {
+    const result = compilersInternal.jsx(code, options);
+    registerMappersIfFilenameInOptions(options, result.mappers);
+    return result.code;
+  },
+
+  coffee(code: string, options?: CompilerOptions): string {
+    const result = compilersInternal.coffee(code, options);
+    registerMappersIfFilenameInOptions(options, result.mappers);
+    return result.code;
+  },
+
+  civet(code: string, options?: CompilerOptions): string {
+    const result = compilersInternal.civet(code, options);
+    registerMappersIfFilenameInOptions(options, result.mappers);
+    return result.code;
+  },
+
+  autodetect(code: string, options?: CompilerOptions): string {
+    const result = compilersInternal.autodetect(code, options);
+    registerMappersIfFilenameInOptions(options, result.mappers);
+    return result.code;
+  },
+
+  esmToCjs(code: string, options?: CompilerOptions): string {
+    const result = compilersInternal.esmToCjs(code, options);
+    registerMappersIfFilenameInOptions(options, result.mappers);
+    return result.code;
   },
 };
 
