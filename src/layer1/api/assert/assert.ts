@@ -1,3 +1,5 @@
+import * as engine from "quickjs:engine";
+import { getStackFrame } from "@suchipi/error-utils";
 import { assertType as phenoAssertType } from "pheno";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import {
@@ -15,7 +17,21 @@ function assert<ValueType>(
   : ValueType {
   if (value) return;
 
-  const errMsg = message || "Assertion failed";
+  let errMsg = "Assertion failed";
+  if (message != null) {
+    errMsg = message;
+  } else {
+    const stackFrame = getStackFrame(1);
+    if (stackFrame == null) {
+      try {
+        const assertCallLocation = engine.getFileNameFromStack(1);
+        errMsg = "Assertion failed in " + assertCallLocation;
+      } catch {}
+    } else {
+      console.error(stackFrame);
+    }
+  }
+  
   throw makeErrorWithProperties(errMsg, { value });
 }
 
