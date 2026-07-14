@@ -109,12 +109,6 @@ export const combine = rule("combine", {
   description: "COMBINE $out",
 });
 
-export const minifyJs = rule("minify-js", {
-  command: `npx --no-install terser $in $TERSER_OPTIONS -o $out`,
-  description: "TERSER $out",
-  implicitInputs: [rootDir("node_modules/terser/package.json")],
-});
-
 /** NOTE: must define GLOBAL_NAME */
 export const makeArrayBufferScript = rule("make-array-buffer-script", {
   command:
