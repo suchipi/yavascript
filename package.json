@@ -36,7 +36,7 @@
     "string-dedent": "^3.0.2",
     "strip-ansi": "^6.0.1",
     "sucrase": "^3.35.1",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "typescript-assert-utils": "^1.2.0",
     "yaml": "^2.9.0"
   },

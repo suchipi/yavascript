@@ -1,21 +1,29 @@
 import { describe, expect, it } from "vitest";
 import fs from "fs";
-import ts from "typescript";
+import { API } from "typescript/unstable/async";
 import { rootDir } from "./test-helpers";
 
 const dtsPath = rootDir("yavascript.d.ts");
 
 describe("yavascript.d.ts", () => {
   it("is considered a global script rather than a module", async () => {
-    const content = await fs.promises.readFile(dtsPath, "utf-8");
-    const sourceFile = ts.createSourceFile(
-      "yavascript.d.ts",
-      content,
-      ts.ScriptTarget.ES2023,
-    );
+    const api = new API();
+    let isModule: boolean;
+    try {
+      const snapshot = await api.updateSnapshot({ openFiles: [dtsPath] });
+      const project = await snapshot.getDefaultProjectForFile(dtsPath);
+      if (project == null) {
+        throw new Error(`Couldn't load a project for ${dtsPath}`);
+      }
+      const sourceFile = await project.program.getSourceFile(dtsPath);
+      if (sourceFile == null) {
+        throw new Error(`Couldn't parse ${dtsPath}`);
+      }
 
-    // @ts-ignore this function is there, but it isn't in the type defs
-    const isModule = ts.isFileProbablyExternalModule(sourceFile);
+      isModule = sourceFile.externalModuleIndicator != null;
+    } finally {
+      await api.close();
+    }
 
     // Could just do `expect(isModule).toBeFalsy()`, but all the stuff below
     // will give a more actionable error message
@@ -23,6 +31,7 @@ describe("yavascript.d.ts", () => {
       return;
     }
 
+    const content = await fs.promises.readFile(dtsPath, "utf-8");
     const lines = content.split("\n");
     const exportingLineIndex = lines.findIndex((line) =>
       line.startsWith("export"),
