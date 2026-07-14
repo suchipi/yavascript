@@ -6,7 +6,7 @@ export const yavascript = {
   arch: "",
   ecmaVersion: "ES2023",
   compilers,
-  getTypesDts() {
+  getTypesDts(): string {
     throw new Error("Layer 1 stub");
   },
 };

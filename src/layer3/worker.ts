@@ -17,7 +17,7 @@ export class Worker extends os.Worker {
           fakeModuleFilename: string | Path,
           options: {
             overrideCode?: string;
-            initialData?: StructuredClonable;
+            initialData?: import("quickjs:os").StructuredClonable;
           },
         ]
   ) {
@@ -38,7 +38,7 @@ export class Worker extends os.Worker {
     }
 
     let rawCode: string;
-    let initialData: StructuredClonable | undefined;
+    let initialData: import("quickjs:os").StructuredClonable | undefined;
     if (args.length === 2) {
       if (args[1].overrideCode) {
         rawCode = args[1].overrideCode;

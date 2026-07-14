@@ -1,3 +1,4 @@
+import * as std from "quickjs:std";
 import * as cmdline from "quickjs:cmdline";
 import determineTarget from "./determine-target";
 import { __yavascript_layer1_internals } from "./layer-internals";

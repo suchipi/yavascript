@@ -14,5 +14,5 @@ export default function replTarget(
     | undefined,
 ) {
   std.out.setvbuf(std._IONBF, std.BUFSIZ);
-  startRepl({}, lang);
+  startRepl({}, lang ?? "js");
 }

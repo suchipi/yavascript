@@ -25,7 +25,6 @@ const __yavascript_layer1_internals = {
   hasColors,
   printError,
   LANGS,
-  startRepl,
 };
 
 export type __yavascript_layer1_internals =

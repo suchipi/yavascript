@@ -1,15 +1,6 @@
 {
-  "include": [
-    "src/**/*.ts",
-    "meta/examples/**/*.ts",
-    "node_modules/@suchipi/quickjs/build/dts/*.d.ts"
-  ],
-  "exclude": [
-    "**/*.inc.d.ts",
-    "./yavascript.d.ts",
-    "meta/tests/**/*",
-    "meta/type-tests/**/*"
-  ],
+  "include": ["src/**/*.ts", "node_modules/@suchipi/quickjs/build/dts/*.d.ts"],
+  "exclude": ["**/*.inc.d.ts"],
 
   "compilerOptions": {
     "declaration": true,
