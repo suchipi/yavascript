@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, expect, test } from "vitest";
 import {
   evaluate,
   removeSanitizer,

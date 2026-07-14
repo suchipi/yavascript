@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { evaluate, rootDir } from "./test-helpers";
 
 test("Path.OS_SEGMENT_SEPARATOR", async () => {

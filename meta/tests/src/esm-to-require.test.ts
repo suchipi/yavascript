@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { transform } from "../../../src/layer1/esm-to-require";
 
 test("ignores non-esm", async () => {

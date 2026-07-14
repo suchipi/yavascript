@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { evaluate } from "./test-helpers";
 
 describe("wrapping code for CommonJS interop", () => {

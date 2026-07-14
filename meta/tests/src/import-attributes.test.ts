@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { runYavascript, rootDir } from "./test-helpers";
 
 const fixturesDir = rootDir.concat("meta/tests/fixtures/import-attributes");

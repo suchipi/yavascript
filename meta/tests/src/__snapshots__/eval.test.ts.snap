@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`eval target via --eval can evaluate coffeescript 1`] = `
+exports[`eval target > via --eval > can evaluate coffeescript 1`] = `
 {
   "code": 0,
   "error": null,
@@ -10,7 +10,7 @@ exports[`eval target via --eval can evaluate coffeescript 1`] = `
 }
 `;
 
-exports[`eval target via --eval can evaluate jsx 1`] = `
+exports[`eval target > via --eval > can evaluate jsx 1`] = `
 {
   "code": 0,
   "error": null,
@@ -43,7 +43,7 @@ exports[`eval target via --eval can evaluate jsx 1`] = `
 }
 `;
 
-exports[`eval target via --eval can evaluate tsx 1`] = `
+exports[`eval target > via --eval > can evaluate tsx 1`] = `
 {
   "code": 0,
   "error": null,
@@ -76,7 +76,7 @@ exports[`eval target via --eval can evaluate tsx 1`] = `
 }
 `;
 
-exports[`eval target via --eval can evaluate typescript (via --lang ts) 1`] = `
+exports[`eval target > via --eval > can evaluate typescript (via --lang ts) 1`] = `
 {
   "code": 0,
   "error": null,
@@ -86,7 +86,7 @@ exports[`eval target via --eval can evaluate typescript (via --lang ts) 1`] = `
 }
 `;
 
-exports[`eval target via --eval can evaluate typescript (via --lang typescript) 1`] = `
+exports[`eval target > via --eval > can evaluate typescript (via --lang typescript) 1`] = `
 {
   "code": 0,
   "error": null,
@@ -96,7 +96,7 @@ exports[`eval target via --eval can evaluate typescript (via --lang typescript) 
 }
 `;
 
-exports[`eval target via --eval doesn't print anything when the code results in undefined 1`] = `
+exports[`eval target > via --eval > doesn't print anything when the code results in undefined 1`] = `
 {
   "code": 0,
   "error": null,
@@ -105,7 +105,7 @@ exports[`eval target via --eval doesn't print anything when the code results in 
 }
 `;
 
-exports[`eval target via --eval evaluates the specified code 1`] = `
+exports[`eval target > via --eval > evaluates the specified code 1`] = `
 {
   "code": 0,
   "error": null,
@@ -115,7 +115,7 @@ exports[`eval target via --eval evaluates the specified code 1`] = `
 }
 `;
 
-exports[`eval target via --eval prints non-empty completion value 1`] = `
+exports[`eval target > via --eval > prints non-empty completion value 1`] = `
 {
   "code": 0,
   "error": null,
@@ -125,7 +125,7 @@ exports[`eval target via --eval prints non-empty completion value 1`] = `
 }
 `;
 
-exports[`eval target via --eval prints the result when it's not undefined 1`] = `
+exports[`eval target > via --eval > prints the result when it's not undefined 1`] = `
 {
   "code": 0,
   "error": null,
@@ -135,7 +135,7 @@ exports[`eval target via --eval prints the result when it's not undefined 1`] = 
 }
 `;
 
-exports[`eval target via -e can evaluate coffeescript 1`] = `
+exports[`eval target > via -e > can evaluate coffeescript 1`] = `
 {
   "code": 0,
   "error": null,
@@ -145,7 +145,7 @@ exports[`eval target via -e can evaluate coffeescript 1`] = `
 }
 `;
 
-exports[`eval target via -e can evaluate jsx 1`] = `
+exports[`eval target > via -e > can evaluate jsx 1`] = `
 {
   "code": 0,
   "error": null,
@@ -178,7 +178,7 @@ exports[`eval target via -e can evaluate jsx 1`] = `
 }
 `;
 
-exports[`eval target via -e can evaluate tsx 1`] = `
+exports[`eval target > via -e > can evaluate tsx 1`] = `
 {
   "code": 0,
   "error": null,
@@ -211,7 +211,7 @@ exports[`eval target via -e can evaluate tsx 1`] = `
 }
 `;
 
-exports[`eval target via -e can evaluate typescript (via --lang ts) 1`] = `
+exports[`eval target > via -e > can evaluate typescript (via --lang ts) 1`] = `
 {
   "code": 0,
   "error": null,
@@ -221,7 +221,7 @@ exports[`eval target via -e can evaluate typescript (via --lang ts) 1`] = `
 }
 `;
 
-exports[`eval target via -e can evaluate typescript (via --lang typescript) 1`] = `
+exports[`eval target > via -e > can evaluate typescript (via --lang typescript) 1`] = `
 {
   "code": 0,
   "error": null,
@@ -231,7 +231,7 @@ exports[`eval target via -e can evaluate typescript (via --lang typescript) 1`] 
 }
 `;
 
-exports[`eval target via -e doesn't print anything when the code results in undefined 1`] = `
+exports[`eval target > via -e > doesn't print anything when the code results in undefined 1`] = `
 {
   "code": 0,
   "error": null,
@@ -240,7 +240,7 @@ exports[`eval target via -e doesn't print anything when the code results in unde
 }
 `;
 
-exports[`eval target via -e evaluates the specified code 1`] = `
+exports[`eval target > via -e > evaluates the specified code 1`] = `
 {
   "code": 0,
   "error": null,
@@ -250,7 +250,7 @@ exports[`eval target via -e evaluates the specified code 1`] = `
 }
 `;
 
-exports[`eval target via -e prints non-empty completion value 1`] = `
+exports[`eval target > via -e > prints non-empty completion value 1`] = `
 {
   "code": 0,
   "error": null,
@@ -260,7 +260,7 @@ exports[`eval target via -e prints non-empty completion value 1`] = `
 }
 `;
 
-exports[`eval target via -e prints the result when it's not undefined 1`] = `
+exports[`eval target > via -e > prints the result when it's not undefined 1`] = `
 {
   "code": 0,
   "error": null,

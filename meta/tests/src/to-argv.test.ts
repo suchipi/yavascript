@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { evaluate, binaryPath, inspect } from "./test-helpers";
 
 async function toArgv(str: string) {

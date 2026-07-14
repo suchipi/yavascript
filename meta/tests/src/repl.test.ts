@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { spawn } from "first-base";
 import { binaryPath } from "./test-helpers";
 

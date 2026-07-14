@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { rootDir } from "./test-helpers";
 import { spawn } from "first-base";
 

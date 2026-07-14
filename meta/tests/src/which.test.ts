@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { pathMarker } from "path-less-traveled";
 import { evaluate, rootDir } from "./test-helpers";
 

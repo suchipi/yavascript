@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { evaluate, runYavascript } from "./test-helpers";
 
 async function getPackagesInBinary() {

@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { evaluate, rootDir, EvaluateResult } from "./test-helpers";
 
 const globDir = rootDir("meta/tests/fixtures/glob");

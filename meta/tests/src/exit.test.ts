@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { evaluate } from "./test-helpers";
 
 test("exit - direct call", async () => {

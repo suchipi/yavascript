@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { evaluate, inspect } from "./test-helpers";
 
 test("console.log string", async () => {

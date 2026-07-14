@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import fs from "fs";
 import ts from "typescript";
 import { rootDir } from "./test-helpers";

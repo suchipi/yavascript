@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { evaluate, rootDir, binaryPath } from "./test-helpers";
 
 const runInWorkerFixturesDir = rootDir.concat(

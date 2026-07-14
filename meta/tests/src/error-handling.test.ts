@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import {
   evaluate,
   runYavascript,

@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { evaluate, binaryPath } from "./test-helpers";
 
 test("exec true - string", async () => {

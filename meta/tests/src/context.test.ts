@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { evaluate, rootDir } from "./test-helpers";
 
 const printGlobalsFixturePath = rootDir(
