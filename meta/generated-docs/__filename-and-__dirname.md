@@ -1,7 +1,7 @@
-- [\_\_filename (string)](#__filename-string)
-- [\_\_dirname (string)](#__dirname-string)
+- [__filename (string)](#__filename-string)
+- [__dirname (string)](#__dirname-string)
 
-# \_\_filename (string)
+# __filename (string)
 
 The absolute path to the currently-executing file (whether script or module).
 
@@ -14,7 +14,7 @@ Example: `/home/suchipi/some-folder/some-file.js`
 var __filename: string;
 ```
 
-# \_\_dirname (string)
+# __dirname (string)
 
 The absolute path to the directory containing the currently-executing file.
 

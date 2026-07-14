@@ -14,7 +14,7 @@
   - ["quickjs:engine".setStackFrameMapper (exported function)](#quickjsenginesetstackframemapper-exported-function)
   - ["quickjs:engine".getStackFrameMapper (exported function)](#quickjsenginegetstackframemapper-exported-function)
   - ["quickjs:engine".formatValue (exported function)](#quickjsengineformatvalue-exported-function)
-  - ["quickjs:engine".\_\_printObject (exported function)](#quickjsengine__printobject-exported-function)
+  - ["quickjs:engine".__printObject (exported function)](#quickjsengine__printobject-exported-function)
 
 # "quickjs:engine" (namespace)
 
@@ -369,7 +369,7 @@ export function formatValue(
 ): string;
 ```
 
-## "quickjs:engine".\_\_printObject (exported function)
+## "quickjs:engine".__printObject (exported function)
 
 Format a value using QuickJS's built-in C-level printer and write the
 result directly to stdout (no trailing newline).

@@ -1294,9 +1294,7 @@ const types: {
   objectWithProperties<
     T extends {
       [key: string | number | symbol]:
-        | TypeValidator<any>
-        | CoerceableToTypeValidator
-        | unknown;
+        TypeValidator<any> | CoerceableToTypeValidator | unknown;
     },
   >(
     properties: T,
@@ -1306,9 +1304,7 @@ const types: {
   objectWithOnlyTheseProperties<
     T extends {
       [key: string | number | symbol]:
-        | TypeValidator<any>
-        | CoerceableToTypeValidator
-        | unknown;
+        TypeValidator<any> | CoerceableToTypeValidator | unknown;
     },
   >(
     properties: T,
@@ -1346,17 +1342,13 @@ const types: {
   partialObjectWithProperties<
     T extends {
       [key: string | number | symbol]:
-        | TypeValidator<any>
-        | CoerceableToTypeValidator
-        | unknown;
+        TypeValidator<any> | CoerceableToTypeValidator | unknown;
     },
   >(
     properties: T,
   ): TypeValidator<{
     [key in keyof T]:
-      | UnwrapTypeFromCoerceableOrValidator<T[key]>
-      | null
-      | undefined;
+      UnwrapTypeFromCoerceableOrValidator<T[key]> | null | undefined;
   }>;
   tuple: {
     <
@@ -2611,7 +2603,9 @@ declare type CoerceToTypeValidator<V extends CoerceableToTypeValidator> =
                                                     ? TypeValidator<string>
                                                     : V extends {}
                                                       ? TypeValidator<{
-                                                          [key in keyof V]: CoerceToTypeValidator<
+                                                          [
+                                                            key in keyof V
+                                                          ]: CoerceToTypeValidator<
                                                             V[key]
                                                           >;
                                                         }>

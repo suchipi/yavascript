@@ -21,7 +21,7 @@ The function `glob` can be used to turn one or more of these "glob strings" into
 
 `glob` uses [minimatch](https://www.npmjs.com/package/minimatch) with its
 default options, which means it supports features like brace expanstion,
-"globstar" (\*\*) matching, and other features you would expect from a modern
+"globstar" (**) matching, and other features you would expect from a modern
 globbing solution.
 
 > When specifying more than one pattern string, paths must match ALL of the

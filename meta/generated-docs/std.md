@@ -35,9 +35,9 @@
   - ["quickjs:std".SEEK_SET (exported number)](#quickjsstdseek_set-exported-number)
   - ["quickjs:std".SEEK_CUR (exported number)](#quickjsstdseek_cur-exported-number)
   - ["quickjs:std".SEEK_END (exported number)](#quickjsstdseek_end-exported-number)
-  - ["quickjs:std".\_IOFBF (exported number)](#quickjsstd_iofbf-exported-number)
-  - ["quickjs:std".\_IOLBF (exported number)](#quickjsstd_iolbf-exported-number)
-  - ["quickjs:std".\_IONBF (exported number)](#quickjsstd_ionbf-exported-number)
+  - ["quickjs:std"._IOFBF (exported number)](#quickjsstd_iofbf-exported-number)
+  - ["quickjs:std"._IOLBF (exported number)](#quickjsstd_iolbf-exported-number)
+  - ["quickjs:std"._IONBF (exported number)](#quickjsstd_ionbf-exported-number)
   - ["quickjs:std".BUFSIZ (exported number)](#quickjsstdbufsiz-exported-number)
   - ["quickjs:std".getenv (exported function)](#quickjsstdgetenv-exported-function)
   - ["quickjs:std".setenv (exported function)](#quickjsstdsetenv-exported-function)
@@ -556,7 +556,7 @@ Constant for [FILE.seek](/meta/generated-docs/std.md#fileseek-method). Declares 
 var SEEK_END: number;
 ```
 
-## "quickjs:std".\_IOFBF (exported number)
+## "quickjs:std"._IOFBF (exported number)
 
 Constant for [FILE.setvbuf](/meta/generated-docs/std.md#filesetvbuf-method). Declares that the buffer mode should be 'full buffering'.
 
@@ -564,7 +564,7 @@ Constant for [FILE.setvbuf](/meta/generated-docs/std.md#filesetvbuf-method). Dec
 var _IOFBF: number;
 ```
 
-## "quickjs:std".\_IOLBF (exported number)
+## "quickjs:std"._IOLBF (exported number)
 
 Constant for [FILE.setvbuf](/meta/generated-docs/std.md#filesetvbuf-method). Declares that the buffer mode should be 'line buffering'.
 
@@ -572,7 +572,7 @@ Constant for [FILE.setvbuf](/meta/generated-docs/std.md#filesetvbuf-method). Dec
 var _IOLBF: number;
 ```
 
-## "quickjs:std".\_IONBF (exported number)
+## "quickjs:std"._IONBF (exported number)
 
 Constant for [FILE.setvbuf](/meta/generated-docs/std.md#filesetvbuf-method). Declares that the buffer mode should be 'no buffering'.
 

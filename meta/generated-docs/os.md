@@ -388,12 +388,10 @@ declare module "quickjs:os" {
         options?: CreateProcessOptions,
       ) => CreateProcessResult);
   export var WaitForSingleObject:
-    | undefined
-    | ((handle: Win32Handle, timeoutMs?: number) => number);
+    undefined | ((handle: Win32Handle, timeoutMs?: number) => number);
   export var GetExitCodeProcess: undefined | ((handle: Win32Handle) => number);
   export var TerminateProcess:
-    | undefined
-    | ((handle: Win32Handle, exitCode: number) => void);
+    undefined | ((handle: Win32Handle, exitCode: number) => void);
   export var CloseHandle: undefined | ((handle: Win32Handle) => void);
   export type CreatePipeOptions = {
     inheritHandle?: boolean;
@@ -403,8 +401,7 @@ declare module "quickjs:os" {
     writeEnd: FILE;
   };
   export var CreatePipe:
-    | undefined
-    | ((options?: CreatePipeOptions) => CreatePipeResult);
+    undefined | ((options?: CreatePipeOptions) => CreatePipeResult);
   export var WAIT_OBJECT_0: number | undefined;
   export var WAIT_ABANDONED: number | undefined;
   export var WAIT_TIMEOUT: number | undefined;
@@ -1195,13 +1192,7 @@ export function now(): number;
 
 ```ts
 var platform:
-  | "win32"
-  | "darwin"
-  | "emscripten"
-  | "wasm"
-  | "freebsd"
-  | "linux"
-  | "unknown";
+  "win32" | "darwin" | "emscripten" | "wasm" | "freebsd" | "linux" | "unknown";
 ```
 
 ## "quickjs:os".StructuredClonable (exported type)
@@ -1545,8 +1536,7 @@ NOTE: this function is only present on windows
 
 ```ts
 var WaitForSingleObject:
-  | undefined
-  | ((handle: Win32Handle, timeoutMs?: number) => number);
+  undefined | ((handle: Win32Handle, timeoutMs?: number) => number);
 ```
 
 ## "quickjs:os".GetExitCodeProcess (exported value)
@@ -1573,8 +1563,7 @@ NOTE: this function is only present on windows
 
 ```ts
 var TerminateProcess:
-  | undefined
-  | ((handle: Win32Handle, exitCode: number) => void);
+  undefined | ((handle: Win32Handle, exitCode: number) => void);
 ```
 
 ## "quickjs:os".CloseHandle (exported value)

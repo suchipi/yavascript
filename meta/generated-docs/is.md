@@ -1,6 +1,6 @@
 - [is (function)](#is-function)
   - [Example](#example)
-- [\_is (value)](#_is-value)
+- [_is (value)](#_is-value)
 
 # is (function)
 
@@ -61,7 +61,7 @@ const is: <T extends TypeValidator<any> | CoerceableToTypeValidator>(
 ) => value is UnwrapTypeFromCoerceableOrValidator<T>;
 ```
 
-# \_is (value)
+# _is (value)
 
 Alias to [is](/meta/generated-docs/is.md#is-function), for when using the Civet language, because `is` is a
 reserved keyword in Civet.

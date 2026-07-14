@@ -296,15 +296,14 @@ type ExecWaitResult<ExecOptions extends BaseExecOptions> = ExecOptions extends
           }
         : {}) &
       (ExecOptions["failOnNonZeroStatus"] extends false
-        ?
-            | {
-                status: number;
-                signal: undefined;
-              }
-            | {
-                status: undefined;
-                signal: number;
-              }
+        ? | {
+              status: number;
+              signal: undefined;
+            }
+          | {
+              status: undefined;
+              signal: number;
+            }
         : {})
   : void;
 ```
