@@ -6,6 +6,7 @@ import {
   UnwrapTypeFromCoerceableOrValidator,
   types,
 } from "../types";
+import { AssertionError } from "./AssertionError";
 
 function assert<ValueType>(
   value: ValueType,
@@ -16,7 +17,7 @@ function assert<ValueType>(
   if (value) return;
 
   const errMsg = message || "Assertion failed";
-  throw makeErrorWithProperties(errMsg, { value });
+  throw makeErrorWithProperties(errMsg, { value }, AssertionError);
 }
 
 const assertType = <T extends TypeValidator<any> | CoerceableToTypeValidator>(

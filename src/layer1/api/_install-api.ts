@@ -86,6 +86,7 @@ const isProps = makeGetterPropertyDescriptorMap({
 
 const assertProps = makeGetterPropertyDescriptorMap({
   assert: () => require("./assert").assert,
+  AssertionError: () => require("./assert").AssertionError,
 });
 
 const stringsProps = makeGetterPropertyDescriptorMap({

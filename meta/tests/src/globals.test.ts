@@ -143,6 +143,7 @@ test("globals", async () => {
    is: function (GSCE)
    _is: function (GSCE)
    assert: function (GSCE)
+   AssertionError: function (GSCE)
    GitRepo: function (GSCE)
    quote: function (GSCE)
    stripAnsi: function (GSCE)
