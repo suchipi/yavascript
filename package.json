@@ -18,7 +18,7 @@
     "@types/node": "^24.13.2",
     "@types/papaparse": "^5.5.2",
     "a-mimir": "^1.0.1",
-    "clef-parse": "^0.6.0",
+    "clef-parse": "^0.8.0",
     "coffeescript": "^2.7.0",
     "json5": "^2.2.3",
     "kame": "^2.1.0",

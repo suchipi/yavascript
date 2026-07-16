@@ -2,10 +2,15 @@ import * as clefParse from "clef-parse";
 import { Path } from "../path";
 import { pwd } from "../commands/pwd";
 import { assert } from "../assert";
-import { types } from "../types";
+import { types, TypeValidator } from "../types";
 import { makeErrorWithProperties } from "../../error-with-properties";
 
-type Hint = typeof String | typeof Boolean | typeof Number | typeof Path;
+type Hint =
+  | typeof String
+  | typeof Boolean
+  | typeof Number
+  | typeof Path
+  | TypeValidator<Array<string | boolean | number | Path>>;
 
 export function parseScriptArgs(
   hints: { [key: string]: Hint } = {},
@@ -33,6 +38,7 @@ export function parseScriptArgs(
 
   const hintsForClef: { [key: string]: clefParse.Hint } = {};
   const pathKeys: Set<string> = new Set();
+  const arrayOfPathKeys: Set<string> = new Set();
   for (const [key, value] of Object.entries(hints)) {
     if (typeof key !== "string") {
       throw makeErrorWithProperties(
@@ -42,7 +48,7 @@ export function parseScriptArgs(
       );
     }
 
-    switch (value) {
+    outerSwitch: switch (value) {
       case String:
       case Boolean:
       case Number: {
@@ -57,8 +63,31 @@ export function parseScriptArgs(
       }
 
       default: {
+        if (typeof value === "function") {
+          switch (value.name) {
+            case "arrayOf(string)": {
+              hintsForClef[key] = clefParse.arrayOfStrings;
+              break outerSwitch;
+            }
+            case "arrayOf(number)": {
+              hintsForClef[key] = clefParse.arrayOfNumbers;
+              break outerSwitch;
+            }
+            case "arrayOf(boolean)": {
+              hintsForClef[key] = clefParse.arrayOfBooleans;
+              break outerSwitch;
+            }
+            case "arrayOf(Path)":
+            case "arrayOf(isPath)": {
+              hintsForClef[key] = clefParse.arrayOfPaths;
+              arrayOfPathKeys.add(key);
+              break outerSwitch;
+            }
+          }
+        }
+
         throw makeErrorWithProperties(
-          `property '${key}' of 'hints' argument should be String, Boolean, Number, or Path, but it was something else.`,
+          `property '${key}' of 'hints' argument should be String, Boolean, Number, Path, or types.arrayOf(<one of those>), but it was something else.`,
           { actual: value },
           TypeError,
         );
@@ -90,6 +119,13 @@ export function parseScriptArgs(
   for (const key of pathKeys) {
     if (Object.hasOwn(optionsClone, key)) {
       optionsClone[key] = new Path(optionsClone[key].toString());
+    }
+  }
+  for (const key of arrayOfPathKeys) {
+    if (Object.hasOwn(optionsClone, key)) {
+      optionsClone[key] = optionsClone[key].map(
+        (value: any) => new Path(value.toString()),
+      );
     }
   }
 
