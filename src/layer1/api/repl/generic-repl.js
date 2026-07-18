@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2017-2020 Fabrice Bellard
  * Copyright (c) 2017-2020 Charlie Gordon
- * Copyright (c) 2022 Lily Skye
+ * Copyright (c) 2022-2026 Lily Skye
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

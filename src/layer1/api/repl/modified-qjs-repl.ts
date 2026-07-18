@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2017-2020 Fabrice Bellard
  * Copyright (c) 2017-2020 Charlie Gordon
- * Copyright (c) 2022 Lily Skye
+ * Copyright (c) 2022-2026 Lily Skye
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -256,7 +256,7 @@ export function startRepl(lang: string) {
   }
 
   function print_color_text(str: string, start: number, style_names: string[]) {
-    for (let spanEnd = start; spanEnd < str.length; ) {
+    for (let spanEnd = start; spanEnd < str.length;) {
       let spanStart: number;
       const style = style_names[(spanStart = spanEnd)];
       while (++spanEnd < str.length && style_names[spanEnd] == style) {
@@ -1307,7 +1307,7 @@ export function startRepl(lang: string) {
       }
     }
 
-    for (idx = 0; idx < len; ) {
+    for (idx = 0; idx < len;) {
       style = null;
       tokenStart = idx;
       switch ((char = str[idx++])) {
