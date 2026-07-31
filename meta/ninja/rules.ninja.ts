@@ -109,6 +109,12 @@ export const combine = rule("combine", {
   description: "COMBINE $out",
 });
 
+/** NOTE: must define CONTENT */
+export const createFile = rule("createFile", {
+  command: `printf $CONTENT > $out`,
+  description: "CREATE-FILE $out",
+});
+
 /** NOTE: must define GLOBAL_NAME */
 export const makeArrayBufferScript = rule("make-array-buffer-script", {
   command:

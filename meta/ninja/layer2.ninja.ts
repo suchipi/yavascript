@@ -2,10 +2,20 @@
 /// <reference types="node" />
 
 import { walkJsDeps } from "../scripts/lib/walk.js";
+import compileTime from "../../src/layer2/hardcoded/compile-time.js";
+
+const compileTimeResults = build({
+  rule: "createFile",
+  inputs: [],
+  output: builddir("bundles/intermediate/compile-time-results.json"),
+  ruleVariables: {
+    CONTENT: JSON.stringify(JSON.stringify(compileTime)),
+  },
+});
 
 const layer2_deps = walkJsDeps("src/layer2/index.ts", {
   useKameResolver: true,
-});
+}).concat(compileTimeResults);
 
 const layer2_arm64_js = build({
   rule: "kame",
