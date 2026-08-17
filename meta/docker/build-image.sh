@@ -25,13 +25,10 @@ docker build --platform=linux/aarch64 -f Dockerfile.aarch64 -t "${IMAGE_NAME}:${
 docker push "${IMAGE_NAME}:${TAG}-x86_64"
 docker push "${IMAGE_NAME}:${TAG}-aarch64"
 
-docker manifest create "${IMAGE_NAME}:${TAG}" \
-  --amend "${IMAGE_NAME}:${TAG}-x86_64" \
-  --amend "${IMAGE_NAME}:${TAG}-aarch64"
-
-docker manifest annotate --arch amd64 "${IMAGE_NAME}:${TAG}" "${IMAGE_NAME}:${TAG}-x86_64"
-docker manifest annotate --arch arm64 "${IMAGE_NAME}:${TAG}" "${IMAGE_NAME}:${TAG}-aarch64"
-
-docker manifest push "${IMAGE_NAME}:${TAG}"
+# not `docker manifest create`: that resolves tags from a stale
+# ~/.docker/manifests cache, and also rejects the per-arch tags
+docker buildx imagetools create -t "${IMAGE_NAME}:${TAG}" \
+  "${IMAGE_NAME}:${TAG}-x86_64" \
+  "${IMAGE_NAME}:${TAG}-aarch64"
 
 echo "Done building and pushing: ${IMAGE_NAME}:${TAG}"
