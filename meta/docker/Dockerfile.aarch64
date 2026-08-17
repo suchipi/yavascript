@@ -1,6 +1,7 @@
-FROM --platform=linux/aarch64 scratch
-COPY --from=tarampampam/curl:7.78.0 /bin/curl /bin/curl
+FROM --platform=linux/aarch64 alpine:3.23
+
+RUN apk add --no-cache libcurl ca-certificates
+
 COPY ./yavascript-aarch64 /bin/yavascript
-COPY ./empty /tmp
 
 ENTRYPOINT ["/bin/yavascript"]
