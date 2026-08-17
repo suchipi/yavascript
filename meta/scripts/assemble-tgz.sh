@@ -6,7 +6,7 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 cd "$SCRIPT_DIR/../.." # go to root
 ROOTDIR="$PWD"
 
-VERSION=`node -e 'console.log(require("./src/hardcoded/compile-time.js").version)'`
+VERSION=`node -e 'console.log(require("./src/layer2/hardcoded/compile-time.js").version)'`
 
 if test -e meta/tgz-release; then
   rm -rf meta/tgz-release
