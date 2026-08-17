@@ -393,6 +393,14 @@ Copyright (c) 2015 Brian Donovan
 
 ${MIT}
 
+====== @parallel-park/run-jobs ======
+
+The MIT License (MIT)
+
+Copyright (c) 2026 Lily Skye
+
+${MIT}
+
 ====== sucrase ======
 
 The MIT License (MIT)

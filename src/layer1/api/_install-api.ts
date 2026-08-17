@@ -13,6 +13,7 @@ import {
 } from "./grep";
 import { install as installRegexpEscape } from "./regexp-escape";
 import { install as installStringDedent } from "./string-dedent";
+import { install as installPromiseMap } from "./promise-map";
 import { installModuleHooks } from "../module-hooks";
 import { installNodeCompat } from "./node-compat/node-compat";
 import { patchRequire } from "../cjs-interop";
@@ -237,6 +238,7 @@ export default function installApi(target: typeof globalThis) {
 
   installRegexpEscape(target.RegExp);
   installStringDedent(target.String);
+  installPromiseMap(target.Promise);
   installModuleHooks();
   installNodeCompat(target);
   patchRequire(target);
