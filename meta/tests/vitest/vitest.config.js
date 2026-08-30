@@ -7,6 +7,7 @@ module.exports = defineConfig({
     setupFiles: [
       require.resolve("./go-to-root"),
       require.resolve("./first-base-sanitizers"),
+      require.resolve("./kill-leftover-processes.ts"),
     ],
     include: ["meta/tests/src/**/*.test.ts"],
     exclude: [
