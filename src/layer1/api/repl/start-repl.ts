@@ -1,10 +1,9 @@
 import { LANGS } from "../../langs";
 import { NOTHING } from "./special";
-import * as modifiedQjsRepl from "./modified-qjs-repl";
+import * as jsRepl from "./js-repl";
 
 const validLangs = Array.from(LANGS);
 
-// TODO merge with InteractivePrompt in a sensible way
 function startRepl(
   context: { [key: string]: any } = {},
   lang: string = "javascript",
@@ -19,7 +18,7 @@ function startRepl(
 
   // TODO create actual QuickJS context and run stuff inside it
   Object.assign(globalThis, context);
-  modifiedQjsRepl.startRepl(lang);
+  jsRepl.startRepl(lang);
 }
 
 Object.assign(startRepl, { NOTHING });

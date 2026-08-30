@@ -1,10 +1,7 @@
 import { assert } from "../assert";
-import { yellow } from "../strings";
 import { types } from "../types";
-import { startRepl } from "./generic-repl";
+import { startReplEngine, ReplCompletions } from "./repl-engine";
 import { HistoryFile } from "./history-file";
-
-let didDoInteractivePromptWarning = false;
 
 export class InteractivePrompt {
   handleInput: (input: string) => void;
@@ -12,15 +9,7 @@ export class InteractivePrompt {
   prompt?: () => string;
   printInput?: (input: string) => void;
   historyFileName?: string;
-  getCompletions?: (
-    line: string,
-    pos: number,
-  ) => {
-    // TODO refactor these to have better key names
-    tab: Array<string>;
-    pos: number;
-    ctx: { [key: string | number | symbol]: any };
-  };
+  getCompletions?: (line: string, cursorIndex: number) => ReplCompletions;
 
   constructor(
     handleInput: (input: string) => void,
@@ -28,26 +17,9 @@ export class InteractivePrompt {
       prompt?: () => string;
       printInput?: (input: string) => void;
       historyFileName?: string;
-      getCompletions?: (
-        line: string,
-        pos: number,
-      ) => {
-        // TODO refactor these to have better key names
-        tab: Array<string>;
-        pos: number;
-        ctx: { [key: string | number | symbol]: any };
-      };
+      getCompletions?: (line: string, cursorIndex: number) => ReplCompletions;
     } = {},
   ) {
-    if (!didDoInteractivePromptWarning) {
-      console.warn(
-        yellow(
-          "InteractivePrompt is hella WIP and buggy; it WILL change. You're using it at your own risk",
-        ),
-      );
-      didDoInteractivePromptWarning = true;
-    }
-
     assert.type(
       handleInput,
       types.Function,
@@ -89,11 +61,16 @@ export class InteractivePrompt {
       historyFile = new HistoryFile(this.historyFileName);
     }
 
-    startRepl(this.handleInput, {
-      print_cmd: this.printInput,
-      get_completions: this.getCompletions,
-      history_file: historyFile,
-      get_prompt: this.prompt,
+    const printInput = this.printInput;
+
+    startReplEngine({
+      handleInput: this.handleInput,
+      historyFile,
+      getPrompt: this.prompt,
+      getCompletions: this.getCompletions,
+      // The engine's incremental echo can't run a custom painter, so adapt
+      // rather than forward: supplying printInput is what makes it repaint.
+      printInput: printInput ? (line) => printInput(line) : undefined,
     });
   }
 }
