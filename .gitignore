@@ -6,3 +6,5 @@ bin
 yavascript-internal.js
 
 meta/tgz-release
+
+.tmp
