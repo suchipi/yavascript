@@ -300,6 +300,37 @@ describe("repl multiline", () => {
     `);
   });
 
+  test("an unclosed jsx element continues until its closing tag", async () => {
+    const session = await startReplSession(["--lang", "jsx"]);
+    await session.line("<div>", CONTINUATION_PROMPT);
+    await session.line("hi", CONTINUATION_PROMPT);
+    await session.line("</div>");
+    await session.exit();
+    expect(session.result()).toMatchInlineSnapshot(`
+      {
+        "code": 0,
+        "error": null,
+        "stderr": "",
+        "stdout": "> <div>
+      >  ...     hi
+      >  ...     </div>
+      -> JSX.createElement('div', null, "hi" )
+      {
+        $$typeof: Symbol(JSX.Element)
+        type: "div"
+        props: {
+          children: [
+            "hi"
+          ]
+        }
+        key: null
+      }
+      > 
+      ",
+      }
+    `);
+  });
+
   test("an unterminated template literal continues", async () => {
     const session = await startReplSession();
     await session.line("`abc", CONTINUATION_PROMPT);
@@ -1409,6 +1440,54 @@ describe("repl langs", () => {
     `);
   });
 
+  test("--lang jsx compiles a jsx element typed on one line", async () => {
+    const session = await startReplSession(["--lang", "jsx"]);
+    await session.line("<div>hi</div>");
+    await session.exit();
+    expect(session.result()).toMatchInlineSnapshot(`
+      {
+        "code": 0,
+        "error": null,
+        "stderr": "",
+        "stdout": "> <div>hi</div>
+      -> JSX.createElement('div', null, "hi")
+      {
+        $$typeof: Symbol(JSX.Element)
+        type: "div"
+        props: {
+          children: [
+            "hi"
+          ]
+        }
+        key: null
+      }
+      > 
+      ",
+      }
+    `);
+  });
+
+  // The colorizer doubles as the parser, and a `<` in expression position is
+  // the start of a tag to it everywhere but here, where it has to stay an
+  // angle-bracket assertion, or the line would never look finished.
+  test("--lang ts reads <Type>value as an assertion, not as a tag", async () => {
+    const session = await startReplSession(["--lang", "ts"]);
+    await session.line('<string>"hi"');
+    await session.exit();
+    expect(session.result()).toMatchInlineSnapshot(`
+      {
+        "code": 0,
+        "error": null,
+        "stderr": "",
+        "stdout": "> <string>"hi"
+      -> "hi"
+      "hi"
+      > 
+      ",
+      }
+    `);
+  });
+
   test("import statements are rewritten to require calls", async () => {
     const session = await startReplSession();
     await session.line('import { basename } from "quickjs:os"');
@@ -1460,5 +1539,13 @@ describe("repl colors", () => {
     const raw = session.raw().stdout;
     expect(raw).toContain("\x1b[34;1m"); // bright_blue: keyword
     expect(raw).toContain("\x1b[35;1m"); // bright_magenta: number
+  });
+
+  test("jsx tags get their own color", async () => {
+    const session = await startReplSession(["--lang", "jsx"], { colors: true });
+    await session.line("<div>hi</div>");
+    await session.exit();
+
+    expect(session.raw().stdout).toContain("\x1b[36;1m"); // bright_cyan: jsx tag
   });
 });

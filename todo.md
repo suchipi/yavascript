@@ -1,4 +1,3 @@
-- [ ] jsx in the repl behaves weirdly because the repl autocomplete thinks the slash is a regexp literal
 - [ ] add `.on("exit")` support to node-compat `process` shim
 - [ ] make assert have nice messages when one isn't specified
 - [ ] move some of the static properties on Path to some sort of "os" thing, along with other similar helpers. maybe extension of the existing "quickjs:os" `os` global?

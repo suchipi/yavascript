@@ -10,6 +10,14 @@ export const LANGS = new Set([
   "civet",
 ]);
 
+/**
+ * Whether `lang` has TypeScript's `<Type>value` assertion, which is the one `<`
+ * in expression position that isn't the start of a JSX tag.
+ */
+export function langHasAngleBracketAssertions(lang: string) {
+  return lang === "ts" || lang === "typescript";
+}
+
 export function langToCompiler(lang: string) {
   const compilers: typeof import("./compilers").default =
     require("./compilers").default;

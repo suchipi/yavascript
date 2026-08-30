@@ -7,7 +7,7 @@ import printError from "../../print-error";
 import * as inspectOptions from "../../inspect-options";
 import { NOTHING } from "./special";
 import * as esmToRequire from "../../esm-to-require";
-import { langToCompiler } from "../../langs";
+import { langHasAngleBracketAssertions, langToCompiler } from "../../langs";
 import { HistoryFile } from "./history-file";
 import { hasColors } from "../../has-colors";
 import { isAlpha } from "./text-utils";
@@ -23,6 +23,7 @@ const CONTINUATION_PROMPT = "  ... ";
 
 export function startRepl(lang: string) {
   const compiler = langToCompiler(lang);
+  const colorizeOptions = { jsx: !langHasAngleBracketAssertions(lang) };
   const compileExpression = (expr: string): string => {
     const compiledCode = compiler(expr, { expression: true });
     return esmToRequire.transform(compiledCode);
@@ -147,7 +148,7 @@ export function startRepl(lang: string) {
     // input is balanced and ready to evaluate, and the bracket depth gives the
     // indent to prefill the next line with.
     isInputComplete(text) {
-      const [state, level] = colorizeJs(text);
+      const [state, level] = colorizeJs(text, colorizeOptions);
       return {
         complete: state === "",
         indent: "    ".repeat(level),
@@ -176,7 +177,7 @@ export function startRepl(lang: string) {
       ? (line, pending) => {
           const str = pending ? pending + "\n" + line : line;
           const start = str.length - line.length;
-          const [, , styleNames] = colorizeJs(str);
+          const [, , styleNames] = colorizeJs(str, colorizeOptions);
           printColorText(colors, str, start, styleNames);
         }
       : undefined,

@@ -3,7 +3,7 @@
  * (see repl-engine.ts for the full license).
  */
 
-import { isDigit, isWord } from "./text-utils";
+import { isAlpha, isDigit, isWord } from "./text-utils";
 
 function isBalanced(open: string, close: string) {
   switch (open + close) {
@@ -15,6 +15,15 @@ function isBalanced(open: string, close: string) {
   return false;
 }
 
+export type ColorizeJsOptions = {
+  /**
+   * Tokenize JSX elements. Off by default: TypeScript's `<Type>value`
+   * assertion is a `<` in expression position which isn't a tag, so langs that
+   * allow it can't have this.
+   */
+  jsx?: boolean;
+};
+
 /**
  * Tokenize `str` as JavaScript.
  *
@@ -23,7 +32,11 @@ function isBalanced(open: string, close: string) {
  * `level` is the bracket nesting depth, and `styleArray` holds a style name per
  * character of `str`.
  */
-export function colorizeJs(str: string): [string, number, Array<string>] {
+export function colorizeJs(
+  str: string,
+  options: ColorizeJsOptions = {},
+): [string, number, Array<string>] {
+  const jsx = options.jsx ?? false;
   let idx: number;
   let char: string;
   let tokenStart: number;
@@ -138,6 +151,113 @@ export function colorizeJs(str: string): [string, number, Array<string>] {
     }
   }
 
+  function isJsxTagStart(index: number) {
+    const next = str[index];
+    // `<>` opens a fragment; anything else has to start an element name
+    return next === ">" || isAlpha(next) || next === "_" || next === "$";
+  }
+
+  function isJsxNameChar(ch: string) {
+    return isWord(ch) || ch === "-" || ch === ":" || ch === ".";
+  }
+
+  /** Consumes an element name; the attributes after it are state "<". */
+  function parseJsxTagStart() {
+    style = "jsxTag";
+    pushState("<");
+    canRegex = 0;
+    while (idx < len && isJsxNameChar(str[idx])) {
+      idx++;
+    }
+  }
+
+  /**
+   * Consumes `</name>`, ending the ">" region it closes. A closing tag holds
+   * nothing but the name, so scanning for the ">" can't overshoot.
+   */
+  function parseJsxClosingTag() {
+    style = "jsxTag";
+    idx += 2;
+    while (idx < len) {
+      if (str[idx++] === ">") {
+        popState();
+        level--;
+        canRegex = 0;
+        break;
+      }
+    }
+  }
+
+  /** One token of an element's children: a nested tag, `{`, or text. */
+  function parseJsxChildren() {
+    if (str[idx] === "{") {
+      idx++;
+      level++;
+      pushState("{");
+      canRegex = 1;
+      return;
+    }
+    if (str[idx] === "<") {
+      if (str[idx + 1] === "/") {
+        parseJsxClosingTag();
+        return;
+      }
+      if (isJsxTagStart(idx + 1)) {
+        idx++;
+        parseJsxTagStart();
+        return;
+      }
+    }
+    style = "jsxText";
+    idx++;
+    while (idx < len && str[idx] !== "{" && str[idx] !== "<") {
+      idx++;
+    }
+  }
+
+  /**
+   * One token of a tag's attribute region. Returns false for the parts an
+   * attribute is made of (names, `=`, strings), which tokenize as JavaScript.
+   */
+  function parseJsxTagInterior() {
+    if (str[idx] === ">") {
+      style = "jsxTag";
+      idx++;
+      popState();
+      pushState(">");
+      level++;
+      return true;
+    }
+    if (str[idx] === "/" && str[idx + 1] === ">") {
+      style = "jsxTag";
+      idx += 2;
+      popState();
+      canRegex = 0;
+      return true;
+    }
+    if (str[idx] === "{") {
+      idx++;
+      level++;
+      pushState("{");
+      canRegex = 1;
+      return true;
+    }
+    return false;
+  }
+
+  /** Whether the token at `idx` belongs to a JSX tag rather than to JS. */
+  function parseJsxToken() {
+    switch (lastState()) {
+      case ">":
+        parseJsxChildren();
+        return true;
+      case "<":
+        return parseJsxTagInterior();
+      default:
+        return false;
+    }
+  }
+
   const jsLiterals = new Set(["true", "false", "null", "undefined"]);
 
   const jsKeywords = new Set(
@@ -209,6 +329,12 @@ export function colorizeJs(str: string): [string, number, Array<string>] {
   for (idx = 0; idx < len;) {
     style = null;
     tokenStart = idx;
+    if (jsx && parseJsxToken()) {
+      if (style) {
+        setStyle(tokenStart, idx);
+      }
+      continue;
+    }
     switch ((char = str[idx++])) {
       case " ":
       case "\t":
@@ -253,6 +379,13 @@ export function colorizeJs(str: string): [string, number, Array<string>] {
         canRegex = 1;
         level++;
         pushState(char);
+        continue;
+      case "<":
+        if (jsx && canRegex && isJsxTagStart(idx)) {
+          parseJsxTagStart();
+          break;
+        }
+        canRegex = 1;
         continue;
       case ")":
       case "]":

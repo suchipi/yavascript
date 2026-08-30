@@ -44,6 +44,8 @@ export const styles: { [styleName: string]: string } = {
   keyword: "brightBlue",
   function: "brightGreen",
   identifier: "none",
+  jsxTag: "brightCyan",
+  jsxText: "none",
   error: "red",
   errorMsg: "brightRed",
 };
