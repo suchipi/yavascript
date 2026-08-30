@@ -10,7 +10,7 @@ test("Promise.map", async () => {
     Promise.map([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], (num) => {
       const rawTimeOffset = Date.now() - startTime;
       const rounded = Math.round(rawTimeOffset / delay) * delay;
-      console.log(rounded);
+      console.log(rounded / delay);
       return sleep.async(delay);
     }, {
       concurrency: 3
@@ -29,15 +29,15 @@ test("Promise.map", async () => {
     0
     0
     0
-    10
-    10
-    10
-    20
-    20
-    20
-    30
-    30
-    30
+    1
+    1
+    1
+    2
+    2
+    2
+    3
+    3
+    3
     after all
     ",
     }
