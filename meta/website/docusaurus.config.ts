@@ -143,6 +143,11 @@ const config: Config = {
       ],
       copyright: 'YavaScript is written with &lt;3 by Lily Skye.',
     },
+    // The generated API docs nest one level deeper than the default cutoff of
+    // 3, which would drop entries like yavascript.compilers.ts.
+    tableOfContents: {
+      maxHeadingLevel: 6,
+    },
     prism: {
       theme: prismThemeLight,
       darkTheme: prismThemeDark,
