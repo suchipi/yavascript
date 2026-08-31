@@ -28,7 +28,7 @@ const isWorkingTreeDirty = diffResult.status !== 0;
 if (isWorkingTreeDirty) {
   const jsFiles = glob("lib/**/*.js");
   for (const filePath of jsFiles) {
-    // filePath is an instance of the Path class: https://github.com/suchipi/yavascript/blob/main/meta/generated-docs/path.md#path-class
+    // filePath is an instance of the Path class: https://yavascript.suchipi.com/docs/path#path-class
     const dtsFilePath = filePath.replaceLast(
       filePath.basename().replace(/\\.js$/, ".d.ts"),
     );
