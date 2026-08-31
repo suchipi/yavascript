@@ -1,6 +1,6 @@
-# ![YavaScript logo](meta/assets/logo.png)
+# [![YavaScript logo](meta/assets/logo.png)](https://yavascript.suchipi.com/)
 
-YavaScript is a cross-platform bash-like script runner and repl which is distributed as a single statically-linked program, weighing in at about 5MB. Scripts can be written in [JavaScript](https://en.wikipedia.org/wiki/JavaScript) or [JS-related languages](#languages).
+[YavaScript](https://yavascript.suchipi.com/) is a cross-platform bash-like script runner and repl which is distributed as a single statically-linked program, weighing in at about 5MB. Scripts can be written in [JavaScript](https://en.wikipedia.org/wiki/JavaScript) or [JS-related languages](#languages).
 
 > YavaScript is the name of the program. YavaScript is not a new language. YavaScript uses normal JavaScript.
 
