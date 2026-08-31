@@ -33,7 +33,7 @@ You'll also find cross-platform analogues to familiar CLI tools, like `mkdir`, `
 
 ## APIs
 
-**For the full API documentation, see [here](/meta/generated-docs/README.md).**
+**For the full API documentation, see [the website](https://yavascript.suchipi.com/docs/).**
 
 ## Example
 
@@ -55,7 +55,7 @@ const isWorkingTreeDirty = diffResult.status !== 0;
 if (isWorkingTreeDirty) {
   const jsFiles = glob("lib/**/*.js");
   for (const filePath of jsFiles) {
-    // filePath is an instance of the Path class: https://github.com/suchipi/yavascript/blob/main/meta/generated-docs/path.md#path-class
+    // filePath is an instance of the Path class: https://yavascript.suchipi.com/docs/path#path-class
     const dtsFilePath = filePath.replaceLast(
       filePath.basename().replace(/\.js$/, ".d.ts"),
     );
