@@ -34,6 +34,34 @@ describe("repl", () => {
      }
     `);
   });
+
+  test("statements work", async () => {
+    const run = spawn(binaryPath);
+    await run.outputContains("> ");
+    run.write("var a = 2 + 2\n");
+    await run.outputContains("undefined");
+    run.write("a\n");
+    await run.outputContains("4");
+    run.kill("SIGINT"); // Ctrl-C
+    await run.outputContains("Press Ctrl-C again");
+    run.kill("SIGINT");
+    await run.completion;
+    expect(run.cleanResult()).toMatchInlineSnapshot(`
+      {
+        "code": 0,
+        "error": null,
+        "stderr": "",
+        "stdout": "> var a = 2 + 2
+      undefined
+      > a
+      4
+      > 
+      (Press Ctrl-C again to quit)
+      > 
+      ",
+      }
+    `);
+  });
 });
 
 describe("repl eval and print", () => {

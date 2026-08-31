@@ -24,8 +24,8 @@ const CONTINUATION_PROMPT = "  ... ";
 export function startRepl(lang: string) {
   const compiler = langToCompiler(lang);
   const colorizeOptions = { jsx: !langHasAngleBracketAssertions(lang) };
-  const compileExpression = (expr: string): string => {
-    const compiledCode = compiler(expr, { expression: true });
+  const compileLine = (line: string): string => {
+    const compiledCode = compiler(line);
     return esmToRequire.transform(compiledCode);
   };
 
@@ -100,21 +100,21 @@ export function startRepl(lang: string) {
     return true;
   }
 
-  function evalAndPrint(expr: string) {
+  function evalAndPrint(line: string) {
     let result: any;
 
     try {
-      const newExpr = compileExpression(expr);
-      if (newExpr !== expr) {
+      const newLine = compileLine(line);
+      if (newLine !== line) {
         std.puts(colors.gray);
-        std.puts(`-> ${newExpr.replace(/\s+/g, " ")}`);
+        std.puts(`-> ${newLine.replace(/\s+/g, " ")}`);
         std.puts(colors.none);
         std.puts("\n");
-        expr = newExpr;
+        line = newLine;
       }
       const now = new Date().getTime();
       /* eval as a script */
-      result = engine.evalScript(expr, {
+      result = engine.evalScript(line, {
         backtraceBarrier: true,
         filename: evalFilename,
       });

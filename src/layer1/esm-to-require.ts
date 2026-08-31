@@ -24,15 +24,15 @@ const namedImportStmt = new RegExp(stmt(namedImport), "m");
 
 const wsAsWs = /\sas\s/;
 
-export function transform(expr: string): string {
+export function transform(line: string): string {
   let matches: RegExpMatchArray | null = null;
-  if ((matches = expr.match(bareImportStmt))) {
+  if ((matches = line.match(bareImportStmt))) {
     return `require(${matches[1]})`;
-  } else if ((matches = expr.match(defaultImportStmt))) {
+  } else if ((matches = line.match(defaultImportStmt))) {
     return `${matches[1]} = require(${matches[2]}).default`;
-  } else if ((matches = expr.match(nsImportStmt))) {
+  } else if ((matches = line.match(nsImportStmt))) {
     return `${matches[1]} = require(${matches[2]})`;
-  } else if ((matches = expr.match(namedImportStmt))) {
+  } else if ((matches = line.match(namedImportStmt))) {
     const allSpecifiers = matches[1];
     const source = matches[2];
 
@@ -54,7 +54,7 @@ export function transform(expr: string): string {
         } else {
           // idk what's going on but it's not what I expect.
           // give up on transforming this
-          return expr;
+          return line;
         }
       } else {
         properties.push(specifier);
@@ -67,6 +67,6 @@ export function transform(expr: string): string {
       (bindings.length === 1 ? bindings[0] : `({ ${bindings.join(", ")} })`)
     );
   } else {
-    return expr;
+    return line;
   }
 }
