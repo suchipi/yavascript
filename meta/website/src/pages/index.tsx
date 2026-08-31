@@ -1,14 +1,17 @@
-import type {ReactNode} from 'react';
-import Link from '@docusaurus/Link';
-import useBaseUrl from '@docusaurus/useBaseUrl';
-import Layout from '@theme/Layout';
-import Heading from '@theme/Heading';
-import CodeBlock from '@theme/CodeBlock';
+import type { ReactNode } from "react";
+import Link from "@docusaurus/Link";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import Layout from "@theme/Layout";
+import Heading from "@theme/Heading";
+import CodeBlock from "@theme/CodeBlock";
+import ApiCodeBlock, {
+  type ApiDocLinks,
+} from "@site/src/components/ApiCodeBlock";
 
-import styles from './index.module.css';
+import styles from "./index.module.css";
 
-const API_DOCS_URL = '/docs/';
-const RELEASES_URL = 'https://github.com/suchipi/yavascript/releases';
+const API_DOCS_URL = "/docs/";
+const RELEASES_URL = "https://github.com/suchipi/yavascript/releases";
 
 const EXAMPLE_SCRIPT = `#!/usr/bin/env yavascript
 
@@ -61,47 +64,88 @@ console.log(os.lstat(".gitignore").size);
 console.log("Is tty?", os.isatty(std.in));
 `;
 
+const EXAMPLE_SCRIPT_DOC_LINKS: ApiDocLinks = {
+  identifiers: {
+    GitRepo: "/docs/git-repo#gitrepo-class",
+    __filename: "/docs/__filename-and-__dirname#__filename-string",
+    cd: "/docs/cd#cd-function",
+    exec: "/docs/exec#exec-exec",
+    failOnNonZeroStatus:
+      "/docs/exec#baseexecoptionsfailonnonzerostatus-boolean-property",
+    glob: "/docs/glob#glob-function",
+    exists: "/docs/filesystem#exists-function",
+    quote: "/docs/strings#quote-function",
+    bold: "/docs/strings#bold-function",
+    yellow: "/docs/strings#yellow-function",
+    console: "/docs/console#console-console",
+    $: "/docs/exec#-function",
+    echo: "/docs/echo#echo-value",
+    writeFile: "/docs/filesystem#writefile-function",
+    YAML: "/docs/yaml#yaml-object",
+    std: "/docs/std#quickjsstd-namespace",
+    os: "/docs/os#quickjsos-namespace",
+    '"quickjs:std"': "/docs/std#quickjsstd-namespace",
+    '"quickjs:os"': "/docs/os#quickjsos-namespace",
+  },
+  members: {
+    "GitRepo.findRoot": "/docs/git-repo#gitrepofindroot-static-method",
+    "filePath.replaceLast": "/docs/path#pathprototypereplacelast-method",
+    "filePath.basename": "/docs/path#pathprototypebasename-method",
+    "dtsFilePath.relativeTo": "/docs/path#pathprototyperelativeto-method",
+    "console.error": "/docs/console#consoleerror-method",
+    "console.log": "/docs/console#consolelog-method",
+    "YAML.stringify": "/docs/yaml#yamlstringify-method",
+    "std.strftime": "/docs/std#quickjsstdstrftime-exported-function",
+    "std.in": "/docs/std#quickjsstdin-exported-file",
+    "os.lstat": "/docs/os#quickjsoslstat-exported-function",
+    "os.isatty": "/docs/os#quickjsosisatty-exported-function",
+  },
+};
+
 const BASH_LIKE_APIS = [
-  'Running programs',
-  'Using environment variables',
-  'Working with files/folders',
-  'Resolving globs into lists of paths',
-  'Printing stylized text',
+  "Running programs",
+  "Using environment variables",
+  "Working with files/folders",
+  "Resolving globs into lists of paths",
+  "Printing stylized text",
 ];
 
 const HARDER_IN_BASH_APIS = [
-  '(De)serialize JSON, CSV, YAML, and TOML',
-  'Parse command-line flags into a structured object',
-  'Safely manipulate and resolve path strings',
-  'Work with raw byte buffers (typed arrays)',
-  'Reliably get the path to the currently-running script',
-  'Typed interfaces and functions (via TypeScript)',
-  'Cross-file import/export using ECMAScript Modules',
-  'Call low-level POSIX C APIs like fputs, sprintf, isatty',
+  "(De)serialize JSON, CSV, YAML, and TOML",
+  "Parse command-line flags into a structured object",
+  "Safely manipulate and resolve path strings",
+  "Work with raw byte buffers (typed arrays)",
+  "Reliably get the path to the currently-running script",
+  "Typed interfaces and functions (via TypeScript)",
+  "Cross-file import/export using ECMAScript Modules",
+  "Call low-level POSIX C APIs like fputs, sprintf, isatty",
 ];
 
 const LANGUAGES = [
-  {name: 'JavaScript', href: 'https://en.wikipedia.org/wiki/JavaScript'},
-  {name: 'TypeScript', href: 'https://www.typescriptlang.org/'},
+  { name: "JavaScript", href: "https://en.wikipedia.org/wiki/JavaScript" },
+  { name: "TypeScript", href: "https://www.typescriptlang.org/" },
   {
-    name: 'JSX/TSX',
-    href: 'https://react.dev/learn/writing-markup-with-jsx',
+    name: "JSX/TSX",
+    href: "https://react.dev/learn/writing-markup-with-jsx",
   },
-  {name: 'CoffeeScript', href: 'https://coffeescript.org/'},
-  {name: 'Civet', href: 'https://civet.dev/'},
+  { name: "CoffeeScript", href: "https://coffeescript.org/" },
+  { name: "Civet", href: "https://civet.dev/" },
 ];
 
 const PLATFORMS = [
   {
-    name: 'macOS (10.16 or higher)',
-    variants: ['Intel Processors (x86_64)', 'Apple Silicon (aarch64)'],
+    name: "macOS (10.16 or higher)",
+    variants: ["Intel Processors (x86_64)", "Apple Silicon (aarch64)"],
   },
   {
-    name: 'Linux',
-    variants: ['aarch64 (gnu, musl, or static)', 'x86_64 (gnu, musl, or static)'],
+    name: "Linux",
+    variants: [
+      "aarch64 (gnu, musl, or static)",
+      "x86_64 (gnu, musl, or static)",
+    ],
   },
-  {name: 'Windows (MinGW)', variants: ['x86_64']},
-  {name: 'FreeBSD', variants: ['aarch64', 'x86_64']},
+  { name: "Windows (MinGW)", variants: ["x86_64"] },
+  { name: "FreeBSD", variants: ["aarch64", "x86_64"] },
 ];
 
 function Hero() {
@@ -110,7 +154,7 @@ function Hero() {
       <div className="container">
         <img
           className={styles.heroLogo}
-          src={useBaseUrl('img/logo.png')}
+          src={useBaseUrl("img/logo.png")}
           alt="YavaScript logo"
         />
         <p className={styles.heroTagline}>
@@ -129,7 +173,8 @@ function Hero() {
           </Link>
           <Link
             className="button button--secondary button--lg"
-            href={RELEASES_URL}>
+            href={RELEASES_URL}
+          >
             Download
           </Link>
         </div>
@@ -192,13 +237,13 @@ function Apis() {
           </div>
         </div>
         <p>
-          You'll also find cross-platform analogues to familiar CLI tools, like{' '}
-          <code>mkdir</code>, <code>rm</code>, <code>chmod</code>,{' '}
+          You'll also find cross-platform analogues to familiar CLI tools, like{" "}
+          <code>mkdir</code>, <code>rm</code>, <code>chmod</code>,{" "}
           <code>dirname</code>, <code>which</code>, and more.
         </p>
         <p>
           <strong>
-            For the full API documentation, see{' '}
+            For the full API documentation, see{" "}
             <Link to={API_DOCS_URL}>here</Link>.
           </strong>
         </p>
@@ -212,8 +257,13 @@ function Example() {
     <section className={styles.section}>
       <div className="container">
         <Heading as="h2">Example</Heading>
-        <p>Here's an example of a script using YavaScript:</p>
-        <CodeBlock language="js">{EXAMPLE_SCRIPT}</CodeBlock>
+        <p>
+          Here's an example of a script using YavaScript. Try clicking the
+          identifiers to go to their API docs!
+        </p>
+        <ApiCodeBlock language="js" links={EXAMPLE_SCRIPT_DOC_LINKS}>
+          {EXAMPLE_SCRIPT}
+        </ApiCodeBlock>
       </div>
     </section>
   );
@@ -226,8 +276,8 @@ function Comparison() {
         <Heading as="h2">How is that different from ____?</Heading>
         <p>
           There are several other projects that bring a shell-like environment
-          to JS, such as <Link href="https://github.com/google/zx">zx</Link>,{' '}
-          <Link href="https://www.npmjs.com/package/shelljs">ShellJS</Link>, and{' '}
+          to JS, such as <Link href="https://github.com/google/zx">zx</Link>,{" "}
+          <Link href="https://www.npmjs.com/package/shelljs">ShellJS</Link>, and{" "}
           <Link href="https://bun.sh/docs/runtime/shell">Bun Shell</Link>. The
           main difference between those and YavaScript is that YavaScript is
           very small, fully cross-platform, and brings its own JavaScript
@@ -252,7 +302,7 @@ function Languages() {
           ahead-of-time compilation step needed:
         </p>
         <ul>
-          {LANGUAGES.map(({name, href}) => (
+          {LANGUAGES.map(({ name, href }) => (
             <li key={name}>
               <Link href={href}>{name}</Link>
             </li>
@@ -275,13 +325,13 @@ function TypeScriptTypes() {
           aren't writing your scripts in TypeScript.
         </p>
         <p>
-          You can{' '}
+          You can{" "}
           <Link href="https://github.com/suchipi/yavascript/blob/main/yavascript.d.ts">
             view the <code>.d.ts</code> file online
           </Link>
-          , but if you have YavaScript installed, you should instead run{' '}
-          <code>yavascript --print-types</code> to obtain the{' '}
-          <code>.d.ts</code> file for your specific release.
+          , but if you have YavaScript installed, you should instead run{" "}
+          <code>yavascript --print-types</code> to obtain the <code>.d.ts</code>{" "}
+          file for your specific release.
         </p>
         <p>
           You can put this comment at the top of your script to instruct VS Code
@@ -305,10 +355,10 @@ function Install() {
           <div className="col col--6">
             <Heading as="h2">Installation</Heading>
             <p>
-              You can find the binary for your platform on{' '}
+              You can find the binary for your platform on{" "}
               <Link href={RELEASES_URL}>the releases page</Link>. As YavaScript
               is fully self-contained in one small file, it's trivial to install
-              and uninstall; simply place it somewhere specified in your{' '}
+              and uninstall; simply place it somewhere specified in your{" "}
               <Link href="https://superuser.com/a/284351">
                 <code>PATH</code>
               </Link>
@@ -318,7 +368,7 @@ function Install() {
           <div className="col col--6">
             <Heading as="h2">Supported Platforms</Heading>
             <ul>
-              {PLATFORMS.map(({name, variants}) => (
+              {PLATFORMS.map(({ name, variants }) => (
                 <li key={name}>
                   {name}
                   <ul>
@@ -340,7 +390,8 @@ export default function Home(): ReactNode {
   return (
     <Layout
       title="YavaScript"
-      description="YavaScript is a cross-platform bash-like script runner and repl which is distributed as a single statically-linked program, weighing in at about 5MB.">
+      description="YavaScript is a cross-platform bash-like script runner and repl which is distributed as a single statically-linked program, weighing in at about 5MB."
+    >
       <Hero />
       <main>
         <Why />

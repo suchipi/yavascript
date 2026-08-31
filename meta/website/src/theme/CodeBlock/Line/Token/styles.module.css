@@ -1,0 +1,15 @@
+.apiDocLink,
+.apiDocLink:hover,
+.apiDocLink:focus-visible {
+  color: inherit;
+}
+
+.apiDocLink {
+  text-decoration: none;
+}
+
+.apiDocLink:hover,
+.apiDocLink:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
