@@ -67,6 +67,8 @@ const config: Config = {
     ],
   ],
 
+  plugins: ['./plugins/api-doc-links'],
+
   themes: [
     [
       require.resolve('@easyops-cn/docusaurus-search-local'),
