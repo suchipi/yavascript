@@ -193,7 +193,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`basename`]: /meta/generated-docs/basename.md#basename-function
 [`cat`]: /meta/generated-docs/cat.md#cat-function
 [`cd`]: /meta/generated-docs/cd.md#cd-function
-[`chmod`]: /meta/generated-docs/chmod.md#chmod-function
+[`chmod`]: /meta/generated-docs/chmod.md#chmod-chmod
 [`dirname`]: /meta/generated-docs/dirname.md#dirname-function
 [`echo`]: /meta/generated-docs/echo.md#echo-value
 [`exit`]: /meta/generated-docs/exit.md#exit-function

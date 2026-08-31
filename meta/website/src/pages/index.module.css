@@ -1,0 +1,61 @@
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.hero {
+  padding: 4rem 0;
+  text-align: center;
+  background-color: var(--ifm-color-emphasis-100);
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+}
+
+.heroLogo {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+}
+
+/* The logo is black-on-transparent; hue-rotate keeps the red underline red. */
+[data-theme='dark'] .heroLogo {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.heroTagline {
+  margin: 1.5rem auto 0;
+  max-width: 44rem;
+  font-size: 1.25rem;
+}
+
+.heroNote {
+  margin: 1.5rem auto 0;
+  max-width: 44rem;
+  text-align: left;
+  border-left: 4px solid var(--ifm-color-primary);
+  padding: 0.75rem 1rem;
+  background-color: var(--ifm-background-color);
+}
+
+.heroButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.section {
+  padding: 3rem 0;
+}
+
+.sectionAlt {
+  padding: 3rem 0;
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+@media screen and (max-width: 996px) {
+  .hero {
+    padding: 2rem 1rem;
+  }
+}

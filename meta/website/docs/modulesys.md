@@ -1,0 +1,326 @@
+---
+hide_title: true
+---
+## ModuleDelegate (interface)
+
+An object which lets you configure the module loader (import/export/require).
+You can change these properties to add support for importing new filetypes.
+
+```ts
+interface ModuleDelegate {
+  searchExtensions: Array<string>;
+  compilers: {
+    [key: string]: (
+      filename: string,
+      content: string,
+      attributes?: Record<string, string>,
+    ) => string;
+  };
+  builtinModuleNames: Array<string>;
+  resolve(
+    name: string,
+    fromFile: string,
+    attributes?: Record<string, string>,
+  ): string;
+  read(modulePath: string, attributes?: Record<string, string>): string;
+}
+```
+
+### ModuleDelegate.searchExtensions (property)
+
+A list of filetype extensions that may be omitted from an import specifier
+string.
+
+Defaults to `[".js"]`. You can add more strings to this array to
+make the engine search for additional files when resolving a
+require/import.
+
+See the doc comment on [require](./modulesys.md#requirefunction-call-signature) for more information.
+
+NOTE: If you add a new extension to this array, you will likely also want
+to add to [compilers](./modulesys.md#moduledelegatecompilers-object-property).
+
+```ts
+searchExtensions: Array<string>;
+```
+
+### ModuleDelegate.compilers (object property)
+
+User-defined functions which will handle getting the JavaScript code
+associated with a module.
+
+Keys in this object can take one of two forms:
+
+- `".ext"` (with a leading dot) — matches files whose name ends with
+  `.ext`. Selected by file extension during normal module loading.
+- `"type"` (no leading dot) — matches imports written with
+  `import x from "..." with { type: "<key>" }`. Selected by
+  import-attributes type, regardless of file extension.
+
+The value for each property is a function which receives (1) the filepath
+to a module, (2) that file's content as a UTF-8 string, and (3) the
+import attributes object (or `undefined` when no `with { ... }` clause was
+used). The function should return a string containing JavaScript code that
+corresponds to that module. In most cases, these functions will compile
+the contents of the file from one format into JavaScript.
+
+The function does not have to use the second 'content' argument it
+receives (ie. when loading binary files).
+
+By adding to this object, you can make it possible to import non-js
+filetypes; compile-to-JS languages like JSX, TypeScript, and CoffeeScript
+can be compiled at import time, and asset files like .txt files or .png
+files can be converted into an appropriate data structure at import time.
+
+`compilers["json"]` is pre-registered, which turns JSON file content
+into a JS module source of the form
+`export default JSON.parse(<escaped content>);`. To make `.json`
+files load by extension alone (without `with { type: "json" }`),
+register the same loader under the dot-prefixed key:
+
+```js
+ModuleDelegate.compilers[".json"] = ModuleDelegate.compilers["json"];
+```
+
+`compilers["json5"]` is also pre-registered, which turns JSON5
+file content (JSON with comments, trailing commas, unquoted keys,
+single quotes, NaN/Infinity, `.N` decimals, multi-line strings,
+and the `\v` escape) into a JS module source that parses the
+content via `std.parseExtJSON`. It matches
+`import x from "..." with { type: "json5" }` by default.
+
+As an example, to make it possible to import .txt files, you might do:
+
+```js
+import * as std from "std";
+
+ModuleDelegate.compilers[".txt"] = (filename, content) => {
+  return `export default ${JSON.stringify(content)}`;
+};
+```
+
+(leveraging `JSON.stringify`'s ability to escape quotes).
+
+Then, later in your code, you can do:
+
+```js
+import names from "./names.txt";
+```
+
+And `names` will be a string containing the contents of names.txt.
+
+NOTE: When adding a dot-prefixed key, you may also wish to add to
+[searchExtensions](./modulesys.md#moduledelegatesearchextensions-property).
+
+```ts
+compilers: {
+  [key: string]: (filename: string, content: string, attributes?: Record<string, string>) => string;
+};
+```
+
+### ModuleDelegate.builtinModuleNames (property)
+
+An Array containing the names of all the built-in modules, such as
+"quickjs:std", "quickjs:bytecode", etc.
+
+`quickjs:engine`'s `defineBuiltinModule` function adds to the end of this
+array.
+
+```ts
+builtinModuleNames: Array<string>;
+```
+
+### ModuleDelegate.resolve (method)
+
+Resolves a require/import request from `fromFile` into a canonicalized
+path.
+
+`attributes` is the import-attributes object (passed via the
+`with { ... }` clause), or `undefined` when no `with` clause was used.
+
+To change native module resolution behavior, replace this function with
+your own implementation. Note that you must handle
+`ModuleDelegate.searchExtensions` yourself in your replacement
+implementation.
+
+```ts
+resolve(name: string, fromFile: string, attributes?: Record<string, string>): string;
+```
+
+### ModuleDelegate.read (method)
+
+Reads the contents of the given resolved module name into a string.
+
+`attributes` is the import-attributes object (passed via the
+`with { ... }` clause), or `undefined` when no `with` clause was used.
+
+To change native module loading behavior, replace this function with your
+own implementation. Note that you must handle `ModuleDelegate.compilers`
+yourself in your replacement implementation.
+
+```ts
+read(modulePath: string, attributes?: Record<string, string>): string;
+```
+
+## RequireFunction (interface)
+
+```ts
+interface RequireFunction {
+  (
+    source: string,
+    options?: {
+      with?: Record<string, string>;
+    },
+  ): any;
+  resolve: (
+    source: string,
+    options?: {
+      with?: Record<string, string>;
+    },
+  ) => string;
+}
+```
+
+### RequireFunction(...) (call signature)
+
+Synchronously import a module.
+
+`source` will be resolved relative to the calling file.
+
+If `source` does not have a file extension, and a file without an extension
+cannot be found, the engine will check for files with the extensions in
+[ModuleDelegate.searchExtensions](./modulesys.md#moduledelegatesearchextensions-property), and use one of those if present.
+This behavior also happens when using normal `import` statements.
+
+For example, if you write:
+
+```js
+import something from "./somewhere";
+```
+
+but there's no file named `somewhere` in the same directory as the file
+where that import appears, and `ModuleDelegate.searchExtensions` is the
+default value:
+
+```js
+[".js"];
+```
+
+then the engine will look for `somewhere.js`. If that doesn't exist, the
+engine will look for `somewhere/index.js`. If _that_ doesn't exist, an
+error will be thrown.
+
+If you add more extensions to `ModuleDelegate.searchExtensions`, then the
+engine will use those, too. It will search in the same order as the strings
+appear in the `ModuleDelegate.searchExtensions` array.
+
+The optional `options` argument matches the second argument of
+dynamic `import()`. Its `with` property carries import attributes,
+eg `require("./data.json", { with: { type: "json" } })`.
+
+```ts
+(source: string, options?: {
+  with?: Record<string, string>;
+}): any;
+```
+
+### RequireFunction.resolve (function property)
+
+Resolves the normalized path to a modules, relative to the calling file.
+
+The optional `options` argument matches the shape of dynamic
+`import()`'s second argument. Its `with` property carries import
+attributes which are passed through to `ModuleDelegate.resolve`.
+
+```ts
+resolve: (
+  source: string,
+  options?: {
+    with?: Record<string, string>;
+  },
+) => string;
+```
+
+## require (RequireFunction)
+
+```ts
+var require: RequireFunction;
+```
+
+## ImportMeta (interface)
+
+```ts
+interface ImportMeta {
+  url: string;
+  main: boolean;
+  require: RequireFunction;
+  resolve: RequireFunction["resolve"];
+  attributes: Record<string, string> | undefined;
+}
+```
+
+### ImportMeta.url (string property)
+
+A URL representing the current module.
+
+Usually starts with `file://`.
+
+```ts
+url: string;
+```
+
+### ImportMeta.main (boolean property)
+
+Whether the current module is the "main" module, meaning that it is the
+entrypoint file that's been loaded, or, in other terms, the first
+user-authored module that's been loaded.
+
+```ts
+main: boolean;
+```
+
+### ImportMeta.require (RequireFunction property)
+
+Equivalent to `globalThis.require`. Provided for compatibility with tools
+that can leverage a CommonJS require function via `import.meta.require`.
+
+```ts
+require: RequireFunction;
+```
+
+### ImportMeta.resolve (`RequireFunction["resolve"]` property)
+
+Resolves a module specifier based on the current module's path.
+
+Equivalent to `globalThis.require.resolve`.
+
+Behaves similarly to [the browser
+import.meta.resolve](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta/resolve),
+but it does not ensure that the returned string is a valid URL, because it
+delegates directly to [ModuleDelegate.resolve](./modulesys.md#moduledelegateresolve-method) to resolve the name.
+If you want this to return URL strings, change `ModuleDelegate.resolve` and
+`ModuleDelegate.read` to work with URL strings.
+
+```ts
+resolve: RequireFunction["resolve"];
+```
+
+### ImportMeta.attributes (property)
+
+The `with { ... }` clause that was used to import this module, if any.
+
+- `undefined` when the module was imported without a `with` clause.
+- An object whose enumerable own properties are the attribute key/value
+  pairs from the `with` clause when one was used. The object is
+  non-extensible, and each own property is non-writable and
+  non-configurable.
+- The `attributes` property itself is also non-writable and
+  non-configurable.
+
+The undefined-vs-empty-object distinction is meaningful: a module body can
+tell whether it was imported with a (possibly empty) attribute clause vs
+no clause at all.
+
+```ts
+attributes: Record<string, string> | undefined;
+```

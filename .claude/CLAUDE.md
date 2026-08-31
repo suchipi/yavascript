@@ -75,6 +75,7 @@ These are build outputs that are checked into git. Edit the source and rebuild i
 | --- | --- |
 | [yavascript.d.ts](yavascript.d.ts) (repo root) | `src/**/*.inc.d.ts`, assembled by [macaroni](https://npmjs.com/package/@suchipi/macaroni) via `src/templates/yavascript-git.d.ts.tmpl` → `yavascript.d.ts.tmpl` |
 | [meta/generated-docs/](meta/generated-docs/) | the same `.inc.d.ts` files, via [dtsmd](https://npmjs.com/package/@suchipi/dtsmd) ([meta/ninja/generated-docs.ninja.ts](meta/ninja/generated-docs.ninja.ts)) |
+| [meta/website/docs/](meta/website/docs/) | the same dtsmd output, minus the table of contents, run through [meta/scripts/md-to-docusaurus-doc.js](meta/scripts/md-to-docusaurus-doc.js) |
 | `dist/**` | the whole build |
 | `meta/npm/bin/`, `meta/npm/yavascript.d.ts`, `meta/npm/README.md` | copies made by [meta/ninja/npm.ninja.ts](meta/ninja/npm.ninja.ts) |
 

@@ -1,0 +1,201 @@
+---
+hide_title: true
+---
+## ObjectConstructor (interface)
+
+```ts
+interface ObjectConstructor {
+  toPrimitive(
+    input: any,
+    hint: "string" | "number" | "default",
+  ): string | number | bigint | boolean | undefined | symbol | null;
+  isPrimitive(input: any): boolean;
+}
+```
+
+### ObjectConstructor.toPrimitive (method)
+
+Convert the specified value to a primitive value.
+
+The provided hint indicates a preferred return type, which may or may not
+be respected by the engine.
+
+See the abstract operation "ToPrimitive" in the ECMAScript standard for
+more info.
+
+```ts
+toPrimitive(input: any, hint: "string" | "number" | "default"): string | number | bigint | boolean | undefined | symbol | null;
+```
+
+### ObjectConstructor.isPrimitive (method)
+
+Returns a boolean indicating whether the specified value is a primitive value.
+
+```ts
+isPrimitive(input: any): boolean;
+```
+
+## StringConstructor (interface)
+
+```ts
+interface StringConstructor {
+  cooked(
+    strings: readonly string[] | ArrayLike<string>,
+    ...substitutions: any[]
+  ): string;
+}
+```
+
+### StringConstructor.cooked (method)
+
+A no-op template literal tag.
+
+https://github.com/tc39/proposal-string-cooked
+
+```ts
+cooked(strings: readonly string[] | ArrayLike<string>, ...substitutions: any[]): string;
+```
+
+## BigIntConstructor (interface)
+
+```ts
+interface BigIntConstructor {
+  tdiv(a: bigint, b: bigint): bigint;
+  fdiv(a: bigint, b: bigint): bigint;
+  cdiv(a: bigint, b: bigint): bigint;
+  ediv(a: bigint, b: bigint): bigint;
+  tdivrem(a: bigint, b: bigint): [bigint, bigint];
+  fdivrem(a: bigint, b: bigint): [bigint, bigint];
+  cdivrem(a: bigint, b: bigint): [bigint, bigint];
+  edivrem(a: bigint, b: bigint): [bigint, bigint];
+  sqrt(a: bigint): bigint;
+  sqrtrem(a: bigint): [bigint, bigint];
+  floorLog2(a: bigint): bigint;
+  ctz(a: bigint): bigint;
+}
+```
+
+### BigIntConstructor.tdiv (method)
+
+Return trunc(a/b).
+
+b = 0 raises a RangeError exception.
+
+```ts
+tdiv(a: bigint, b: bigint): bigint;
+```
+
+### BigIntConstructor.fdiv (method)
+
+Return \lfloor a/b \rfloor.
+
+b = 0 raises a RangeError exception.
+
+```ts
+fdiv(a: bigint, b: bigint): bigint;
+```
+
+### BigIntConstructor.cdiv (method)
+
+Return \lceil a/b \rceil.
+
+b = 0 raises a RangeError exception.
+
+```ts
+cdiv(a: bigint, b: bigint): bigint;
+```
+
+### BigIntConstructor.ediv (method)
+
+Return sgn(b) \lfloor a/{|b|} \rfloor (Euclidian division).
+
+b = 0 raises a RangeError exception.
+
+```ts
+ediv(a: bigint, b: bigint): bigint;
+```
+
+### BigIntConstructor.tdivrem (method)
+
+Perform trunc(a/b) and return an array of two elements. The first element
+is the quotient, the second is the remainder.
+
+b = 0 raises a RangeError exception.
+
+```ts
+tdivrem(a: bigint, b: bigint): [bigint, bigint];
+```
+
+### BigIntConstructor.fdivrem (method)
+
+Perform \lfloor a/b \rfloor and return an array of two elements. The first
+element is the quotient, the second is the remainder.
+
+b = 0 raises a RangeError exception.
+
+```ts
+fdivrem(a: bigint, b: bigint): [bigint, bigint];
+```
+
+### BigIntConstructor.cdivrem (method)
+
+Perform \lceil a/b \rceil and return an array of two elements. The first
+element is the quotient, the second is the remainder.
+
+b = 0 raises a RangeError exception.
+
+```ts
+cdivrem(a: bigint, b: bigint): [bigint, bigint];
+```
+
+### BigIntConstructor.edivrem (method)
+
+Perform sgn(b) \lfloor a/{|b|} \rfloor (Euclidian division) and return an
+array of two elements. The first element is the quotient, the second is
+the remainder.
+
+b = 0 raises a RangeError exception.
+
+```ts
+edivrem(a: bigint, b: bigint): [bigint, bigint];
+```
+
+### BigIntConstructor.sqrt (method)
+
+Return \lfloor \sqrt(a) \rfloor.
+
+A RangeError exception is raised if a < 0.
+
+```ts
+sqrt(a: bigint): bigint;
+```
+
+### BigIntConstructor.sqrtrem (method)
+
+Return an array of two elements. The first element is
+\lfloor \sqrt{a} \rfloor. The second element is
+a-\lfloor \sqrt{a} \rfloor^2.
+
+A RangeError exception is raised if a < 0.
+
+```ts
+sqrtrem(a: bigint): [bigint, bigint];
+```
+
+### BigIntConstructor.floorLog2 (method)
+
+Return -1 if a \leq 0 otherwise return \lfloor \log2(a) \rfloor.
+
+```ts
+floorLog2(a: bigint): bigint;
+```
+
+### BigIntConstructor.ctz (method)
+
+Return the number of trailing zeros in the two’s complement binary representation of a.
+
+Return -1 if a=0.
+
+```ts
+ctz(a: bigint): bigint;
+```

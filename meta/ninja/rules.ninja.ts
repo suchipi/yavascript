@@ -98,6 +98,12 @@ export const mdLinksFromJson5 = rule("md-links-from-json5", {
   implicitInputs: walkJsDeps("meta/scripts/md-links-from-json5.js"),
 });
 
+export const mdToDocusaurusDoc = rule("md-to-docusaurus-doc", {
+  command: `node meta/scripts/md-to-docusaurus-doc.js $in $out`,
+  description: "MD-TO-DOCUSAURUS-DOC $out",
+  implicitInputs: walkJsDeps("meta/scripts/md-to-docusaurus-doc.js"),
+});
+
 export const markdownToc = rule("markdown-toc", {
   command: `node meta/scripts/markdown-toc.js --input $in --output $out`,
   description: "MD-TOC $out",

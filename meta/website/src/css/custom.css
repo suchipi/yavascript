@@ -1,0 +1,39 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  /* Alucard's pink, to match the code blocks (see src/prism-theme.ts). */
+  --ifm-color-primary: #a3144d;
+  --ifm-color-primary-dark: #931246;
+  --ifm-color-primary-darker: #8b1142;
+  --ifm-color-primary-darkest: #720e36;
+  --ifm-color-primary-light: #b41655;
+  --ifm-color-primary-lighter: #bc1759;
+  --ifm-color-primary-lightest: #d41a65;
+  --ifm-code-font-size: 95%;
+  /* Alucard's selection color; its "current line" is too dark to sit behind text. */
+  --docusaurus-highlighted-code-line-bg: #cfcfde;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  /* Dracula's pink. */
+  --ifm-color-primary: #ff79c6;
+  --ifm-color-primary-dark: #ff61ba;
+  --ifm-color-primary-darker: #ff52b4;
+  --ifm-color-primary-darkest: #ff33a7;
+  --ifm-color-primary-light: #ff94d1;
+  --ifm-color-primary-lighter: #ffa3d7;
+  --ifm-color-primary-lightest: #ffc2e4;
+  /* Dracula's current line. */
+  --docusaurus-highlighted-code-line-bg: #44475a;
+}
+
+/* The logo is black-on-transparent; hue-rotate keeps the red underline red. */
+[data-theme='dark'] .navbarLogo {
+  filter: invert(1) hue-rotate(180deg);
+}

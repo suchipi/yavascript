@@ -1,0 +1,142 @@
+---
+hide_title: true
+---
+## Context (class)
+
+A separate global context (or 'realm') within which code can be executed.
+
+This is the same as [import("quickjs:context")](./quickjs-context.md#quickjscontext-namespace), but with a
+`yavascriptGlobals` option added.
+
+```ts
+declare class Context {
+  constructor(options?: {
+    date?: boolean;
+    eval?: boolean;
+    stringNormalize?: boolean;
+    regExp?: boolean;
+    json?: boolean;
+    proxy?: boolean;
+    mapSet?: boolean;
+    typedArrays?: boolean;
+    promise?: boolean;
+    inspect?: boolean;
+    console?: boolean;
+    print?: boolean;
+    moduleGlobals?: boolean;
+    timers?: boolean;
+    yavascriptGlobals?: boolean;
+    modules?: {
+      "quickjs:bytecode"?: boolean;
+      "quickjs:cmdline"?: boolean;
+      "quickjs:context"?: boolean;
+      "quickjs:encoding"?: boolean;
+      "quickjs:engine"?: boolean;
+      "quickjs:os"?: boolean;
+      "quickjs:std"?: boolean;
+      "quickjs:timers"?: boolean;
+    };
+  });
+  globalThis: typeof globalThis;
+  eval(code: string): any;
+}
+```
+
+### Context (constructor)
+
+Create a new global context (or 'realm') within code can be executed.
+
+- `@param` _options_ — Options for what globals/modules/etc to make available within the context.
+
+The following globals are always present, regardless of options:
+
+- Object
+- Function
+- Error
+- EvalError
+- RangeError
+- ReferenceError
+- SyntaxError
+- TypeError
+- URIError
+- InternalError
+- AggregateError
+- Array
+- parseInt
+- parseFloat
+- isNaN
+- isFinite
+- decodeURI
+- decodeURIComponent
+- encodeURI
+- encodeURIComponent
+- escape
+- unescape
+- Infinity
+- NaN
+- undefined
+- Number
+- Boolean
+- String
+- Math
+- Reflect
+- Symbol
+- eval (but it doesn't work unless the `eval` option is enabled)
+- globalThis
+
+Note that new contexts don't have a `scriptArgs` global. If you need one
+to be present in the new context, you can add one onto the Context's
+`globalThis` property.
+
+```ts
+constructor(options?: {
+  date?: boolean;
+  eval?: boolean;
+  stringNormalize?: boolean;
+  regExp?: boolean;
+  json?: boolean;
+  proxy?: boolean;
+  mapSet?: boolean;
+  typedArrays?: boolean;
+  promise?: boolean;
+  inspect?: boolean;
+  console?: boolean;
+  print?: boolean;
+  moduleGlobals?: boolean;
+  timers?: boolean;
+  yavascriptGlobals?: boolean;
+  modules?: {
+    "quickjs:bytecode"?: boolean;
+    "quickjs:cmdline"?: boolean;
+    "quickjs:context"?: boolean;
+    "quickjs:encoding"?: boolean;
+    "quickjs:engine"?: boolean;
+    "quickjs:os"?: boolean;
+    "quickjs:std"?: boolean;
+    "quickjs:timers"?: boolean;
+  };
+});
+```
+
+### Context.prototype.globalThis (property)
+
+The `globalThis` object used by this context.
+
+You can add to or remove from it to change what is visible to the context.
+
+```ts
+globalThis: typeof globalThis;
+```
+
+### Context.prototype.eval (method)
+
+Runs code within the context and returns the result.
+
+- `@param` _code_ — The code to run.
+
+> NOTE: This function will work even if you created the Context with option
+> `eval: false` (which only disables eval _within_ the context).
+
+```ts
+eval(code: string): any;
+```

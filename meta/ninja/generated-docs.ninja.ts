@@ -38,16 +38,34 @@ function dtsToMd(
     inputs: [combined],
     output: outputFile,
   });
+
+  return build({
+    rule: "prettier",
+    ruleVariables: {
+      PRETTIER_FLAGS: "--parser markdown",
+    },
+    inputs: [mdWithoutToc],
+    output: builddir(`docs/${name}-no-toc-formatted.md`),
+  });
+}
+
+function toWebsiteDoc(inputFile: string, name: string) {
+  build({
+    rule: "md-to-docusaurus-doc",
+    inputs: [inputFile],
+    output: rel(`../website/docs/${name}.md`),
+  });
 }
 
 for (const dtsFile of dtsIncFiles) {
   const inputFile = dtsFile;
-  const outputFile = rel(
-    "../generated-docs/" +
-      path.basename(inputFile).replace(/\.inc\.d\.ts$/, ".md"),
-  );
+  const name = path.basename(inputFile).replace(/\.inc\.d\.ts$/, "");
+  const outputFile = rel(`../generated-docs/${name}.md`);
 
-  dtsToMd(inputFile, outputFile);
+  // The website gets the pre-toc markdown, since docusaurus renders its own
+  // table of contents.
+  const mdWithoutTocFormatted = dtsToMd(inputFile, outputFile, name);
+  toWebsiteDoc(mdWithoutTocFormatted, name);
 }
 
 const quickjsDtsFilesMap = {
@@ -70,7 +88,8 @@ for (const [outputName, quickjsDtsPath] of Object.entries(quickjsDtsFilesMap)) {
   const inputFile = quickjsDtsPath;
   const outputFile = rel(`../generated-docs/${outputName}.md`);
 
-  dtsToMd(inputFile, outputFile, outputName);
+  const mdWithoutTocFormatted = dtsToMd(inputFile, outputFile, outputName);
+  toWebsiteDoc(mdWithoutTocFormatted, outputName);
 }
 
 const linkFooter = build({
@@ -79,8 +98,10 @@ const linkFooter = build({
   output: builddir("docs/link-footer.md"),
 });
 
-build({
+const docsIndex = build({
   rule: "combine",
   inputs: [rel("../scripts/lib/generated-doc-index.md"), linkFooter],
   output: rel("../generated-docs/README.md"),
 });
+
+toWebsiteDoc(docsIndex, "index");
