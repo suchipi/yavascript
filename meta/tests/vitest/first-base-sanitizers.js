@@ -20,10 +20,18 @@ function getBinaryPath(platform, arch) {
 
 const binaryPath = getBinaryPath(process.platform, process.arch);
 
+const ansiSequenceRegexp = "(?:\\x1b\\[[\\d;]*m)*";
+
 sanitizers.push(function redactLineAndColumnNumbers(str) {
-  return str
-    .replaceAll(/lineNumber: \d+/g, "lineNumber: <redacted>")
-    .replaceAll(/columnNumber: \d+/g, "columnNumber: <redacted>");
+  // Colored output puts escape sequences around the property name, its colon
+  // and its value, so they have to be allowed for anywhere in between.
+  return str.replace(
+    new RegExp(
+      `((?:line|column)Number${ansiSequenceRegexp}:${ansiSequenceRegexp} ${ansiSequenceRegexp})\\d+`,
+      "g",
+    ),
+    "$1<redacted>",
+  );
 });
 
 const TMP = child_process

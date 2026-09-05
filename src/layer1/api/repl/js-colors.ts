@@ -7,8 +7,6 @@
  * Copyright (c) 2022-2026 Lily Skye
  */
 
-import * as std from "quickjs:std";
-
 export type Colors = { [name: string]: string };
 
 const ANSI_COLORS: Colors = {
@@ -68,23 +66,26 @@ export function makeColors(enabled: boolean): Colors {
 }
 
 /**
- * Write `str` from `start` onwards, coloring each character according to the
+ * `str` from `start` onwards, with each character colored according to the
  * style named at the same index of `styleNames`.
  */
-export function printColorText(
+export function colorText(
   colors: Colors,
   str: string,
   start: number,
   styleNames: Array<string>,
-) {
+): string {
+  let result = "";
   for (let spanEnd = start; spanEnd < str.length;) {
     let spanStart: number;
     const style = styleNames[(spanStart = spanEnd)];
     while (++spanEnd < str.length && styleNames[spanEnd] == style) {
       continue;
     }
-    std.puts(colors[styles[style] || "default"]);
-    std.puts(str.substring(spanStart, spanEnd));
-    std.puts(colors["none"]);
+    result +=
+      colors[styles[style] || "default"] +
+      str.substring(spanStart, spanEnd) +
+      colors["none"];
   }
+  return result;
 }

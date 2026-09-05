@@ -10,6 +10,16 @@ export const LANGS = new Set([
   "civet",
 ]);
 
+/** The lang `fileName`'s extension implies, or null when it implies none. */
+export function fileNameToLang(fileName: string): string | null {
+  const match = /\.([^.\/\\]+)$/.exec(fileName);
+  if (match == null) {
+    return null;
+  }
+  const lang = match[1].toLowerCase();
+  return LANGS.has(lang) ? lang : null;
+}
+
 /**
  * Whether `lang` has TypeScript's `<Type>value` assertion, which is the one `<`
  * in expression position that isn't the start of a JSX tag.

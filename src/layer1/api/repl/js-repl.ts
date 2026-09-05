@@ -13,7 +13,7 @@ import { hasColors } from "../../has-colors";
 import { isAlpha } from "./text-utils";
 import { colorizeJs } from "./colorize-js";
 import { getCompletions } from "./js-completions";
-import { makeColors, printColorText, styles } from "./js-colors";
+import { colorText, makeColors, styles } from "./js-colors";
 import { startReplEngine } from "./repl-engine";
 
 /** Printed in front of the first line of an expression. */
@@ -178,7 +178,7 @@ export function startRepl(lang: string) {
           const str = pending ? pending + "\n" + line : line;
           const start = str.length - line.length;
           const [, , styleNames] = colorizeJs(str, colorizeOptions);
-          printColorText(colors, str, start, styleNames);
+          std.puts(colorText(colors, str, start, styleNames));
         }
       : undefined,
 
