@@ -1,3 +1,4 @@
+import * as std from "quickjs:std";
 import * as engine from "quickjs:engine";
 import { assertType as phenoAssertType } from "pheno";
 import { makeErrorWithProperties } from "../../error-with-properties";
@@ -22,6 +23,8 @@ function assert<ValueType>(
     const [callerFrame] = engine.getStackFrames(1);
     if (callerFrame != null) {
       let locDescription = "";
+      let locPreview = "";
+
       if (callerFrame.fileName) {
         locDescription += callerFrame.fileName;
         if (callerFrame.lineNumber) {
@@ -29,11 +32,47 @@ function assert<ValueType>(
           if (callerFrame.columnNumber) {
             locDescription += ":" + callerFrame.columnNumber;
           }
+
+          try {
+            const fileContent = std.loadFile(callerFrame.fileName);
+            const lines = fileContent.split(/\n|\r\n/g);
+
+            const paddingAmount = Math.max(
+              ...[
+                callerFrame.lineNumber - 1,
+                callerFrame.lineNumber,
+                callerFrame.lineNumber + 1,
+              ].map((num) => String(num).length),
+            );
+
+            // Note: lineNumber is 1-based, slice is 0-based
+            const linesAround = lines.slice(
+              callerFrame.lineNumber - 2,
+              callerFrame.lineNumber + 1,
+            );
+
+            locPreview = linesAround
+              .map(
+                (line, index) =>
+                  String(callerFrame.lineNumber - 1 + index).padStart(
+                    paddingAmount,
+                    " ",
+                  ) +
+                  " | " +
+                  line,
+              )
+              .join("\n");
+          } catch {
+            // ignored
+          }
         }
       }
 
       if (locDescription.length > 0) {
         errMsg += ` at ${locDescription}`;
+      }
+      if (locPreview.length > 0) {
+        errMsg += `\n${locPreview}\n`;
       }
     }
   } catch {
