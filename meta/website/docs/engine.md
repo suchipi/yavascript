@@ -33,6 +33,18 @@ declare module "quickjs:engine" {
     },
   ): string;
   export function getFileNameFromStack(stackLevels?: number): string;
+  export type StackFrame =
+    | {
+        fileName: string;
+        lineNumber: number;
+        columnNumber: number;
+      }
+    | {
+        fileName: null;
+        lineNumber: null;
+        columnNumber: null;
+      };
+  export function getStackFrames(skip?: number): StackFrame[];
   export function isModuleNamespace(target: any): boolean;
   export function defineBuiltinModule(
     name: string,
@@ -181,6 +193,61 @@ If there isn't a valid filename for the specified stack frame, an error will be 
 
 ```ts
 export function getFileNameFromStack(stackLevels?: number): string;
+```
+
+### "quickjs\:engine".StackFrame (exported type)
+
+A single stack frame captured by [getStackFrames](#).
+
+A frame either has a source location (all three of `fileName`,
+`lineNumber`, and `columnNumber` are present) or has none (all three are
+`null`). A frame has no location when it is a native (C) frame, or comes
+from code compiled without debug information. The two cases never mix, so
+checking any one field narrows the other two:
+
+```js
+for (const frame of getStackFrames()) {
+  if (frame.fileName !== null) {
+    // fileName, lineNumber, and columnNumber are all non-null here
+  }
+}
+```
+
+`lineNumber` and `columnNumber` are 1-based, matching the values used by
+the stack frame mapper (see [setStackFrameMapper](./engine.md#quickjsenginesetstackframemapper-exported-function)) and by an
+Error's `lineNumber` / `columnNumber` own properties.
+
+```ts
+type StackFrame =
+  | {
+      fileName: string;
+      lineNumber: number;
+      columnNumber: number;
+    }
+  | {
+      fileName: null;
+      lineNumber: null;
+      columnNumber: null;
+    };
+```
+
+### "quickjs\:engine".getStackFrames (exported function)
+
+Capture the current call stack as an array of [StackFrame](#) objects,
+ordered from the innermost (most recent) frame outward.
+
+Frame locations are passed through the registered stack frame mapper (see
+[setStackFrameMapper](./engine.md#quickjsenginesetstackframemapper-exported-function)), so a frame's `fileName` / `lineNumber` /
+`columnNumber` match what an Error thrown at that point would report.
+
+Frames beyond a `backtraceBarrier` (see [evalScript](#)) are not
+included, exactly as they are omitted from `error.stack`.
+
+- `@param` _skip_ — How many innermost frames to omit from the result. Defaults
+  to 0, which starts at the caller of `getStackFrames`.
+
+```ts
+export function getStackFrames(skip?: number): StackFrame[];
 ```
 
 ### "quickjs\:engine".isModuleNamespace (exported function)

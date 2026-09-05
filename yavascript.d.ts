@@ -6650,6 +6650,55 @@ declare module "quickjs:engine" {
   export function getFileNameFromStack(stackLevels?: number): string;
 
   /**
+   * A single stack frame captured by {@link getStackFrames}.
+   *
+   * A frame either has a source location (all three of `fileName`,
+   * `lineNumber`, and `columnNumber` are present) or has none (all three are
+   * `null`). A frame has no location when it is a native (C) frame, or comes
+   * from code compiled without debug information. The two cases never mix, so
+   * checking any one field narrows the other two:
+   *
+   * ```js
+   * for (const frame of getStackFrames()) {
+   *   if (frame.fileName !== null) {
+   *     // fileName, lineNumber, and columnNumber are all non-null here
+   *   }
+   * }
+   * ```
+   *
+   * `lineNumber` and `columnNumber` are 1-based, matching the values used by
+   * the stack frame mapper (see {@link setStackFrameMapper}) and by an
+   * Error's `lineNumber` / `columnNumber` own properties.
+   */
+  export type StackFrame =
+    | {
+        fileName: string;
+        lineNumber: number;
+        columnNumber: number;
+      }
+    | {
+        fileName: null;
+        lineNumber: null;
+        columnNumber: null;
+      };
+
+  /**
+   * Capture the current call stack as an array of {@link StackFrame} objects,
+   * ordered from the innermost (most recent) frame outward.
+   *
+   * Frame locations are passed through the registered stack frame mapper (see
+   * {@link setStackFrameMapper}), so a frame's `fileName` / `lineNumber` /
+   * `columnNumber` match what an Error thrown at that point would report.
+   *
+   * Frames beyond a `backtraceBarrier` (see {@link evalScript}) are not
+   * included, exactly as they are omitted from `error.stack`.
+   *
+   * @param skip - How many innermost frames to omit from the result. Defaults
+   *   to 0, which starts at the caller of `getStackFrames`.
+   */
+  export function getStackFrames(skip?: number): StackFrame[];
+
+  /**
    * Returns true if `target` is a module namespace object.
    */
   export function isModuleNamespace(target: any): boolean;
