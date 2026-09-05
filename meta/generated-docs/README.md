@@ -340,7 +340,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`Path.prototype.extname`]: /meta/generated-docs/path.md#pathprototypeextname-method
 [`getpwuid`]: /meta/generated-docs/std.md#quickjsstdgetpwuid-exported-function
 [`CreateProcess`]: /meta/generated-docs/os.md#quickjsoscreateprocess-exported-value
-[`Promise.map`]: /meta/generated-docs/promise-map.md#promiseconstructor-map-method
+[`Promise.map`]: /meta/generated-docs/promise-map.md#promiseconstructormap-method
 [`"quickjs:std"`]: /meta/generated-docs/std.md#quickjsstd-namespace
 [`"quickjs:os"`]: /meta/generated-docs/os.md#quickjsos-namespace
 [`"quickjs:bytecode"`]: /meta/generated-docs/bytecode.md#quickjsbytecode-namespace
