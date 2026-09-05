@@ -137,6 +137,7 @@ Additions/extensions to the standard ECMAScript objects found in the runtime.
 - [`String.prototype.grep`]: Alias for `grepString`
 - [`RegExp.escape`]: Escape special RegExp characters in a string
 - [`String.dedent`]: Remove leading indentation from template strings
+- [`Promise.map`]: Like `Promise.all` but with a concurrency limit
 
 ## Constructor Aliases
 

@@ -137,6 +137,7 @@ Additions/extensions to the standard ECMAScript objects found in the runtime.
 - [`String.prototype.grep`]: Alias for `grepString`
 - [`RegExp.escape`]: Escape special RegExp characters in a string
 - [`String.dedent`]: Remove leading indentation from template strings
+- [`Promise.map`]: Like `Promise.all` but with a concurrency limit
 
 ## Constructor Aliases
 
@@ -336,6 +337,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`Path.prototype.extname`]: /meta/generated-docs/path.md#pathprototypeextname-method
 [`getpwuid`]: /meta/generated-docs/std.md#quickjsstdgetpwuid-exported-function
 [`CreateProcess`]: /meta/generated-docs/os.md#quickjsoscreateprocess-exported-value
+[`Promise.map`]: /meta/generated-docs/promise-map.md#promiseconstructor-map-method
 [`"quickjs:std"`]: /meta/generated-docs/std.md#quickjsstd-namespace
 [`"quickjs:os"`]: /meta/generated-docs/os.md#quickjsos-namespace
 [`"quickjs:bytecode"`]: /meta/generated-docs/bytecode.md#quickjsbytecode-namespace

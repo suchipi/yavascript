@@ -190,6 +190,7 @@
   "Path.prototype.extname": "/meta/generated-docs/path.md#pathprototypeextname-method",
   getpwuid: "/meta/generated-docs/std.md#quickjsstdgetpwuid-exported-function",
   CreateProcess: "/meta/generated-docs/os.md#quickjsoscreateprocess-exported-value",
+  "Promise.map": "/meta/generated-docs/promise-map.md#promiseconstructor-map-method",
 
   '"quickjs:std"': "/meta/generated-docs/std.md#quickjsstd-namespace",
   '"quickjs:os"': "/meta/generated-docs/os.md#quickjsos-namespace",
