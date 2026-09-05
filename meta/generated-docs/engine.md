@@ -214,7 +214,7 @@ export function getFileNameFromStack(stackLevels?: number): string;
 
 ## "quickjs:engine".StackFrame (exported type)
 
-A single stack frame captured by [getStackFrames](#).
+A single stack frame captured by [getStackFrames](/meta/generated-docs/engine.md#quickjsenginegetstackframes-exported-function).
 
 A frame either has a source location (all three of `fileName`,
 `lineNumber`, and `columnNumber` are present) or has none (all three are
@@ -250,14 +250,14 @@ type StackFrame =
 
 ## "quickjs:engine".getStackFrames (exported function)
 
-Capture the current call stack as an array of [StackFrame](#) objects,
+Capture the current call stack as an array of [StackFrame](/meta/generated-docs/engine.md#quickjsenginestackframe-exported-type) objects,
 ordered from the innermost (most recent) frame outward.
 
 Frame locations are passed through the registered stack frame mapper (see
 [setStackFrameMapper](/meta/generated-docs/engine.md#quickjsenginesetstackframemapper-exported-function)), so a frame's `fileName` / `lineNumber` /
 `columnNumber` match what an Error thrown at that point would report.
 
-Frames beyond a `backtraceBarrier` (see [evalScript](#)) are not
+Frames beyond a `backtraceBarrier` (see [evalScript](/meta/generated-docs/engine.md#quickjsengineevalscript-exported-function)) are not
 included, exactly as they are omitted from `error.stack`.
 
 - `@param` _skip_ — How many innermost frames to omit from the result. Defaults

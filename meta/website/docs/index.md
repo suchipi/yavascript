@@ -295,6 +295,9 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`JSX.pragma`]: ./jsx.md#jsxpragma-exported-string
 [`setMainModule`]: ./engine.md#quickjsenginesetmainmodule-exported-function
 [`setStackFrameMapper`]: ./engine.md#quickjsenginesetstackframemapper-exported-function
+[`getStackFrames`]: ./engine.md#quickjsenginegetstackframes-exported-function
+[`StackFrame`]: ./engine.md#quickjsenginestackframe-exported-type
+[`evalScript`]: ./engine.md#quickjsengineevalscript-exported-function
 [`setExitCode`]: ./cmdline.md#quickjsstdsetexitcode-exported-function
 [`FILE.seek`]: ./std.md#fileseek-method
 [`FILE.setvbuf`]: ./std.md#filesetvbuf-method
