@@ -1,3 +1,4 @@
+import * as engine from "quickjs:engine";
 import { assertType as phenoAssertType } from "pheno";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import {
@@ -15,7 +16,30 @@ function assert<ValueType>(
   : ValueType {
   if (value) return;
 
-  const errMsg = message || "Assertion failed";
+  let errMsg = message || "Assertion failed";
+
+  try {
+    const [callerFrame] = engine.getStackFrames(1);
+    if (callerFrame != null) {
+      let locDescription = "";
+      if (callerFrame.fileName) {
+        locDescription += callerFrame.fileName;
+        if (callerFrame.lineNumber) {
+          locDescription += ":" + callerFrame.lineNumber;
+          if (callerFrame.columnNumber) {
+            locDescription += ":" + callerFrame.columnNumber;
+          }
+        }
+      }
+
+      if (locDescription.length > 0) {
+        errMsg += ` at ${locDescription}`;
+      }
+    }
+  } catch {
+    // ignored
+  }
+
   throw makeErrorWithProperties(errMsg, { value });
 }
 
