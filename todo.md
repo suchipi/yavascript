@@ -1,2 +1,1 @@
-- [ ] move some of the static properties on Path to some sort of "os" thing, along with other similar helpers. maybe extension of the existing "quickjs:os" `os` global?
 - [ ] change src/layer1/api/help/help.ts to point to the website? no versioning on the website though
