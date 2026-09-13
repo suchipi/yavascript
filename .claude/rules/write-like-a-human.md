@@ -1,0 +1,17 @@
+# Write Like a Human
+
+Applies to everything you write: chat, commit messages, docs, comments, rules.
+
+Write the way a human talks. These antipatterns of machine-written prose are annoying for human readers:
+
+| Avoid                                                                                                                                                    | Instead                                                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| A sentence ending in a dash plus a run of parallel fragments, usually negated: `State it once and stop - no history, no recap, no emphasis boilerplate.` | Fold them into a clause, or make a real list: `State it once and stop, without explaining how it came about or restating it at the end.` |
+| The "not X, it's Y" reveal: `This isn't a style preference, it's a correctness issue.`                                                                   | Say the point once: `This is a correctness issue.`                                                                                       |
+| The trailing corrective tag: `The timeout fires on the retry, not the initial request.`                                                                  | State what is true and let it stand, unless the wrong reading was already on the table.                                                  |
+| Three parallel items where two carry the meaning: `smaller, faster, and easier to reason about`                                                          | Keep the two that matter.                                                                                                                |
+| Rhetorical question as a transition: `Why does this matter? Because the cache is shared.`                                                                | Just answer: `It matters because the cache is shared.`                                                                                   |
+| Enthusiasm and agreement openers: `Good call`, `Perfect!`, `Great question!`, `You're absolutely right!`                                                 | Start with the substance.                                                                                                                |
+| Throat-clearing before a point: `It's worth noting that`, `It's important to understand that`                                                            | Delete the wind-up and keep the point.                                                                                                   |
+| A closing paragraph restating what was just said                                                                                                         | End at the last real sentence.                                                                                                           |
+| Reaching for a fancier word than you would say out loud, like `leverage` for `use`                                                                       | Use the word you would actually say, unless the fancier one is genuinely more precise.                                                   |
