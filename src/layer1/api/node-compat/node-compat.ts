@@ -53,6 +53,7 @@ export function installNodeCompat(global: any) {
         cmdline.exit();
       }
     },
+    platform: os.platform,
   };
 
   Object.defineProperty(global, "process", {
