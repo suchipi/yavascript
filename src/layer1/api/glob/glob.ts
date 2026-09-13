@@ -25,12 +25,11 @@ function compile(pattern: string, startingDir: string) {
       : Path.normalize(startingDir, "./" + pattern));
 
   const matcher = new minimatch.Minimatch(normalized);
-  const regexp = matcher.makeRe();
-  if (!regexp) {
+  if (!matcher.makeRe()) {
     throw makeErrorWithProperties("Invalid glob pattern", { pattern });
   }
 
-  return { matcher, regexp };
+  return matcher;
 }
 
 export type GlobOptions = {
@@ -178,7 +177,7 @@ export function glob(
     return {
       negated: pattern.startsWith("!"),
       pattern,
-      ...compile(pattern, startingDir),
+      matcher: compile(pattern, startingDir),
     };
   });
 
@@ -218,8 +217,8 @@ export function glob(
         }
 
         if (
-          allPatterns.every(({ pattern, negated, regexp }) => {
-            let didMatch = regexp.test(fullName);
+          allPatterns.every(({ pattern, negated, matcher }) => {
+            let didMatch = matcher.match(fullName);
 
             trace(
               "match info:",
@@ -241,8 +240,8 @@ export function glob(
           // Only traverse deeper dirs if this one doesn't match a negated
           // pattern.
           let shouldGoDeeper = true;
-          for (const { regexp, pattern } of negatedPatterns) {
-            const matchesNegated = !regexp.test(fullName);
+          for (const { matcher, pattern } of negatedPatterns) {
+            const matchesNegated = !matcher.match(fullName);
             if (matchesNegated) {
               trace(
                 `not traversing deeper into dir as it matches a negated pattern: ${JSON.stringify(

@@ -282,8 +282,11 @@ test("using trace", async () => {
     checking <rootDir>/meta/tests/fixtures/glob/hi/.yeah
     checking <rootDir>/meta/tests/fixtures/glob/hi/there.txt
     checking <rootDir>/meta/tests/fixtures/glob/potato
+    checking <rootDir>/meta/tests/fixtures/glob/potato/banana
+    checking <rootDir>/meta/tests/fixtures/glob/potato/eggplant
     found 3 children of <rootDir>/meta/tests/fixtures/glob/cabana
     found 4 children of <rootDir>/meta/tests/fixtures/glob/hi
+    found 4 children of <rootDir>/meta/tests/fixtures/glob/potato
     found 8 children of <rootDir>/meta/tests/fixtures/glob
     glob: expanding ["**/*.txt","!**/potato/**"]
     match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/meta/tests/fixtures/glob/cabana"}
@@ -293,14 +296,17 @@ test("using trace", async () => {
     match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/meta/tests/fixtures/glob/hi.something.js"}
     match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/meta/tests/fixtures/glob/hi/.yeah"}
     match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/meta/tests/fixtures/glob/potato"}
+    match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/meta/tests/fixtures/glob/potato/banana"}
+    match info: {"didMatch":false,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/meta/tests/fixtures/glob/potato/eggplant"}
     match info: {"didMatch":true,"pattern":"!**/potato/**","negated":true,"fullName":"<rootDir>/meta/tests/fixtures/glob/hi.txt"}
     match info: {"didMatch":true,"pattern":"!**/potato/**","negated":true,"fullName":"<rootDir>/meta/tests/fixtures/glob/hi/there.txt"}
     match info: {"didMatch":true,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/meta/tests/fixtures/glob/hi.txt"}
     match info: {"didMatch":true,"pattern":"**/*.txt","negated":false,"fullName":"<rootDir>/meta/tests/fixtures/glob/hi/there.txt"}
-    not traversing deeper into dir as it matches a negated pattern: {"dir":"<rootDir>/meta/tests/fixtures/glob/potato","pattern":"!**/potato/**"}
+    not traversing deeper into dir as it matches a negated pattern: {"dir":"<rootDir>/meta/tests/fixtures/glob/potato/banana","pattern":"!**/potato/**"}
     reading children of <rootDir>/meta/tests/fixtures/glob
     reading children of <rootDir>/meta/tests/fixtures/glob/cabana
-    reading children of <rootDir>/meta/tests/fixtures/glob/hi"
+    reading children of <rootDir>/meta/tests/fixtures/glob/hi
+    reading children of <rootDir>/meta/tests/fixtures/glob/potato"
   `);
 });
 
@@ -336,4 +342,37 @@ test("leading single-asterisk pattern doesn't traverse deeper than the pattern c
     reading children of <rootDir>/meta/tests/fixtures/glob/hi
     reading children of <rootDir>/meta/tests/fixtures/glob/potato"
   `);
+});
+
+testGlob(
+  "trailing globstar alongside another globstar",
+  globDir,
+  ["**/potato/**"],
+  [
+    "<rootDir>/meta/tests/fixtures/glob/potato/banana",
+    "<rootDir>/meta/tests/fixtures/glob/potato/banana/yo.js",
+    "<rootDir>/meta/tests/fixtures/glob/potato/banana/yo.txt",
+    "<rootDir>/meta/tests/fixtures/glob/potato/eggplant",
+  ],
+);
+
+testGlob(
+  "trailing globstar doesn't match the dir it hangs off of",
+  globDir,
+  ["potato/**"],
+  [
+    "<rootDir>/meta/tests/fixtures/glob/potato/banana",
+    "<rootDir>/meta/tests/fixtures/glob/potato/banana/yo.js",
+    "<rootDir>/meta/tests/fixtures/glob/potato/banana/yo.txt",
+    "<rootDir>/meta/tests/fixtures/glob/potato/eggplant",
+  ],
+);
+
+test("globbing from the filesystem root accepts a leading slash", async () => {
+  const result = await evaluate(
+    `JSON.stringify(glob("/us*", { dir: "/" }).map(path => path.toString()))`,
+  );
+
+  expect(result).toMatchObject({ code: 0, error: null });
+  expect(JSON.parse(result.stdout)).toEqual(["/usr"]);
 });
