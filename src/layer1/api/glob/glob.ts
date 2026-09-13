@@ -24,12 +24,13 @@ function compile(pattern: string, startingDir: string) {
       ? pattern
       : Path.normalize(startingDir, "./" + pattern));
 
-  const regexp = minimatch.makeRe(normalized);
+  const matcher = new minimatch.Minimatch(normalized);
+  const regexp = matcher.makeRe();
   if (!regexp) {
     throw makeErrorWithProperties("Invalid glob pattern", { pattern });
   }
 
-  return regexp;
+  return { matcher, regexp };
 }
 
 export type GlobOptions = {
@@ -177,11 +178,12 @@ export function glob(
     return {
       negated: pattern.startsWith("!"),
       pattern,
-      regexp: compile(pattern, startingDir),
+      ...compile(pattern, startingDir),
     };
   });
 
   const negatedPatterns = allPatterns.filter(({ negated }) => negated);
+  const nonNegatedPatterns = allPatterns.filter(({ negated }) => !negated);
 
   const matches: Array<string> = [];
 
@@ -238,14 +240,6 @@ export function glob(
         if (os.S_IFDIR & stat.mode) {
           // Only traverse deeper dirs if this one doesn't match a negated
           // pattern.
-          //
-          // TODO: it'd be better if it also avoided traversing deeper when
-          // it'd be impossible for deeper dirs to ever match the patterns.
-          //
-          // Honestly, it'd be great to just have a c globstar library that
-          // took care of all of this for us... because you end up needing
-          // to be aware of the glob pattern parsing and syntax in order to
-          // know the optimal traversal path.
           let shouldGoDeeper = true;
           for (const { regexp, pattern } of negatedPatterns) {
             const matchesNegated = !regexp.test(fullName);
@@ -258,6 +252,23 @@ export function glob(
 
               shouldGoDeeper = false;
               break;
+            }
+          }
+
+          if (shouldGoDeeper) {
+            for (const { matcher, pattern } of nonNegatedPatterns) {
+              // A partial match means some path at or below this dir could
+              // still match; if there's none, nothing below here ever can.
+              if (!matcher.match(fullName, true)) {
+                trace(
+                  `not traversing deeper into dir as nothing within it could match a pattern: ${JSON.stringify(
+                    { dir: fullName, pattern },
+                  )}`,
+                );
+
+                shouldGoDeeper = false;
+                break;
+              }
             }
           }
 

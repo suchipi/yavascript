@@ -303,3 +303,37 @@ test("using trace", async () => {
     reading children of <rootDir>/meta/tests/fixtures/glob/hi"
   `);
 });
+
+test("leading single-asterisk pattern doesn't traverse deeper than the pattern can match", async () => {
+  const result = await evaluate(
+    `JSON.stringify(glob("*/*.txt", {
+      logging: {
+        trace: (...args) => {
+          const message = args.join(" ");
+          if (message.startsWith("reading children of ")) {
+            console.error(message);
+          }
+        },
+      },
+      dir: ${JSON.stringify(globDir)}
+    }))`,
+  );
+
+  expect(result).toMatchObject({
+    code: 0,
+    error: null,
+  });
+
+  compareResult(result, ["<rootDir>/meta/tests/fixtures/glob/hi/there.txt"]);
+
+  // message order varies with OS
+  const traceMessages = result.stderr.split("\n").sort().join("\n");
+  expect(traceMessages).toMatchInlineSnapshot(`
+    "
+    glob: expanding ["*/*.txt"]
+    reading children of <rootDir>/meta/tests/fixtures/glob
+    reading children of <rootDir>/meta/tests/fixtures/glob/cabana
+    reading children of <rootDir>/meta/tests/fixtures/glob/hi
+    reading children of <rootDir>/meta/tests/fixtures/glob/potato"
+  `);
+});
