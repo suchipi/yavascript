@@ -6,7 +6,7 @@ sudo apt-get install -y ninja-build libcurl4
 
 export NVM_DIR="$HOME/.nvm"
 # this is really chatty...
-echo "+ source "$NVM_DIR/nvm.sh" --no-use"
+echo "+ source \"$NVM_DIR/nvm.sh\" --no-use"
 set +x
   source "$NVM_DIR/nvm.sh" --no-use
 set -x
