@@ -92,8 +92,21 @@ const exec = (
     );
     child.start();
 
+    // The temp files are closed once the wait finishes, so the outcome has to
+    // be remembered rather than recomputed on a second call.
+    let settled: { ok: true; value: any } | { ok: false; error: any } | null =
+      null;
+
     const waiter = {
       wait() {
+        if (settled != null) {
+          if (settled.ok) return settled.value;
+          throw settled.error;
+        }
+        const settle = (value: any) => {
+          settled = { ok: true, value };
+          return value;
+        };
         try {
           result = child.waitUntilComplete();
           if (result.status !== 0 && !failOnNonZeroStatus) {
@@ -157,17 +170,17 @@ const exec = (
 
           if (!captureOutput) {
             if (failOnNonZeroStatus) {
-              return undefined;
+              return settle(undefined);
             } else {
-              return result;
+              return settle(result);
             }
           }
 
           if (stdout != null && stderr != null) {
             if (failOnNonZeroStatus) {
-              return { stdout, stderr };
+              return settle({ stdout, stderr });
             } else {
-              return { stdout, stderr, ...result };
+              return settle({ stdout, stderr, ...result });
             }
           } else {
             throw new Error(
@@ -175,6 +188,7 @@ const exec = (
             );
           }
         } catch (err) {
+          settled = { ok: false, error: err };
           trace("exec error:", err);
           throw err;
         } finally {
