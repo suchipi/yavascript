@@ -21,3 +21,19 @@ ModuleDelegate.searchExtensions = [
   ".jsx",
   ".js",
 ];
+
+// The engine picks a compiler by matching /(\.[^.]+)$/ against the whole
+// module path, so a dot anywhere in a directory name (~/.local/bin,
+// node_modules/.bin, v1.2/) yields a key like ".bin/script" and a file with no
+// extension of its own is never compiled. An explicit type takes precedence
+// over that lookup, so one is supplied when the basename has no extension.
+const readWithoutExtensionFix = ModuleDelegate.read;
+ModuleDelegate.read = (moduleName: string, attributes?: any) => {
+  if (attributes == null || typeof attributes.type !== "string") {
+    const basename = moduleName.split(/[/\\]/).pop() ?? "";
+    if (!basename.includes(".")) {
+      attributes = { ...attributes, type: "" };
+    }
+  }
+  return readWithoutExtensionFix(moduleName, attributes);
+};
