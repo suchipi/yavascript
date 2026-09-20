@@ -420,7 +420,7 @@ declare function isWritable(path: string | Path): boolean;
  *
  * If the directory isn't empty, its contents will be deleted, too.
  *
- * Provides the same functionality as the command `rm -rf`.
+ * Provides the same functionality as the command `rm -r`.
  */
 declare function remove(path: string | Path): void;
 

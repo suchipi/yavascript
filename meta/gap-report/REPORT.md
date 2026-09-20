@@ -89,7 +89,7 @@ These are behaviors that would be breaking to change later. Each one is working 
 
 | Topic | Current behavior | Ref |
 | --- | --- | --- |
-| "Same as the unix command" claims | `remove` throws on a missing path (`rm -rf` doesn't). `rename` can't move into a dir. `copy` dereferences symlinks and drops dir modes. `basename`/`dirname` treat `\` as a separator on POSIX. `chmod` has no symbolic modes, and `"set"` clears every class you don't mention. `mkdirp` applies `mode` to intermediate dirs. `printf` rejects `%lld`, `%zu`, positional args. Either match the commands or drop the claims. | fs #16-18, commands #3, #14, #19, #24, #27 |
+| "Same as the unix command" claims | `rename` can't move into a dir. `copy` dereferences symlinks and drops dir modes. `basename`/`dirname` treat `\` as a separator on POSIX. `chmod` has no symbolic modes, and `"set"` clears every class you don't mention. `mkdirp` applies `mode` to intermediate dirs. `printf` rejects `%lld`, `%zu`, positional args. Either match the commands or drop the claims. | fs #16-18, commands #3, #14, #19, #24, #27 |
 | Stub globals (`cp`, `rm`, `id`, `where`, `FILE`, ...) | `typeof cp` throws instead of returning `"undefined"`, which breaks feature detection in libraries | commands #31, crosscut #21 |
 | Return types | `basename`/`extname`/`__filename` return strings; `dirname`/`pwd`/`ls`/`which`/`readlink`/`realpath` return `Path`. `which` is the only command that rejects `Path` input. | commands #28 |
 | Physical vs logical paths | `pwd()` and `ls()` resolve symlinks (bash's `pwd` doesn't). `ls` is unsorted. `cd` doesn't update `env.PWD`. No `~` expansion anywhere; `mkdirp("~/x")` creates a literal `./~/x`. | commands #21-23, #29 |
