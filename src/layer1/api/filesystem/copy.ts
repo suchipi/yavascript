@@ -109,6 +109,27 @@ function copyRaw(
   }
 }
 
+// Recursing through copy() instead would re-enter "dir -> dir" for a child
+// whose target exists, nesting it one level deeper each time.
+function copyDirTo(
+  from: string,
+  to: string,
+  options: CopyOptions,
+  trace: (...args: Array<any>) => void,
+): void {
+  trace("ensuring dir", to);
+  mkdir(to, { recursive: true, logging: { info: noop } });
+
+  for (const child of ls(from)) {
+    const target = new Path(to, basename(child)).toString();
+    if (_getPathInfo(child.toString()) === "dir") {
+      copyDirTo(child.toString(), target, options, trace);
+    } else {
+      copy(child, target, options);
+    }
+  }
+}
+
 export type CopyOptions = {
   whenTargetExists?: "overwrite" | "skip" | "error";
   logging?: {
@@ -225,31 +246,13 @@ export function copy(
       return;
     }
     case "dir -> nonexistent": {
-      // Create new dir at target path and copy contents into it recursively
-      trace("ensuring dir", to);
-      mkdir(to, { recursive: true, logging: { info: noop } });
-
-      const children = ls(from);
-      for (const child of children) {
-        const filename = basename(child);
-        const target = new Path(to, filename);
-        copy(child, target, options);
-      }
+      copyDirTo(from, to, options, trace);
       return;
     }
     case "dir -> dir": {
-      // Create new dir within target path and copy contents into it recursively
-      const dirname = basename(from);
-      const targetDir = new Path(to, dirname);
-      trace("ensuring dir", targetDir);
-      mkdir(targetDir, { recursive: true, logging: { info: noop } });
-
-      const children = ls(from);
-      for (const child of children) {
-        const filename = basename(child);
-        const target = new Path(targetDir, filename);
-        copy(child, target, options);
-      }
+      // cp -R src dst makes dst/src
+      const targetDir = new Path(to, basename(from)).toString();
+      copyDirTo(from, targetDir, options, trace);
       return;
     }
     case "nonexistent -> nonexistent":
