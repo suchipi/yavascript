@@ -19,8 +19,12 @@ export function grepArray<T>(
   pattern: string | RegExp,
   options: { inverse?: boolean; details?: boolean } = {},
 ) {
+  // Copied rather than used directly, because matching against a sticky or
+  // global regexp writes to its lastIndex.
   const regexp =
-    typeof pattern === "string" ? new RegExp(RegExp.escape(pattern), "g") : pattern;
+    typeof pattern === "string"
+      ? new RegExp(RegExp.escape(pattern), "g")
+      : new RegExp(pattern.source, pattern.flags);
 
   const outLines: Array<
     | T
@@ -35,6 +39,7 @@ export function grepArray<T>(
   > = [];
 
   targetArray.forEach((item, index) => {
+    regexp.lastIndex = 0;
     const matches = String(item).match(regexp);
     let shouldInclude = matches != null;
     if (options.inverse) {
