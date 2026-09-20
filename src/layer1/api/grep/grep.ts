@@ -1,5 +1,4 @@
 import * as std from "quickjs:std";
-import { escape } from "../regexp-escape";
 import { is } from "../is";
 import { types } from "../types";
 import { assert } from "../assert";
@@ -21,7 +20,7 @@ export function grepArray<T>(
   options: { inverse?: boolean; details?: boolean } = {},
 ) {
   const regexp =
-    typeof pattern === "string" ? new RegExp(escape(pattern), "g") : pattern;
+    typeof pattern === "string" ? new RegExp(RegExp.escape(pattern), "g") : pattern;
 
   const outLines: Array<
     | T

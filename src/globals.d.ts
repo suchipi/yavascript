@@ -29,3 +29,8 @@ declare var yavascript: typeof import("./layer1/api/yavascript").yavascript;
 // Declared and assigned in layer 3
 declare var Worker: typeof import("./layer3/worker").Worker;
 declare var Context: typeof import("./layer3/context").Context;
+
+// Present in the engine, but newer than tsconfig.json's "lib" setting
+interface RegExpConstructor {
+  escape(str: string): string;
+}

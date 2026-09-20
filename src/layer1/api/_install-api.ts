@@ -11,7 +11,6 @@ import {
   grepArray,
   installToArrayProto as installGrepToArrayProto,
 } from "./grep";
-import { install as installRegexpEscape } from "./regexp-escape";
 import { install as installStringDedent } from "./string-dedent";
 import { install as installPromiseMap } from "./promise-map";
 import { installModuleHooks } from "../module-hooks";
@@ -236,7 +235,6 @@ export default function installApi(target: typeof globalThis) {
   installGrepToStringProto(target.String.prototype);
   installGrepToArrayProto(target.Array.prototype);
 
-  installRegexpEscape(target.RegExp);
   installStringDedent(target.String);
   installPromiseMap(target.Promise);
   installModuleHooks();
