@@ -57,11 +57,7 @@ function copyRaw(
       to,
       `(flags: O_WRONLY | O_CREAT | O_TRUNC, mode: 0o${fromPerms.toString(8)})`,
     );
-    const toFd = os.open(
-      to,
-      os.O_WRONLY | os.O_CREAT | os.O_TRUNC,
-      fromPerms,
-    );
+    const toFd = os.open(to, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, fromPerms);
     fdsToCloseLater[to] = toFd;
     const toFile = std.fdopen(toFd, "w");
     filesToCloseLater[to] = toFile;
@@ -110,8 +106,6 @@ function copyRaw(
   }
 }
 
-// Recursing through copy() instead would re-enter "dir -> dir" for a child
-// whose target exists, nesting it one level deeper each time.
 function copyDirTo(
   from: string,
   to: string,
@@ -223,10 +217,10 @@ export function copy(
         : os.realpath(new Path(to).dirname().toString()),
     );
     if (toReal.startsWith(fromReal)) {
-      throw makeErrorWithProperties(
-        "Cannot copy a directory into itself",
-        { from, to },
-      );
+      throw makeErrorWithProperties("Cannot copy a directory into itself", {
+        from,
+        to,
+      });
     }
   }
 
@@ -277,7 +271,6 @@ export function copy(
       return;
     }
     case "dir -> dir": {
-      // cp -R src dst makes dst/src
       const targetDir = new Path(to, basename(from)).toString();
       copyDirTo(from, targetDir, options, trace);
       return;

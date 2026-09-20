@@ -124,8 +124,8 @@ export function glob(
   const patternsArray = Array.isArray(patterns) ? patterns : [patterns];
   info(`glob: expanding ${JSON.stringify(patternsArray)}`);
 
-  // Patterns are ANDed together, and every() is vacuously true for an empty
-  // list, which would otherwise match the entire tree.
+  // Patterns are ANDed together, and every() returns true for an empty list,
+  // which would otherwise match the entire tree.
   if (patternsArray.length === 0) {
     return [];
   }

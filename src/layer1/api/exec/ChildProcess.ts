@@ -150,10 +150,10 @@ export class ChildProcess {
   start(): number {
     this._logging.trace.call(null, "ChildProcess.start:", this.args);
 
-    // The child writes to the same fds, so anything still buffered here has
-    // to go out first to keep the output in order.
-    std.out.flush();
-    std.err.flush();
+    // The child inherits these, so anything still buffered in them has to go
+    // out first to keep the output in order.
+    this.stdio.out.flush();
+    this.stdio.err.flush();
 
     const pid = os.exec(this.args, {
       block: false,

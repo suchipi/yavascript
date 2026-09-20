@@ -5,7 +5,6 @@ import { assert } from "../../assert";
 import { is } from "../../is";
 import { TypeValidator, types } from "../../types";
 import type { Path } from "../../path";
-import { ResizableBuffer } from "../../../resizable-buffer";
 import { readWholeFile } from "../../../read-whole-file";
 
 let pathsArgType: TypeValidator<string | Path | Array<string | Path>> | null =
@@ -45,8 +44,7 @@ export function cat(
     }
   }
 
-  const content = new ResizableBuffer(0);
-  let offset = 0;
+  const fileContents: Array<ArrayBuffer> = [];
 
   for (let path of paths) {
     if (is(path, types.Path)) {
@@ -58,15 +56,29 @@ export function cat(
       "'path' argument must be either a string or a Path object",
     );
 
-    const fileContent = readWholeFile(path);
-    content.resizeBy(fileContent.byteLength);
-    new Uint8Array(content.buffer).set(new Uint8Array(fileContent), offset);
-    offset += fileContent.byteLength;
+    fileContents.push(readWholeFile(path));
+  }
+
+  let content: ArrayBuffer;
+  if (fileContents.length === 1) {
+    content = fileContents[0];
+  } else {
+    const totalLength = fileContents.reduce(
+      (total, buffer) => total + buffer.byteLength,
+      0,
+    );
+    content = new ArrayBuffer(totalLength);
+    const view = new Uint8Array(content);
+    let offset = 0;
+    for (const buffer of fileContents) {
+      view.set(new Uint8Array(buffer), offset);
+      offset += buffer.byteLength;
+    }
   }
 
   if (options.binary) {
-    return content.buffer;
+    return content;
   } else {
-    return encoding.toUtf8(content.buffer);
+    return encoding.toUtf8(content);
   }
 }

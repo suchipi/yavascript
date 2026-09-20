@@ -9,6 +9,19 @@ import { ChildProcess } from "./ChildProcess";
 import { types } from "../types";
 import { quote } from "../strings";
 
+type ExecRuntimeResult =
+  | undefined
+  | {
+      status?: number;
+      signal?: number;
+      stdout?: string | ArrayBuffer;
+      stderr?: string | ArrayBuffer;
+    };
+
+type WaitOutcome =
+  | { type: "success"; value: ExecRuntimeResult }
+  | { type: "error"; error: Error };
+
 const exec = (
   args: Array<string | Path | number> | string | Path,
   options: {
@@ -94,17 +107,16 @@ const exec = (
 
     // The temp files are closed once the wait finishes, so the outcome has to
     // be remembered rather than recomputed on a second call.
-    let settled: { ok: true; value: any } | { ok: false; error: any } | null =
-      null;
+    let outcome: WaitOutcome | null = null;
 
     const waiter = {
       wait() {
-        if (settled != null) {
-          if (settled.ok) return settled.value;
-          throw settled.error;
+        if (outcome != null) {
+          if (outcome.type === "error") throw outcome.error;
+          return outcome.value;
         }
-        const settle = (value: any) => {
-          settled = { ok: true, value };
+        const settle = (value: ExecRuntimeResult) => {
+          outcome = { type: "success", value };
           return value;
         };
         try {
@@ -188,7 +200,7 @@ const exec = (
             );
           }
         } catch (err) {
-          settled = { ok: false, error: err };
+          outcome = { type: "error", error: err as Error };
           trace("exec error:", err);
           throw err;
         } finally {

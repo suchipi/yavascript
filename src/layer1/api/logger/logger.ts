@@ -9,23 +9,26 @@ type LoggerFunction = (...args: Array<any>) => void;
 
 const noop = () => {};
 
+const dimIfHasColors = (str: string) => (hasColors(std.err) ? dim(str) : str);
+
+const yellowIfHasColors = (str: string) =>
+  hasColors(std.err) ? yellow(str) : str;
+
 let _info: LoggerFunction = (...args: Array<any>) => {
-  const colorize = hasColors(std.err) ? dim : (str: string) => str;
   const parts = inspectManyToParts(args);
   const len = parts.length;
   for (let i = 0; i < len; i++) {
-    std.err.puts(colorize(parts[i]));
+    std.err.puts(dimIfHasColors(parts[i]));
   }
   std.err.puts("\n");
 };
 let _trace: LoggerFunction = noop;
 
 let _warn: LoggerFunction = (...args: Array<any>) => {
-  const colorize = hasColors(std.err) ? yellow : (str: string) => str;
   const parts = inspectManyToParts(args);
   const len = parts.length;
   for (let i = 0; i < len; i++) {
-    std.err.puts(colorize(parts[i]));
+    std.err.puts(yellowIfHasColors(parts[i]));
   }
   std.err.puts("\n");
 };

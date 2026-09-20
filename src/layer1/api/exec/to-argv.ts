@@ -30,7 +30,7 @@ export function toArgv(
   let argBeingBuilt = "";
   // Tracked separately from argBeingBuilt so that "" stays an empty argument
   // rather than disappearing.
-  let argStarted = false;
+  let isArgCurrentlyBeingBuilt = false;
 
   const chars = stringInput.split("");
   for (let i = 0; i < chars.length; i++) {
@@ -40,12 +40,12 @@ export function toArgv(
     switch (`${char} during ${mode}`) {
       case `" during DEFAULT`: {
         mode = "IN_DOUBLE_STRING";
-        argStarted = true;
+        isArgCurrentlyBeingBuilt = true;
         break;
       }
       case `' during DEFAULT`: {
         mode = "IN_SINGLE_STRING";
-        argStarted = true;
+        isArgCurrentlyBeingBuilt = true;
         break;
       }
       case `${" "} during DEFAULT`:
@@ -53,10 +53,10 @@ export function toArgv(
       case `\v during DEFAULT`:
       case `\n during DEFAULT`:
       case `\r during DEFAULT`: {
-        if (argStarted) {
+        if (isArgCurrentlyBeingBuilt) {
           result.push(argBeingBuilt);
           argBeingBuilt = "";
-          argStarted = false;
+          isArgCurrentlyBeingBuilt = false;
         }
         break;
       }
@@ -68,7 +68,7 @@ export function toArgv(
           break;
         } else {
           argBeingBuilt += "\\";
-          argStarted = true;
+          isArgCurrentlyBeingBuilt = true;
           break;
         }
       }
@@ -92,7 +92,7 @@ export function toArgv(
 
         if (escapedChars[nextChar]) {
           argBeingBuilt += escapedChars[nextChar];
-          argStarted = true;
+          isArgCurrentlyBeingBuilt = true;
           i++; // skip next char
         } else {
           // They used backslash to escape something but it wasn't an escape sequence.
@@ -103,12 +103,12 @@ export function toArgv(
       }
       default: {
         argBeingBuilt += char;
-        argStarted = true;
+        isArgCurrentlyBeingBuilt = true;
       }
     }
   }
 
-  if (mode === "DEFAULT" && argStarted) {
+  if (mode === "DEFAULT" && isArgCurrentlyBeingBuilt) {
     result.push(argBeingBuilt);
   } else if (mode === "IN_DOUBLE_STRING") {
     throw new Error(

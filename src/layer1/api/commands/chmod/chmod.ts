@@ -295,7 +295,6 @@ export const chmod: Chmod = (
   if (is(permissions, Number)) {
     permNum = permissions;
   } else if (is(permissions, String)) {
-    // parseInt(s, 8) stops at the first non-octal character rather than failing.
     if (!/^[0-7]{1,4}$/.test(permissions)) {
       throw new Error(
         `Invalid permissions string: ${permissions}. It should be an octal-representation number, like "750".`,
