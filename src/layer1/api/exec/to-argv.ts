@@ -11,7 +11,8 @@ export function toArgv(
   if (is(args, types.string)) {
     stringInput = args;
   } else if (is(args, types.Path)) {
-    stringInput = args.toString();
+    // A Path is one program path, not a command line to be split on spaces.
+    return [args.toString()];
   } else if (
     is(args, types.arrayOf(types.or(types.string, types.number, types.Path)))
   ) {
