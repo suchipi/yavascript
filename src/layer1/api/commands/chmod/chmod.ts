@@ -80,8 +80,8 @@ function permsNumberFor(
           }
 
           case "go": {
-            user = true;
             group = true;
+            others = true;
             break;
           }
 
