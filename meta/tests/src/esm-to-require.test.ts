@@ -41,15 +41,20 @@ test("transforms namespace import", async () => {
 });
 
 test("transforms default import", async () => {
-  expect(transform(`import a from "a"`)).toBe(`a = require("a").default`);
+  // require() already unwraps CommonJS, JSON, YAML and TOML modules to their
+  // exported value, so reading .default off it unconditionally gave undefined.
+  const defaultOf = (source: string) =>
+    `((m) => (m != null && typeof m === "object" && "default" in m ? m.default : m))(require(${source}))`;
+
+  expect(transform(`import a from "a"`)).toBe(`a = ${defaultOf(`"a"`)}`);
   expect(transform(`import      \n\t  a   from    'a'`)).toBe(
-    `a = require('a').default`,
+    `a = ${defaultOf(`'a'`)}`,
   );
   expect(transform(`import std from "quickjs:std"`)).toBe(
-    `std = require("quickjs:std").default`,
+    `std = ${defaultOf(`"quickjs:std"`)}`,
   );
   expect(transform(`import std from 'quickjs:std'`)).toBe(
-    `std = require('quickjs:std').default`,
+    `std = ${defaultOf(`'quickjs:std'`)}`,
   );
 });
 

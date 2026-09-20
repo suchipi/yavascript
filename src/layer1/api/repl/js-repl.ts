@@ -25,8 +25,10 @@ export function startRepl(lang: string) {
   const compiler = langToCompiler(lang);
   const colorizeOptions = { jsx: !langHasAngleBracketAssertions(lang) };
   const compileLine = (line: string): string => {
-    const compiledCode = compiler(line);
-    return esmToRequire.transform(compiledCode);
+    // Rewritten before compiling: sucrase's TypeScript transform drops an
+    // import whose bindings aren't used in the same input, which at a prompt
+    // is every import, leaving nothing to rewrite afterwards.
+    return compiler(esmToRequire.transform(line));
   };
 
   /* close global objects, so redefining them at the prompt can't break the repl */

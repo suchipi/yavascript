@@ -22,14 +22,25 @@ const defaultImportStmt = new RegExp(stmt(defaultImport), "m");
 const nsImportStmt = new RegExp(stmt(nsImport), "m");
 const namedImportStmt = new RegExp(stmt(namedImport), "m");
 
+// require() already unwraps CommonJS, JSON, YAML and TOML modules to their
+// exported value, which has no "default" to read.
+const defaultOf = (source: string) =>
+  `((m) => (m != null && typeof m === "object" && "default" in m ? m.default : m))(require(${source}))`;
+
 const wsAsWs = /\sas\s/;
 
-export function transform(line: string): string {
+// Ordered so the more specific forms are tried before the permissive one.
+const anyImportStmt = new RegExp(
+  stmt(`(?:${nsImport}|${namedImport}|${defaultImport}|${bareImport})`),
+  "gm",
+);
+
+function transformStatement(line: string): string {
   let matches: RegExpMatchArray | null = null;
   if ((matches = line.match(bareImportStmt))) {
     return `require(${matches[1]})`;
   } else if ((matches = line.match(defaultImportStmt))) {
-    return `${matches[1]} = require(${matches[2]}).default`;
+    return `${matches[1]} = ${defaultOf(matches[2])}`;
   } else if ((matches = line.match(nsImportStmt))) {
     return `${matches[1]} = require(${matches[2]})`;
   } else if ((matches = line.match(namedImportStmt))) {
@@ -69,4 +80,20 @@ export function transform(line: string): string {
   } else {
     return line;
   }
+}
+
+export function transform(input: string): string {
+  // Replaced where each statement sits, so the rest of the input survives.
+  return input.replace(anyImportStmt, (...args) => {
+    const match = args[0] as string;
+    const offset = args[args.length - 2] as number;
+    const transformed = transformStatement(match);
+
+    // A replacement starting with "(" would otherwise be read as a call on
+    // whatever the previous line evaluated to.
+    const needsSeparator =
+      /\S/.test(input.slice(0, offset)) && transformed.trimStart().startsWith("(");
+
+    return needsSeparator ? ";" + transformed : transformed;
+  });
 }
