@@ -7,11 +7,11 @@ const hasOwn = Object.hasOwn;
 export function patchRequire(theGlobal: typeof globalThis) {
   const nativeRequire = theGlobal.require;
 
-  const newRequire = (path: string) => {
+  const newRequire = (path: string, options?: { with?: { [key: string]: string } }) => {
     const callerFile = engine.getFileNameFromStack(1);
     let resolved: string;
     try {
-      resolved = engine.resolveModule(path, callerFile);
+      resolved = engine.resolveModule(path, callerFile, options);
     } catch (err) {
       throw makeErrorWithProperties(`Cannot find module`, {
         request: path,
@@ -19,7 +19,7 @@ export function patchRequire(theGlobal: typeof globalThis) {
       });
     }
 
-    const exps = nativeRequire(resolved);
+    const exps = nativeRequire(resolved, options);
     if (
       hasOwn(exps, "__isCjsModule") &&
       exps.__isCjsModule === true &&
@@ -43,6 +43,14 @@ export function patchRequire(theGlobal: typeof globalThis) {
     // skypack creates named exports like these
     if (hasOwn(exps, "__moduleExports")) {
       return exps.__moduleExports;
+    }
+
+    // A loader that emits only a default export (the engine's own "json" one,
+    // for instance) should require() to the same value the .json extension
+    // loader gives, rather than a namespace wrapping it.
+    const names = Object.keys(exps);
+    if (names.length === 1 && names[0] === "default") {
+      return exps.default;
     }
 
     return exps;
