@@ -1536,16 +1536,19 @@ describe("repl langs", () => {
 
   test("import statements are rewritten to require calls", async () => {
     const session = await startReplSession();
-    await session.line('import { basename } from "quickjs:os"');
+    await session.line('import { getcwd } from "quickjs:os"');
+    await session.line("typeof getcwd");
     await session.exit();
     expect(session.result()).toMatchInlineSnapshot(`
       {
         "code": 0,
         "error": null,
         "stderr": "",
-        "stdout": "> import { basename } from "quickjs:os"
-      -> ({ basename } = require("quickjs:os")); basename
-      undefined
+        "stdout": "> import { getcwd } from "quickjs:os"
+      -> ({ getcwd } = require("quickjs:os")); getcwd
+      Function "getcwd" {}
+      > typeof getcwd
+      "function"
       > 
       ",
       }

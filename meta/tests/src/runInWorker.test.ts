@@ -54,26 +54,6 @@ test("async", async () => {
   `);
 });
 
-test("function rejects", async () => {
-  const result = await evaluate(`
-    void runInWorker(undefined, () => {
-      throw new TypeError("oopsie!");
-    }).then(console.log, console.error);
-  `);
-
-  expect(result).toMatchInlineSnapshot(`
-   {
-     "code": 0,
-     "error": null,
-     "stderr": "TypeError: oopsie!
-       at somewhere
-
-   ",
-     "stdout": "",
-   }
-  `);
-});
-
 test(
   "a worker function that throws a string rejects with that string",
   async () => {

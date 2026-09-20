@@ -152,30 +152,31 @@ test("passing relative path to isIgnored resolves relative to repo root rather t
 
       cd(repo.repoDir);
       cd("meta/tests/fixtures/gitignoring");
-      console.log("at", pwd(), 'repo.isIgnored("hi.txt") is:', repo.isIgnored("hi.txt"));
+      console.log("cwd:", pwd(), 'repo.isIgnored("hi.txt") is:', repo.isIgnored("hi.txt"));
       cd("subdir");
-      console.log("at", pwd(), 'repo.isIgnored("hi.txt") is:', repo.isIgnored("hi.txt"));
-      console.log("at", pwd(), 'repo.isIgnored(pwd().concat("hi.txt")) is:', repo.isIgnored(pwd().concat("hi.txt")));
+      console.log("cwd:", pwd(), 'repo.isIgnored("hi.txt") is:', repo.isIgnored("hi.txt"));
+      console.log("cwd:", pwd(), 'repo.isIgnored(pwd().concat("hi.txt")) is:', repo.isIgnored(pwd().concat("hi.txt")));
     `,
     { cwd: __dirname },
   );
   expect(result).toMatchInlineSnapshot(`
-   {
-     "code": 0,
-     "error": null,
-     "stderr": "exec: git check-ignore "<rootDir>/meta/tests/fixtures/gitignoring/hi.txt"
-     exec -> {"status":1}
-   exec: git check-ignore "<rootDir>/meta/tests/fixtures/gitignoring/subdir/hi.txt"
-   exec: git check-ignore "<rootDir>/hi.txt"
-     exec -> {"status":1}
-   exec: git check-ignore "<rootDir>/hi.txt"
-     exec -> {"status":1}
-   exec: git check-ignore "<rootDir>/meta/tests/fixtures/gitignoring/subdir/hi.txt"
-   ",
-     "stdout": "at Path { <rootDir>/meta/tests/fixtures/gitignoring } repo.isIgnored("hi.txt") is: false
-   at somewhere
-   ",
-   }
+    {
+      "code": 0,
+      "error": null,
+      "stderr": "exec: git check-ignore "<rootDir>/meta/tests/fixtures/gitignoring/hi.txt"
+      exec -> {"status":1}
+    exec: git check-ignore "<rootDir>/meta/tests/fixtures/gitignoring/subdir/hi.txt"
+    exec: git check-ignore "<rootDir>/hi.txt"
+      exec -> {"status":1}
+    exec: git check-ignore "<rootDir>/hi.txt"
+      exec -> {"status":1}
+    exec: git check-ignore "<rootDir>/meta/tests/fixtures/gitignoring/subdir/hi.txt"
+    ",
+      "stdout": "cwd: Path { <rootDir>/meta/tests/fixtures/gitignoring } repo.isIgnored("hi.txt") is: false
+    cwd: Path { <rootDir>/meta/tests/fixtures/gitignoring/subdir } repo.isIgnored("hi.txt") is: false
+    cwd: Path { <rootDir>/meta/tests/fixtures/gitignoring/subdir } repo.isIgnored(pwd().concat("hi.txt")) is: true
+    ",
+    }
   `);
 });
 
