@@ -81,50 +81,50 @@ test("json5", async () => {
 test("toml", async () => {
   const result = await runYavascript([fixturesDir("load-toml.js")]);
   expect(result).toMatchInlineSnapshot(`
-   {
-     "code": 0,
-     "error": null,
-     "stderr": "",
-     "stdout": "{
-     title: "TOML Example"
-     owner: {
-       name: "Tom Preston-Werner"
-       dob: "1979-05-27T15:32:00.000Z"
-     }
-     database: {
-       enabled: true
-       ports: [
-         8000
-         8001
-         8002
-       ]
-       data: [
-         [
-           "delta"
-           "phi"
-         ]
-         [
-           3.14
-         ]
-       ]
-       temp_targets: {
-         cpu: 79.5
-         case: 72
-       }
-     }
-     servers: {
-       alpha: {
-         ip: "10.0.0.1"
-         role: "frontend"
-       }
-       beta: {
-         ip: "10.0.0.2"
-         role: "backend"
-       }
-     }
-   }
-   ",
-   }
+    {
+      "code": 0,
+      "error": null,
+      "stderr": "",
+      "stdout": "{
+      title: "TOML Example"
+      owner: {
+        name: "Tom Preston-Werner"
+        dob: 1979-05-27T15:32:00.000Z
+      }
+      database: {
+        enabled: true
+        ports: [
+          8000
+          8001
+          8002
+        ]
+        data: [
+          [
+            "delta"
+            "phi"
+          ]
+          [
+            3.14
+          ]
+        ]
+        temp_targets: {
+          cpu: 79.5
+          case: 72
+        }
+      }
+      servers: {
+        alpha: {
+          ip: "10.0.0.1"
+          role: "frontend"
+        }
+        beta: {
+          ip: "10.0.0.2"
+          role: "backend"
+        }
+      }
+    }
+    ",
+    }
   `);
 });
 

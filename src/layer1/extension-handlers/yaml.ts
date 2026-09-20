@@ -1,18 +1,13 @@
 import { ModuleDelegate } from "quickjs:engine";
 
-const template = (data: any) =>
-  `const data = ${JSON.stringify(data, null, 2)};
+// Parsed when the module runs, not at compile time; see the note in toml.ts.
+const compiler = (filename: string, content: string) =>
+  `const data = YAML.parse(${JSON.stringify(content)});
 export default data;
 
 export const __isCjsModule = true;
 export const __cjsExports = data;
 `;
-
-const compiler = (filename: string, content: string) => {
-  const { YAML } = require("../api/yaml");
-  const data = YAML.parse(content);
-  return template(data);
-};
 
 ModuleDelegate.compilers[".yaml"] = compiler;
 ModuleDelegate.compilers[".yml"] = compiler;
