@@ -119,7 +119,13 @@ function copyDirTo(
   trace: (...args: Array<any>) => void,
 ): void {
   trace("ensuring dir", to);
+  const targetExisted = exists(to);
   mkdir(to, { recursive: true, logging: { info: noop } });
+  if (!targetExisted) {
+    const fromPerms =
+      os.stat(from).mode & (os.S_IRWXU | os.S_IRWXG | os.S_IRWXO);
+    os.chmod(to, fromPerms);
+  }
 
   for (const child of ls(from)) {
     const childPath = child.toString();
