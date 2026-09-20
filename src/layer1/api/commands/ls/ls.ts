@@ -29,6 +29,7 @@ export function ls(dir: string | Path = pwd()): Array<Path> {
   let children = os
     .readdir(dir)
     .filter((child) => child !== "." && child !== "..")
+    .sort()
     .map((child) => {
       return new Path(parent, child);
     });

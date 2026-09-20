@@ -32,16 +32,14 @@ test("ls - no args", async () => {
     stderr: "",
   });
 
-  expect(JSON.parse(result.stdout).sort()).toEqual(
-    [
-      "<rootDir>/meta/tests/fixtures/glob/hi.something.js",
-      "<rootDir>/meta/tests/fixtures/glob/potato",
-      "<rootDir>/meta/tests/fixtures/glob/hi.js",
-      "<rootDir>/meta/tests/fixtures/glob/hi.txt",
-      "<rootDir>/meta/tests/fixtures/glob/cabana",
-      "<rootDir>/meta/tests/fixtures/glob/hi",
-    ].sort(),
-  );
+  expect(JSON.parse(result.stdout)).toEqual([
+    "<rootDir>/meta/tests/fixtures/glob/hi.something.js",
+    "<rootDir>/meta/tests/fixtures/glob/potato",
+    "<rootDir>/meta/tests/fixtures/glob/hi.js",
+    "<rootDir>/meta/tests/fixtures/glob/hi.txt",
+    "<rootDir>/meta/tests/fixtures/glob/cabana",
+    "<rootDir>/meta/tests/fixtures/glob/hi",
+  ]);
 });
 
 test("ls - no args (different process cwd)", async () => {
@@ -54,15 +52,13 @@ test("ls - no args (different process cwd)", async () => {
     stderr: "",
   });
 
-  expect(JSON.parse(result.stdout).sort()).toEqual(
-    [
-      "<rootDir>/meta/tests/fixtures/symlinks/some-folder",
-      "<rootDir>/meta/tests/fixtures/symlinks/link-to-file",
-      "<rootDir>/meta/tests/fixtures/symlinks/link-to-folder",
-      "<rootDir>/meta/tests/fixtures/symlinks/dead-link",
-      "<rootDir>/meta/tests/fixtures/symlinks/some-file",
-    ].sort(),
-  );
+  expect(JSON.parse(result.stdout)).toEqual([
+    "<rootDir>/meta/tests/fixtures/symlinks/some-folder",
+    "<rootDir>/meta/tests/fixtures/symlinks/link-to-file",
+    "<rootDir>/meta/tests/fixtures/symlinks/link-to-folder",
+    "<rootDir>/meta/tests/fixtures/symlinks/dead-link",
+    "<rootDir>/meta/tests/fixtures/symlinks/some-file",
+  ]);
 });
 
 test("ls - specifying dir", async () => {
@@ -75,13 +71,11 @@ test("ls - specifying dir", async () => {
     stderr: "",
   });
 
-  expect(JSON.parse(result.stdout).sort()).toEqual(
-    [
-      //
-      "<rootDir>/meta/tests/fixtures/glob/potato/banana",
-      "<rootDir>/meta/tests/fixtures/glob/potato/eggplant",
-    ].sort(),
-  );
+  expect(JSON.parse(result.stdout)).toEqual([
+    //
+    "<rootDir>/meta/tests/fixtures/glob/potato/banana",
+    "<rootDir>/meta/tests/fixtures/glob/potato/eggplant",
+  ]);
 });
 
 test("ls - a caught permission error doesn't abort the process at exit", async () => {
