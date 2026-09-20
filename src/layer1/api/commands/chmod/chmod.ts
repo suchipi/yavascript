@@ -211,7 +211,7 @@ function permsNumberFor(
         break;
       }
       case "remove": {
-        perms ^= bitsToApply;
+        perms &= ~bitsToApply;
         break;
       }
       default: {
