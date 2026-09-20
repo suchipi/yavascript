@@ -71,11 +71,14 @@ export function which(
   } = options ?? defaults;
 
   for (const lookupPath of searchPaths) {
-    trace(`which: Searching for ${quote(binaryName)} in ${quote(lookupPath)}`);
+    // POSIX reads an empty PATH entry as the current directory.
+    const searchDir = String(lookupPath) === "" ? "." : lookupPath;
 
-    const potentialPaths = new Set([new Path(lookupPath, binaryName)]);
+    trace(`which: Searching for ${quote(binaryName)} in ${quote(searchDir)}`);
+
+    const potentialPaths = new Set([new Path(searchDir, binaryName)]);
     for (const suffix of suffixes) {
-      potentialPaths.add(new Path(lookupPath, binaryName + suffix));
+      potentialPaths.add(new Path(searchDir, binaryName + suffix));
     }
 
     for (const potentialPath of potentialPaths) {
