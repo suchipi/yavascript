@@ -1,5 +1,6 @@
 import * as engine from "quickjs:engine";
 import * as os from "quickjs:os";
+import { failProcessOnThrow } from "../layer1/fail-on-callback-throw";
 
 declare var yavascript: typeof import("../layer1/api/yavascript").yavascript;
 
@@ -99,3 +100,23 @@ export class Worker extends os.Worker {
     });
   }
 }
+
+// The engine prints an exception that escapes a main-side message handler but
+// leaves the exit status at 0, the same as it does for a timer callback.
+const assignedHandler = Symbol("assignedHandler");
+const baseOnMessage = Object.getOwnPropertyDescriptor(
+  os.Worker.prototype,
+  "onmessage",
+)!;
+
+Object.defineProperty(Worker.prototype, "onmessage", {
+  configurable: true,
+  enumerable: false,
+  get(this: any) {
+    return this[assignedHandler] ?? baseOnMessage.get!.call(this);
+  },
+  set(this: any, handler: any) {
+    this[assignedHandler] = handler;
+    baseOnMessage.set!.call(this, failProcessOnThrow(handler));
+  },
+});
