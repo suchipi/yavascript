@@ -32,6 +32,10 @@ export class Context extends QuickJsContext {
 
     super(options);
 
+    // The engine's Context constructor ignores new.target, so the instance
+    // comes back carrying the base class's prototype.
+    Object.setPrototypeOf(this, new.target.prototype);
+
     if (options?.yavascriptGlobals !== false) {
       const Bytecode = this.globalThis.require("quickjs:bytecode");
       this.globalThis.__run_bytecode_layer1 =
