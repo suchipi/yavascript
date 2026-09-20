@@ -15,7 +15,7 @@ export class ResizableBuffer {
     }
 
     if (bytes < 0) {
-      this.buffer = this.buffer.slice(0, -bytes);
+      this.buffer = this.buffer.slice(0, this.buffer.byteLength + bytes);
     } else {
       const newBuffer = new ArrayBuffer(this.buffer.byteLength + bytes);
       new Uint8Array(newBuffer).set(new Uint8Array(this.buffer));
