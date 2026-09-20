@@ -215,6 +215,21 @@ export function copy(
   const sourceInfo = _getPathInfo(from);
   const targetInfo = _getPathInfo(to);
 
+  if (sourceInfo === "dir") {
+    const fromReal = new Path(os.realpath(from));
+    const toReal = new Path(
+      exists(to)
+        ? os.realpath(to)
+        : os.realpath(new Path(to).dirname().toString()),
+    );
+    if (toReal.startsWith(fromReal)) {
+      throw makeErrorWithProperties(
+        "Cannot copy a directory into itself",
+        { from, to },
+      );
+    }
+  }
+
   trace("copy requested", { from, to });
 
   switch (`${sourceInfo} -> ${targetInfo}`) {
