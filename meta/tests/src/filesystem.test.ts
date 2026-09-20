@@ -762,14 +762,23 @@ test("copy - a failed open isn't masked by a utimes error", async () => {
 // readFile on non-regular files
 // ---------------------------------------------------------------------------
 
-test("readFile - string mode reads from a pipe", async () => {
-  // stdin is a pipe here, so /dev/stdin is not seekable.
-  const result = await evaluate(`readFile("/dev/stdin")`, {
-    cwd: scratchDir(),
-  });
-  expect(result.code).toBe(0);
-  expect(result.stderr).toBe("");
-});
+test(
+  "readFile - string mode reads from a pipe",
+  async () => {
+    // stdin is a pipe here, so /dev/stdin is not seekable.
+    const result = await evaluateWithTimeout(
+      `JSON.stringify(readFile("/dev/stdin"))`,
+      { stdin: "hello from a pipe\n" },
+    );
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: JSON.stringify("hello from a pipe\n") + "\n",
+    });
+  },
+  HANG_TEST_TIMEOUT,
+);
 
 test("readFile - binary mode reads a fifo in full", async () => {
   const fifo = makeFifo("readfile-fifo");

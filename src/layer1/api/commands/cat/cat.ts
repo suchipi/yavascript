@@ -6,6 +6,7 @@ import { is } from "../../is";
 import { TypeValidator, types } from "../../types";
 import type { Path } from "../../path";
 import { ResizableBuffer } from "../../../resizable-buffer";
+import { readWholeFile } from "../../../read-whole-file";
 
 let pathsArgType: TypeValidator<string | Path | Array<string | Path>> | null =
   null;
@@ -57,11 +58,10 @@ export function cat(
       "'path' argument must be either a string or a Path object",
     );
 
-    const stats = os.stat(path);
-    content.resizeBy(stats.size);
-    const file = std.open(path, "rb");
-    offset += file.read(content.buffer, offset, stats.size);
-    file.close();
+    const fileContent = readWholeFile(path);
+    content.resizeBy(fileContent.byteLength);
+    new Uint8Array(content.buffer).set(new Uint8Array(fileContent), offset);
+    offset += fileContent.byteLength;
   }
 
   if (options.binary) {
