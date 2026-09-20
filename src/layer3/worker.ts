@@ -23,11 +23,19 @@ export class Worker extends os.Worker {
   ) {
     const requestedModulePath = args[0];
 
+    const hasOverrideCode = args.length === 2 && Boolean(args[1]?.overrideCode);
+
     let absoluteModulePath: Path;
     if (Path.isAbsolute(requestedModulePath)) {
       absoluteModulePath = Path.isPath(requestedModulePath)
         ? requestedModulePath
         : new Path(requestedModulePath);
+    } else if (hasOverrideCode) {
+      // With overrideCode the name is only a label, so it must not have to
+      // resolve to a file that exists.
+      absoluteModulePath = new Path(engine.getFileNameFromStack(1))
+        .dirname()
+        .concat(requestedModulePath.toString());
     } else {
       absoluteModulePath = new Path(
         engine.resolveModule(
@@ -37,38 +45,44 @@ export class Worker extends os.Worker {
       );
     }
 
-    let rawCode: string;
     let initialData: import("quickjs:os").StructuredClonable | undefined;
     if (args.length === 2) {
-      if (args[1].overrideCode) {
-        rawCode = args[1].overrideCode;
-      } else {
-        rawCode = readFile(absoluteModulePath);
-      }
-
       if ("initialData" in args[1]) {
         initialData = args[1].initialData;
       } else {
         initialData = undefined;
       }
-    } else if (args.length === 1) {
-      rawCode = readFile(absoluteModulePath);
-    } else {
+    } else if (args.length !== 1) {
       throw new Error(
         "Incorrect number of arguments given to Worker constructor",
       );
     }
 
-    const extensionWithDot = absoluteModulePath.extname();
-    const compilerForExtension: (typeof compilers)[keyof typeof compilers] =
-      compilers[extensionWithDot.replace(/^\./, "").toLowerCase()] ??
-      compilers.autodetect;
+    let workerCode: string;
+    if (hasOverrideCode) {
+      const rawCode = args[1]!.overrideCode!;
+      const extensionWithDot = absoluteModulePath.extname();
+      const compilerForExtension: (typeof compilers)[keyof typeof compilers] =
+        compilers[extensionWithDot.replace(/^\./, "").toLowerCase()] ??
+        compilers.autodetect;
 
-    const compiledCode = compilerForExtension(rawCode, {
-      filename: absoluteModulePath.toString(),
-    });
+      workerCode = compilerForExtension(rawCode, {
+        filename: absoluteModulePath.toString(),
+      });
+    } else {
+      // Loading the file through require rather than inlining its source means
+      // its own imports go through yavascript's module hooks, which aren't
+      // installed until the bootstrap above has run.
+      workerCode = `require(${JSON.stringify(absoluteModulePath.toString())});`;
+    }
 
-    super(absoluteModulePath.toString(), {
+    // The bootstrap module can't share a name with the file it requires, or
+    // the engine sees the module requiring itself.
+    const entryModuleName = hasOverrideCode
+      ? absoluteModulePath.toString()
+      : absoluteModulePath.toString() + "$worker-entry";
+
+    super(entryModuleName, {
       initialData: {
         __bytecode_layer1,
         __bytecode_layer2,
@@ -82,7 +96,7 @@ export class Worker extends os.Worker {
         // yavascript-specific constructor override doesn't matter because
         // Workers aren't allowed to make sub-Workers.
         `Object.defineProperty(Worker, "initialData", { value: Worker.initialData.userInitialData });`,
-        compiledCode,
+        workerCode,
       ].join(" "),
     });
   }
