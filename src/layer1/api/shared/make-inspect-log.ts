@@ -22,7 +22,13 @@ export function inspectManyToParts(args: Array<any>): Array<string> {
         } catch (err) {
           // I give up
         }
-        str = String(arg);
+        // String() can throw too, on a revoked Proxy or a null-prototype
+        // object, which would abandon the line halfway through.
+        try {
+          str = String(arg);
+        } catch (err) {
+          str = "<unprintable value>";
+        }
       }
     }
 
@@ -52,7 +58,13 @@ export function inspectManyToFile(args: Array<any>, file: FILE): void {
         } catch (err) {
           // I give up
         }
-        str = String(arg);
+        // String() can throw too, on a revoked Proxy or a null-prototype
+        // object, which would abandon the line halfway through.
+        try {
+          str = String(arg);
+        } catch (err) {
+          str = "<unprintable value>";
+        }
       }
     }
 
