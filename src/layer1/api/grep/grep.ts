@@ -81,19 +81,29 @@ export function grepFile(
 }
 
 export function installToStringProto(stringProto: any) {
-  stringProto.grep = function grep(
-    pattern: string | RegExp,
-    options?: { inverse?: boolean; lineNumbers?: boolean },
-  ) {
-    return grepString(this as string, pattern, options);
-  };
+  Object.defineProperty(stringProto, "grep", {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: function grep(
+      pattern: string | RegExp,
+      options?: { inverse?: boolean; lineNumbers?: boolean },
+    ) {
+      return grepString(this as string, pattern, options);
+    },
+  });
 }
 
 export function installToArrayProto(arrayProto: any) {
-  arrayProto.grep = function grep(
-    pattern: string | RegExp,
-    options?: { inverse?: boolean; lineNumbers?: boolean },
-  ) {
-    return grepArray(this, pattern, options);
-  };
+  Object.defineProperty(arrayProto, "grep", {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: function grep(
+      pattern: string | RegExp,
+      options?: { inverse?: boolean; lineNumbers?: boolean },
+    ) {
+      return grepArray(this, pattern, options);
+    },
+  });
 }

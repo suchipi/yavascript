@@ -13,5 +13,10 @@ export function map<T, U>(
 }
 
 export function install(_Promise: any) {
-  _Promise.map = map;
+  Object.defineProperty(_Promise, "map", {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: map,
+  });
 }
