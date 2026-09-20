@@ -242,6 +242,9 @@ export function glob(
   const nonNegatedPatterns = allPatterns.filter(({ negated }) => !negated);
 
   const matches: Array<string> = [];
+  // Following symlinks can lead back into a directory already being walked,
+  // so each one is only descended into once.
+  const visitedDirs = new Set<string>();
 
   function find(searchDir: string) {
     trace(`reading children of ${searchDir}`);
@@ -331,6 +334,16 @@ export function glob(
             }
           }
 
+          if (shouldGoDeeper && options.followSymlinks) {
+            const realDir = os.realpath(fullName);
+            if (visitedDirs.has(realDir)) {
+              trace(`not traversing deeper into an already-visited dir: ${realDir}`);
+              shouldGoDeeper = false;
+            } else {
+              visitedDirs.add(realDir);
+            }
+          }
+
           if (shouldGoDeeper) {
             find(fullName);
           }
@@ -347,6 +360,9 @@ export function glob(
     }
   }
 
+  if (options.followSymlinks) {
+    visitedDirs.add(os.realpath(traversalRoot.toString()));
+  }
   find(traversalRoot.toString());
 
   return matches.map((str) => new Path(str));
