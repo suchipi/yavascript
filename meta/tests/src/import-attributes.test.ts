@@ -2,6 +2,9 @@ import { expect, test } from "vitest";
 import { runYavascript, rootDir } from "./test-helpers";
 
 const fixturesDir = rootDir.concat("meta/tests/fixtures/import-attributes");
+const requireFixturesDir = rootDir.concat(
+  "meta/tests/fixtures/require-attributes",
+);
 
 test("civet", async () => {
   const result = await runYavascript([fixturesDir("load-civet.js")]);
@@ -211,6 +214,15 @@ test("yml", async () => {
    ",
    }
   `);
+});
+
+test("require receives the attributes it is given", async () => {
+  const result = await runYavascript([requireFixturesDir("require-json.js")]);
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+    stdout: `{"requiredJson":true}\n`,
+  });
 });
 
 test("yaml", async () => {

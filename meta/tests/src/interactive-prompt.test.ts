@@ -1,12 +1,28 @@
 import * as fs from "fs";
 import { describe, expect, test } from "vitest";
-import { evaluate } from "./test-helpers";
+import {
+  evaluate,
+  runYavascriptWithTimeout,
+  HANG_TIMEOUT,
+} from "./test-helpers";
 import {
   KEYS,
   historyFilePath,
   startReplSession,
   tempConfigDir,
 } from "./repl-helpers";
+
+/**
+ * vitest's own per-test timeout has to be comfortably above HANG_TIMEOUT, or
+ * it fires first and the test reports a timeout instead of the real failure.
+ */
+const HANG_TEST_TIMEOUT = HANG_TIMEOUT * 4;
+
+/**
+ * What startReplSession spawns with: no HOME, so nothing is written to the
+ * config dir of whoever runs the tests.
+ */
+const ISOLATED_ENV = { PATH: process.env.PATH, CLICOLOR: "0" };
 
 /**
  * InteractivePrompt is driven by running a script that constructs one and
@@ -81,6 +97,49 @@ describe("InteractivePrompt", () => {
       > 
       "
     `);
+  });
+
+  test(
+    "stdin reaching EOF ends the prompt",
+    async () => {
+      const result = await runYavascriptWithTimeout(promptScript(ECHO_INPUT), {
+        stdin: "line1\n",
+        env: ISOLATED_ENV,
+      });
+      expect(result.timedOut).toBe(false);
+      expect(result.code).toBe(0);
+      expect(result.stdout).toContain(`got: "line1"`);
+    },
+    HANG_TEST_TIMEOUT,
+  );
+
+  test("a throwing handleInput doesn't absorb the next line", async () => {
+    // Each line is reported on stderr, which is unbuffered, because stdout
+    // only reaches the test when the engine draws the next prompt.
+    const session = await startReplSession(
+      promptScript(`
+        new InteractivePrompt(
+          (input) => {
+            std.err.puts("handled: " + JSON.stringify(input) + "\\n");
+            std.err.flush();
+            if (input === "boom") throw new Error("handler threw");
+          },
+          { prompt: () => "ip> " },
+        ).start();
+      `),
+      { promptMarker: "ip> " },
+    );
+
+    // Each line has to be seen through before the next keys are written: an
+    // exception thrown while reading drops the rest of the bytes read with it.
+    await session.input(`boom${KEYS.enter}`, `handled: "boom"`);
+    await session.input(`after${KEYS.enter}`, /handled: "(boom)?after"/);
+    // Ctrl-C twice rather than Ctrl-D, because Ctrl-D only exits on an empty
+    // line and what the failed line left behind is what this test is about.
+    session.send(KEYS.ctrlC, KEYS.ctrlC);
+    await session.finish();
+
+    expect(session.result().stderr).toContain(`handled: "after"`);
   });
 
   test("submits each line as-is, with no multiline continuation", async () => {

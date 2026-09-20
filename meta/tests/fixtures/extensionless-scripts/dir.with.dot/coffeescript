@@ -1,0 +1,2 @@
+square = (x) -> x * x
+console.log "coffeescript ok", square 3

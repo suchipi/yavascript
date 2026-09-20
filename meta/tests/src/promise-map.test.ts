@@ -1,5 +1,7 @@
 import { expect, test } from "vitest";
-import { evaluate } from "./test-helpers";
+import { evaluate, evaluateWithTimeout, HANG_TIMEOUT } from "./test-helpers";
+
+const HANG_TEST_TIMEOUT = HANG_TIMEOUT * 4;
 
 test("Promise.map runs at most `concurrency` jobs at a time", async () => {
   const script = `
@@ -71,4 +73,51 @@ test("Promise.map runs at most `concurrency` jobs at a time", async () => {
     ",
     }
   `);
+});
+
+test(
+  "Promise.map never resolves without running the mapper",
+  async () => {
+    const script = `
+    async function attempt(concurrency) {
+      const calls = [];
+      try {
+        const result = await Promise.map([1, 2, 3], async (value) => {
+          calls.push(value);
+          return value;
+        }, { concurrency });
+        return { settled: "resolved", calls, result };
+      } catch (err) {
+        return { settled: "rejected", calls };
+      }
+    }
+
+    Promise.all([attempt(NaN), attempt("abc")]).then(([nan, nonNumericString]) => {
+      console.log(JSON.stringify({ nan, nonNumericString }));
+    });
+    undefined;
+  `;
+
+    const result = await evaluateWithTimeout(script);
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({ code: 0, stderr: "" });
+
+    const outcomes: Record<string, { settled: string; calls: Array<number> }> =
+      JSON.parse(result.stdout);
+    // Rejecting is fine, and so is falling back to a default concurrency.
+    // Resolving with an array the mapper never saw is not.
+    const resolvedWithoutMapping = Object.entries(outcomes).filter(
+      ([, outcome]) =>
+        outcome.settled === "resolved" && outcome.calls.length !== 3,
+    );
+    expect(resolvedWithoutMapping).toEqual([]);
+  },
+  HANG_TEST_TIMEOUT,
+);
+
+test("Promise.map is non-enumerable", async () => {
+  const result = await evaluate(
+    `JSON.stringify(Object.getOwnPropertyDescriptor(Promise, "map").enumerable)`,
+  );
+  expect(result).toMatchObject({ code: 0, stderr: "", stdout: "false\n" });
 });

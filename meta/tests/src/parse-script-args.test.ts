@@ -1,5 +1,7 @@
 import { expect, test } from "vitest";
-import { evaluate, binaryPath } from "./test-helpers";
+import { evaluate, runYavascript, binaryPath, rootDir } from "./test-helpers";
+
+const fixturesDir = rootDir.concat("meta/tests/fixtures/parse-script-args");
 
 test("parseScriptArgs", async () => {
   const result = await evaluate(`
@@ -142,4 +144,71 @@ test("parseScriptArgs", async () => {
     ",
     }
   `);
+});
+
+test("default args skip the code string given to -e", async () => {
+  const result = await runYavascript([
+    "-e",
+    `console.log(JSON.stringify(parseScriptArgs().args))`,
+    "a",
+    "b",
+  ]);
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(JSON.parse(result.stdout)).toEqual(["a", "b"]);
+});
+
+test("default args skip --lang and its value", async () => {
+  const result = await runYavascript([
+    "--lang",
+    "js",
+    fixturesDir("print-args.js"),
+    "a",
+    "b",
+  ]);
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(JSON.parse(result.stdout)).toEqual(["a", "b"]);
+});
+
+test("default args skip -r and its value", async () => {
+  const result = await runYavascript([
+    "-r",
+    fixturesDir("preload.js"),
+    fixturesDir("print-args.js"),
+    "a",
+    "b",
+  ]);
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(JSON.parse(result.stdout)).toEqual(["a", "b"]);
+});
+
+test("a flag value that starts with a minus sign is kept", async () => {
+  const result = await evaluate(
+    `JSON.stringify(parseScriptArgs({}, ["--count=-5"]).flags)`,
+  );
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(String(JSON.parse(result.stdout).count)).toBe("-5");
+});
+
+test("a negative number is a positional arg", async () => {
+  const result = await evaluate(`JSON.stringify(parseScriptArgs({}, ["-3"]))`);
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  const parsed = JSON.parse(result.stdout);
+  expect(parsed.args).toEqual(["-3"]);
+  expect(parsed.flags).toEqual({});
+});
+
+test("a lone dash is a positional arg", async () => {
+  const result = await evaluate(`JSON.stringify(parseScriptArgs({}, ["-"]))`);
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  const parsed = JSON.parse(result.stdout);
+  expect(parsed.args).toEqual(["-"]);
+  expect(parsed.flags).toEqual({});
+});
+
+test("a flag name with non-ASCII letters keeps them", async () => {
+  const result = await evaluate(
+    `JSON.stringify(parseScriptArgs({}, ["--héllo"]).flags)`,
+  );
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(Object.keys(JSON.parse(result.stdout))).toEqual(["héllo"]);
 });

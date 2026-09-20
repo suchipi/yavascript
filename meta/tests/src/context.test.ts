@@ -285,6 +285,38 @@ test("minimal context globals", async () => {
   `);
 });
 
+test("date: false with the default yavascript globals exits normally", async () => {
+  const result = await evaluate(`
+    try {
+      new Context({ date: false });
+      console.log("constructed");
+    } catch (err) {
+      console.log("threw: " + err.message);
+    }
+  `);
+
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+  });
+});
+
+test("promise: false with the default yavascript globals exits normally", async () => {
+  const result = await evaluate(`
+    try {
+      new Context({ promise: false });
+      console.log("constructed");
+    } catch (err) {
+      console.log("threw: " + err.message);
+    }
+  `);
+
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+  });
+});
+
 test("eval behavior when eval: false option is specified", async () => {
   const result = await evaluate(`
     const ctx = new Context({

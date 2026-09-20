@@ -1,0 +1,5 @@
+inf: .inf
+nan: .nan
+set: !!set
+  ? a
+  ? b

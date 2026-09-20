@@ -146,3 +146,27 @@ test("does not expand globs", async () => {
     "./**/*",
   ]);
 });
+
+async function toArgvResult(str: string) {
+  return evaluate(`JSON.stringify(exec.toArgv(${JSON.stringify(str)}))`);
+}
+
+test("escaped backslash right before a closing double quote", async () => {
+  const result = await toArgvResult(`echo "a\\\\"`);
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(JSON.parse(result.stdout)).toEqual(["echo", "a\\"]);
+});
+
+test("escaped backslash right before a closing single quote", async () => {
+  const result = await toArgvResult(`echo 'a\\\\'`);
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(JSON.parse(result.stdout)).toEqual(["echo", "a\\"]);
+});
+
+test("a quoted section glues to the bare word that follows it", async () => {
+  expect(await toArgv(`echo "foo"bar foo"bar"`)).toEqual([
+    "echo",
+    "foobar",
+    "foobar",
+  ]);
+});

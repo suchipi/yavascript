@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { spawn } from "first-base";
-import { binaryPath, inspect } from "./test-helpers";
+import { binaryPath, evaluate, inspect } from "./test-helpers";
 
 describe("eval target", () => {
   ["-e", "--eval"].forEach((flag) => {
@@ -75,6 +75,27 @@ describe("eval target", () => {
         await run.completion;
         expect(run.result).toMatchSnapshot();
       });
+    });
+  });
+
+  describe("import statements", () => {
+    it("runs the lines that follow an import", async () => {
+      const result = await evaluate(
+        `import { fromUtf8 } from "quickjs:encoding"\nconsole.log("second line ran"); 42`,
+      );
+      expect(result).toMatchObject({
+        code: 0,
+        stderr: "",
+        stdout: "second line ran\n42\n",
+      });
+    });
+
+    it("runs the lines that precede an import", async () => {
+      const result = await evaluate(
+        `console.log("first line ran")\nimport { fromUtf8 } from "quickjs:encoding"`,
+      );
+      expect(result.code).toBe(0);
+      expect(result.stdout).toContain("first line ran");
     });
   });
 });

@@ -1,5 +1,12 @@
 import { expect, test } from "vitest";
-import { evaluate, rootDir } from "./test-helpers";
+import {
+  evaluate,
+  evaluateWithTimeout,
+  rootDir,
+  HANG_TIMEOUT,
+} from "./test-helpers";
+
+const HANG_TEST_TIMEOUT = HANG_TIMEOUT * 4;
 
 test("Path.OS_SEGMENT_SEPARATOR", async () => {
   const result = await evaluate(`Path.OS_SEGMENT_SEPARATOR`);
@@ -870,4 +877,88 @@ test("Path.hasEqualSegments", async () => {
    ",
    }
   `);
+});
+
+test(
+  "Path.prototype.relativeTo - path equal to dir",
+  async () => {
+    const result = await evaluateWithTimeout(
+      `JSON.stringify([
+      new Path("/a/b").relativeTo("/a/b").toString(),
+      new Path("a").relativeTo("a").toString(),
+      new Path("/a/b").relativeTo("/a/b", { noLeadingDot: true }).toString(),
+    ])`,
+    );
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: `[".",".",""]\n`,
+    });
+  },
+  HANG_TEST_TIMEOUT,
+);
+
+test(
+  "Path.prototype.replaceAll - empty replacement removes segments",
+  async () => {
+    const result = await evaluateWithTimeout(
+      `JSON.stringify([
+      new Path("a/b").replaceAll("a", []).toString(),
+      new Path("x/a/a/y").replaceAll("a", []).toString(),
+    ])`,
+    );
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: `["b","x/y"]\n`,
+    });
+  },
+  HANG_TEST_TIMEOUT,
+);
+
+test("Path.prototype.replaceAll - replacement longer than the value", async () => {
+  const result = await evaluate(
+    `JSON.stringify([
+      new Path("a/a/a").replaceAll("a", "b/c").toString(),
+      new Path("a/x/a").replaceAll("a", "a/b").toString(),
+    ])`,
+  );
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+    stdout: `["b/c/b/c/b/c","a/b/x/a/b"]\n`,
+  });
+});
+
+test("Path.normalize - leading .. and fully-cancelling paths", async () => {
+  const result = await evaluate(
+    `JSON.stringify(["a/..", "a/b/../..", "/a/../../b", "/../x"].map((p) => Path.normalize(p).toString()))`,
+  );
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+    // A relative path must not normalize into the filesystem root, and an
+    // absolute path must not normalize into a relative one.
+    stdout: `[".",".","/b","/x"]\n`,
+  });
+});
+
+test("Path - an empty path doesn't mean the filesystem root", async () => {
+  const result = await evaluate(
+    `JSON.stringify([
+      new Path("a.txt").dirname().toString(),
+      dirname("a.txt").toString(),
+      new Path(".").dirname().toString(),
+      new Path("", "etc").toString(),
+    ])`,
+  );
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+    // POSIX `dirname a.txt` prints ".", and joining an empty segment
+    // must not produce an absolute path.
+    stdout: `[".",".",".","etc"]\n`,
+  });
 });

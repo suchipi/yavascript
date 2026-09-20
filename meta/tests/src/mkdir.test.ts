@@ -326,6 +326,19 @@ describe("recursive via mkdirp", () => {
      }
     `);
   });
+
+  test("first segment file collision errors", async () => {
+    const dir = recursiveWorkDir("first_segment_collision");
+
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, "f"), "hi");
+
+    const result = await evaluate(`mkdirp("f/sub")`, { cwd: dir });
+    expect(result.code).toBe(1);
+    expect(result.stderr).toMatch(
+      /Cannot use mkdir to create directory 'f\/sub' because 'f' is a file, not a directory\./,
+    );
+  });
 });
 
 // TODO: test 'mode' option

@@ -28,16 +28,19 @@ Bundled library versions (from `node_modules/*/package.json`): yaml 2.9.0, papap
 - Actual: `[["a","b"],["c","d"]]`. Also `CSV.parse("a;b;c\nd;e;f")` and `CSV.parse("a\tb\tc\nd\te\tf")` are split on `;` / tab. Passing options does nothing: `CSV.parse("a,b", { delimiter: ";" })` returns `[["a","b"]]`.
 - Cause: same as #1 (`csv.ts:9`, no fixed delimiter).
 
-### 3. bug - yavascript.compilers.autodetect / extensionless files: files without an extension are never compiled
+### 3. bug - extensionless files aren't compiled when an ancestor directory name contains a dot
 
-- Repro (files in the sandbox):
-  - `./dist/yavascript .tmp/api-audit/formats-sandbox/ts-noext` (content `const a: number = 1; ...`)
-  - `./dist/yavascript .tmp/api-audit/formats-sandbox/civet-noext`
-  - `./dist/yavascript --lang coffee .tmp/api-audit/formats-sandbox/coffee-noext` (this is the exact form shown in `yavascript --help`: `yavascript --lang 'coffee' ./myscript`)
-  - `./dist/yavascript .tmp/api-audit/formats-sandbox/import-noext.js` (does `require("./ts-noext")` and `import("./civet-noext")`)
+> **Corrected 2026-09-20.** This finding originally said extensionless files are *never* compiled, and blamed `ModuleDelegate.compilers[""]` in `empty.ts`. That was wrong: every repro below lived under `.tmp/api-audit/formats-sandbox/`, and `.tmp` starts with a dot, which is what actually broke them. The real trigger and cause are described here. Regression tests: `meta/tests/src/extensionless-scripts.test.ts`, whose fixtures deliberately sit in a `dir.with.dot/` directory.
+
+- Works today: an extensionless script whose path contains no dot in any component. `yavascript /tmp/plain/tsscript` (holding `const a: number = 1`) prints `ts ok 1`, and `--lang ts|civet|coffee` works too. `compilers[""]` is consulted and does its job.
+- Repro (the dot in the directory name is what matters):
+  - `./dist/yavascript .tmp/ext/dir.with.dot/tsscript` gives `SyntaxError: missing initializer for const variable`
+  - `./dist/yavascript --lang ts .tmp/ext/dir.with.dot/tsscript` gives the same error, so `--lang` appears to be ignored
+  - Equally affected in practice: `~/.local/bin/<script>`, `node_modules/.bin/<script>`, any `v1.2/<script>`
 - Expected: per `yavascript.inc.d.ts:109-123` autodetect is "the function yavascript uses internally to load files which don't have an extension", and CLI help (`src/layer5b/targets/help.ts:34-35`) says the language of an extensionless file is inferred from its contents. `--lang coffee` should force CoffeeScript.
-- Actual: all four run the raw source as JS: `SyntaxError: missing initializer for const variable`, `SyntaxError: unexpected token in expression: '='`, `SyntaxError: unexpected token in expression: '>'` (the `--lang coffee` run included). `yavascript --lang ts <extensionless>` fails the same way.
-- Cause: `src/layer1/extension-handlers/empty.ts:4` registers the handler as `ModuleDelegate.compilers[""]`, and `src/layer5b/targets/run-file.ts:14-20` overrides `compilers[extname(file)]`, which is also `""` for extensionless files. The engine now treats keys without a leading dot as import-attribute `type` names (documented at `yavascript.d.ts:6388-6392`), so `""` never matches a file extension. Confirmed: `import x from "./ts-noext" with { type: "" }` (`import-noext-attr.js`) does compile the file (it gets as far as `Could not find export 'default'`).
+- Cause: the engine derives the compiler key from the last `.` in the **whole path**, not the basename. Proven rather than inferred: registering `ModuleDelegate.compilers[".b/typescript"]` and then requiring `./a.b/typescript` hits that key (prints `HIT key: ".b/typescript"`) and compiles the file. For real paths no such key is registered, so the file is evaluated as raw JS. `--lang` fails for the same reason: `src/layer5b/targets/run-file.ts:14` registers `compilers[extname(file)]` using yavascript's basename-aware `extname()`, which gives `""`, while the engine then looks up a different key.
+- Files that do have an extension are unaffected, because for them the last dot is already in the basename.
+- The fix belongs in the engine/loader's extension derivation, not in `empty.ts`.
 
 ### 4. bug - TOML.parse: a local time without fractional seconds followed by a newline is a parse error
 

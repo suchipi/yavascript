@@ -99,3 +99,33 @@ for (const input of inputs) {
     expect({ argv, result }).toMatchSnapshot();
   });
 }
+
+const runFile = (file: string) => ({
+  target: "run-file",
+  file,
+  lang: null,
+  filesToLoadFirst: [],
+});
+
+test("'-e' after the file to run belongs to the user's script", () => {
+  expect(
+    determineTarget(["/usr/local/bin/yavascript", "my-file", "-e", "2 + 2"]),
+  ).toEqual(runFile("my-file"));
+});
+
+test("'--eval' after the file to run belongs to the user's script", () => {
+  expect(
+    determineTarget([
+      "/usr/local/bin/yavascript",
+      "my-file",
+      "--eval",
+      "2 + 2",
+    ]),
+  ).toEqual(runFile("my-file"));
+});
+
+test("'--eval' with no value after the file to run belongs to the user's script", () => {
+  expect(
+    determineTarget(["/usr/local/bin/yavascript", "my-file", "--eval"]),
+  ).toEqual(runFile("my-file"));
+});

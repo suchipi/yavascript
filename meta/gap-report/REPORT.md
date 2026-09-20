@@ -13,7 +13,9 @@ Binary: `dist/yavascript` rebuilt from `3eedd83` (the checked-in build was older
 | d.ts vs runtime, QuickJS `std`/`os`, doc quality, built-ins | [crosscut.md](crosscut.md) | 30 |
 | Worker, `Context`, REPL, Node compat, modules, languages, CLI | [runtime-modules-cli.md](runtime-modules-cli.md) | 34 |
 
-The existing test suite passes (563 passed, 1 skipped; log in [full-test-run.log](full-test-run.log)). None of the bugs below are covered by it.
+The existing test suite passes (563 passed, 1 skipped; log in [full-test-run.log](full-test-run.log)). None of the bugs below were covered by it at the time of the audit.
+
+**Update 2026-09-20:** every finding in section 1 now has a failing regression test in `meta/tests/src/`, 168 of them, asserting the correct behavior. The suite is therefore red on purpose until the bugs are fixed: 167 failed, 563 passed, 2 skipped (one of the 168 is platform-guarded). The 563 passing are the same pre-existing tests, so nothing regressed. Two findings were deliberately left untested and are noted in section 5.
 
 Items marked **(re-verified)** I reproduced a second time myself, independently of the area agent.
 
@@ -61,7 +63,7 @@ Items marked **(re-verified)** I reproduced a second time myself, independently 
 | `is`/`assert.type` with `Promise`, `WeakMap`, `WeakSet`, BigInt typed arrays, and yavascript's own `ChildProcess`, `GitRepo`, `InteractivePrompt`, `Worker`, `Context` | Throws "must be called with new" instead of doing an instanceof check. A validator whose source mentions `class ` is silently treated as a class. **(re-verified for Promise)** | pheno detects classes with `/class\s/` on the source text; only `Path` has the override (`path.ts:191-209`) | types #2-3 |
 | `Array.prototype.grep`, `String.prototype.grep`, `String.dedent`, `Promise.map` | Enumerable, so `for (k in [1])` yields `"grep"`. Breaks any library that uses `for...in` on arrays. **(re-verified)** | plain assignment at `grep.ts:85,94`, `string-dedent.ts:5`, `promise-map.ts:16` | console #2, crosscut #1 |
 | `RegExp.escape` | Overwrites the engine's native, spec-compliant version with an old polyfill that doesn't escape `-` and others, so `RegExp.escape("a-c")` inside `[...]` becomes a range. **(re-verified)** | `regexp-escape.ts:2-8` | console #3, crosscut #2 |
-| Extensionless scripts | Never compiled, even with `--lang`, which is the exact form `--help` shows. A TS shebang script with no extension fails with a syntax error. **(re-verified)** | the `compilers[""]` key is now read as an import-attribute type, `empty.ts:4`, `run-file.ts:14-20` | formats #3 |
+| Extensionless scripts | Not compiled when any *ancestor directory* name contains a dot (`~/.local/bin/x`, `node_modules/.bin/x`), even with `--lang`, which is the exact form `--help` shows. Paths with no dot at all work fine. **(corrected 2026-09-20; the original "never compiled" reading came from repros that all sat under `.tmp/`)** | the compiler key is taken from the last `.` in the whole path rather than the basename, so `run-file.ts:14` registers one key and the engine looks up another | formats #3 |
 | CLI `script.js -e x` | Runs `x` instead of the script, so user scripts can't take a `-e` flag. **(re-verified)** | `determine-target.ts:126-134` | exec F3 |
 | `parseScriptArgs()` default | Includes the eval code, or the `--lang` value and filename, as positional args when those flags were used | `parse-script-args.ts:17` | exec F4 |
 | `env` | An empty-string variable reads as `undefined` and is dropped from every child process. **(re-verified)** | `env.ts:9` | exec F5 |
@@ -169,19 +171,25 @@ The full built-ins matrix is in [crosscut.md](crosscut.md#built-ins-matrix).
 
 ## 5. Test coverage gaps
 
+**Update 2026-09-20:** the 168 regression tests added for section 1 close much of this. Each item below is marked with where it now stands.
+
+Two findings were judged untestable without flakiness and left alone:
+
+- The `-e 'import { x } from "..."; 1'` same-line case under runtime #3: the report states no expected behavior for it, so there was nothing to assert.
+- The third sub-case of runtime #4, an uncaught error inside a worker with no `onerror`: with no `onerror` there is nothing to keep the main thread alive deterministically, so the main thread's exit races the worker's throw.
+
 - **No tests at all:**
-  - Commands and filesystem: `chmod`, `touch`, `rename` (there's a `// rename test TODO`).
-  - Other APIs: `RegExp.escape`, `String.dedent`, `YAML.parse`/`stringify`, `is()`, `openUrl`, `help()`.
-  - Loading and modules: the non-JS compilers, extensionless scripts, the `http:`/`https:`/`npm:` protocols, `node_modules` package resolution (no fixture has a `package.json`), `require(..., { with })`, `\load`.
-  - Exit behavior: exit codes for a throw in a timer or worker handler.
-- **Happy path only:** `copy` (one test), `CSV` (one round-trip without a trailing newline), `TOML`, `Promise.map`, `grep`, `which`, `sleep`, `exit`, `ls`, `cat`, `parseScriptArgs` (one snapshot), `ChildProcess`.
+  - Now covered: `chmod` (new `chmod.test.ts`), `RegExp.escape`, `String.dedent`, `is()`, `help()`, extensionless scripts, the `http:`/`https:` protocols (new `http-modules.test.ts`, served by a local `node:http` server on an ephemeral port rather than a CDN), `require(..., { with })`, `\load`, and exit codes for a throw in a timer or in a main-side worker message handler.
+  - Partly covered: `rename` has one test, for the symlink-resolution case; the `// rename test TODO` still stands for everything else, including the EXDEV cross-filesystem path. `YAML.parse`/`stringify` are exercised only indirectly, through the lossy-import comparison in `format-imports.test.ts`.
+  - Still open: `touch`, `openUrl`, the `npm:` protocol, `node_modules` package resolution (no fixture has a `package.json`), and direct tests of the non-JS compilers.
+- **Happy path only:** `copy`, `CSV`, `TOML`, `Promise.map`, `grep`, `which`, `sleep`, `ls`, and `parseScriptArgs` all gained failure-path tests. `cat` gained one (a fifo read, living in `filesystem.test.ts`). `exit` and `ChildProcess` are untouched and still happy-path only.
 - **Tests that can't catch what they look like they check:**
-  - The default sanitizers strip ANSI, so the always-on escape codes are invisible.
-  - The `git-repo.test.ts` "relative isIgnored" snapshot collapses its key lines to `at somewhere` (the stack-trace sanitizer eats lines starting with `at `).
-  - The `ls` tests `.sort()` before comparing, which hides the missing sort.
-  - The `.tsx` fixture's `/// <reference path>` points at a file that doesn't exist, and fixtures are never typechecked.
-  - `runInWorker.test.ts` "function rejects" passes by accident: the worker's own error print matches the snapshot, but the rejection handler is never called.
-  - The REPL "import statements are rewritten" test imports `basename` from `quickjs:os`, which doesn't export it, so the snapshot shows `undefined` and would pass even if imports did nothing.
-  - The REPL helpers always end with Ctrl+D or Ctrl+C and never close stdin, so the EOF spin is invisible.
-- **No TypeScript usage tests:** nothing typechecks `is`/`assert.type` narrowing or JSX against the published d.ts, which is how the wrong narrowing went unnoticed.
-- **No `Path` objects passed to any fs function** in any test.
+  - Addressed: the ANSI-stripping sanitizers are now bypassed where it matters, via `removeSanitizer` or `cleanResult: false`, in the `assert`, `logger` and `console` colour tests. The REPL EOF spin now has tests that close stdin instead of ending with Ctrl+D. `runInWorker.test.ts` now has tests that distinguish resolve from reject explicitly.
+  - Still standing, because the misleading tests themselves were left in place:
+    - The `git-repo.test.ts` "relative isIgnored" snapshot still collapses its key lines to `at somewhere` (the stack-trace sanitizer eats lines starting with `at `), so its subdirectory assertions still are not really checked.
+    - The `ls` tests still `.sort()` before comparing, which hides the missing sort.
+    - The `.tsx` fixture's `/// <reference path="../../../yavascript.d.ts" />` still resolves to `meta/yavascript.d.ts`, which does not exist, and fixtures are still never typechecked.
+    - `runInWorker.test.ts` "function rejects" is still present and still passes for the wrong reason; it should be deleted once the new tests go green.
+    - The REPL "import statements are rewritten" test still imports `basename` from `quickjs:os`, which does not export it, so its snapshot still shows `undefined` and would pass even if imports did nothing.
+- **No TypeScript usage tests:** unchanged. Nothing typechecks `is`/`assert.type` narrowing or JSX against the published d.ts, which is how the wrong narrowing went unnoticed. Deliberately left out of the regression-test pass, since it needs a tsc-diagnostics harness rather than running the binary.
+- **No `Path` objects passed to any fs function** in any test. Unchanged.

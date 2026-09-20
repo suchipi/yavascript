@@ -93,6 +93,51 @@ test("assert - falsy value with message in real file", async () => {
   `);
 });
 
+// CLICOLOR_FORCE beats CLICOLOR, so it has to be neutralized too, or an
+// ambient CLICOLOR_FORCE would decide the outcome.
+const colorsOffEnv = { ...process.env, CLICOLOR: "0", CLICOLOR_FORCE: "0" };
+
+const ansiEscapesIn = (str: string) =>
+  (str.match(/\x1b\[[0-9;]*m/g) || []).map((sequence) =>
+    sequence.replace("\x1b", "\\x1b"),
+  );
+
+describe("no colors", () => {
+  // The default sanitizers strip ANSI, so these have to look at raw output.
+  const runWithColorsOff = (code: string) =>
+    evaluate(code, { env: colorsOffEnv, cleanResult: false });
+
+  test("assert - caught failure message has no ANSI escapes", async () => {
+    const result = await runWithColorsOff(`
+      try {
+        assert(2 + 2 === 5);
+      } catch (err) {
+        err.message;
+      }
+    `);
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain("Assertion failed");
+    expect(ansiEscapesIn(result.stdout)).toEqual([]);
+  });
+
+  test("assert - uncaught failure printed to stderr has no ANSI escapes", async () => {
+    const result = await runWithColorsOff(`assert(2 + 2 === 5);`);
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain("Assertion failed");
+    expect(ansiEscapesIn(result.stderr)).toEqual([]);
+  });
+
+  test("assert - code frame from a file has no ANSI escapes", async () => {
+    const result = await runYavascript([fixturesDir("nested-throw.js")], {
+      env: colorsOffEnv,
+      cleanResult: false,
+    });
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain("OHHH this is sad day!!");
+    expect(ansiEscapesIn(result.stderr)).toEqual([]);
+  });
+});
+
 describe("colorized code frames", () => {
   // Remove the sanitizers that strip ANSI escapes, so the syntax highlighting
   // is visible in the snapshots.

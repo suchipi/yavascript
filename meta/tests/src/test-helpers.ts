@@ -37,6 +37,66 @@ export async function evaluate(
   return runYavascript(["-e", code], options);
 }
 
+export type TimedResult = EvaluateResult & { timedOut: boolean };
+
+/**
+ * How long a run gets before we call it hung. The runs this is used for
+ * either finish in well under a second or never finish at all, so the exact
+ * value only needs to be far above process startup time.
+ */
+export const HANG_TIMEOUT = 5000;
+
+/**
+ * Like {@link runYavascript}, but SIGKILLs the process if it hasn't exited
+ * within `timeout` ms and reports that via `timedOut`. Use it for behavior
+ * that is supposed to terminate, so that a regression fails the test instead
+ * of hanging the suite.
+ */
+export async function runYavascriptWithTimeout(
+  args: Array<string>,
+  options: SpawnOptions & { timeout?: number; stdin?: string } = {},
+): Promise<TimedResult> {
+  const { timeout = HANG_TIMEOUT, stdin, ...spawnOptions } = options;
+
+  const runContext = spawn(binaryPath, args, {
+    cwd: rootDir(),
+    ...spawnOptions,
+  });
+
+  if (stdin != null) {
+    runContext.write(stdin);
+    runContext.close("stdin");
+  }
+
+  let timedOut = false;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  await Promise.race([
+    runContext.completion,
+    new Promise<void>((resolve) => {
+      timer = setTimeout(() => {
+        timedOut = true;
+        resolve();
+      }, timeout);
+    }),
+  ]);
+  if (timer != null) clearTimeout(timer);
+
+  if (timedOut) {
+    runContext.kill("SIGKILL");
+    await runContext.completion;
+  }
+
+  return { ...runContext.cleanResult(), timedOut };
+}
+
+export async function evaluateWithTimeout(
+  code: string,
+  options: SpawnOptions & { timeout?: number; stdin?: string } = {},
+): Promise<TimedResult> {
+  return runYavascriptWithTimeout(["-e", code], options);
+}
+
 export function inspect(value: any): string {
   // options to inspect here match what is given to console.log
   return print(value, inspectOptions.forPrint());

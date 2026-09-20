@@ -1,8 +1,69 @@
-import { expect, test } from "vitest";
-import { evaluate, rootDir, EvaluateResult } from "./test-helpers";
+import { afterAll, beforeEach, expect, test } from "vitest";
+import fs from "fs";
+import path from "path";
+import {
+  evaluate,
+  evaluateWithTimeout,
+  rootDir,
+  EvaluateResult,
+  HANG_TIMEOUT,
+} from "./test-helpers";
+
+/**
+ * vitest's own per-test timeout has to be comfortably above HANG_TIMEOUT, or
+ * it fires first and the test reports a timeout instead of the real failure.
+ */
+const HANG_TEST_TIMEOUT = HANG_TIMEOUT * 4;
 
 const globDir = rootDir("meta/tests/fixtures/glob");
 const symlinksDir = rootDir("meta/tests/fixtures/symlinks");
+
+const scratchDir = rootDir.concat("meta/tests/fixtures/glob-scratch");
+const scratch = (...parts: Array<string>) => scratchDir(...parts);
+const scratchPath = (relative: string) =>
+  `<rootDir>/meta/tests/fixtures/glob-scratch/${relative}`;
+
+const makeDirsTraversable = (dir: string) => {
+  let entries: Array<fs.Dirent>;
+  try {
+    fs.chmodSync(dir, 0o755);
+    entries = fs.readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      makeDirsTraversable(path.join(dir, entry.name));
+    }
+  }
+};
+
+const cleanScratch = () => {
+  for (const child of fs.readdirSync(scratchDir())) {
+    if (child.startsWith(".")) continue;
+    const target = scratchDir(child);
+    if (fs.lstatSync(target).isDirectory()) makeDirsTraversable(target);
+    fs.rmSync(target, { recursive: true, force: true });
+  }
+};
+
+beforeEach(cleanScratch);
+afterAll(cleanScratch);
+
+const write = (relative: string, content = "") => {
+  const target = scratch(relative);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, content);
+};
+
+function globCode(
+  patterns: string | Array<string>,
+  options: Record<string, any> = {},
+) {
+  return `JSON.stringify(glob(${JSON.stringify(patterns)}, Object.assign(${JSON.stringify(
+    options,
+  )}, { logging: { info() {} } })).map(String))`;
+}
 
 function compareResult(result: EvaluateResult, expected: Array<string>) {
   const res = JSON.parse(result.stdout);
@@ -376,3 +437,163 @@ test("globbing from the filesystem root accepts a leading slash", async () => {
   expect(result).toMatchObject({ code: 0, error: null });
   expect(JSON.parse(result.stdout)).toEqual(["/usr"]);
 });
+
+test("a caught readdir error leaves the exit status alone", async () => {
+  write("not-a-dir.txt", "hi");
+
+  const result = await evaluate(
+    `try { ${globCode("*", { dir: scratch("not-a-dir.txt") })} } catch (err) { console.log("caught") }`,
+  );
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(result.stdout).toBe("caught\n");
+});
+
+test("an unreadable subdirectory leaves the exit status alone", async () => {
+  write("tree/readable/a.txt");
+  fs.mkdirSync(scratch("tree/noperm"), { recursive: true });
+  fs.chmodSync(scratch("tree/noperm"), 0o000);
+
+  try {
+    const result = await evaluate(
+      // glob reports the unreadable dir through console.warn, which its
+      // logging options can't redirect.
+      `console.warn = () => {}; ${globCode("**", { dir: scratch("tree") })}`,
+    );
+    expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  } finally {
+    fs.chmodSync(scratch("tree/noperm"), 0o755);
+  }
+});
+
+test("relative patterns work when 'dir' contains glob metacharacters", async () => {
+  write("weird[1]/w.js");
+
+  const result = await evaluate(globCode("*", { dir: scratch("weird[1]") }));
+  expect(result).toMatchObject({ code: 0, error: null });
+  compareResult(result, [scratchPath("weird[1]/w.js")]);
+});
+
+test("relative patterns work when the cwd contains glob metacharacters", async () => {
+  write("weird[1]/w.js");
+
+  const result = await evaluate(globCode("*"), { cwd: scratch("weird[1]") });
+  expect(result).toMatchObject({ code: 0, error: null });
+  compareResult(result, [scratchPath("weird[1]/w.js")]);
+});
+
+test("an absolute pattern naming one existing file matches that file", async () => {
+  write("solo.txt");
+
+  const result = await evaluate(globCode(scratch("solo.txt")));
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  compareResult(result, [scratchPath("solo.txt")]);
+});
+
+test("an absolute pattern with '?' in a directory segment matches", async () => {
+  write("abc/z.js");
+
+  const result = await evaluate(globCode(scratch("ab?/*.js")));
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  compareResult(result, [scratchPath("abc/z.js")]);
+});
+
+test("an absolute pattern with a character class in a directory segment matches", async () => {
+  write("abc/z.js");
+
+  const result = await evaluate(globCode(scratch("[a]bc/*.js")));
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  compareResult(result, [scratchPath("abc/z.js")]);
+});
+
+test(
+  "an empty pattern list matches nothing",
+  async () => {
+    write("tree/one.js");
+    write("tree/sub/two.js");
+
+    const result = await evaluateWithTimeout(
+      globCode([], { dir: scratch("tree") }),
+    );
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({ code: 0, error: null });
+    compareResult(result, []);
+  },
+  HANG_TEST_TIMEOUT,
+);
+
+test("a pattern starting with '../' matches in the parent directory", async () => {
+  write("parent/one.js");
+  write("parent/two.js");
+  write("parent/child/three.js");
+
+  const result = await evaluate(
+    globCode("../*.js", { dir: scratch("parent/child") }),
+  );
+  expect(result).toMatchObject({ code: 0, error: null });
+  compareResult(result, [
+    scratchPath("parent/one.js"),
+    scratchPath("parent/two.js"),
+  ]);
+});
+
+test("a backslash escapes a glob metacharacter in a pattern", async () => {
+  write("weird[1]/w.js");
+  write("weird1/decoy.js");
+
+  const result = await evaluate(
+    globCode("weird\\[1\\]/*", { dir: scratchDir() }),
+  );
+  expect(result).toMatchObject({ code: 0, error: null });
+  compareResult(result, [scratchPath("weird[1]/w.js")]);
+});
+
+test("a backslash is not a path separator", async () => {
+  write("a*.js");
+  write("a/one.js");
+
+  const result = await evaluate(globCode("a\\*.js", { dir: scratchDir() }));
+  expect(result).toMatchObject({ code: 0, error: null });
+  compareResult(result, [scratchPath("a*.js")]);
+});
+
+test("a leading extglob '!(...)' excludes what it names", async () => {
+  write("x/one.js");
+  write("x/two.ts");
+
+  const result = await evaluate(globCode("!(*.js)", { dir: scratch("x") }));
+  expect(result).toMatchObject({ code: 0, error: null });
+  compareResult(result, [scratchPath("x/two.ts")]);
+});
+
+test("a trailing slash matches only directories", async () => {
+  write("y/f.txt");
+  write("y/d/inner.txt");
+
+  const result = await evaluate(globCode("*/", { dir: scratch("y") }));
+  expect(result).toMatchObject({ code: 0, error: null });
+  const found: Array<string> = JSON.parse(result.stdout).map((entry: string) =>
+    entry.replace(/\/$/, ""),
+  );
+  expect(found.sort()).toEqual([scratchPath("y/d")]);
+});
+
+test(
+  "followSymlinks doesn't walk a symlink cycle",
+  async () => {
+    write("cycle/f.txt");
+    fs.symlinkSync(".", scratch("cycle/self"));
+
+    const result = await evaluateWithTimeout(
+      globCode("**", { dir: scratch("cycle"), followSymlinks: true }),
+    );
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({ code: 0, error: null });
+
+    const revisited = JSON.parse(result.stdout).filter(
+      (entry: string) =>
+        entry.split("/").filter((segment) => segment === "self").length > 1,
+    );
+    expect(revisited).toEqual([]);
+  },
+  HANG_TEST_TIMEOUT,
+);

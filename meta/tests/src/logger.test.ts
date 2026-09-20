@@ -77,6 +77,30 @@ test("modifying logger.info affects logging of API functions", async () => {
   `);
 });
 
+test("logger.info writes no ANSI escapes to a non-terminal stderr", async () => {
+  const result = await evaluate(`logger.info("msg")`, { cleanResult: false });
+  expect(result).toMatchObject({ code: 0, stdout: "", stderr: "msg\n" });
+});
+
+test("logger.warn writes no ANSI escapes to a non-terminal stderr", async () => {
+  const result = await evaluate(`logger.warn("careful")`, {
+    cleanResult: false,
+  });
+  expect(result).toMatchObject({ code: 0, stdout: "", stderr: "careful\n" });
+});
+
+test("logger output has no ANSI escapes when CLICOLOR is 0", async () => {
+  const result = await evaluate(
+    `logger.info("msg"); logger.warn("careful"); exec("true");`,
+    { cleanResult: false, env: { ...process.env, CLICOLOR: "0" } },
+  );
+  expect(result).toMatchObject({
+    code: 0,
+    stdout: "",
+    stderr: "msg\ncareful\nexec: true\n",
+  });
+});
+
 test("modifying logger.trace affects logging of API functions", async () => {
   const result = await evaluate(
     `

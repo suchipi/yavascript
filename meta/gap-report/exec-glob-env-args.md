@@ -65,7 +65,8 @@ All repros run from the repo root. Fixtures live in `.tmp/api-audit/exec-sandbox
 ### F9. [bug] glob: patterns silently match nothing when `dir` or the cwd contains glob metacharacters
 
 - Repro: `./dist/yavascript -e "logger.info=()=>{}; cd('.tmp/api-audit/exec-sandbox/g/weird[1]'); console.log(JSON.stringify(glob('*').map(String)))"` prints `[]` (the dir contains `w.js`). `glob("*", { dir: ".../weird[1]" })` also gives `[]`.
-- Impact: every relative glob breaks inside dirs like `Photos [2020]`; a dir containing `{a,b}` or `*` would also misbehave.
+- Impact: every relative glob breaks inside dirs like `Photos [2020]`.
+- **Corrected 2026-09-20:** this originally also claimed a dir containing `{a,b}` or `?` misbehaves. Re-checked against the binary: only the character-class case reproduces. `br{ace}` and `q?mark` directory names both resolve correctly, so there is one bug here, not three.
 - Cause: the starting dir is concatenated unescaped into the minimatch pattern (src/layer1/api/glob/glob.ts:21-25).
 
 ### F10. [bug] glob: absolute patterns with a literal file, or with `?`/`[...]` in their first wildcard segment, throw

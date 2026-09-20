@@ -1,0 +1,1 @@
+console.log "coffeescript ok", 2 + 2

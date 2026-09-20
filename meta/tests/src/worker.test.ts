@@ -3,9 +3,45 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { spawn } from "first-base";
-import { runYavascript, rootDir, binaryPath } from "./test-helpers";
+import {
+  runYavascript,
+  runYavascriptWithTimeout,
+  evaluateWithTimeout,
+  rootDir,
+  binaryPath,
+  HANG_TIMEOUT,
+} from "./test-helpers";
 
 const workerFixturesDir = rootDir.concat("meta/tests/fixtures/worker");
+
+/**
+ * vitest's own per-test timeout has to be comfortably above HANG_TIMEOUT, or
+ * it fires first and the test reports a timeout instead of the real failure.
+ */
+const HANG_TEST_TIMEOUT = HANG_TIMEOUT * 4;
+
+/**
+ * Runs the worker fixture named `workerFileName` and prints the first message
+ * it posts. Load failures are printed too, so that a worker which never starts
+ * shows up as a failed assertion instead of a main thread waiting forever.
+ */
+function runWorkerModule(workerFileName: string) {
+  const workerModulePath = workerFixturesDir(workerFileName);
+
+  // The trailing `void 0` keeps `-e` from printing the last assignment's value.
+  return evaluateWithTimeout(`
+    const worker = new Worker(${JSON.stringify(workerModulePath)});
+    worker.onmessage = (event) => {
+      console.log(event.data);
+      worker.terminate();
+    };
+    worker.onerror = (event) => {
+      console.log("onerror: " + event.message);
+      worker.terminate();
+    };
+    void 0;
+  `);
+}
 
 test("worker cannot call std.exit", async () => {
   const result = await runYavascript([workerFixturesDir("main.js")]);
@@ -106,6 +142,68 @@ test("the overrideCode option overrides the worker's module code", async () => {
    }
   `);
 });
+
+test(
+  "a worker can statically import a TypeScript module",
+  async () => {
+    const result = await runWorkerModule("static-import-ts-worker.js");
+
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: "imported from ts\n",
+    });
+  },
+  HANG_TEST_TIMEOUT,
+);
+
+test(
+  "a worker's static imports resolve using yavascript's search extensions",
+  async () => {
+    const result = await runWorkerModule("static-import-noext-worker.js");
+
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: "imported from ts\n",
+    });
+  },
+  HANG_TEST_TIMEOUT,
+);
+
+test(
+  "a worker file can start with a shebang",
+  async () => {
+    const result = await runWorkerModule("shebang-worker.js");
+
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: "shebang worker ok\n",
+    });
+  },
+  HANG_TEST_TIMEOUT,
+);
+
+test(
+  "overrideCode works with a relative moduleFilename that isn't on disk",
+  async () => {
+    const result = await runYavascriptWithTimeout([
+      workerFixturesDir("override-virtual-main.js"),
+    ]);
+
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: "override ran with a virtual filename\n",
+    });
+  },
+  HANG_TEST_TIMEOUT,
+);
 
 // `yavascript-bootstrap` is `qjsbootstrap` with yavascript's primordials added
 // on; you make a standalone program by appending JS source to a copy of the

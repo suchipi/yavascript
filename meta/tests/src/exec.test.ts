@@ -1,5 +1,20 @@
-import { expect, test } from "vitest";
-import { evaluate, binaryPath } from "./test-helpers";
+import { afterAll, beforeEach, expect, test } from "vitest";
+import fs from "fs";
+import path from "path";
+import { evaluate, binaryPath, rootDir } from "./test-helpers";
+
+const scratchDir = rootDir.concat("meta/tests/fixtures/exec-scratch");
+const scratch = (...parts: Array<string>) => scratchDir(...parts);
+
+const cleanScratch = () => {
+  for (const child of fs.readdirSync(scratchDir())) {
+    if (child.startsWith(".")) continue;
+    fs.rmSync(scratchDir(child), { recursive: true, force: true });
+  }
+};
+
+beforeEach(cleanScratch);
+afterAll(cleanScratch);
 
 test("exec true - string", async () => {
   const result = await evaluate(`exec("true")`);
@@ -544,4 +559,52 @@ test("non-blocking with full return value", async () => {
    ",
    }
   `);
+});
+
+test("the script's own output keeps its place around a child process", async () => {
+  const result = await evaluate(`
+    console.log("one");
+    exec("echo two", { logging: { info() {} } });
+    console.log("three");
+  `);
+  expect(result).toMatchObject({ code: 0, error: null });
+  expect(result.stdout).toBe("one\ntwo\nthree\n");
+});
+
+test("a Path program containing a space is one argument", async () => {
+  const result = await evaluate(
+    `JSON.stringify(exec.toArgv(new Path("/a b/c")))`,
+  );
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(JSON.parse(result.stdout)).toEqual(["/a b/c"]);
+});
+
+test("a Path program containing a space runs", async () => {
+  const program = scratch("dir with space", "prog");
+  fs.mkdirSync(path.dirname(program), { recursive: true });
+  fs.writeFileSync(program, "#!/bin/sh\necho ran\n");
+  fs.chmodSync(program, 0o755);
+
+  const result = await evaluate(
+    `exec(new Path(${JSON.stringify(program)}), { logging: { info() {} } })`,
+  );
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(result.stdout).toBe("ran\n");
+});
+
+test("wait() called twice with captureOutput gives the same result again", async () => {
+  const result = await evaluate(`
+    const proc = exec("echo hi", {
+      block: false,
+      captureOutput: true,
+      logging: { info() {} },
+    });
+    console.log(JSON.stringify(proc.wait()));
+    console.log(JSON.stringify(proc.wait()));
+  `);
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(result.stdout.trim().split("\n")).toEqual([
+    `{"stdout":"hi\\n","stderr":""}`,
+    `{"stdout":"hi\\n","stderr":""}`,
+  ]);
 });

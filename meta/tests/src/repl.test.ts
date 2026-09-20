@@ -1,7 +1,13 @@
 import * as fs from "fs";
 import { describe, expect, test } from "vitest";
 import { spawn } from "first-base";
-import { binaryPath, runYavascript } from "./test-helpers";
+import {
+  binaryPath,
+  rootDir,
+  runYavascript,
+  runYavascriptWithTimeout,
+  HANG_TIMEOUT,
+} from "./test-helpers";
 import {
   CONTINUATION_PROMPT,
   KEYS,
@@ -9,6 +15,18 @@ import {
   startReplSession,
   tempConfigDir,
 } from "./repl-helpers";
+
+/**
+ * vitest's own per-test timeout has to be comfortably above HANG_TIMEOUT, or
+ * it fires first and the test reports a timeout instead of the real failure.
+ */
+const HANG_TEST_TIMEOUT = HANG_TIMEOUT * 4;
+
+/**
+ * What startReplSession spawns with: no HOME, so the repl keeps history in
+ * memory rather than in the config dir of whoever runs the tests.
+ */
+const ISOLATED_ENV = { PATH: process.env.PATH, CLICOLOR: "0" };
 
 describe("repl", () => {
   test("basic run", async () => {
@@ -1575,5 +1593,92 @@ describe("repl colors", () => {
     await session.exit();
 
     expect(session.raw().stdout).toContain("\x1b[36;1m"); // bright_cyan: jsx tag
+  });
+});
+
+describe("repl stdin", () => {
+  test(
+    "a line piped in is evaluated and then EOF ends the session",
+    async () => {
+      const result = await runYavascriptWithTimeout([], {
+        stdin: "1 + 1\n",
+        env: ISOLATED_ENV,
+      });
+      expect(result.timedOut).toBe(false);
+      expect(result.code).toBe(0);
+      expect(result.stdout).toContain("2");
+    },
+    HANG_TEST_TIMEOUT,
+  );
+
+  test(
+    "stdin that is already at EOF ends the session",
+    async () => {
+      const result = await runYavascriptWithTimeout([], {
+        stdin: "",
+        env: ISOLATED_ENV,
+      });
+      expect(result.timedOut).toBe(false);
+      expect(result.code).toBe(0);
+    },
+    HANG_TEST_TIMEOUT,
+  );
+});
+
+describe("repl imports", () => {
+  test("a default import of a JSON file gives the parsed data", async () => {
+    const session = await startReplSession();
+    await session.line(
+      `import data from "./meta/tests/fixtures/repl-imports/data.json"`,
+    );
+    await session.line(`console.log(JSON.stringify(data))`);
+    await session.exit();
+    expect(session.result().stdout).toContain(`{"a":1,"b":[1,2]}`);
+  });
+
+  test("a default import of a CommonJS file gives module.exports", async () => {
+    const session = await startReplSession();
+    await session.line(
+      `import cjs from "./meta/tests/fixtures/repl-imports/lib-cjs.js"`,
+    );
+    await session.line(`console.log(JSON.stringify(cjs))`);
+    await session.exit();
+    expect(session.result().stdout).toContain(`{"a":1,"b":2}`);
+  });
+
+  test("--lang ts keeps the bindings an import introduces", async () => {
+    const session = await startReplSession(["--lang", "ts"]);
+    await session.line(`import { fromUtf8 } from "quickjs:encoding"`);
+    await session.line(`console.log("typeof:", typeof fromUtf8)`);
+    await session.exit();
+    expect(session.result().stdout).toContain("typeof: function");
+  });
+
+  test("--lang tsx keeps the bindings an import introduces", async () => {
+    const session = await startReplSession(["--lang", "tsx"]);
+    await session.line(`import { fromUtf8 } from "quickjs:encoding"`);
+    await session.line(`console.log("typeof:", typeof fromUtf8)`);
+    await session.exit();
+    expect(session.result().stdout).toContain("typeof: function");
+  });
+});
+
+describe("repl \\load", () => {
+  test("a script that throws leaves the repl usable", async () => {
+    const session = await startReplSession();
+
+    // Each line has to be seen through before the next keys are written: an
+    // exception thrown while reading drops the rest of the bytes read with it.
+    await session.input(
+      `\\load ${rootDir("meta/tests/fixtures/repl-load/throws.js")}${KEYS.enter}`,
+      "the loaded script ran",
+    );
+    await session.input(`1 + 1${KEYS.enter}`, /\n2\n|could not load/);
+    // Ctrl-C twice rather than Ctrl-D, because Ctrl-D only exits on an empty
+    // line and what the failed line left behind is what this test is about.
+    session.send(KEYS.ctrlC, KEYS.ctrlC);
+    await session.finish();
+
+    expect(session.result().stdout).toContain("\n2\n");
   });
 });

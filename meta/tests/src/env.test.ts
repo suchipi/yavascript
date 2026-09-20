@@ -100,6 +100,32 @@ test("own keys of env object", async () => {
   `);
 });
 
+test("a variable set to an empty string reads as an empty string", async () => {
+  const result = await evaluate(`JSON.stringify([env.EMPTY, "EMPTY" in env])`, {
+    env: { EMPTY: "" },
+  });
+  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
+  expect(JSON.parse(result.stdout)).toEqual(["", true]);
+});
+
+test("a variable set to an empty string reaches child processes", async () => {
+  const result = await evaluate(
+    'exec(["/bin/sh", "-c", "echo EMPTY=${EMPTY-unset}"], { logging: { info() {} } })',
+    { env: { EMPTY: "" } },
+  );
+  expect(result).toMatchObject({ code: 0, error: null });
+  expect(result.stdout).toBe("EMPTY=\n");
+});
+
+test("a variable set to an empty string in-script reaches child processes", async () => {
+  const result = await evaluate(
+    'env.EMPTY = ""; exec(["/bin/sh", "-c", "echo EMPTY=${EMPTY-unset}"], { logging: { info() {} } })',
+    { env: {} },
+  );
+  expect(result).toMatchObject({ code: 0, error: null });
+  expect(result.stdout).toBe("EMPTY=\n");
+});
+
 test("readEnvBool - normative case", async () => {
   for (const [value, expectedReturn] of Object.entries({
     0: false,

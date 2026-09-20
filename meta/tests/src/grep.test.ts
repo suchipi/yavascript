@@ -535,6 +535,44 @@ test("grepArray", async () => {
   `);
 });
 
+test("the grep prototype methods are non-enumerable", async () => {
+  const result = await evaluate(`
+    const arrayKeys = [];
+    for (const key in ["x"]) arrayKeys.push(key);
+
+    const stringKeys = [];
+    for (const key in "x") stringKeys.push(key);
+
+    JSON.stringify({
+      arrayKeys,
+      stringKeys,
+      arrayGrepEnumerable: Object.getOwnPropertyDescriptor(Array.prototype, "grep").enumerable,
+      stringGrepEnumerable: Object.getOwnPropertyDescriptor(String.prototype, "grep").enumerable,
+    })
+  `);
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+    stdout: `{"arrayKeys":["0"],"stringKeys":["0"],"arrayGrepEnumerable":false,"stringGrepEnumerable":false}\n`,
+  });
+});
+
+test("grep doesn't carry sticky regexp state between lines or calls", async () => {
+  const result = await evaluate(`
+    const regexp = /a/y;
+    const first = grepArray(["a", "a", "a"], regexp);
+    const lastIndexAfterCall = regexp.lastIndex;
+    const second = grepArray(["a"], regexp);
+
+    JSON.stringify({ first, lastIndexAfterCall, second })
+  `);
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+    stdout: `{"first":["a","a","a"],"lastIndexAfterCall":0,"second":["a"]}\n`,
+  });
+});
+
 test("Array.prototype.grep", async () => {
   const result = await evaluate(
     `

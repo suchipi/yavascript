@@ -1,5 +1,74 @@
-import { expect, test } from "vitest";
+import { afterAll, beforeAll, expect, test } from "vitest";
+import fs from "fs";
+import path from "path";
+import { execFileSync } from "child_process";
 import { evaluate, rootDir } from "./test-helpers";
+
+const gitFixturesDir = rootDir.concat("meta/tests/fixtures/git-fixtures");
+const repoADir = gitFixturesDir("repo-a");
+const repoBDir = gitFixturesDir("repo-b");
+const worktreeLikeDir = gitFixturesDir("worktree-like");
+
+/** Keeps the fixture repos out of reach of the host's git config and of any
+ * git environment variables the test runner was started with. */
+const gitEnv = () => {
+  const { GIT_DIR, GIT_WORK_TREE, GIT_INDEX_FILE, ...rest } = process.env;
+  return {
+    ...rest,
+    GIT_CONFIG_GLOBAL: "/dev/null",
+    GIT_CONFIG_SYSTEM: "/dev/null",
+  };
+};
+
+const git = (args: Array<string>) =>
+  execFileSync("git", args, {
+    env: gitEnv(),
+    stdio: "pipe",
+    encoding: "utf-8",
+  });
+
+const makeRepo = (dir: string, branchName: string, commitMessage: string) => {
+  git(["init", "-q", dir]);
+  git([
+    "-C",
+    dir,
+    "-c",
+    "user.email=test@example.com",
+    "-c",
+    "user.name=Test",
+    "commit",
+    "-q",
+    "--allow-empty",
+    "-m",
+    commitMessage,
+  ]);
+  git(["-C", dir, "branch", "-M", branchName]);
+};
+
+const cleanGitFixtures = () => {
+  for (const child of fs.readdirSync(gitFixturesDir())) {
+    if (child === ".gitignore") continue;
+    fs.rmSync(gitFixturesDir(child), { recursive: true, force: true });
+  }
+};
+
+let repoAHead = "";
+
+beforeAll(() => {
+  cleanGitFixtures();
+
+  makeRepo(repoADir, "repo-a-branch", "repo a");
+  makeRepo(repoBDir, "repo-b-branch", "repo b");
+  repoAHead = git(["-C", repoADir, "rev-parse", "HEAD"]).trim();
+
+  fs.mkdirSync(path.join(worktreeLikeDir, "src"), { recursive: true });
+  fs.writeFileSync(
+    path.join(worktreeLikeDir, ".git"),
+    `gitdir: ${path.join(repoADir, ".git")}\n`,
+  );
+});
+
+afterAll(cleanGitFixtures);
 
 test("very basic usage", async () => {
   const result = await evaluate(
@@ -160,6 +229,39 @@ test("passing absolute path outside repo root to isIgnored throws an error", asy
      "stdout": "",
    }
   `);
+});
+
+test("GitRepo methods describe repoDir even when GIT_DIR points at another repo", async () => {
+  const result = await evaluate(
+    `
+      logger.info = () => {};
+      const repo = new GitRepo(${JSON.stringify(repoADir)});
+      console.log("commitSHA", repo.commitSHA());
+      console.log("branchName", repo.branchName());
+    `,
+    { env: { ...gitEnv(), GIT_DIR: path.join(repoBDir, ".git") } },
+  );
+  expect(result).toEqual({
+    code: 0,
+    error: null,
+    stderr: "",
+    stdout: `commitSHA ${repoAHead}\nbranchName repo-a-branch\n`,
+  });
+});
+
+test("GitRepo.findRoot finds a checkout whose .git is a file", async () => {
+  const result = await evaluate(`
+    console.log(GitRepo.findRoot(${JSON.stringify(path.join(worktreeLikeDir, "src"))}).toString());
+    console.log(GitRepo.findRoot(${JSON.stringify(worktreeLikeDir)}).toString());
+  `);
+  expect(result).toEqual({
+    code: 0,
+    error: null,
+    stderr: "",
+    stdout: "<rootDir>/meta/tests/fixtures/git-fixtures/worktree-like\n".repeat(
+      2,
+    ),
+  });
 });
 
 test("passing path with newline to isIgnored throws error", async () => {

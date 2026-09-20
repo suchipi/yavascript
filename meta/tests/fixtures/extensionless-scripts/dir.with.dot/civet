@@ -1,0 +1,2 @@
+message := "civet ok"
+console.log message
