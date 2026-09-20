@@ -1,6 +1,7 @@
 import * as std from "quickjs:std";
 import { TypeValidator, $BasicTypes, $TypeConstructors } from "pheno";
-import coerce, { $CoercingTypeConstructors } from "pheno/coerce";
+import phenoCoerce, { $CoercingTypeConstructors } from "pheno/coerce";
+import { instanceOf } from "pheno";
 import { Path } from "../path";
 import { JSX } from "../jsx";
 
@@ -1369,6 +1370,26 @@ type types = {
     Fragment: TypeValidator<JSX.Fragment>;
   };
 };
+
+// pheno decides whether a function is a class by looking for "class " in its
+// source, which never matches here: compiling to bytecode drops function
+// bodies, so even a real class stringifies as "function X() { [native code] }".
+// Only a constructor has a prototype, and pheno's own validators are arrows,
+// so that is the distinction used instead.
+const coerce: typeof phenoCoerce = ((type: any) => {
+  if (typeof type === "function") {
+    // Arrows, methods and bound functions can't construct, so they're
+    // validators no matter what their source text happens to contain.
+    if (type.prototype == null) {
+      return type;
+    }
+
+    const asBuiltinType = phenoCoerce(type);
+    return asBuiltinType === type ? instanceOf(type) : asBuiltinType;
+  }
+
+  return phenoCoerce(type);
+}) as any;
 
 export const types: types = Object.assign(Object.create(null), {
   ...$BasicTypes,
