@@ -10,6 +10,9 @@ export function normalizeModulePath(modulePath: string) {
   return modulePath;
 }
 
-export function readModule(modulePath: string) {
-  return http.readModule(modulePath);
+export function readModule(
+  modulePath: string,
+  attributes?: { [key: string]: string },
+) {
+  return http.readModule(modulePath, attributes);
 }

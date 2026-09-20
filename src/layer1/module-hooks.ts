@@ -48,6 +48,38 @@ function potentialFilesForPath(path: string): Array<string> {
   return potentials;
 }
 
+// There's no URL global, so this does the part of URL resolution that module
+// specifiers need: "/x" against the origin, "./x" and "../x" against the
+// directory the importing module sits in.
+function resolveAgainstUrl(base: string, specifier: string): string | null {
+  if (!specifier.startsWith("/") && !specifier.startsWith(".")) return null;
+
+  const schemeEnd = base.indexOf("://");
+  if (schemeEnd === -1) return null;
+
+  const pathStart = base.indexOf("/", schemeEnd + 3);
+  const origin = pathStart === -1 ? base : base.slice(0, pathStart);
+
+  if (specifier.startsWith("/")) return origin + specifier;
+
+  const basePath = (pathStart === -1 ? "/" : base.slice(pathStart)).split(
+    /[?#]/,
+  )[0];
+  const baseDir = basePath.slice(0, basePath.lastIndexOf("/") + 1);
+
+  const segments: Array<string> = [];
+  for (const segment of (baseDir + specifier).split("/")) {
+    if (segment === "" || segment === ".") continue;
+    if (segment === "..") {
+      segments.pop();
+      continue;
+    }
+    segments.push(segment);
+  }
+
+  return origin + "/" + segments.join("/");
+}
+
 export function installModuleHooks() {
   ModuleDelegate.resolve = (name, fromFile) => {
     if (ModuleDelegate.builtinModuleNames.includes(name)) {
@@ -67,6 +99,13 @@ export function installModuleHooks() {
 
     if (protos.http.handlesModulePath(name)) {
       return protos.http.normalizeModulePath(name);
+    }
+
+    // A module loaded over http(s) has a URL for its fromFile, so its own
+    // imports have to be resolved against that URL rather than the local disk.
+    if (fromFile != null && /^https?:\/\//i.test(fromFile)) {
+      const resolved = resolveAgainstUrl(fromFile, name);
+      if (resolved != null) return resolved;
     }
 
     if (Path.isAbsolute(name)) {
@@ -114,11 +153,11 @@ export function installModuleHooks() {
     }
 
     if (protos.https.handlesModulePath(modulePath)) {
-      return protos.https.readModule(modulePath);
+      return protos.https.readModule(modulePath, attributes);
     }
 
     if (protos.http.handlesModulePath(modulePath)) {
-      return protos.http.readModule(modulePath);
+      return protos.http.readModule(modulePath, attributes);
     }
 
     return originalRead(modulePath, attributes);
