@@ -53,9 +53,13 @@ function copyRaw(
     trace(
       "opening",
       to,
-      `(flags: O_WRONLY | O_CREAT, mode: 0o${fromPerms.toString(8)})`,
+      `(flags: O_WRONLY | O_CREAT | O_TRUNC, mode: 0o${fromPerms.toString(8)})`,
     );
-    const toFd = os.open(to, os.O_WRONLY | os.O_CREAT, fromPerms);
+    const toFd = os.open(
+      to,
+      os.O_WRONLY | os.O_CREAT | os.O_TRUNC,
+      fromPerms,
+    );
     fdsToCloseLater[to] = toFd;
     const toFile = std.fdopen(toFd, "w");
     filesToCloseLater[to] = toFile;
