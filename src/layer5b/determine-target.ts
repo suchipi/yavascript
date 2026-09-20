@@ -20,14 +20,31 @@ export type TargetDetermination =
   | TargetInfo<"version">
   | TargetInfo<"license">
   | TargetInfo<"print-types">
-  | TargetInfo<"repl", { lang: Lang | null; filesToLoadFirst: Array<string> }>
+  | TargetInfo<
+      "repl",
+      {
+        lang: Lang | null;
+        filesToLoadFirst: Array<string>;
+        scriptArgs: Array<string>;
+      }
+    >
   | TargetInfo<
       "eval",
-      { code: string; lang: Lang | null; filesToLoadFirst: Array<string> }
+      {
+        code: string;
+        lang: Lang | null;
+        filesToLoadFirst: Array<string>;
+        scriptArgs: Array<string>;
+      }
     >
   | TargetInfo<
       "run-file",
-      { file: string; lang: Lang | null; filesToLoadFirst: Array<string> }
+      {
+        file: string;
+        lang: Lang | null;
+        filesToLoadFirst: Array<string>;
+        scriptArgs: Array<string>;
+      }
     >
   | TargetInfo<"invalid", { message: string }>;
 
@@ -38,7 +55,7 @@ export default function determineTarget(
 
   if (rest.length === 0) {
     // They ran the program with no args
-    return { target: "repl", lang: null, filesToLoadFirst: [] };
+    return { target: "repl", lang: null, filesToLoadFirst: [], scriptArgs: [] };
   }
 
   const arg1 = rest[0];
@@ -92,7 +109,12 @@ export default function determineTarget(
 
       case "--": {
         // Act as if they ran the program with no args
-        return { target: "repl", lang: null, filesToLoadFirst: [] };
+        return {
+          target: "repl",
+          lang: null,
+          filesToLoadFirst: [],
+          scriptArgs: [],
+        };
       }
 
       default: {
@@ -101,6 +123,7 @@ export default function determineTarget(
           file: arg1,
           lang: null,
           filesToLoadFirst: [],
+          scriptArgs: [],
         };
       }
     }
@@ -114,12 +137,14 @@ export default function determineTarget(
   };
 
   let hasFoundFileFromArgs = false;
+  const userArgs: Array<string> = [];
 
   for (let i = 0; i < rest.length; i++) {
     const arg = rest[i];
     const nextArg = rest[i + 1] || null;
 
     if (arg === "--") {
+      userArgs.push(...rest.slice(i + 1));
       break;
     }
 
@@ -167,6 +192,8 @@ export default function determineTarget(
     } else if (info.eval == null && info.file == null) {
       info.file = arg;
       hasFoundFileFromArgs = true;
+    } else {
+      userArgs.push(arg);
     }
   }
 
@@ -176,6 +203,7 @@ export default function determineTarget(
       code: info.eval,
       lang: info.lang,
       filesToLoadFirst: info.preloadFiles,
+      scriptArgs: userArgs,
     };
   } else if (info.file != null) {
     return {
@@ -183,12 +211,14 @@ export default function determineTarget(
       file: info.file,
       lang: info.lang,
       filesToLoadFirst: info.preloadFiles,
+      scriptArgs: userArgs,
     };
   } else {
     return {
       target: "repl",
       lang: info.lang,
       filesToLoadFirst: info.preloadFiles,
+      scriptArgs: userArgs,
     };
   }
 }

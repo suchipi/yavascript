@@ -12,9 +12,16 @@ type Hint =
   | typeof Path
   | TypeValidator<Array<string | boolean | number | Path>>;
 
+let defaultArgs: Array<string> | null = null;
+
+/** internal use only; called by the CLI once it knows which args are the user's */
+export function _setDefaultArgs(args: Array<string>) {
+  defaultArgs = args;
+}
+
 export function parseScriptArgs(
   hints: { [key: string]: Hint } = {},
-  args: Array<string> = scriptArgs.slice(2),
+  args: Array<string> = defaultArgs ?? scriptArgs.slice(2),
 ): {
   flags: { [key: string]: any };
   args: Array<string>;

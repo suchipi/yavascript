@@ -3,10 +3,14 @@ import * as cmdline from "quickjs:cmdline";
 import determineTarget from "./determine-target";
 import { __yavascript_layer1_internals } from "./layer-internals";
 
-const { printError } = __yavascript_layer1_internals;
+const { printError, setDefaultScriptArgs } = __yavascript_layer1_internals;
 
 async function main(): Promise<void> {
   const targetInfo = determineTarget(scriptArgs);
+
+  if ("scriptArgs" in targetInfo) {
+    setDefaultScriptArgs(targetInfo.scriptArgs);
+  }
 
   switch (targetInfo.target) {
     case "eval": {

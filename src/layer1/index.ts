@@ -17,6 +17,7 @@ import { NOTHING } from "./api/repl/special";
 import { LANGS, langToCompiler } from "./langs";
 import { hasColors } from "./has-colors";
 import printError from "./print-error";
+import { _setDefaultArgs } from "./api/parse-script-args/parse-script-args";
 
 const __yavascript_layer1_internals = {
   esmToRequire,
@@ -25,6 +26,7 @@ const __yavascript_layer1_internals = {
   hasColors,
   printError,
   LANGS,
+  setDefaultScriptArgs: _setDefaultArgs,
 };
 
 export type __yavascript_layer1_internals =

@@ -8,6 +8,7 @@ exports[`(empty) 1`] = `
   "result": {
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [],
     "target": "repl",
   },
 }
@@ -56,6 +57,10 @@ exports[`/tmp/something -v --help 1`] = `
     "file": "/tmp/something",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "-v",
+      "--help",
+    ],
     "target": "run-file",
   },
 }
@@ -71,6 +76,9 @@ exports[`-- --require 1`] = `
   "result": {
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "--require",
+    ],
     "target": "repl",
   },
 }
@@ -86,6 +94,9 @@ exports[`-- -r 1`] = `
   "result": {
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "-r",
+    ],
     "target": "repl",
   },
 }
@@ -101,6 +112,9 @@ exports[`-- -v 1`] = `
   "result": {
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "-v",
+    ],
     "target": "repl",
   },
 }
@@ -115,6 +129,7 @@ exports[`-- 1`] = `
   "result": {
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [],
     "target": "repl",
   },
 }
@@ -133,6 +148,9 @@ exports[`--eval "2 + 2" -- --require 1`] = `
     "code": "2 + 2",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "--require",
+    ],
     "target": "eval",
   },
 }
@@ -151,6 +169,9 @@ exports[`--eval "2 + 2" -- -r 1`] = `
     "code": "2 + 2",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "-r",
+    ],
     "target": "eval",
   },
 }
@@ -184,6 +205,7 @@ exports[`--eval "2 + 2" --lang coffee 1`] = `
     "code": "2 + 2",
     "filesToLoadFirst": [],
     "lang": "coffee",
+    "scriptArgs": [],
     "target": "eval",
   },
 }
@@ -200,6 +222,7 @@ exports[`--eval "2 + 2" 1`] = `
     "code": "2 + 2",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [],
     "target": "eval",
   },
 }
@@ -217,6 +240,9 @@ exports[`--eval --lang js 1`] = `
     "code": "--lang",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "js",
+    ],
     "target": "eval",
   },
 }
@@ -288,6 +314,7 @@ exports[`--lang jsx ../something.js 1`] = `
     "file": "../something.js",
     "filesToLoadFirst": [],
     "lang": "jsx",
+    "scriptArgs": [],
     "target": "run-file",
   },
 }
@@ -306,6 +333,7 @@ exports[`--lang tsx --eval "2 + 2" 1`] = `
     "code": "2 + 2",
     "filesToLoadFirst": [],
     "lang": "tsx",
+    "scriptArgs": [],
     "target": "eval",
   },
 }
@@ -324,6 +352,7 @@ exports[`--lang tsx -e "2 + 2" 1`] = `
     "code": "2 + 2",
     "filesToLoadFirst": [],
     "lang": "tsx",
+    "scriptArgs": [],
     "target": "eval",
   },
 }
@@ -381,6 +410,7 @@ exports[`--require some-file --eval "2 + 2" 1`] = `
       "some-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "eval",
   },
 }
@@ -401,6 +431,7 @@ exports[`--require some-file --require another-file 1`] = `
       "another-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "repl",
   },
 }
@@ -423,6 +454,7 @@ exports[`--require some-file --require another-file main-file 1`] = `
       "another-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "run-file",
   },
 }
@@ -443,6 +475,7 @@ exports[`--require some-file -e "2 + 2" 1`] = `
       "some-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "eval",
   },
 }
@@ -460,6 +493,7 @@ exports[`--require some-file 1`] = `
       "some-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "repl",
   },
 }
@@ -479,6 +513,7 @@ exports[`--require some-file main-file 1`] = `
       "some-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "run-file",
   },
 }
@@ -509,6 +544,7 @@ exports[`-e "2 + 2" --lang coffee 1`] = `
     "code": "2 + 2",
     "filesToLoadFirst": [],
     "lang": "coffee",
+    "scriptArgs": [],
     "target": "eval",
   },
 }
@@ -525,6 +561,7 @@ exports[`-e "2 + 2" 1`] = `
     "code": "2 + 2",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [],
     "target": "eval",
   },
 }
@@ -583,6 +620,7 @@ exports[`-r some-file --eval "2 + 2" 1`] = `
       "some-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "eval",
   },
 }
@@ -603,6 +641,7 @@ exports[`-r some-file -e "2 + 2" 1`] = `
       "some-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "eval",
   },
 }
@@ -623,6 +662,7 @@ exports[`-r some-file -r another-file 1`] = `
       "another-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "repl",
   },
 }
@@ -645,6 +685,7 @@ exports[`-r some-file -r another-file main-file 1`] = `
       "another-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "run-file",
   },
 }
@@ -662,6 +703,7 @@ exports[`-r some-file 1`] = `
       "some-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "repl",
   },
 }
@@ -681,6 +723,7 @@ exports[`-r some-file main-file 1`] = `
       "some-file",
     ],
     "lang": null,
+    "scriptArgs": [],
     "target": "run-file",
   },
 }
@@ -721,6 +764,9 @@ exports[`my-file --require 1`] = `
     "file": "my-file",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "--require",
+    ],
     "target": "run-file",
   },
 }
@@ -738,6 +784,10 @@ exports[`my-file --require some-file 1`] = `
     "file": "my-file",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "--require",
+      "some-file",
+    ],
     "target": "run-file",
   },
 }
@@ -754,6 +804,9 @@ exports[`my-file -r 1`] = `
     "file": "my-file",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "-r",
+    ],
     "target": "run-file",
   },
 }
@@ -771,6 +824,10 @@ exports[`my-file -r some-file 1`] = `
     "file": "my-file",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "-r",
+      "some-file",
+    ],
     "target": "run-file",
   },
 }
@@ -788,6 +845,9 @@ exports[`some-file -- --hi 1`] = `
     "file": "some-file",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [
+      "--hi",
+    ],
     "target": "run-file",
   },
 }
@@ -805,6 +865,7 @@ exports[`something.js --lang coffee 1`] = `
     "file": "something.js",
     "filesToLoadFirst": [],
     "lang": "coffee",
+    "scriptArgs": [],
     "target": "run-file",
   },
 }
@@ -820,6 +881,7 @@ exports[`something.js 1`] = `
     "file": "something.js",
     "filesToLoadFirst": [],
     "lang": null,
+    "scriptArgs": [],
     "target": "run-file",
   },
 }
