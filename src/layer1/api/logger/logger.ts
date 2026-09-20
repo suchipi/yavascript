@@ -3,26 +3,29 @@ import { assert } from "../assert";
 import { inspectManyToParts } from "../shared/make-inspect-log";
 import { types } from "../types";
 import { dim, yellow } from "../strings";
+import { hasColors } from "../../has-colors";
 
 type LoggerFunction = (...args: Array<any>) => void;
 
 const noop = () => {};
 
 let _info: LoggerFunction = (...args: Array<any>) => {
+  const colorize = hasColors(std.err) ? dim : (str: string) => str;
   const parts = inspectManyToParts(args);
   const len = parts.length;
   for (let i = 0; i < len; i++) {
-    std.err.puts(dim(parts[i]));
+    std.err.puts(colorize(parts[i]));
   }
   std.err.puts("\n");
 };
 let _trace: LoggerFunction = noop;
 
 let _warn: LoggerFunction = (...args: Array<any>) => {
+  const colorize = hasColors(std.err) ? yellow : (str: string) => str;
   const parts = inspectManyToParts(args);
   const len = parts.length;
   for (let i = 0; i < len; i++) {
-    std.err.puts(yellow(parts[i]));
+    std.err.puts(colorize(parts[i]));
   }
   std.err.puts("\n");
 };
