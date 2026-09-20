@@ -1259,8 +1259,8 @@ declare var sleep: {
    * `sleep.async`'s return Promise is waiting to resolve. If this is not the
    * behavior you want, use `sleep.sync` instead.
    *
-   * The Promise returned by `sleep.async` will never get rejected. It will only
-   * ever get resolved.
+   * If `milliseconds` isn't a finite number, the returned Promise gets
+   * rejected with a TypeError.
    */
   async(milliseconds: number): Promise<void>;
 };
