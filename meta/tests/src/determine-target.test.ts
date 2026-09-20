@@ -100,17 +100,18 @@ for (const input of inputs) {
   });
 }
 
-const runFile = (file: string) => ({
+const runFile = (file: string, scriptArgs: Array<string> = []) => ({
   target: "run-file",
   file,
   lang: null,
   filesToLoadFirst: [],
+  scriptArgs,
 });
 
 test("'-e' after the file to run belongs to the user's script", () => {
   expect(
     determineTarget(["/usr/local/bin/yavascript", "my-file", "-e", "2 + 2"]),
-  ).toEqual(runFile("my-file"));
+  ).toEqual(runFile("my-file", ["-e", "2 + 2"]));
 });
 
 test("'--eval' after the file to run belongs to the user's script", () => {
@@ -121,11 +122,11 @@ test("'--eval' after the file to run belongs to the user's script", () => {
       "--eval",
       "2 + 2",
     ]),
-  ).toEqual(runFile("my-file"));
+  ).toEqual(runFile("my-file", ["--eval", "2 + 2"]));
 });
 
 test("'--eval' with no value after the file to run belongs to the user's script", () => {
   expect(
     determineTarget(["/usr/local/bin/yavascript", "my-file", "--eval"]),
-  ).toEqual(runFile("my-file"));
+  ).toEqual(runFile("my-file", ["--eval"]));
 });
