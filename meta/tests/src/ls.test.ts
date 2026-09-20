@@ -33,12 +33,12 @@ test("ls - no args", async () => {
   });
 
   expect(JSON.parse(result.stdout)).toEqual([
-    "<rootDir>/meta/tests/fixtures/glob/hi.something.js",
-    "<rootDir>/meta/tests/fixtures/glob/potato",
-    "<rootDir>/meta/tests/fixtures/glob/hi.js",
-    "<rootDir>/meta/tests/fixtures/glob/hi.txt",
     "<rootDir>/meta/tests/fixtures/glob/cabana",
     "<rootDir>/meta/tests/fixtures/glob/hi",
+    "<rootDir>/meta/tests/fixtures/glob/hi.js",
+    "<rootDir>/meta/tests/fixtures/glob/hi.something.js",
+    "<rootDir>/meta/tests/fixtures/glob/hi.txt",
+    "<rootDir>/meta/tests/fixtures/glob/potato",
   ]);
 });
 
@@ -53,11 +53,11 @@ test("ls - no args (different process cwd)", async () => {
   });
 
   expect(JSON.parse(result.stdout)).toEqual([
-    "<rootDir>/meta/tests/fixtures/symlinks/some-folder",
+    "<rootDir>/meta/tests/fixtures/symlinks/dead-link",
     "<rootDir>/meta/tests/fixtures/symlinks/link-to-file",
     "<rootDir>/meta/tests/fixtures/symlinks/link-to-folder",
-    "<rootDir>/meta/tests/fixtures/symlinks/dead-link",
     "<rootDir>/meta/tests/fixtures/symlinks/some-file",
+    "<rootDir>/meta/tests/fixtures/symlinks/some-folder",
   ]);
 });
 
