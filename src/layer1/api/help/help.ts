@@ -15,7 +15,7 @@ export function help() {
   if ((matches = ver.match(/^git-([A-Fa-f0-9]+)(?:-dirty)?$/))) {
     const sha = matches[1];
     url = docsUrlForRef(sha);
-  } else if ((matches = ver.match(/^(v[0-9.]+)/))) {
+  } else if ((matches = ver.match(/^(v[0-9][0-9A-Za-z.+-]*)$/))) {
     const version = matches[1];
     url = docsUrlForRef(version);
   } else {

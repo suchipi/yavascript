@@ -62,6 +62,9 @@ export function mkdir(
     const components = path.segments;
 
     for (let i = 0; i < components.length; i++) {
+      // The requested path is the last segment, not the first: segment 0 is
+      // "" for an absolute path and "." for a ./ one.
+      const isRequestedPath = i === components.length - 1;
       const componentsSoFar = components.slice(0, i + 1);
       let pathSoFar = componentsSoFar.join(Path.OS_SEGMENT_SEPARATOR);
       if (pathSoFar === ".") continue;
@@ -88,7 +91,7 @@ export function mkdir(
           break;
         }
         case "file": {
-          if (i === 0) {
+          if (isRequestedPath) {
             throw makeErrorWithProperties(
               `Cannot use mkdir to create directory '${path}' because there is an existing file with that name.`,
               { path },

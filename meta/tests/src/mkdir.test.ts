@@ -176,21 +176,20 @@ describe("recursive via option", () => {
       `mkdir(${JSON.stringify(target)}, { recursive: true })`,
     );
     expect(result).toMatchInlineSnapshot(`
-     {
-       "code": 1,
-       "error": null,
-       "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file' because '<rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file })
-       at somewhere
-     {
-       fileName: "yavascript-internals/dist/bundles/layer1.js"
-       lineNumber: <redacted>
-       columnNumber: <redacted>
-       path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file }
-       pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file }
-     }
-     ",
-       "stdout": "",
-     }
+      {
+        "code": 1,
+        "error": null,
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file' because there is an existing file with that name. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file })
+        at somewhere
+      {
+        fileName: "yavascript-internals/dist/bundles/layer1.js"
+        lineNumber: <redacted>
+        columnNumber: <redacted>
+        path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive/collision/file }
+      }
+      ",
+        "stdout": "",
+      }
     `);
   });
 
@@ -281,21 +280,20 @@ describe("recursive via mkdirp", () => {
 
     const result = await evaluate(`mkdirp(${JSON.stringify(target)})`);
     expect(result).toMatchInlineSnapshot(`
-     {
-       "code": 1,
-       "error": null,
-       "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file' because '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file })
-       at somewhere
-     {
-       fileName: "yavascript-internals/dist/bundles/layer1.js"
-       lineNumber: <redacted>
-       columnNumber: <redacted>
-       path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file }
-       pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file }
-     }
-     ",
-       "stdout": "",
-     }
+      {
+        "code": 1,
+        "error": null,
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file' because there is an existing file with that name. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file })
+        at somewhere
+      {
+        fileName: "yavascript-internals/dist/bundles/layer1.js"
+        lineNumber: <redacted>
+        columnNumber: <redacted>
+        path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/collision/file }
+      }
+      ",
+        "stdout": "",
+      }
     `);
   });
 
