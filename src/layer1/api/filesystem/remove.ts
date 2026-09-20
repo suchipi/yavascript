@@ -20,6 +20,13 @@ export function remove(path: string | Path): void {
 
   path = appendSlashIfWindowsDriveLetter(path);
 
+  const lastSegment = new Path(path).basename();
+  if (lastSegment === "." || lastSegment === "..") {
+    throw new Error(
+      `Refusing to remove '${path}': "${lastSegment}" may not be removed.`,
+    );
+  }
+
   // isDir follows symlinks, so without the isLink check a link to a directory
   // would get its target emptied instead of just being unlinked.
   if (!isLink(path) && isDir(path)) {
