@@ -28,20 +28,24 @@ export function toArgv(
 
   let mode: "DEFAULT" | "IN_DOUBLE_STRING" | "IN_SINGLE_STRING" = "DEFAULT";
   let argBeingBuilt = "";
+  // Tracked separately from argBeingBuilt so that "" stays an empty argument
+  // rather than disappearing.
+  let argStarted = false;
 
   const chars = stringInput.split("");
   for (let i = 0; i < chars.length; i++) {
-    const prevChar: string | null = chars[i - 1] ?? null;
     const char: string = chars[i];
     const nextChar: string | null = chars[i + 1] ?? null;
 
     switch (`${char} during ${mode}`) {
       case `" during DEFAULT`: {
         mode = "IN_DOUBLE_STRING";
+        argStarted = true;
         break;
       }
       case `' during DEFAULT`: {
         mode = "IN_SINGLE_STRING";
+        argStarted = true;
         break;
       }
       case `${" "} during DEFAULT`:
@@ -49,9 +53,10 @@ export function toArgv(
       case `\v during DEFAULT`:
       case `\n during DEFAULT`:
       case `\r during DEFAULT`: {
-        if (argBeingBuilt.length > 0) {
+        if (argStarted) {
           result.push(argBeingBuilt);
           argBeingBuilt = "";
+          argStarted = false;
         }
         break;
       }
@@ -63,33 +68,13 @@ export function toArgv(
           break;
         } else {
           argBeingBuilt += "\\";
+          argStarted = true;
           break;
         }
       }
-      case `" during IN_DOUBLE_STRING`: {
-        if (prevChar === "\\") {
-          argBeingBuilt += `"`;
-        } else {
-          // in order to support string gluing
-          if (nextChar !== `'` && nextChar !== `"`) {
-            result.push(argBeingBuilt);
-            argBeingBuilt = "";
-          }
-          mode = "DEFAULT";
-        }
-        break;
-      }
+      case `" during IN_DOUBLE_STRING`:
       case `' during IN_SINGLE_STRING`: {
-        if (prevChar === "\\") {
-          argBeingBuilt += `'`;
-        } else {
-          // in order to support string gluing
-          if (nextChar !== `'` && nextChar !== `"`) {
-            result.push(argBeingBuilt);
-            argBeingBuilt = "";
-          }
-          mode = "DEFAULT";
-        }
+        mode = "DEFAULT";
         break;
       }
       case `\\ during IN_DOUBLE_STRING`:
@@ -101,10 +86,13 @@ export function toArgv(
           v: "\v",
           "0": String.fromCharCode(0),
           "\\": "\\",
+          '"': '"',
+          "'": "'",
         };
 
         if (escapedChars[nextChar]) {
           argBeingBuilt += escapedChars[nextChar];
+          argStarted = true;
           i++; // skip next char
         } else {
           // They used backslash to escape something but it wasn't an escape sequence.
@@ -115,11 +103,12 @@ export function toArgv(
       }
       default: {
         argBeingBuilt += char;
+        argStarted = true;
       }
     }
   }
 
-  if (mode === "DEFAULT" && argBeingBuilt.length > 0) {
+  if (mode === "DEFAULT" && argStarted) {
     result.push(argBeingBuilt);
   } else if (mode === "IN_DOUBLE_STRING") {
     throw new Error(
