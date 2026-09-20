@@ -11,9 +11,14 @@ import { types } from "../types";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 import { quote } from "../strings";
 
+// "!(" opens an extglob group, so only a bare leading "!" negates.
+function isNegated(pattern: string): boolean {
+  return pattern.startsWith("!") && !pattern.startsWith("!(");
+}
+
 function compile(pattern: string, startingDir: string) {
   let prefix = "";
-  if (pattern.startsWith("!")) {
+  if (isNegated(pattern)) {
     prefix = "!";
     pattern = pattern.slice(1);
   }
@@ -88,6 +93,12 @@ export function glob(
 
   const patternsArray = Array.isArray(patterns) ? patterns : [patterns];
   info(`glob: expanding ${JSON.stringify(patternsArray)}`);
+
+  // Patterns are ANDed together, and every() is vacuously true for an empty
+  // list, which would otherwise match the entire tree.
+  if (patternsArray.length === 0) {
+    return [];
+  }
 
   if (is(dir, types.Path)) {
     dir = dir.toString();
@@ -175,7 +186,7 @@ export function glob(
   const startingDir = normDir.toString();
   const allPatterns = patternsArray.map((pattern) => {
     return {
-      negated: pattern.startsWith("!"),
+      negated: isNegated(pattern),
       pattern,
       matcher: compile(pattern, startingDir),
     };
