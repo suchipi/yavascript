@@ -13,7 +13,7 @@ import {
   UnwrapTypeFromCoerceableOrValidator,
   types,
 } from "../types";
-import { red, bold } from "../strings";
+import { red as redText, bold as boldText } from "../strings";
 // not using normal Path here to avoid creating a dependency cycle
 import { Path as NicePath } from "nice-path";
 
@@ -39,6 +39,11 @@ function assert<ValueType>(
   if (value) return;
 
   let errMsg = message || "Assertion failed";
+
+  // The message ends up in an Error that normally gets printed to stderr.
+  const useColors = hasColors(std.err);
+  const red = useColors ? redText : (str: string) => str;
+  const bold = useColors ? boldText : (str: string) => str;
 
   try {
     const [callerFrame] = engine.getStackFrames(1);
@@ -89,7 +94,7 @@ function assert<ValueType>(
               fileContent.slice(0, lastLine.offset + lastLine.text.length),
               { jsx: !langHasAngleBracketAssertions(lang) },
             );
-            const colors = makeColors(hasColors());
+            const colors = makeColors(useColors);
 
             locPreview = linesAround
               .map(
