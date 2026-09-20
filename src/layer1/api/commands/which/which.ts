@@ -1,6 +1,6 @@
 import { env } from "../../env";
 import { Path } from "../../path";
-import { exists, isExecutable } from "../../filesystem";
+import { isExecutable, isFile } from "../../filesystem";
 import { assert } from "../../assert";
 import { types } from "../../types";
 import { is } from "../../is";
@@ -81,7 +81,7 @@ export function which(
     for (const potentialPath of potentialPaths) {
       trace(`which: Checking for ${quote(potentialPath)}`);
 
-      if (exists(potentialPath) && isExecutable(potentialPath)) {
+      if (isFile(potentialPath) && isExecutable(potentialPath)) {
         trace(`which: Found ${quote(binaryName)} at ${quote(potentialPath)}!`);
         return potentialPath;
       }
