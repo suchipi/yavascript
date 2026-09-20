@@ -13,6 +13,7 @@ import { mkdir } from "../commands/mkdir";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 import { pwd } from "../commands/pwd";
 import { exists } from "./exists";
+import { isLink } from "./isLink";
 
 const noop = () => {};
 
@@ -121,9 +122,14 @@ function copyDirTo(
   mkdir(to, { recursive: true, logging: { info: noop } });
 
   for (const child of ls(from)) {
+    const childPath = child.toString();
     const target = new Path(to, basename(child)).toString();
-    if (_getPathInfo(child.toString()) === "dir") {
-      copyDirTo(child.toString(), target, options, trace);
+
+    if (isLink(childPath)) {
+      trace("recreating symlink", target);
+      os.symlink(os.readlink(childPath), target);
+    } else if (_getPathInfo(childPath) === "dir") {
+      copyDirTo(childPath, target, options, trace);
     } else {
       copy(child, target, options);
     }
