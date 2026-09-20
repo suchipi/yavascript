@@ -1,6 +1,6 @@
 import * as os from "quickjs:os";
 import minimatch from "minimatch";
-import { exists } from "../filesystem";
+import { exists, isDir } from "../filesystem";
 import { pwd } from "../commands/pwd";
 import { Path } from "../path";
 import { makeErrorWithProperties } from "../../error-with-properties";
@@ -46,7 +46,7 @@ export type GlobOptions = {
   };
 };
 
-const HAS_GLOB_METACHARS_RE = /[*{}]|\+\(|^!/;
+const HAS_GLOB_METACHARS_RE = /[*?{}\[\]]|[+@!?]\(|^!/;
 
 export function glob(
   patterns: string | Array<string>,
@@ -157,6 +157,12 @@ export function glob(
       );
     } else {
       dir = Path.fromRaw(commonParentDirParts).normalize();
+
+      // The literal part of a pattern can name a file rather than a directory,
+      // eg. an absolute path with no wildcards in it at all.
+      if (exists(dir) && !isDir(dir)) {
+        dir = dir.dirname();
+      }
 
       trace(
         `inferred starting dir from absolute pattern(s): ${dir.toString()}`,
