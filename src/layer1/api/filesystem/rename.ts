@@ -17,8 +17,10 @@ export function rename(from: string | Path, to: string | Path): void {
     "'to' argument must be either a string or a Path object",
   );
 
-  from = Path.normalize(from).toString();
-  to = Path.normalize(to).toString();
+  // Normalizing here would resolve ".." lexically, which doesn't match how
+  // the kernel resolves it when a symlink is involved.
+  from = from.toString();
+  to = to.toString();
 
   from = appendSlashIfWindowsDriveLetter(from);
   to = appendSlashIfWindowsDriveLetter(to);
