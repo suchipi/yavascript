@@ -33,6 +33,7 @@ export function inspectManyToParts(args: Array<any>): Array<string> {
 }
 
 export function inspectManyToFile(args: Array<any>, file: FILE): void {
+  const options = inspectOptions.forPrint(file);
   for (let i = 0; i < args.length; i++) {
     if (i !== 0) {
       file.puts(" ");
@@ -44,7 +45,7 @@ export function inspectManyToFile(args: Array<any>, file: FILE): void {
       str = arg;
     } else {
       try {
-        str = inspect(arg, inspectOptions.forPrint());
+        str = inspect(arg, options);
       } catch (err) {
         try {
           std.err.puts((err as any).message + "\n");

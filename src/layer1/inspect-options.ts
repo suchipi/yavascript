@@ -1,7 +1,7 @@
-let hasColors: () => boolean;
+let hasColors: (file?: FILE) => boolean;
 
 // defer check for `yavascript` global until first time `hasColors` is called
-const __hasColorsInitialValue = (): boolean => {
+const __hasColorsInitialValue = (file?: FILE): boolean => {
   // @ts-ignore checking global that isn't in project types
   if (typeof yavascript !== "undefined") {
     hasColors = (require("./has-colors") as typeof import("./has-colors"))
@@ -10,15 +10,15 @@ const __hasColorsInitialValue = (): boolean => {
     hasColors = () => require("kleur").enabled;
   }
 
-  return hasColors();
+  return hasColors(file);
 };
 
 hasColors = __hasColorsInitialValue;
 
-export const forPrint: () => InspectOptions = () => ({
+export const forPrint: (file?: FILE) => InspectOptions = (file) => ({
   maxDepth: 8,
   noAmp: true,
-  colours: hasColors(),
+  colours: hasColors(file),
   indent: "  ",
   noSource: true,
 });
