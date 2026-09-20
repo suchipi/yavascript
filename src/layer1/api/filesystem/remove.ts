@@ -5,6 +5,7 @@ import { types } from "../types";
 import { assert } from "../assert";
 import { appendSlashIfWindowsDriveLetter } from "../path/_win32Helpers";
 import { isDir } from "./isDir";
+import { isLink } from "./isLink";
 
 export function remove(path: string | Path): void {
   assert.type(
@@ -19,7 +20,9 @@ export function remove(path: string | Path): void {
 
   path = appendSlashIfWindowsDriveLetter(path);
 
-  if (isDir(path)) {
+  // isDir follows symlinks, so without the isLink check a link to a directory
+  // would get its target emptied instead of just being unlinked.
+  if (!isLink(path) && isDir(path)) {
     const children = os
       .readdir(path)
       .filter((child) => child !== "." && child !== "..")
