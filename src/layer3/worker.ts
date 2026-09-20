@@ -27,9 +27,7 @@ export class Worker extends os.Worker {
 
     let absoluteModulePath: Path;
     if (Path.isAbsolute(requestedModulePath)) {
-      absoluteModulePath = Path.isPath(requestedModulePath)
-        ? requestedModulePath
-        : new Path(requestedModulePath);
+      absoluteModulePath = new Path(requestedModulePath);
     } else if (hasOverrideCode) {
       // With overrideCode the name is only a label, so it must not have to
       // resolve to a file that exists.

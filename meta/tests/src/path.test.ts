@@ -407,16 +407,13 @@ test("printing of empty Path object", async () => {
     { cwd: rootDir() },
   );
   expect(result).toMatchInlineSnapshot(`
-   {
-     "code": 0,
-     "error": null,
-     "stderr": "",
-     "stdout": "Path {
-     segments: []
-     separator: "/"
-   }
-   ",
-   }
+    {
+      "code": 0,
+      "error": null,
+      "stderr": "",
+      "stdout": "Path { . }
+    ",
+    }
   `);
 });
 
@@ -813,26 +810,20 @@ test("Path.equals", async () => {
 
   const result = await evaluate(script);
   expect(result).toMatchInlineSnapshot(`
-   {
-     "code": 0,
-     "error": null,
-     "stderr": "",
-     "stdout": "Path {
-     segments: []
-     separator: "/"
-   } Path {
-     segments: []
-     separator: "/"
-   } equals true
-   Path { / } Path { / } equals true
-   Path { /abc/d } Path { /abc/d } equals true
-   Path { /abc/d } Path { abc/d } equals false
-   Path { abc/d } Path { abc/d } equals true
-   Path { /123/4 } Path { abc/d } equals false
-   Path { \\a\\b\\c } Path { /a/b/c } equals false
-   Path { a\\b\\c } Path { a/b/c } equals false
-   ",
-   }
+    {
+      "code": 0,
+      "error": null,
+      "stderr": "",
+      "stdout": "Path { . } Path { . } equals true
+    Path { . } Path { . } equals true
+    Path { /abc/d } Path { /abc/d } equals true
+    Path { /abc/d } Path { abc/d } equals false
+    Path { abc/d } Path { abc/d } equals true
+    Path { /123/4 } Path { abc/d } equals false
+    Path { \\a\\b\\c } Path { /a/b/c } equals false
+    Path { a\\b\\c } Path { a/b/c } equals false
+    ",
+    }
   `);
 });
 
@@ -856,26 +847,20 @@ test("Path.hasEqualSegments", async () => {
 
   const result = await evaluate(script);
   expect(result).toMatchInlineSnapshot(`
-   {
-     "code": 0,
-     "error": null,
-     "stderr": "",
-     "stdout": "Path {
-     segments: []
-     separator: "/"
-   } Path {
-     segments: []
-     separator: "/"
-   } hasEqualSegments true
-   Path { / } Path { / } hasEqualSegments true
-   Path { /abc/d } Path { /abc/d } hasEqualSegments true
-   Path { /abc/d } Path { abc/d } hasEqualSegments false
-   Path { abc/d } Path { abc/d } hasEqualSegments true
-   Path { /123/4 } Path { abc/d } hasEqualSegments false
-   Path { \\a\\b\\c } Path { /a/b/c } hasEqualSegments true
-   Path { a\\b\\c } Path { a/b/c } hasEqualSegments true
-   ",
-   }
+    {
+      "code": 0,
+      "error": null,
+      "stderr": "",
+      "stdout": "Path { . } Path { . } hasEqualSegments true
+    Path { . } Path { . } hasEqualSegments true
+    Path { /abc/d } Path { /abc/d } hasEqualSegments true
+    Path { /abc/d } Path { abc/d } hasEqualSegments false
+    Path { abc/d } Path { abc/d } hasEqualSegments true
+    Path { /123/4 } Path { abc/d } hasEqualSegments false
+    Path { \\a\\b\\c } Path { /a/b/c } hasEqualSegments true
+    Path { a\\b\\c } Path { a/b/c } hasEqualSegments true
+    ",
+    }
   `);
 });
 
@@ -893,7 +878,7 @@ test(
     expect(result).toMatchObject({
       code: 0,
       stderr: "",
-      stdout: `[".",".",""]\n`,
+      stdout: `[".",".","."]\n`,
     });
   },
   HANG_TEST_TIMEOUT,
