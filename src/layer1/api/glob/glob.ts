@@ -16,25 +16,55 @@ function isNegated(pattern: string): boolean {
   return pattern.startsWith("!") && !pattern.startsWith("!(");
 }
 
+// Minimatch reads these as syntax, so a real directory name containing one has
+// to be escaped before it becomes part of a pattern.
+function escapeGlobMetachars(text: string): string {
+  return text.replace(/[*?[\]{}()!+@\\]/g, "\\$&");
+}
+
 function compile(pattern: string, startingDir: string) {
-  let prefix = "";
-  if (isNegated(pattern)) {
-    prefix = "!";
-    pattern = pattern.slice(1);
+  const negated = isNegated(pattern);
+  let body = negated ? pattern.slice(1) : pattern;
+
+  const dirOnly = body.endsWith("/");
+  if (dirOnly) {
+    body = body.slice(0, -1);
   }
 
-  const normalized =
-    prefix +
-    (Path.isAbsolute(pattern)
-      ? pattern
-      : Path.normalize(startingDir, "./" + pattern));
+  let base = startingDir;
+  let text: string;
 
-  const matcher = new minimatch.Minimatch(normalized);
+  if (Path.isAbsolute(body)) {
+    text = body;
+  } else {
+    // Only the leading segments without wildcards get resolved against the
+    // starting dir. Everything from the first wildcard on is left exactly as
+    // written, so escapes and separators keep their meaning.
+    const segments = body.split("/");
+    let splitAt = 0;
+    while (
+      splitAt < segments.length &&
+      !HAS_GLOB_METACHARS_RE.test(segments[splitAt])
+    ) {
+      splitAt++;
+    }
+
+    const literal = segments.slice(0, splitAt);
+    const rest = segments.slice(splitAt);
+
+    base = Path.normalize([startingDir, ...literal].join("/")).toString();
+    text = escapeGlobMetachars(base);
+    if (rest.length > 0) {
+      text += "/" + rest.join("/");
+    }
+  }
+
+  const matcher = new minimatch.Minimatch((negated ? "!" : "") + text);
   if (!matcher.makeRe()) {
     throw makeErrorWithProperties("Invalid glob pattern", { pattern });
   }
 
-  return matcher;
+  return { matcher, dirOnly, base };
 }
 
 export type GlobOptions = {
@@ -194,9 +224,19 @@ export function glob(
     return {
       negated: isNegated(pattern),
       pattern,
-      matcher: compile(pattern, startingDir),
+      ...compile(pattern, startingDir),
     };
   });
+
+  // A pattern that climbs out of the starting dir with ".." has to be searched
+  // from wherever it lands, not from the starting dir.
+  let traversalRoot = new Path(startingDir);
+  for (const { base } of allPatterns) {
+    const basePath = new Path(base);
+    if (traversalRoot.startsWith(basePath)) {
+      traversalRoot = basePath;
+    }
+  }
 
   const negatedPatterns = allPatterns.filter(({ negated }) => negated);
   const nonNegatedPatterns = allPatterns.filter(({ negated }) => !negated);
@@ -234,8 +274,11 @@ export function glob(
         }
 
         if (
-          allPatterns.every(({ pattern, negated, matcher }) => {
+          allPatterns.every(({ pattern, negated, matcher, dirOnly }) => {
             let didMatch = matcher.match(fullName);
+            if (didMatch && dirOnly && !(os.S_IFDIR & stat.mode)) {
+              didMatch = false;
+            }
 
             trace(
               "match info:",
@@ -304,7 +347,7 @@ export function glob(
     }
   }
 
-  find(startingDir);
+  find(traversalRoot.toString());
 
   return matches.map((str) => new Path(str));
 }
