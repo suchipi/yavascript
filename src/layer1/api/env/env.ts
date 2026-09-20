@@ -6,7 +6,8 @@ const _env = std.getenviron();
 export const env = new Proxy(_env, {
   get(target, property, receiver) {
     if (typeof property === "symbol") return undefined;
-    return std.getenv(property) || undefined;
+    // An empty string is a set variable, so it must not collapse to undefined.
+    return std.getenv(property) ?? undefined;
   },
 
   set(target, property, value, receiver) {
