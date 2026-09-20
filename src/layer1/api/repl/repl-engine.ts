@@ -211,6 +211,16 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
       0,
       termReadBuf.length,
     );
+
+    // A closed stdin stays readable forever, so leaving the handler installed
+    // spins the process at 100% CPU instead of ending the session.
+    if (bytesRead === 0) {
+      stop();
+      std.puts("\n");
+      onQuit();
+      return;
+    }
+
     for (let idx = 0; idx < bytesRead; idx++) {
       handleByte(termReadBuf[idx]);
     }
