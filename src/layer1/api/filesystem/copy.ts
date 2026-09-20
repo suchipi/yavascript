@@ -192,11 +192,11 @@ export function copy(
       );
     }
     case "file -> dir": {
-      // Copy file into dir
+      // Copy file into dir, going back through copy so that an existing
+      // dir/<name> gets the same whenTargetExists handling as file -> file.
       const filename = basename(from);
       const target = new Path(to, filename).toString();
-      info(`copy: ${formatPath(from)} -> ${formatPath(target)}`);
-      copyRaw(from, target, trace);
+      copy(from, target, options);
       return;
     }
     case "file -> nonexistent": {
