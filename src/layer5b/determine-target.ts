@@ -123,7 +123,7 @@ export default function determineTarget(
       break;
     }
 
-    if (arg === "-e" || arg === "--eval") {
+    if (!hasFoundFileFromArgs && (arg === "-e" || arg === "--eval")) {
       if (nextArg == null) {
         return {
           target: "invalid",
