@@ -65,4 +65,7 @@ export const makeInspectLog =
   (...args: Array<any>) => {
     inspectManyToFile(args, file);
     file.puts("\n");
+    // stdout is block-buffered when it isn't a terminal, so without this the
+    // line lands after anything a child process or stderr writes next.
+    file.flush();
   };
