@@ -851,8 +851,18 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
   }
 
   function readlineHandleCmd(line: string | null) {
-    handleAcceptedLine(line);
-    cmdReadlineStart();
+    try {
+      handleAcceptedLine(line);
+    } catch (err) {
+      // Without this the prompt never comes back and the failed line stays in
+      // the buffer, so the next line the user types is appended to it.
+      const printError = (
+        require("../../print-error") as typeof import("../../print-error")
+      ).default;
+      printError(err, std.err);
+    } finally {
+      cmdReadlineStart();
+    }
   }
 
   function handleAcceptedLine(line: string | null) {
