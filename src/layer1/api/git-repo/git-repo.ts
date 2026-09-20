@@ -6,6 +6,22 @@ import { Path } from "../path";
 import { assert } from "../assert";
 import { makeErrorWithProperties } from "../../error-with-properties";
 import { quote } from "../strings";
+import { env } from "../env";
+
+// git exports these to hooks, so a yavascript hook that inspects some other
+// repo would otherwise have every command here report on the hook's repo.
+function envWithoutGitVars(): { [key: string]: string } {
+  const result: { [key: string]: string } = {};
+  for (const [key, value] of Object.entries({ ...env })) {
+    if (typeof value === "string") result[key] = value;
+  }
+  delete result.GIT_DIR;
+  delete result.GIT_WORK_TREE;
+  delete result.GIT_INDEX_FILE;
+  delete result.GIT_COMMON_DIR;
+  delete result.GIT_OBJECT_DIRECTORY;
+  return result;
+}
 
 export class GitRepo {
   repoDir: Path;
@@ -31,7 +47,7 @@ export class GitRepo {
 
     while (currentPath.segments.length > 0) {
       const potentialPath = currentPath.concat(".git");
-      if (exists(potentialPath) && isDir(potentialPath)) {
+      if (exists(potentialPath)) {
         return currentPath;
       }
 
@@ -82,6 +98,7 @@ export class GitRepo {
     const repoDir = this.repoDir.toString();
 
     const result = exec(["git", "rev-parse", "HEAD"], {
+      env: envWithoutGitVars(),
       failOnNonZeroStatus: false,
       captureOutput: true,
       cwd: repoDir,
@@ -103,6 +120,7 @@ export class GitRepo {
     const repoDir = this.repoDir.toString();
 
     const result = exec(["git", "rev-parse", "--abbrev-ref", "HEAD"], {
+      env: envWithoutGitVars(),
       failOnNonZeroStatus: false,
       captureOutput: true,
       cwd: repoDir,
@@ -132,6 +150,7 @@ export class GitRepo {
     const repoDir = this.repoDir.toString();
 
     const result = exec(["git", "diff", "--quiet"], {
+      env: envWithoutGitVars(),
       failOnNonZeroStatus: false,
       captureOutput: true,
       cwd: repoDir,
@@ -188,6 +207,7 @@ export class GitRepo {
     }
 
     const result = exec(["git", "check-ignore", resolvedPath], {
+      env: envWithoutGitVars(),
       failOnNonZeroStatus: false,
       captureOutput: true,
       cwd: this.repoDir.toString(),
