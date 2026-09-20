@@ -16,6 +16,20 @@ export class Context extends QuickJsContext {
       yavascriptGlobals?: boolean;
     },
   ) {
+    // Checked before the context exists: the layer 1 bytecode needs these, and
+    // failing partway through loading it leaves objects the runtime asserts on
+    // when it shuts down.
+    if (options != null && options.yavascriptGlobals !== false) {
+      const required = ["date", "promise", "moduleGlobals"] as const;
+      for (const option of required) {
+        if (options[option] === false) {
+          throw new Error(
+            `The '${option}' option can't be disabled unless 'yavascriptGlobals' is also false, because the yavascript globals are built using it.`,
+          );
+        }
+      }
+    }
+
     super(options);
 
     if (options?.yavascriptGlobals !== false) {
