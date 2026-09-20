@@ -41,6 +41,7 @@ function copyRaw(
   let fdsToCloseLater: Record<string, number> = {};
 
   let fromStats: os.Stats | null = null;
+  let copySucceeded = false;
 
   try {
     trace("opening", from, "(mode: rb)");
@@ -66,6 +67,7 @@ function copyRaw(
 
     const bufferSize = 16 * 1024 * 1024; // 16MB
     fromFile.writeTo(toFile, bufferSize);
+    copySucceeded = true;
   } catch (err) {
     trace("copyRaw failed:", { from, to, err });
     throw err;
@@ -91,17 +93,17 @@ function copyRaw(
       // ignored
     }
 
-    if (fromStats != null) {
+    if (copySucceeded && fromStats != null) {
       try {
         // TODO: birth time, too. need crtime bindings from quickjs to do that
         os.utimes(to, fromStats.atime, fromStats.mtime);
       } catch (err) {
+        // Throwing here would replace whatever the copy itself threw.
         trace("copyRaw failed to set access and modification times:", {
           from,
           to,
           err,
         });
-        throw err;
       }
     }
   }
