@@ -1,0 +1,79 @@
+diff --git a/node_modules/clef-parse/dist/convert-case.js b/node_modules/clef-parse/dist/convert-case.js
+index a9ed156..54dba2a 100644
+--- a/node_modules/clef-parse/dist/convert-case.js
++++ b/node_modules/clef-parse/dist/convert-case.js
+@@ -4,12 +4,14 @@ exports.convertToCamelCase = convertToCamelCase;
+ function convertToCamelCase(input) {
+     const parts = input
+         .replace(/^-{1,2}/, "")
+-        .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
+-        .replace(/([A-Z]+)([A-Z][a-z])/g, "$1_$2")
+-        .split(/\b|_/g)
++        .replace(/([\p{Ll}\p{N}])([\p{Lu}])/gu, "$1_$2")
++        .replace(/([\p{Lu}]+)([\p{Lu}][\p{Ll}])/gu, "$1_$2")
++        .split(/[^\p{L}\p{N}]+/u)
+         .map((part) => part.toLowerCase())
+-        .filter((part) => /[A-Za-z0-9]/.test(part));
+-    const [first, ...rest] = parts.filter(Boolean);
++        .filter(Boolean);
++    const [first, ...rest] = parts;
++    if (first == null)
++        return "";
+     const mappedParts = [
+         first,
+         ...rest.map((part) => part[0].toUpperCase() + part.slice(1)),
+diff --git a/node_modules/clef-parse/dist/index.js b/node_modules/clef-parse/dist/index.js
+index 46e17fa..d62f568 100644
+--- a/node_modules/clef-parse/dist/index.js
++++ b/node_modules/clef-parse/dist/index.js
+@@ -13,11 +13,21 @@ exports.arrayOfStrings = Symbol("arrayOfStrings");
+ exports.arrayOfBooleans = Symbol("arrayOfBooleans");
+ exports.arrayOfNumbers = Symbol("arrayOfNumbers");
+ exports.arrayOfPaths = Symbol("arrayOfPaths");
+-function bestGuess(nextValue) {
++const NEGATIVE_NUMBER_RE = /^-(\d+(\.\d+)?|\.\d+)$/;
++function isFlag(item) {
++    if (!item.startsWith("-"))
++        return false;
++    if (item === "-")
++        return false;
++    if (NEGATIVE_NUMBER_RE.test(item))
++        return false;
++    return true;
++}
++function bestGuess(nextValue, valueIsLiteral) {
+     if (nextValue === "true" || nextValue === "false") {
+         return Boolean;
+     }
+-    else if (nextValue == null || nextValue.startsWith("-")) {
++    else if (nextValue == null || (!valueIsLiteral && isFlag(nextValue))) {
+         return Boolean;
+     }
+     else if (nextValue === String(Number(nextValue))) {
+@@ -85,7 +95,7 @@ function hintToArrayHint(hint) {
+ }
+ function countFlagUsages(argv) {
+     const propertyNamesAndDoubleDash = argv
+-        .filter((item) => item.startsWith("-"))
++        .filter(isFlag)
+         .map((item) => {
+         if (item === "--") {
+             return "--";
+@@ -136,7 +146,7 @@ function parseArgv(argv = process.argv.slice(2), hints = {}, { isAbsolute = path
+             positionalArgs.push(item);
+             continue;
+         }
+-        if (item.startsWith("-")) {
++        if (isFlag(item)) {
+             let propertyName;
+             let rightHandValue;
+             let valueComesFromNextArg;
+@@ -158,7 +168,7 @@ function parseArgv(argv = process.argv.slice(2), hints = {}, { isAbsolute = path
+             let propertyValue;
+             let propertyHint = hints[propertyName];
+             if (propertyHint == null) {
+-                propertyHint = bestGuess(rightHandValue);
++                propertyHint = bestGuess(rightHandValue, !valueComesFromNextArg);
+                 if (usages[propertyName] > 1) {
+                     propertyHint = hintToArrayHint(propertyHint);
+                 }

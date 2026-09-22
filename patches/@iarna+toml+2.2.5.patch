@@ -1,0 +1,23 @@
+diff --git a/node_modules/@iarna/toml/lib/toml-parser.js b/node_modules/@iarna/toml/lib/toml-parser.js
+index ebcaec8..367a702 100755
+--- a/node_modules/@iarna/toml/lib/toml-parser.js
++++ b/node_modules/@iarna/toml/lib/toml-parser.js
+@@ -191,6 +191,9 @@ class BoxedBigInt {
+       /* istanbul ignore next */
+       this.value = null
+     }
++    if (this.value !== null && this.value !== global.BigInt(value)) {
++      throw new TomlError('Integer exceeds the range of a signed 64-bit integer')
++    }
+     Object.defineProperty(this, _type, {value: INTEGER})
+   }
+   isNaN () {
+@@ -1140,7 +1143,7 @@ function makeParserClass (Parser) {
+         this.state.buf = ''
+         this.next(this.parseOnlyTimeFraction)
+       } else {
+-        return this.return(createTime(this.state.result))
++        return this.returnNow(createTime(this.state.result))
+       }
+     }
+     parseOnlyTimeFraction () {

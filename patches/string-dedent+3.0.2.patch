@@ -1,0 +1,26 @@
+diff --git a/node_modules/string-dedent/dist/dedent.mjs b/node_modules/string-dedent/dist/dedent.mjs
+index a2a4c60..e6bd9c3 100644
+--- a/node_modules/string-dedent/dist/dedent.mjs
++++ b/node_modules/string-dedent/dist/dedent.mjs
+@@ -236,7 +236,7 @@ function isDigit(str, index) {
+     return c >= zero && c <= nine;
+ }
+ function parseHex(str, index, end) {
+-    if (end >= str.length)
++    if (end > str.length)
+         return -1;
+     let n = 0;
+     for (; index < end; index++) {
+diff --git a/node_modules/string-dedent/dist/dedent.umd.js b/node_modules/string-dedent/dist/dedent.umd.js
+index 9134da1..22b7572 100644
+--- a/node_modules/string-dedent/dist/dedent.umd.js
++++ b/node_modules/string-dedent/dist/dedent.umd.js
+@@ -242,7 +242,7 @@
+         return c >= zero && c <= nine;
+     }
+     function parseHex(str, index, end) {
+-        if (end >= str.length)
++        if (end > str.length)
+             return -1;
+         let n = 0;
+         for (; index < end; index++) {
