@@ -27,7 +27,9 @@ export class Worker extends os.Worker {
 
     let absoluteModulePath: Path;
     if (Path.isAbsolute(requestedModulePath)) {
-      absoluteModulePath = new Path(requestedModulePath);
+      absoluteModulePath = Path.isPath(requestedModulePath)
+        ? requestedModulePath
+        : new Path(requestedModulePath);
     } else if (hasOverrideCode) {
       absoluteModulePath = new Path(engine.getFileNameFromStack(1))
         .dirname()
