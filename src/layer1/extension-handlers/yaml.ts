@@ -1,6 +1,6 @@
 import { ModuleDelegate } from "quickjs:engine";
 
-// Parsed when the module runs, not at compile time; see the note in toml.ts.
+// Parsed at module run time instead of module compile time
 const compiler = (filename: string, content: string) =>
   `const data = YAML.parse(${JSON.stringify(content)});
 export default data;

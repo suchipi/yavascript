@@ -212,9 +212,8 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
       termReadBuf.length,
     );
 
-    // A closed stdin stays readable forever, so leaving the handler installed
-    // spins the process at 100% CPU instead of ending the session.
     if (bytesRead === 0) {
+      // stdin closed
       stop();
       std.puts("\n");
       onQuit();
@@ -854,8 +853,6 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
     try {
       handleAcceptedLine(line);
     } catch (err) {
-      // Without this the prompt never comes back and the failed line stays in
-      // the buffer, so the next line the user types is appended to it.
       const printError = (
         require("../../print-error") as typeof import("../../print-error")
       ).default;

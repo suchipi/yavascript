@@ -138,8 +138,6 @@ export function installModuleHooks() {
     throw makeErrorWithProperties(
       `Couldn't resolve module '${name}' from '${fromFile}'`,
       {
-        // Not "name": that's the Error's own, and setting it makes the error
-        // print as "<specifier>: Couldn't resolve module ...".
         moduleName: name,
         fromFile,
       },

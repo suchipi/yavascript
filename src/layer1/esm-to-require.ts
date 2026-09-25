@@ -83,14 +83,11 @@ function transformStatement(line: string): string {
 }
 
 export function transform(input: string): string {
-  // Replaced where each statement sits, so the rest of the input survives.
   return input.replace(anyImportStmt, (...args) => {
     const match = args[0] as string;
     const offset = args[args.length - 2] as number;
     const transformed = transformStatement(match);
 
-    // A replacement starting with "(" would otherwise be read as a call on
-    // whatever the previous line evaluated to.
     const needsSeparator =
       /\S/.test(input.slice(0, offset)) && transformed.trimStart().startsWith("(");
 

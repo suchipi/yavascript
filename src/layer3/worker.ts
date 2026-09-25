@@ -29,8 +29,6 @@ export class Worker extends os.Worker {
     if (Path.isAbsolute(requestedModulePath)) {
       absoluteModulePath = new Path(requestedModulePath);
     } else if (hasOverrideCode) {
-      // With overrideCode the name is only a label, so it must not have to
-      // resolve to a file that exists.
       absoluteModulePath = new Path(engine.getFileNameFromStack(1))
         .dirname()
         .concat(requestedModulePath.toString());

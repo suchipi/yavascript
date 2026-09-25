@@ -17,8 +17,6 @@ export function rename(from: string | Path, to: string | Path): void {
     "'to' argument must be either a string or a Path object",
   );
 
-  // Normalizing would resolve ".." lexically, making rename act on a
-  // different file than every other path-taking function here.
   from = from.toString();
   to = to.toString();
 
