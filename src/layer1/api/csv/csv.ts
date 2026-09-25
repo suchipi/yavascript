@@ -6,9 +6,17 @@ export const CSV = {
   parse(input: string): Array<Array<string>> {
     assert.type(input, types.string, "'input' argument must be a string");
 
+    if (input === "") {
+      return [];
+    }
+
+    // The text after the final line terminator is reported as a row, which for
+    // a file ending in one is not a record.
+    const source = input.replace(/(\r\n|\n|\r)$/, "");
+
     // Without a fixed delimiter Papa guesses one, which splits on ";" or tab
     // and reports UndetectableDelimiter as an error on ordinary 2-column data.
-    const { data, errors } = Papa.parse(input, {
+    const { data, errors } = Papa.parse(source, {
       header: false,
       delimiter: ",",
     });
@@ -33,25 +41,7 @@ export const CSV = {
       throw new Error(message);
     }
 
-    const rows = data as Array<Array<string>>;
-
-    if (input === "") {
-      return [];
-    }
-
-    // The text after the final line terminator is reported as a row, which for
-    // a file ending in one is not a record.
-    const lastRow = rows[rows.length - 1];
-    if (
-      /(\r\n|\n|\r)$/.test(input) &&
-      lastRow != null &&
-      lastRow.length === 1 &&
-      lastRow[0] === ""
-    ) {
-      return rows.slice(0, -1);
-    }
-
-    return rows;
+    return data as Array<Array<string>>;
   },
   stringify(input: Array<Array<string>>): string {
     assert.type(
