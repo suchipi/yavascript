@@ -16,7 +16,6 @@ import { install as installPromiseMap } from "./promise-map";
 import { installModuleHooks } from "../module-hooks";
 import { installNodeCompat } from "./node-compat/node-compat";
 import { patchRequire } from "../cjs-interop";
-import { installCallbackFailureHandling } from "../fail-on-callback-throw";
 
 const quickjsBuiltinsProps = makeGetterPropertyDescriptorMap({
   std: () => require("quickjs:std"),
@@ -235,8 +234,6 @@ export default function installApi(target: typeof globalThis) {
 
   installGrepToStringProto(target.String.prototype);
   installGrepToArrayProto(target.Array.prototype);
-
-  installCallbackFailureHandling(target);
 
   installStringDedent(target.String);
   installPromiseMap(target.Promise);
