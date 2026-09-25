@@ -8,12 +8,12 @@ let runInWorkerDynamicFilenamePart = 0;
 const activeWorkers = new Set<Worker>();
 
 // The engine's structured clone refuses an Error ("unsupported object class:
-// ERROR"), so a failure that can't be cloned crosses as a description instead.
+// ERROR"), so a failure that can't be cloned crosses as a plain object of the
+// same shape.
 type FailureDescription = {
-  name: string | null;
-  message: string | null;
-  stack: string | null;
-  text: string;
+  name: string;
+  message: string;
+  stack?: string;
 };
 
 // Method shorthand (`foo() {}`) only parses inside an object literal, so it
@@ -32,8 +32,8 @@ function sourceAsExpression(fn: Function): string {
 }
 
 function failureToError(description: FailureDescription): Error {
-  const err = new Error(description.message ?? description.text);
-  if (description.name != null) err.name = description.name;
+  const err = new Error(description.message);
+  err.name = description.name;
   if (description.stack != null) err.stack = description.stack;
   return err;
 }
@@ -56,12 +56,14 @@ export function runInWorker<
     overrideCode: `
       (async () => {
         const post = (message) => Worker.parent.postMessage(message);
-        const describe = (err) => ({
-          name: err != null && err.name != null ? String(err.name) : null,
-          message: err != null && err.message != null ? String(err.message) : null,
-          stack: err != null && err.stack != null ? String(err.stack) : null,
-          text: String(err),
-        });
+        const describe = (err) => {
+          const description = {
+            name: err != null && err.name != null ? String(err.name) : "Error",
+            message: err != null && err.message != null ? String(err.message) : String(err),
+          };
+          if (err != null && err.stack != null) description.stack = String(err.stack);
+          return description;
+        };
         const fail = (err) => {
           try {
             post({ type: "reject", cloned: true, value: err });
