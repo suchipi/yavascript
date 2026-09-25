@@ -65,67 +65,8 @@ export function patchRequire(theGlobal: typeof globalThis) {
 }
 
 const CJS_RE = /exports\.\w|module\.exports|Object\.defineProperty\(exports/;
-
-// Wrapping a file declares `exports` and `module` around it, which collides
-// with a file that declares either itself.
-const OWN_BINDING_RE =
-  /(?:^|[;{}()\s])(?:const|let|var|function|class)\s+(?:exports|module)\b/;
-
-// Comments and string literals are dropped first so that merely mentioning
-// module.exports in prose doesn't make a file CommonJS. Regex literals aren't
-// tracked, which at worst leaves a quote character in the scrubbed text.
-function withoutCommentsAndStrings(code: string): string {
-  let out = "";
-  let index = 0;
-
-  while (index < code.length) {
-    const char = code[index];
-    const next = code[index + 1];
-
-    if (char === "/" && next === "/") {
-      while (index < code.length && code[index] !== "\n") index++;
-      continue;
-    }
-
-    if (char === "/" && next === "*") {
-      index += 2;
-      while (
-        index < code.length &&
-        !(code[index] === "*" && code[index + 1] === "/")
-      ) {
-        index++;
-      }
-      index += 2;
-      continue;
-    }
-
-    if (char === '"' || char === "'" || char === "`") {
-      index++;
-      while (index < code.length) {
-        if (code[index] === "\\") {
-          index += 2;
-          continue;
-        }
-        if (code[index] === char) {
-          index++;
-          break;
-        }
-        index++;
-      }
-      continue;
-    }
-
-    out += char;
-    index++;
-  }
-
-  return out;
-}
-
 export function looksLikeCommonJS(code: string): boolean {
-  const scrubbed = withoutCommentsAndStrings(code);
-  if (OWN_BINDING_RE.test(scrubbed)) return false;
-  return CJS_RE.test(scrubbed);
+  return CJS_RE.test(code);
 }
 
 const cjsPreamble = `
