@@ -10,10 +10,17 @@ export const __isCjsModule = true;
 export const __cjsExports = data;
 `;
 
-ModuleDelegate.compilers[".json"] = (filename: string, content: string) => {
+const compiler = (filename: string, content: string) => {
   // Note: JSON files are loaded as JSON5
   const data = std.parseExtJSON(content);
   return template(data);
 };
-ModuleDelegate.compilers[".json5"] = ModuleDelegate.compilers[".json"];
-// QuickJS already registers import attributes versions
+
+ModuleDelegate.compilers[".json"] = compiler;
+ModuleDelegate.compilers[".json5"] = compiler;
+
+// The engine registers these too, but its versions emit only a default
+// export, which require() can't tell apart from an ES module that happens to
+// have one.
+ModuleDelegate.compilers["json"] = compiler;
+ModuleDelegate.compilers["json5"] = compiler;

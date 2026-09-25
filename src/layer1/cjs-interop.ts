@@ -45,14 +45,6 @@ export function patchRequire(theGlobal: typeof globalThis) {
       return exps.__moduleExports;
     }
 
-    // A loader that emits only a default export (the engine's own "json" one,
-    // for instance) should require() to the same value the .json extension
-    // loader gives, rather than a namespace wrapping it.
-    const names = Object.keys(exps);
-    if (names.length === 1 && names[0] === "default") {
-      return exps.default;
-    }
-
     return exps;
   };
 

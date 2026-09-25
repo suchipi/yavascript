@@ -90,3 +90,32 @@ describe("wrapping code for CommonJS interop", () => {
     `);
   });
 });
+
+describe("require of an ES module", () => {
+  test("a module whose only export is default requires to the namespace", async () => {
+    const result = await evaluate(`
+      const mod = require("./meta/tests/fixtures/repl-imports/only-default-esm.js");
+      console.log(JSON.stringify({
+        keys: Object.keys(mod),
+        default: mod.default,
+      }));
+    `);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: `{"keys":["default"],"default":{"iAm":"the default export"}}\n`,
+    });
+  });
+
+  test("a JSON file required through an import attribute gives the parsed data", async () => {
+    const result = await evaluate(`
+      const data = require("./meta/tests/fixtures/repl-imports/data.json", { type: "json" });
+      console.log(JSON.stringify(data));
+    `);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: `{"a":1,"b":[1,2]}\n`,
+    });
+  });
+});
