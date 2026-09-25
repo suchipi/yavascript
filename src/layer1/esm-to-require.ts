@@ -23,9 +23,10 @@ const nsImportStmt = new RegExp(stmt(nsImport), "m");
 const namedImportStmt = new RegExp(stmt(namedImport), "m");
 
 // require() already unwraps CommonJS, JSON, YAML and TOML modules to their
-// exported value, which has no "default" to read.
+// exported value, which has no "default" to read - and may have a "default"
+// key of its own that isn't one.
 const defaultOf = (source: string) =>
-  `((m) => (m != null && typeof m === "object" && "default" in m ? m.default : m))(require(${source}))`;
+  `((m) => (require("quickjs:engine").isModuleNamespace(m) ? m.default : m))(require(${source}))`;
 
 const wsAsWs = /\sas\s/;
 

@@ -1639,6 +1639,18 @@ describe("repl imports", () => {
     expect(session.result().stdout).toContain(`{"a":1,"b":[1,2]}`);
   });
 
+  test('a default import of a JSON file with a "default" key gives the whole object', async () => {
+    const session = await startReplSession();
+    await session.line(
+      `import data from "./meta/tests/fixtures/repl-imports/has-default-key.json"`,
+    );
+    await session.line(`console.log(JSON.stringify(data))`);
+    await session.exit();
+    expect(session.result().stdout).toContain(
+      `{"default":"not-the-default-export","other":1}`,
+    );
+  });
+
   test("a default import of a CommonJS file gives module.exports", async () => {
     const session = await startReplSession();
     await session.line(
