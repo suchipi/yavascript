@@ -7,6 +7,8 @@ let runInWorkerDynamicFilenamePart = 0;
 // Need to prevent worker GC until it's all done.
 const activeWorkers = new Set<Worker>();
 
+// The engine's structured clone refuses an Error ("unsupported object class:
+// ERROR"), so a failure that can't be cloned crosses as a description instead.
 type FailureDescription = {
   name: string | null;
   message: string | null;
@@ -50,8 +52,7 @@ export function runInWorker<
 
   const worker = new Worker(workerFilename, {
     // The call is inside the try so that a synchronous throw is reported the
-    // same way a rejection is, and failures are posted as a plain description
-    // when the value itself can't be cloned out of the worker.
+    // same way a rejection is.
     overrideCode: `
       (async () => {
         const post = (message) => Worker.parent.postMessage(message);
