@@ -1,0 +1,8 @@
+positive_infinity: .inf
+negative_infinity: -.inf
+not_a_number: .nan
+big_integer: 9007199254740993
+a_set: !!set
+  ? one
+  ? two
+when: 1979-05-27T07:32:00Z

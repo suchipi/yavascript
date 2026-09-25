@@ -275,3 +275,43 @@ test("yaml", async () => {
    }
   `);
 });
+
+// Embedding the parsed data at compile time would route it through JSON,
+// which can't carry any of these.
+test("toml - Infinity, NaN, BigInt and Date survive the import", async () => {
+  const result = await runYavascript([
+    fixturesDir("load-toml-special-values.js"),
+  ]);
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+    stdout:
+      JSON.stringify({
+        positive_infinity: true,
+        negative_infinity: true,
+        not_a_number: true,
+        big_integer: "bigint 9007199254740993",
+        when: "1979-05-27T07:32:00.000Z",
+      }) + "\n",
+  });
+});
+
+test("yaml - Infinity, NaN and Sets survive the import", async () => {
+  const result = await runYavascript([
+    fixturesDir("load-yaml-special-values.js"),
+  ]);
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+    stdout:
+      JSON.stringify({
+        positive_infinity: true,
+        negative_infinity: true,
+        not_a_number: true,
+        // the yaml package's core schema has no bigint or timestamp type
+        big_integer: "number 9007199254740992",
+        a_set: "one,two",
+        when: "string 1979-05-27T07:32:00Z",
+      }) + "\n",
+  });
+});
