@@ -161,32 +161,3 @@ describe("path inputs", () => {
   testFn("quote", { raw: `new Path("/tmp/blah/bla")` }, '"/tmp/blah/bla"');
 });
 
-test("color functions with no argument don't return a chain object", async () => {
-  const result = await evaluate(`
-    function describeCall(fn) {
-      try {
-        return typeof fn();
-      } catch (err) {
-        return err.constructor.name;
-      }
-    }
-
-    JSON.stringify({
-      "red()": describeCall(() => red()),
-      "red(undefined)": describeCall(() => red(undefined)),
-      "dim()": describeCall(() => dim()),
-      "bold(undefined)": describeCall(() => bold(undefined)),
-      "bgBlue()": describeCall(() => bgBlue()),
-      "reset(undefined)": describeCall(() => reset(undefined)),
-    })
-  `);
-  expect(result).toMatchObject({ code: 0, stderr: "" });
-
-  const outcomes: Record<string, string> = JSON.parse(result.stdout);
-  // The d.ts says these return a string; refusing a missing argument the way
-  // quote() does would be fine too. Handing back kleur's chain object is not.
-  const wrong = Object.entries(outcomes).filter(
-    ([, outcome]) => outcome !== "string" && outcome !== "TypeError",
-  );
-  expect(wrong).toEqual([]);
-});

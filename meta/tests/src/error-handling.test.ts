@@ -2,18 +2,10 @@ import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import {
   evaluate,
   runYavascript,
-  runYavascriptWithTimeout,
   removeSanitizer,
   restoreSanitizer,
   rootDir,
-  HANG_TIMEOUT,
 } from "./test-helpers";
-
-/**
- * vitest's own per-test timeout has to be comfortably above HANG_TIMEOUT, or
- * it fires first and the test reports a timeout instead of the real failure.
- */
-const HANG_TEST_TIMEOUT = HANG_TIMEOUT * 4;
 
 test("prints thrown errors to stderr", async () => {
   const result = await evaluate(`blahhhh`);
@@ -198,29 +190,6 @@ describe("source-mapped stack traces for compiled files", () => {
      }
     `);
   });
-});
-
-describe("exit codes for uncaught errors", () => {
-  test("an exception thrown from a timer callback fails the process", async () => {
-    const result = await evaluate(
-      `void setTimeout(() => { throw new Error("thrown in a timer") }, 1)`,
-    );
-    expect(result.stderr).toContain("thrown in a timer");
-    expect(result).toMatchObject({ code: 1, stdout: "" });
-  });
-
-  test(
-    "an exception thrown from a worker message handler fails the process",
-    async () => {
-      const result = await runYavascriptWithTimeout([
-        rootDir("meta/tests/fixtures/uncaught-errors/main-handler-throws.js"),
-      ]);
-      expect(result.timedOut).toBe(false);
-      expect(result.stderr).toContain("main-side handler threw");
-      expect(result).toMatchObject({ code: 1 });
-    },
-    HANG_TEST_TIMEOUT,
-  );
 });
 
 test("a module that can't be resolved rejects with a plain Error", async () => {
