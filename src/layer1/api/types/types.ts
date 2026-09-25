@@ -1,7 +1,6 @@
 import * as std from "quickjs:std";
 import { TypeValidator, $BasicTypes, $TypeConstructors } from "pheno";
-import phenoCoerce, { $CoercingTypeConstructors } from "pheno/coerce";
-import { instanceOf } from "pheno";
+import coerce, { $CoercingTypeConstructors } from "pheno/coerce";
 import { Path } from "../path";
 import { JSX } from "../jsx";
 
@@ -1371,133 +1370,11 @@ type types = {
   };
 };
 
-// pheno decides whether a function is a class by looking for "class " in its
-// source, which never matches here: compiling to bytecode drops function
-// bodies, so even a real class stringifies as "function X() { [native code] }".
-// Only a constructor has a prototype, and pheno's own validators are arrows,
-// so that is the distinction used instead.
-const coerce: typeof phenoCoerce = ((type: any) => {
-  if (Array.isArray(type)) {
-    if (type.length === 1) return arrayOf(type[0]);
-    if (type.length > 1) return tuple(...type);
-  }
-
-  if (isPlainObject(type)) {
-    return objectWithProperties(type);
-  }
-
-  if (typeof type === "function") {
-    // Arrows, methods and bound functions can't construct, so they're
-    // validators no matter what their source text happens to contain.
-    if (type.prototype == null) {
-      return type;
-    }
-
-    const asBuiltinType = phenoCoerce(type);
-    return asBuiltinType === type ? instanceOf(type) : asBuiltinType;
-  }
-
-  return phenoCoerce(type);
-}) as any;
-
-
-const hasHole = (value: Array<unknown>): boolean => {
-  for (let i = 0; i < value.length; i++) {
-    if (!Object.prototype.hasOwnProperty.call(value, i)) return true;
-  }
-  return false;
-};
-
-const isPlainObject = (value: any): boolean => {
-  if (typeof value !== "object" || value === null) return false;
-  const proto = Object.getPrototypeOf(value);
-  return proto === Object.prototype || proto === null;
-};
-
-const named = <T extends Function>(validator: T, name: string): T => {
-  Object.defineProperty(validator, "name", { value: name, configurable: true });
-  return validator;
-};
-
-// Reflect.ownKeys rather than Object.entries, which drops symbol keys.
-const coerceShape = (shape: any): Array<[PropertyKey, TypeValidator<any>]> =>
-  Reflect.ownKeys(shape).map((key) => [key, coerce(shape[key])]);
-
-const objectWithProperties = (shape: any) =>
-  named((value: any) => {
-    if (typeof value !== "object" || value === null) return false;
-    return coerceShape(shape).every(([key, check]) => check(value[key]));
-  }, "objectWithProperties");
-
-const objectWithOnlyTheseProperties = (shape: any) =>
-  named((value: any) => {
-    if (typeof value !== "object" || value === null) return false;
-    const allowed = new Set<PropertyKey>(Reflect.ownKeys(shape));
-    for (const key of Reflect.ownKeys(value)) {
-      if (!allowed.has(key)) return false;
-    }
-    return coerceShape(shape).every(([key, check]) => check(value[key]));
-  }, "objectWithOnlyTheseProperties");
-
-const partialObjectWithProperties = (shape: any) =>
-  named((value: any) => {
-    if (typeof value !== "object" || value === null) return false;
-    return coerceShape(shape).every(([key, check]) => {
-      const property = value[key];
-      return property == null || check(property);
-    });
-  }, "partialObjectWithProperties");
-
-// every() skips holes, so [1, , 3] passed an arrayOf(number) check.
-const arrayOf = (itemType: any) => {
-  const inner = $CoercingTypeConstructors.arrayOf(itemType);
-  return named(
-    (value: any) => Array.isArray(value) && !hasHole(value) && inner(value),
-    inner.name,
-  );
-};
-
-const tuple = (...itemTypes: Array<any>) => {
-  const inner = ($CoercingTypeConstructors as any).tuple(...itemTypes);
-  return named(
-    (value: any) => Array.isArray(value) && !hasHole(value) && inner(value),
-    inner.name,
-  );
-};
-
-// Own keys are always strings or symbols, so a Number key type never matched
-// anything until the numeric form is offered too.
-const record = (keyType: any, valueType: any) => {
-  const checkKey = coerce(keyType);
-  const checkValue = coerce(valueType);
-  return named((value: any) => {
-    if (typeof value !== "object" || value === null) return false;
-    for (const key of Reflect.ownKeys(value)) {
-      const asNumber = typeof key === "string" ? Number(key) : NaN;
-      const keyMatches =
-        checkKey(key) ||
-        (typeof key === "string" &&
-          String(asNumber) === key &&
-          checkKey(asNumber));
-      if (!keyMatches) return false;
-      if (!checkValue(value[key])) return false;
-    }
-    return true;
-  }, "record");
-};
-
 export const types: types = Object.assign(Object.create(null), {
   ...$BasicTypes,
   ...$TypeConstructors,
   ...$CoercingTypeConstructors,
   coerce,
-  arrayOf,
-  tuple,
-  record,
-  mappingObjectOf: record,
-  objectWithProperties,
-  objectWithOnlyTheseProperties,
-  partialObjectWithProperties,
 
   FILE(value: any): value is FILE {
     return std.isFILE(value);

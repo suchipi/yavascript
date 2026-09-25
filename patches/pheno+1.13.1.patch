@@ -1,0 +1,173 @@
+diff --git a/node_modules/pheno/dist/cjs/coerce/coerce.js b/node_modules/pheno/dist/cjs/coerce/coerce.js
+index 8ba0345..f94a36e 100644
+--- a/node_modules/pheno/dist/cjs/coerce/coerce.js
++++ b/node_modules/pheno/dist/cjs/coerce/coerce.js
+@@ -36,6 +36,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.$CoercingTypeConstructors = exports.PHENO_COERCE_OVERRIDE = void 0;
+ const t = __importStar(require("../index.js"));
+ exports.PHENO_COERCE_OVERRIDE = Symbol("PHENO_COERCE_OVERRIDE");
++// Object.entries drops symbol keys, so a shape keyed by one checked nothing.
++const allEntries = (target) => Reflect.ownKeys(target).map((key) => [key, target[key]]);
+ const coerce = (value) => {
+     if ((typeof value === "object" && value !== null) ||
+         typeof value === "function") {
+@@ -95,7 +97,7 @@ const coerce = (value) => {
+         }
+     }
+     else if (t.object(value)) {
+-        return t.objectWithProperties(Object.fromEntries(Object.entries(value).map(([key, value]) => {
++        return t.objectWithProperties(Object.fromEntries(allEntries(value).map(([key, value]) => {
+             return [key, coerce(value)];
+         })));
+     }
+@@ -213,11 +215,11 @@ const _coercingTypeConstructors = {
+     mapOf: (k, v) => t.mapOf(coerce(k), coerce(v)),
+     setOf: (type) => t.setOf(coerce(type)),
+     maybe: (type) => t.maybe(coerce(type)),
+-    objectWithProperties: (properties) => t.objectWithProperties(Object.fromEntries(Object.entries(properties).map(([k, v]) => [k, coerce(v)]))),
+-    objectWithOnlyTheseProperties: (properties) => t.objectWithOnlyTheseProperties(Object.fromEntries(Object.entries(properties).map(([k, v]) => [k, coerce(v)]))),
++    objectWithProperties: (properties) => t.objectWithProperties(Object.fromEntries(allEntries(properties).map(([k, v]) => [k, coerce(v)]))),
++    objectWithOnlyTheseProperties: (properties) => t.objectWithOnlyTheseProperties(Object.fromEntries(allEntries(properties).map(([k, v]) => [k, coerce(v)]))),
+     mappingObjectOf: (k, v) => t.mappingObjectOf(coerce(k), coerce(v)),
+     record: (k, v) => t.record(coerce(k), coerce(v)),
+-    partialObjectWithProperties: (properties) => t.partialObjectWithProperties(Object.fromEntries(Object.entries(properties).map(([k, v]) => [k, coerce(v)]))),
++    partialObjectWithProperties: (properties) => t.partialObjectWithProperties(Object.fromEntries(allEntries(properties).map(([k, v]) => [k, coerce(v)]))),
+     tuple: (...args) => t.tuple(
+     // @ts-ignore spread in tuple position
+     ...args.map(coerce)),
+diff --git a/node_modules/pheno/dist/cjs/type-constructors.js b/node_modules/pheno/dist/cjs/type-constructors.js
+index 1dedd92..2163ea7 100644
+--- a/node_modules/pheno/dist/cjs/type-constructors.js
++++ b/node_modules/pheno/dist/cjs/type-constructors.js
+@@ -61,9 +61,27 @@ function objectStr(obj) {
+         .map(([key, value]) => `${typeof key === "string" ? key : `[${String(key)}]`}: ${value}`)
+         .join(", ")} }`;
+ }
++// every() skips holes, so [1, , 3] passed an arrayOf(number) check.
++const hasHole = (target) => {
++    for (let i = 0; i < target.length; i++) {
++        if (!(0, utils_js_1.hasOwn)(target, i))
++            return true;
++    }
++    return false;
++};
++// Own keys are always strings or symbols, so a Number key type never matched
++// anything until the numeric form is offered too.
++const keyMatches = (keyType, key) => {
++    if (keyType(key))
++        return true;
++    if (typeof key !== "string")
++        return false;
++    const asNumber = Number(key);
++    return String(asNumber) === key && keyType(asNumber);
++};
+ function arrayOf(typeValidator) {
+     (0, api_functions_js_1.assertType)(typeValidator, basicTypes.anyTypeValidator);
+-    const ret = (target) => basicTypes.arrayOfAny(target) && target.every(typeValidator);
++    const ret = (target) => basicTypes.arrayOfAny(target) && !hasHole(target) && target.every(typeValidator);
+     (0, utils_js_1.setName)(ret, `arrayOf(${typeValidator.name})`);
+     ret._inner = typeValidator;
+     return ret;
+@@ -225,7 +243,7 @@ function mappingObjectOf(keyType, valueType) {
+     (0, api_functions_js_1.assertType)(keyType, basicTypes.anyTypeValidator);
+     (0, api_functions_js_1.assertType)(valueType, basicTypes.anyTypeValidator);
+     const ret = (target) => basicTypes.anyObject(target) &&
+-        (0, utils_js_1.allEntries)(target).every(([key, value]) => keyType(key) && valueType(value));
++        (0, utils_js_1.allEntries)(target).every(([key, value]) => keyMatches(keyType, key) && valueType(value));
+     (0, utils_js_1.setName)(ret, `mappingObjectOf(${keyType.name}, ${valueType.name})`);
+     ret._inner = [keyType, valueType];
+     return ret;
+@@ -274,6 +292,7 @@ const tuple = (...args) => {
+     (0, api_functions_js_1.assertType)(args, arrayOfTypeValidator);
+     const ret = (target) => basicTypes.anyArray(target) &&
+         target.length === args.length &&
++        !hasHole(target) &&
+         target.every((item, index) => {
+             return args[index](item);
+         });
+diff --git a/node_modules/pheno/dist/esm/coerce/coerce.js b/node_modules/pheno/dist/esm/coerce/coerce.js
+index e792ac8..0de24ed 100644
+--- a/node_modules/pheno/dist/esm/coerce/coerce.js
++++ b/node_modules/pheno/dist/esm/coerce/coerce.js
+@@ -1,5 +1,7 @@
+ import * as t from "../index.js";
+ export const PHENO_COERCE_OVERRIDE = Symbol("PHENO_COERCE_OVERRIDE");
++// Object.entries drops symbol keys, so a shape keyed by one checked nothing.
++const allEntries = (target) => Reflect.ownKeys(target).map((key) => [key, target[key]]);
+ const coerce = (value) => {
+     if ((typeof value === "object" && value !== null) ||
+         typeof value === "function") {
+@@ -59,7 +61,7 @@ const coerce = (value) => {
+         }
+     }
+     else if (t.object(value)) {
+-        return t.objectWithProperties(Object.fromEntries(Object.entries(value).map(([key, value]) => {
++        return t.objectWithProperties(Object.fromEntries(allEntries(value).map(([key, value]) => {
+             return [key, coerce(value)];
+         })));
+     }
+@@ -177,11 +179,11 @@ const _coercingTypeConstructors = {
+     mapOf: (k, v) => t.mapOf(coerce(k), coerce(v)),
+     setOf: (type) => t.setOf(coerce(type)),
+     maybe: (type) => t.maybe(coerce(type)),
+-    objectWithProperties: (properties) => t.objectWithProperties(Object.fromEntries(Object.entries(properties).map(([k, v]) => [k, coerce(v)]))),
+-    objectWithOnlyTheseProperties: (properties) => t.objectWithOnlyTheseProperties(Object.fromEntries(Object.entries(properties).map(([k, v]) => [k, coerce(v)]))),
++    objectWithProperties: (properties) => t.objectWithProperties(Object.fromEntries(allEntries(properties).map(([k, v]) => [k, coerce(v)]))),
++    objectWithOnlyTheseProperties: (properties) => t.objectWithOnlyTheseProperties(Object.fromEntries(allEntries(properties).map(([k, v]) => [k, coerce(v)]))),
+     mappingObjectOf: (k, v) => t.mappingObjectOf(coerce(k), coerce(v)),
+     record: (k, v) => t.record(coerce(k), coerce(v)),
+-    partialObjectWithProperties: (properties) => t.partialObjectWithProperties(Object.fromEntries(Object.entries(properties).map(([k, v]) => [k, coerce(v)]))),
++    partialObjectWithProperties: (properties) => t.partialObjectWithProperties(Object.fromEntries(allEntries(properties).map(([k, v]) => [k, coerce(v)]))),
+     tuple: (...args) => t.tuple(
+     // @ts-ignore spread in tuple position
+     ...args.map(coerce)),
+diff --git a/node_modules/pheno/dist/esm/type-constructors.js b/node_modules/pheno/dist/esm/type-constructors.js
+index 209bbd7..727139d 100644
+--- a/node_modules/pheno/dist/esm/type-constructors.js
++++ b/node_modules/pheno/dist/esm/type-constructors.js
+@@ -6,9 +6,27 @@ export function objectStr(obj) {
+         .map(([key, value]) => `${typeof key === "string" ? key : `[${String(key)}]`}: ${value}`)
+         .join(", ")} }`;
+ }
++// every() skips holes, so [1, , 3] passed an arrayOf(number) check.
++const hasHole = (target) => {
++    for (let i = 0; i < target.length; i++) {
++        if (!hasOwn(target, i))
++            return true;
++    }
++    return false;
++};
++// Own keys are always strings or symbols, so a Number key type never matched
++// anything until the numeric form is offered too.
++const keyMatches = (keyType, key) => {
++    if (keyType(key))
++        return true;
++    if (typeof key !== "string")
++        return false;
++    const asNumber = Number(key);
++    return String(asNumber) === key && keyType(asNumber);
++};
+ export function arrayOf(typeValidator) {
+     assertType(typeValidator, basicTypes.anyTypeValidator);
+-    const ret = (target) => basicTypes.arrayOfAny(target) && target.every(typeValidator);
++    const ret = (target) => basicTypes.arrayOfAny(target) && !hasHole(target) && target.every(typeValidator);
+     setName(ret, `arrayOf(${typeValidator.name})`);
+     ret._inner = typeValidator;
+     return ret;
+@@ -168,7 +186,7 @@ export function mappingObjectOf(keyType, valueType) {
+     assertType(keyType, basicTypes.anyTypeValidator);
+     assertType(valueType, basicTypes.anyTypeValidator);
+     const ret = (target) => basicTypes.anyObject(target) &&
+-        allEntries(target).every(([key, value]) => keyType(key) && valueType(value));
++        allEntries(target).every(([key, value]) => keyMatches(keyType, key) && valueType(value));
+     setName(ret, `mappingObjectOf(${keyType.name}, ${valueType.name})`);
+     ret._inner = [keyType, valueType];
+     return ret;
+@@ -217,6 +235,7 @@ export const tuple = (...args) => {
+     assertType(args, arrayOfTypeValidator);
+     const ret = (target) => basicTypes.anyArray(target) &&
+         target.length === args.length &&
++        !hasHole(target) &&
+         target.every((item, index) => {
+             return args[index](item);
+         });
