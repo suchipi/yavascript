@@ -2,7 +2,7 @@ import * as std from "quickjs:std";
 import * as os from "quickjs:os";
 
 // See https://bixense.com/clicolors/
-export function hasColors(file: FILE = std.out): boolean {
+export function hasColors(file: FILE): boolean {
   const CLICOLOR = std.getenv("CLICOLOR");
   const CLICOLOR_FORCE = std.getenv("CLICOLOR_FORCE");
 

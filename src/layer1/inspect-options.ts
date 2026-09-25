@@ -4,8 +4,10 @@ let hasColors: (file?: FILE) => boolean;
 const __hasColorsInitialValue = (file?: FILE): boolean => {
   // @ts-ignore checking global that isn't in project types
   if (typeof yavascript !== "undefined") {
-    hasColors = (require("./has-colors") as typeof import("./has-colors"))
+    const std = require("quickjs:std") as typeof import("quickjs:std");
+    const impl = (require("./has-colors") as typeof import("./has-colors"))
       .hasColors;
+    hasColors = (file?: FILE) => impl(file ?? std.out);
   } else {
     hasColors = () => require("kleur").enabled;
   }

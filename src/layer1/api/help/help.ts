@@ -1,3 +1,4 @@
+import * as std from "quickjs:std";
 import { hasColors } from "../../has-colors";
 import { blue, underline } from "../strings";
 import { yavascript } from "../yavascript";
@@ -23,7 +24,7 @@ export function help() {
     url = docsUrlForRef("main");
   }
 
-  if (hasColors()) {
+  if (hasColors(std.out)) {
     url = underline(blue(url));
   }
   console.log("\nPlease see: " + url + "\n");

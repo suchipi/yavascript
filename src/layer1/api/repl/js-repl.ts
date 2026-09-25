@@ -25,9 +25,6 @@ export function startRepl(lang: string) {
   const compiler = langToCompiler(lang);
   const colorizeOptions = { jsx: !langHasAngleBracketAssertions(lang) };
   const compileLine = (line: string): string => {
-    // Rewritten before compiling: sucrase's TypeScript transform drops an
-    // import whose bindings aren't used in the same input, which at a prompt
-    // is every import, leaving nothing to rewrite afterwards.
     return compiler(esmToRequire.transform(line));
   };
 
@@ -35,7 +32,7 @@ export function startRepl(lang: string) {
   const Date = globalThis.Date;
   const Math = globalThis.Math;
 
-  const showColors = hasColors();
+  const showColors = hasColors(std.out);
   const colors = makeColors(showColors);
 
   let showTime = false;

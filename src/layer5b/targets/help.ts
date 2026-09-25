@@ -102,7 +102,7 @@ For more info, see: ${cyan(
   )}.
 `;
 
-  if (hasColors()) {
+  if (hasColors(std.out)) {
     std.out.puts(helpText);
   } else {
     std.out.puts(stripAnsi(helpText));
