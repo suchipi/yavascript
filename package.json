@@ -47,7 +47,7 @@
   },
   "scripts": {
     "build": "meta/build.sh",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package --patch-dir meta/patches",
     "test": "cd meta/tests && npm run test --",
     "typecheck": "tsc --noEmit"
   },
