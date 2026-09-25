@@ -1,0 +1,148 @@
+diff --git a/node_modules/nice-path/dist/index.js b/node_modules/nice-path/dist/index.js
+index 49ba195..be0f5a2 100644
+--- a/node_modules/nice-path/dist/index.js
++++ b/node_modules/nice-path/dist/index.js
+@@ -73,7 +73,10 @@ class Path {
+     }
+     /** Create a new Path object using the provided input(s). */
+     constructor(...inputs) {
++        // An empty input contributes a root segment, which would make
++        // `new Path("", "etc")` absolute.
+         const parts = inputs
++            .filter((input) => input !== "")
+             .flat(1)
+             .map((part) => (typeof part === "string" ? part : part.segments))
+             .flat(1);
+@@ -117,40 +120,40 @@ class Path {
+      * Resolve all non-leading `.` and `..` segments in this path.
+      */
+     normalize() {
+-        // we clone this cause we're gonna mutate it
+-        const segments = [...this.segments];
+-        const newSegments = [];
+-        function isNewSegmentsEmptyExcludingDots() {
+-            return (newSegments.filter((segment) => segment !== "." && segment !== "..")
+-                .length === 0);
+-        }
+-        let currentSegment;
+-        while (segments.length > 0) {
+-            currentSegment = segments.shift();
+-            switch (currentSegment) {
+-                case ".": {
+-                    if (isNewSegmentsEmptyExcludingDots()) {
+-                        newSegments.push(currentSegment);
+-                    }
+-                    break;
++        const segments = this.segments;
++        const isAbsolute = segments[0] === "";
++        const bodyStart = isAbsolute ? 1 : 0;
++        const newSegments = isAbsolute ? [""] : [];
++        for (let i = bodyStart; i < segments.length; i++) {
++            const segment = segments[i];
++            if (segment === "")
++                continue;
++            if (segment === ".") {
++                if (newSegments.length === bodyStart)
++                    newSegments.push(".");
++                continue;
++            }
++            if (segment === "..") {
++                const last = newSegments.length > bodyStart
++                    ? newSegments[newSegments.length - 1]
++                    : undefined;
++                if (last === ".") {
++                    newSegments.pop();
++                    newSegments.push("..");
+                 }
+-                case "..": {
+-                    if (isNewSegmentsEmptyExcludingDots()) {
+-                        newSegments.push(currentSegment);
+-                    }
+-                    else {
+-                        newSegments.pop();
+-                    }
+-                    break;
++                else if (last != null && last !== "..") {
++                    newSegments.pop();
+                 }
+-                default: {
+-                    if (currentSegment != null) {
+-                        newSegments.push(currentSegment);
+-                    }
+-                    break;
++                else if (!isAbsolute) {
++                    // ".." above the root is still the root, but a relative path keeps it
++                    newSegments.push("..");
+                 }
++                continue;
+             }
++            newSegments.push(segment);
+         }
++        if (!isAbsolute && newSegments.length === 0)
++            newSegments.push(".");
+         return this.constructor.fromRaw(newSegments, this.separator);
+     }
+     /**
+@@ -211,7 +214,11 @@ class Path {
+         }
+         const ownSegments = [...this.segments];
+         const dirSegments = [...dir.segments];
+-        while (ownSegments[0] === dirSegments[0]) {
++        // Guarding on length as well: once both run out, comparing undefined to
++        // undefined is true forever.
++        while (ownSegments.length > 0 &&
++            dirSegments.length > 0 &&
++            ownSegments[0] === dirSegments[0]) {
+             ownSegments.shift();
+             dirSegments.shift();
+         }
+@@ -232,6 +239,10 @@ class Path {
+      * Turn this path into a string by joining its segments using its separator.
+      */
+     toString() {
++        // Nothing joined to nothing is the current directory, not the root.
++        if (this.segments.length === 0) {
++            return ".";
++        }
+         let result = this.segments.join(this.separator);
+         if (result == "") {
+             return "/";
+@@ -384,21 +395,27 @@ class Path {
+      * @param replacement - What it should be replaced with
+      */
+     replaceAll(value, replacement) {
+-        replacement = new this.constructor(replacement);
+-        let searchIndex = 0;
+-        let currentPath = this;
+-        const ownLength = this.segments.length;
+-        while (searchIndex < ownLength) {
+-            const matchingIndex = this.indexOf(value, searchIndex);
+-            if (matchingIndex === -1) {
+-                break;
++        const target = new this.constructor(value).segments;
++        const replacementSegments = new this.constructor(replacement).segments;
++        const own = this.segments;
++        const out = [];
++        // Walking once, so a replacement is never rescanned and a shorter one
++        // can't leave the scan position where it started.
++        let index = 0;
++        while (index < own.length) {
++            const matches = target.length > 0 &&
++                index + target.length <= own.length &&
++                target.every((segment, offset) => own[index + offset] === segment);
++            if (matches) {
++                out.push(...replacementSegments);
++                index += target.length;
+             }
+             else {
+-                currentPath = currentPath.replace(value, replacement);
+-                searchIndex = matchingIndex + replacement.segments.length;
++                out.push(own[index]);
++                index++;
+             }
+         }
+-        return currentPath;
++        return this.constructor.from(out, this.separator);
+     }
+     /**
+      * Return a copy of this path but with the final segment replaced with `replacement`

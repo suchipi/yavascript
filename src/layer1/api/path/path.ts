@@ -20,72 +20,6 @@ class Path extends NicePath {
       : [],
   );
 
-  toString(): string {
-    // nice-path renders a path with no segments as "/", but nothing joined to
-    // nothing is the current directory, not the root.
-    if (this.segments.length === 0) return ".";
-    return super.toString();
-  }
-
-  relativeTo(dir: any, options: { noLeadingDot?: boolean } = {}): any {
-    const dirPath = Path.isPath(dir) ? dir : new Path(dir);
-    const ownSegments = [...this.segments];
-    const dirSegments = [...dirPath.segments];
-
-    // Guarding on length as well: once both run out, comparing undefined to
-    // undefined is true forever.
-    while (
-      ownSegments.length > 0 &&
-      dirSegments.length > 0 &&
-      ownSegments[0] === dirSegments[0]
-    ) {
-      ownSegments.shift();
-      dirSegments.shift();
-    }
-
-    const prefix = dirSegments.map(() => "..");
-    const segments = [...prefix, ...ownSegments];
-
-    if (prefix.length === 0 && !options.noLeadingDot) {
-      segments.unshift(".");
-    }
-
-    return Path.from(segments, this.separator) as Path;
-  }
-
-  replaceAll(value: any, replacement: any): any {
-    const target = (Path.isPath(value) ? value : new Path(value)).segments;
-    const replacementSegments = Array.isArray(replacement)
-      ? replacement.flatMap((part: any) =>
-          Path.isPath(part) ? part.segments : Path.splitToSegments(part),
-        )
-      : (Path.isPath(replacement) ? replacement : new Path(replacement))
-          .segments;
-
-    const own = this.segments;
-    const out: Array<string> = [];
-
-    // Walking once, so a replacement is never rescanned and a shorter one
-    // can't leave the scan position where it started.
-    let index = 0;
-    while (index < own.length) {
-      const matches =
-        target.length > 0 &&
-        index + target.length <= own.length &&
-        target.every((segment, offset) => own[index + offset] === segment);
-
-      if (matches) {
-        out.push(...replacementSegments);
-        index += target.length;
-      } else {
-        out.push(own[index]);
-        index++;
-      }
-    }
-
-    return Path.from(out, this.separator) as Path;
-  }
-
   static splitToSegments(inputParts: Array<string> | string): Array<string> {
     assert.type(
       inputParts,
@@ -119,41 +53,7 @@ class Path extends NicePath {
       ),
     );
 
-    const path = new Path(...inputs);
-    const segments = path.segments;
-    const isAbsolute = segments[0] === "";
-    const bodyStart = isAbsolute ? 1 : 0;
-    const out: Array<string> = isAbsolute ? [""] : [];
-
-    for (let i = bodyStart; i < segments.length; i++) {
-      const segment = segments[i];
-      if (segment === "") continue;
-
-      if (segment === ".") {
-        if (out.length === bodyStart) out.push(".");
-        continue;
-      }
-
-      if (segment === "..") {
-        const last = out.length > bodyStart ? out[out.length - 1] : undefined;
-        if (last === ".") {
-          out.pop();
-          out.push("..");
-        } else if (last != null && last !== "..") {
-          out.pop();
-        } else if (!isAbsolute) {
-          // ".." above the root is still the root, but a relative path keeps it
-          out.push("..");
-        }
-        continue;
-      }
-
-      out.push(segment);
-    }
-
-    if (!isAbsolute && out.length === 0) out.push(".");
-
-    return Path.from(out, path.separator) as Path;
+    return super.normalize(...inputs) as Path;
   }
 
   static isAbsolute(path: string | Path): boolean {
@@ -174,9 +74,7 @@ class Path extends NicePath {
       ),
     );
 
-    // An empty input contributes a root segment, which would make
-    // `new Path("", "etc")` absolute.
-    super(...inputs.filter((input) => input !== ""));
+    super(...inputs);
   }
 
   static fromRaw(
