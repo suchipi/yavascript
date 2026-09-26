@@ -762,7 +762,7 @@ test("copy - a failed open isn't masked by a utimes error", async () => {
 // readFile on non-regular files
 // ---------------------------------------------------------------------------
 
-test(
+test.runIf(fs.existsSync("/dev/stdin"))(
   "readFile - string mode reads from a pipe",
   async () => {
     // stdin is a pipe here, so /dev/stdin is not seekable.
