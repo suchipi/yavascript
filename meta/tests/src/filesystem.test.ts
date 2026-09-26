@@ -50,18 +50,20 @@ const fifoWriters: Array<ReturnType<typeof spawnProcess>> = [];
  * until something reads, so it has to be a separate process rather than a
  * node stream (which would tie up a libuv threadpool thread).
  */
-function makeFifo(name: string) {
+function makeFifo(name: string, payload?: string) {
   const fifoPath = scratch(name);
   execFileSync("mkfifo", [fifoPath]);
 
   const writer = spawnProcess(
     "sh",
-    [
-      "-c",
-      `head -c ${FIFO_PAYLOAD_SIZE} /dev/zero | tr '\\0' z > "$1"`,
-      "sh",
-      fifoPath,
-    ],
+    payload == null
+      ? [
+          "-c",
+          `head -c ${FIFO_PAYLOAD_SIZE} /dev/zero | tr '\\0' z > "$1"`,
+          "sh",
+          fifoPath,
+        ]
+      : ["-c", `printf '%s' "$2" > "$1"`, "sh", fifoPath, payload],
     { stdio: "ignore" },
   );
   writer.on("error", () => {});
@@ -762,13 +764,12 @@ test("copy - a failed open isn't masked by a utimes error", async () => {
 // readFile on non-regular files
 // ---------------------------------------------------------------------------
 
-test.runIf(fs.existsSync("/dev/stdin"))(
-  "readFile - string mode reads from a pipe",
+test(
+  "readFile - string mode reads a fifo in full",
   async () => {
-    // stdin is a pipe here, so /dev/stdin is not seekable.
+    const fifo = makeFifo("readfile-string-fifo", "hello from a pipe\n");
     const result = await evaluateWithTimeout(
-      `JSON.stringify(readFile("/dev/stdin"))`,
-      { stdin: "hello from a pipe\n" },
+      `JSON.stringify(readFile(${JSON.stringify(fifo.path)}))`,
     );
     expect(result.timedOut).toBe(false);
     expect(result).toMatchObject({
