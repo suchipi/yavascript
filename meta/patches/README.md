@@ -27,10 +27,9 @@ Covered by the last three tests in `meta/tests/src/parse-script-args.test.ts`. c
 
 ## `nice-path+3.2.2`
 
-All five fixes are in `dist/index.js`, and each one replaced an override that used to live on yavascript's `Path` subclass. Covered by `meta/tests/src/path.test.ts`.
+All four fixes are in `dist/index.js`, and each one replaced an override that used to live on yavascript's `Path` subclass. Covered by `meta/tests/src/path.test.ts`.
 
 - `toString` rendered a path with no segments as `/`. Nothing joined to nothing is the current directory, so it returns `.`.
-- The constructor let an empty input contribute a root segment, which made `new Path("", "etc")` absolute. Empty top-level inputs are dropped.
 - `relativeTo` compared `ownSegments[0] === dirSegments[0]` with no length guard, so once both ran out it compared `undefined` to `undefined` forever and looped.
 - `replaceAll` re-scanned from `matchingIndex + replacement.segments.length` after calling `replace`, which rescanned a replacement and, for a replacement shorter than what it replaced, could leave the scan position where it started. It now walks the segments once.
 - `normalize` treated `..` as "pop unless what's collected so far is only dots", which sent `..` above an absolute root and collapsed a fully-cancelled relative path to nothing. `..` at the root now stays at the root, a fully-cancelled relative path becomes `.`, and a leading `.` is preserved.

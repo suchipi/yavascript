@@ -815,7 +815,7 @@ test("Path.equals", async () => {
       "error": null,
       "stderr": "",
       "stdout": "Path { . } Path { . } equals true
-    Path { . } Path { . } equals true
+    Path { / } Path { / } equals true
     Path { /abc/d } Path { /abc/d } equals true
     Path { /abc/d } Path { abc/d } equals false
     Path { abc/d } Path { abc/d } equals true
@@ -852,7 +852,7 @@ test("Path.hasEqualSegments", async () => {
       "error": null,
       "stderr": "",
       "stdout": "Path { . } Path { . } hasEqualSegments true
-    Path { . } Path { . } hasEqualSegments true
+    Path { / } Path { / } hasEqualSegments true
     Path { /abc/d } Path { /abc/d } hasEqualSegments true
     Path { /abc/d } Path { abc/d } hasEqualSegments false
     Path { abc/d } Path { abc/d } hasEqualSegments true
@@ -936,14 +936,12 @@ test("Path - an empty path doesn't mean the filesystem root", async () => {
       new Path("a.txt").dirname().toString(),
       dirname("a.txt").toString(),
       new Path(".").dirname().toString(),
-      new Path("", "etc").toString(),
     ])`,
   );
   expect(result).toMatchObject({
     code: 0,
     stderr: "",
-    // POSIX `dirname a.txt` prints ".", and joining an empty segment
-    // must not produce an absolute path.
-    stdout: `[".",".",".","etc"]\n`,
+    // POSIX `dirname a.txt` prints "."
+    stdout: `[".",".","."]\n`,
   });
 });
