@@ -1,5 +1,5 @@
 import * as os from "quickjs:os";
-import { Path as NicePath } from "nice-path";
+import { Path as NicePath, PathErrors } from "nice-path";
 import { assert } from "../assert";
 import { types } from "../types";
 import { env } from "../env";
@@ -10,6 +10,8 @@ import { PHENO_COERCE_OVERRIDE } from "pheno/coerce";
 // XP is the same but without ".MSC".
 const windowsDefaultPathExt =
   ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC";
+
+export { PathErrors };
 
 class Path extends NicePath {
   static OS_SEGMENT_SEPARATOR = os.platform === "win32" ? "\\" : "/";
@@ -121,8 +123,8 @@ class Path extends NicePath {
 
     const { colours } = inputs;
 
-    // remove prop lines for segments and separator as we'll print those
-    // in our special way
+    // remove prop lines for normal segments and separator as we'll print
+    // those in our special way
     {
       const segmentsIndex = inputs.propLines.findIndex((line) =>
         line.startsWith(colours.keys + "segments" + colours.off),
@@ -131,10 +133,18 @@ class Path extends NicePath {
         line.startsWith(colours.keys + "separator" + colours.off),
       );
 
-      if (segmentsIndex !== -1) {
+      if (
+        segmentsIndex !== -1 &&
+        Array.isArray(this.segments) &&
+        this.segments.length !== 0
+      ) {
         inputs.propLines[segmentsIndex] = "";
       }
-      if (separatorIndex !== -1) {
+      if (
+        separatorIndex !== -1 &&
+        typeof this.separator === "string" &&
+        this.separator.length === 1
+      ) {
         inputs.propLines[separatorIndex] = "";
       }
 
@@ -143,7 +153,14 @@ class Path extends NicePath {
 
     const hasExtraProps = inputs.propLines.length > 0;
 
-    const printedSelfLine = colours.string + this.toString() + colours.off;
+    let toStringResult: string;
+    try {
+      toStringResult = this.toString();
+    } catch {
+      toStringResult = "<invalid path>";
+    }
+
+    const printedSelfLine = colours.string + toStringResult + colours.off;
     inputs.linesBefore.push(printedSelfLine);
 
     if (
@@ -182,6 +199,14 @@ Path.isAbsolute = Path.isAbsolute.bind(Path);
 Path.isPath = Path.isPath.bind(Path);
 Path.normalize = Path.normalize.bind(Path);
 Path.splitToSegments = Path.splitToSegments.bind(Path);
+// @ts-ignore accessing protected method
+Path._isWin32DriveLetter = Path._isWin32DriveLetter.bind(Path);
+// @ts-ignore accessing protected method
+Path._validateSegments = Path._validateSegments.bind(Path);
+// @ts-ignore accessing protected method
+Path._internalConstructorAllowInvalid =
+  // @ts-ignore accessing protected method
+  Path._internalConstructorAllowInvalid.bind(Path);
 
 // pheno.coerce relies on a function's .toString() returning a value starting
 // with "class" to see that function as a class, and therefore coerce it into

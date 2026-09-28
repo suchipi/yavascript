@@ -368,3 +368,11 @@ declare interface PathRelativeToOptions {
    */
   noLeadingDot?: boolean;
 }
+
+/** Errors which can be thrown by {@link Path}'s methods/constructor. */
+declare namespace PathErrors {
+  export class HolesInSegmentsError extends Error {}
+  export class ZeroSegmentsError extends Error {}
+  export class NormalizeGoingOutsideRootError extends Error {}
+  export class RelativeToSelfError extends Error {}
+}

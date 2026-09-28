@@ -506,3 +506,40 @@ path, if present. Note that a leading `../` will never be omitted.
 ```ts
 noLeadingDot?: boolean;
 ```
+
+## PathErrors (namespace)
+
+Errors which can be thrown by [Path](./path.md#path-class)'s methods/constructor.
+
+```ts
+declare namespace PathErrors {
+  export class HolesInSegmentsError extends Error {}
+  export class ZeroSegmentsError extends Error {}
+  export class NormalizeGoingOutsideRootError extends Error {}
+  export class RelativeToSelfError extends Error {}
+}
+```
+
+### PathErrors.HolesInSegmentsError (exported class)
+
+```ts
+class HolesInSegmentsError extends Error {}
+```
+
+### PathErrors.ZeroSegmentsError (exported class)
+
+```ts
+class ZeroSegmentsError extends Error {}
+```
+
+### PathErrors.NormalizeGoingOutsideRootError (exported class)
+
+```ts
+class NormalizeGoingOutsideRootError extends Error {}
+```
+
+### PathErrors.RelativeToSelfError (exported class)
+
+```ts
+class RelativeToSelfError extends Error {}
+```

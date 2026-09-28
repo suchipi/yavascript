@@ -1,1 +1,1 @@
-export { Path } from "./path";
+export { Path, PathErrors } from "./path";

@@ -399,10 +399,10 @@ test("printing of normal Path object", async () => {
   `);
 });
 
-test("printing of empty Path object", async () => {
+test("printing of zero-segments Path object", async () => {
   const result = await evaluate(
     `
-      new Path()
+      Path._internalConstructorAllowInvalid([])
     `,
     { cwd: rootDir() },
   );
@@ -411,7 +411,11 @@ test("printing of empty Path object", async () => {
       "code": 0,
       "error": null,
       "stderr": "",
-      "stdout": "Path { . }
+      "stdout": "Path {
+      <invalid path>
+      
+      segments: []
+    }
     ",
     }
   `);
@@ -793,7 +797,6 @@ test("Path.clone", async () => {
 test("Path.equals", async () => {
   const script = `
     const pairs = [
-      [new Path(), new Path()],
       [new Path(""), new Path("")],
       [new Path("/abc/d"), new Path("/abc/d")],
       [new Path("/abc/d"), new Path("abc/d")],
@@ -814,8 +817,7 @@ test("Path.equals", async () => {
       "code": 0,
       "error": null,
       "stderr": "",
-      "stdout": "Path { . } Path { . } equals true
-    Path { / } Path { / } equals true
+      "stdout": "Path { / } Path { / } equals true
     Path { /abc/d } Path { /abc/d } equals true
     Path { /abc/d } Path { abc/d } equals false
     Path { abc/d } Path { abc/d } equals true
@@ -830,7 +832,6 @@ test("Path.equals", async () => {
 test("Path.hasEqualSegments", async () => {
   const script = `
     const pairs = [
-      [new Path(), new Path()],
       [new Path(""), new Path("")],
       [new Path("/abc/d"), new Path("/abc/d")],
       [new Path("/abc/d"), new Path("abc/d")],
@@ -851,8 +852,7 @@ test("Path.hasEqualSegments", async () => {
       "code": 0,
       "error": null,
       "stderr": "",
-      "stdout": "Path { . } Path { . } hasEqualSegments true
-    Path { / } Path { / } hasEqualSegments true
+      "stdout": "Path { / } Path { / } hasEqualSegments true
     Path { /abc/d } Path { /abc/d } hasEqualSegments true
     Path { /abc/d } Path { abc/d } hasEqualSegments false
     Path { abc/d } Path { abc/d } hasEqualSegments true
@@ -864,25 +864,28 @@ test("Path.hasEqualSegments", async () => {
   `);
 });
 
-test(
-  "Path.prototype.relativeTo - path equal to dir",
-  async () => {
-    const result = await evaluateWithTimeout(
-      `JSON.stringify([
-      new Path("/a/b").relativeTo("/a/b").toString(),
-      new Path("a").relativeTo("a").toString(),
-      new Path("/a/b").relativeTo("/a/b", { noLeadingDot: true }).toString(),
-    ])`,
-    );
-    expect(result.timedOut).toBe(false);
-    expect(result).toMatchObject({
-      code: 0,
-      stderr: "",
-      stdout: `[".",".","."]\n`,
-    });
-  },
-  HANG_TEST_TIMEOUT,
-);
+test("Path.prototype.relativeTo - path equal to dir throws", async () => {
+  const result = await evaluate(
+    `
+      new Path("/a/b").relativeTo("/a/b")
+    `,
+  );
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": null,
+      "stderr": "PathErrors.RelativeToSelfError: Cannot express the value of a path relative to itself
+      at somewhere
+    {
+      fileName: "yavascript-internals/dist/bundles/layer1.js"
+      lineNumber: <redacted>
+      columnNumber: <redacted>
+    }
+    ",
+      "stdout": "",
+    }
+  `);
+});
 
 test(
   "Path.prototype.replaceAll - empty replacement removes segments",
@@ -917,17 +920,59 @@ test("Path.prototype.replaceAll - replacement longer than the value", async () =
   });
 });
 
-test("Path.normalize - leading .. and fully-cancelling paths", async () => {
+test("Path.normalize - leading .. and fully-cancelling paths throw", async () => {
   const result = await evaluate(
-    `JSON.stringify(["a/..", "a/b/../..", "/a/../../b", "/../x"].map((p) => Path.normalize(p).toString()))`,
+    `
+    for (const input of [
+      "a/..",
+      "a/b/../..",
+      "/a/../../b",
+      "/../x"
+    ]) {
+      try {
+        Path.normalize(input);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  `,
   );
-  expect(result).toMatchObject({
-    code: 0,
-    stderr: "",
-    // A relative path must not normalize into the filesystem root, and an
-    // absolute path must not normalize into a relative one.
-    stdout: `[".",".","/b","/x"]\n`,
-  });
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": null,
+      "stderr": "ZeroSegmentsError {
+      PathErrors.ZeroSegmentsError: 'normalize' is attempting to create a Path with zero segments, which is invalid
+        at somewhere
+      
+      
+      name: "PathErrors.ZeroSegmentsError"
+    }
+    ZeroSegmentsError {
+      PathErrors.ZeroSegmentsError: 'normalize' is attempting to create a Path with zero segments, which is invalid
+        at somewhere
+      
+      
+      name: "PathErrors.ZeroSegmentsError"
+    }
+    NormalizeGoingOutsideRootError {
+      PathErrors.NormalizeGoingOutsideRootError: 'normalize' is attempting to resolve '..' above the root of an absolute path, which isn't supported
+        at somewhere
+      
+      
+      name: "PathErrors.NormalizeGoingOutsideRootError"
+    }
+    NormalizeGoingOutsideRootError {
+      PathErrors.NormalizeGoingOutsideRootError: 'normalize' is attempting to resolve '..' above the root of an absolute path, which isn't supported
+        at somewhere
+      
+      
+      name: "PathErrors.NormalizeGoingOutsideRootError"
+    }
+    ",
+      "stdout": "",
+    }
+  `);
 });
 
 test("Path.normalize - a UNC path keeps its root", async () => {
@@ -941,18 +986,21 @@ test("Path.normalize - a UNC path keeps its root", async () => {
   });
 });
 
-test("Path - an empty path doesn't mean the filesystem root", async () => {
-  const result = await evaluate(
-    `JSON.stringify([
-      new Path("a.txt").dirname().toString(),
-      dirname("a.txt").toString(),
-      new Path(".").dirname().toString(),
-    ])`,
-  );
-  expect(result).toMatchObject({
-    code: 0,
-    stderr: "",
-    // POSIX `dirname a.txt` prints "."
-    stdout: `[".",".","."]\n`,
-  });
+test("Path - an empty path is invalid", async () => {
+  const result = await evaluate(`new Path([])`);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": null,
+      "stderr": "PathErrors.ZeroSegmentsError: Cannot create a Path with zero segments
+      at somewhere
+    {
+      fileName: "yavascript-internals/dist/bundles/layer1.js"
+      lineNumber: <redacted>
+      columnNumber: <redacted>
+    }
+    ",
+      "stdout": "",
+    }
+  `);
 });

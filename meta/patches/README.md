@@ -17,17 +17,6 @@ Two fixes in `lib/toml-parser.js`:
 
 Not reported upstream: `@iarna/toml` was last published in 2019 and its repository is archived.
 
-## `nice-path+3.2.2`
-
-All four fixes are in `dist/index.js`, and each one replaced an override that used to live on yavascript's `Path` subclass. Covered by `meta/tests/src/path.test.ts`.
-
-- `toString` rendered a path with no segments as `/`. Nothing joined to nothing is the current directory, so it returns `.`.
-- `relativeTo` compared `ownSegments[0] === dirSegments[0]` with no length guard, so once both ran out it compared `undefined` to `undefined` forever and looped.
-- `replaceAll` re-scanned from `matchingIndex + replacement.segments.length` after calling `replace`, which rescanned a replacement and, for a replacement shorter than what it replaced, could leave the scan position where it started. It now walks the segments once.
-- `normalize` treated `..` as "pop unless what's collected so far is only dots", which sent `..` above an absolute root and collapsed a fully-cancelled relative path to nothing. `..` at the root now stays at the root, a fully-cancelled relative path becomes `.`, and a leading `.` is preserved. The rewrite keeps a UNC path's `\\` root, which upstream also kept (covered by `Path.normalize - a UNC path keeps its root`).
-
-nice-path is Lily's own package, so these should go upstream.
-
 ## `pheno+1.13.1`
 
 - `dist/*/coerce/coerce.js` built object shapes with `Object.entries`, which drops symbol keys, so a shape keyed by a symbol checked nothing at all. Four call sites now use a `Reflect.ownKeys` helper. Covered by `is - symbol-keyed properties in an object shape are checked`.

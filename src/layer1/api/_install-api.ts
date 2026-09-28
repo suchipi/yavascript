@@ -64,6 +64,7 @@ const filesystemProps = makeGetterPropertyDescriptorMap({
 
 const pathProps = makeGetterPropertyDescriptorMap({
   Path: () => require("./path").Path,
+  PathErrors: () => require("./path").PathErrors,
 });
 
 const gitRepoProps = makeGetterPropertyDescriptorMap({

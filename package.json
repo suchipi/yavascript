@@ -28,7 +28,7 @@
     "mark-applier": "^0.5.2",
     "mdtocs": "^1.0.5",
     "minimatch": "^5.1.0",
-    "nice-path": "3.2.2",
+    "nice-path": "4.0.1",
     "papaparse": "^5.5.4",
     "patch-package": "^8.0.1",
     "path-less-traveled": "^2.2.1",
@@ -43,7 +43,7 @@
     "yaml": "^2.9.0"
   },
   "overrides": {
-    "nice-path": "3.2.2"
+    "nice-path": "4.0.1"
   },
   "scripts": {
     "build": "meta/build.sh",

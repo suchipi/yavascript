@@ -139,6 +139,7 @@ test("globals", async () => {
    isReadable: function (GSCE)
    isWritable: function (GSCE)
    Path: function (GSCE)
+   PathErrors: object (GSCE)
    glob: function (GSCE)
    types: object (GSCE)
    is: function (GSCE)
