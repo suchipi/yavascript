@@ -17,14 +17,6 @@ Two fixes in `lib/toml-parser.js`:
 
 Not reported upstream: `@iarna/toml` was last published in 2019 and its repository is archived.
 
-## `clef-parse+0.8.0`
-
-- `convertToCamelCase` split on an ASCII-only word boundary and dropped any part containing no ASCII alphanumerics, so `--hello` survived but `--héllo` became `hLlo`. Now splits on non-letter/non-number using Unicode property escapes.
-- Anything starting with `-` was read as a flag, so a lone `-` became a flag named `""` and `-3` a flag named `"3"`. `isFlag` now excludes both, making them positional args.
-- `bestGuess` treated a value starting with `-` as an absent value, so `--count=-5` parsed as `{count: true}`. A value after `=` is now always taken literally.
-
-Covered by the last three tests in `meta/tests/src/parse-script-args.test.ts`. clef-parse is Lily's own package, so these should go upstream rather than living here.
-
 ## `nice-path+3.2.2`
 
 All four fixes are in `dist/index.js`, and each one replaced an override that used to live on yavascript's `Path` subclass. Covered by `meta/tests/src/path.test.ts`.
@@ -44,7 +36,7 @@ nice-path is Lily's own package, so these should go upstream.
 
 Both the `cjs` and `esm` builds are patched, since which one gets bundled depends on the resolver.
 
-Note what is deliberately *not* patched: pheno decides whether a function is a class by looking for `class ` in its source text, which never matches under yavascript because compiling to bytecode drops function bodies. That is a known and accepted limitation. `Path` works around it for itself with a `PHENO_COERCE_OVERRIDE` in `src/layer1/api/path/path.ts`.
+Note what is deliberately _not_ patched: pheno decides whether a function is a class by looking for `class ` in its source text, which never matches under yavascript because compiling to bytecode drops function bodies. That is a known and accepted limitation. `Path` works around it for itself with a `PHENO_COERCE_OVERRIDE` in `src/layer1/api/path/path.ts`.
 
 ## `string-dedent+3.0.2`
 
