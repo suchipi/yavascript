@@ -930,6 +930,17 @@ test("Path.normalize - leading .. and fully-cancelling paths", async () => {
   });
 });
 
+test("Path.normalize - a UNC path keeps its root", async () => {
+  const result = await evaluate(
+    `Path.normalize(${JSON.stringify(String.raw`\\server\share\x\..`)}).toString()`,
+  );
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+    stdout: String.raw`\\server\share` + "\n",
+  });
+});
+
 test("Path - an empty path doesn't mean the filesystem root", async () => {
   const result = await evaluate(
     `JSON.stringify([

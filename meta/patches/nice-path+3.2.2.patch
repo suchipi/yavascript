@@ -1,8 +1,8 @@
 diff --git a/node_modules/nice-path/dist/index.js b/node_modules/nice-path/dist/index.js
-index 49ba195..404d0c5 100644
+index 49ba195..3d468a0 100644
 --- a/node_modules/nice-path/dist/index.js
 +++ b/node_modules/nice-path/dist/index.js
-@@ -117,40 +117,40 @@ class Path {
+@@ -117,40 +117,41 @@ class Path {
       * Resolve all non-leading `.` and `..` segments in this path.
       */
      normalize() {
@@ -24,8 +24,9 @@ index 49ba195..404d0c5 100644
 -                    break;
 +        const segments = this.segments;
 +        const isAbsolute = segments[0] === "";
-+        const bodyStart = isAbsolute ? 1 : 0;
-+        const newSegments = isAbsolute ? [""] : [];
++        // A UNC path (\\server\share) has a second empty segment as part of its root.
++        const bodyStart = isAbsolute ? (segments[1] === "" ? 2 : 1) : 0;
++        const newSegments = segments.slice(0, bodyStart);
 +        for (let i = bodyStart; i < segments.length; i++) {
 +            const segment = segments[i];
 +            if (segment === "")
@@ -72,7 +73,7 @@ index 49ba195..404d0c5 100644
          return this.constructor.fromRaw(newSegments, this.separator);
      }
      /**
-@@ -211,7 +211,11 @@ class Path {
+@@ -211,7 +212,11 @@ class Path {
          }
          const ownSegments = [...this.segments];
          const dirSegments = [...dir.segments];
@@ -85,7 +86,7 @@ index 49ba195..404d0c5 100644
              ownSegments.shift();
              dirSegments.shift();
          }
-@@ -232,6 +236,10 @@ class Path {
+@@ -232,6 +237,10 @@ class Path {
       * Turn this path into a string by joining its segments using its separator.
       */
      toString() {
@@ -96,7 +97,7 @@ index 49ba195..404d0c5 100644
          let result = this.segments.join(this.separator);
          if (result == "") {
              return "/";
-@@ -384,21 +392,27 @@ class Path {
+@@ -384,21 +393,27 @@ class Path {
       * @param replacement - What it should be replaced with
       */
      replaceAll(value, replacement) {
