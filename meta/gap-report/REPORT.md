@@ -4,7 +4,7 @@ Binary: `dist/yavascript` built from `d8cc554` (`--version` prints `git-d8cc554c
 
 | Area | Report | Findings |
 | --- | --- | --- |
-| Filesystem, `Path`, `__filename`/`__dirname` | [fs.md](fs.md) | 20 |
+| Filesystem, `Path`, `__filename`/`__dirname` | [fs.md](fs.md) | 19 |
 | Shell-style commands and "did you mean" stubs | [commands.md](commands.md) | 24 |
 | `exec`/`$`/`ChildProcess`, `glob`, `env`, `parseScriptArgs`, `openUrl` | [exec-glob-env-args.md](exec-glob-env-args.md) | 29 |
 | `types`, `is`, `assert`, `number`/`string`/..., JSX | [types-is-assert-jsx.md](types-is-assert-jsx.md) | 17 |
@@ -17,12 +17,6 @@ The test suite passes on this build (713 passed, 1 skipped). None of the bugs in
 
 ## 1. Must fix before 1.0
 
-### Data loss
-
-| API | Problem | Cause | Ref |
-| --- | --- | --- | --- |
-| `copy` a file onto itself | With `whenTargetExists: "overwrite"`, `copy("f.txt", "f.txt")` exits 0 and leaves the file empty. So does `copy("d/f.txt", "d", ...)`. `cp` refuses with "are identical". | `copy.ts:60` opens the target with `O_TRUNC` before the source is read, and nothing checks whether they're the same file | fs #1 |
-
 ### Hangs and crashes
 
 | API | Problem | Cause | Ref |
@@ -34,7 +28,7 @@ The test suite passes on this build (713 passed, 1 skipped). None of the bugs in
 
 | API | Problem | Cause | Ref |
 | --- | --- | --- | --- |
-| Bare relative names | `copy("srcdir", "newdir")` and `mkdir("newdir")` throw `PathErrors.ZeroSegmentsError`. `./newdir`, absolute paths and `mkdirp("newdir")` work. | `copy.ts:212-218` and `mkdir.ts:116` call `dirname` on the target, and `dirname` of a one-segment path throws | fs #2, commands #1 |
+| Bare relative names | `copy("srcdir", "newdir")` and `mkdir("newdir")` throw `PathErrors.ZeroSegmentsError`. `./newdir`, absolute paths and `mkdirp("newdir")` work. | `copy.ts:222-228` and `mkdir.ts:116` call `dirname` on the target, and `dirname` of a one-segment path throws | fs #1, commands #1 |
 | `-e` and REPL imports | An import followed by code on the same line, by trailing whitespace, or by a line starting with `[` or `(` fails with a `SyntaxError`, `ReferenceError` or `TypeError` | `esm-to-require.ts:18` writes `[;\s]*` inside a template literal, where `\s` is just `s`; `:86-97` never adds a `;` after a rewritten import | runtime #1 |
 | ESM importing CommonJS | `import x from "./cjs.js"` fails with "Could not find export 'default'", so ESM code can't import most npm packages; only `require` unwraps CJS | `cjs-interop.ts:64-102` | runtime #3 |
 | `.json`/`.yaml` URL imports | Importing `http(s)://.../data.json` or `.yaml` without `with { type }` silently gives an empty module, while a local `.json` import works without the attribute | `http.ts:33-41` (shared by `https.ts`) picks a compiler only from the `type` attribute and otherwise runs `autodetect`, ignoring the extension | runtime #7 |
@@ -55,7 +49,7 @@ These are behaviors that would be breaking to change later. Each one is working 
 
 | Topic | Current behavior | Ref |
 | --- | --- | --- |
-| "Same as the unix command" claims | `rename` can't move into a dir. `copy` preserves file times and never applies `whenTargetExists` to dirs. `basename`/`dirname` treat `\` as a separator on POSIX. `chmod` has no symbolic modes, and `"set"` clears every class you don't mention. `mkdirp` applies `mode` to intermediate dirs. `printf` rejects `%lld`, `%zu`, positional args. Either match the commands or drop the claims. | fs #3-4, commands #2, #7, #11, #15, #18 |
+| "Same as the unix command" claims | `rename` can't move into a dir. `copy` preserves file times and never applies `whenTargetExists` to dirs. `basename`/`dirname` treat `\` as a separator on POSIX. `chmod` has no symbolic modes, and `"set"` clears every class you don't mention. `mkdirp` applies `mode` to intermediate dirs. `printf` rejects `%lld`, `%zu`, positional args. Either match the commands or drop the claims. | fs #2-3, commands #2, #7, #11, #15, #18 |
 | Stub globals (`cp`, `rm`, `id`, `where`, `FILE`, ...) | `typeof cp` throws instead of returning `"undefined"`, which breaks feature detection in libraries | commands #22, crosscut #18 |
 | Return types | `basename`/`extname`/`__filename` return strings; `dirname`/`pwd`/`ls`/`which`/`readlink`/`realpath` return `Path`. `which` is the only command that rejects `Path` input. | commands #19 |
 | Physical vs logical paths | `pwd()` and `ls()` resolve symlinks (bash's `pwd` doesn't). `cd` doesn't update `env.PWD`. No `~` expansion anywhere; `mkdirp("~/x")` creates a literal `./~/x`. | commands #12-13, #20 |
@@ -141,7 +135,7 @@ Each area report ends with its own coverage notes; these are the ones that cut a
 - **No tests at all:** `touch`, `openUrl`, `inspect` (no dedicated test file), `YAML.stringify`, the `https:` and `npm:` protocols, `node_modules` package resolution (no fixture has a `package.json`), and direct tests of the non-JS compilers. `rename` has a single test, so moving into a directory and the EXDEV cross-filesystem path are untested.
 - **Happy path only:** `exit`, `ChildProcess`, `printf` and `whoami`. Most `types.*` validators and constructors have no tests at all.
 - **Tests that can't catch what they look like they check:**
-  - Every `copy` test uses absolute paths, which is how the bare-relative-name bug (fs #2) got through. The same goes for `mkdir` without `recursive` (commands #1).
+  - Every `copy` test but the file-onto-itself one uses absolute paths, which is how the bare-relative-name bug (fs #1) got through. The same goes for `mkdir` without `recursive` (commands #1).
   - The `mkdir` recursive "relative path" and "absolute path" tests snapshot an empty stderr, so they pin the missing info line (commands #10) instead of testing it.
   - The `printInput` test in `interactive-prompt.test.ts` goes through the ANSI sanitizer, which strips the cursor moves that runtime #18 is about.
   - The `cjs-interop.test.ts` "a JSON file required through an import attribute" test passes `{ type: "json" }` instead of `{ with: { type: "json" } }`, on a `.json` file, so it passes whether or not attributes are honored.

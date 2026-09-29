@@ -30,6 +30,16 @@ function formatPath(path: Path | string): string {
   }
 }
 
+function isSameFile(a: string, b: string): boolean {
+  const aStats = os.stat(a);
+  const bStats = os.stat(b);
+  // st_ino is always 0 on Windows, so it can't tell files apart there
+  if (aStats.ino !== 0 && bStats.ino !== 0) {
+    return aStats.dev === bStats.dev && aStats.ino === bStats.ino;
+  }
+  return os.realpath(a) === os.realpath(b);
+}
+
 function copyRaw(
   from: string,
   to: string,
@@ -259,6 +269,12 @@ export function copy(
         info(`copy: SKIPPING ${formatPath(from)} -> ${formatPath(to)}`);
         return;
       } else if (whenTargetExists === "overwrite") {
+        if (isSameFile(from, to)) {
+          throw makeErrorWithProperties("Source and target are the same file", {
+            from,
+            to,
+          });
+        }
         info(`copy: OVERWRITING ${formatPath(from)} -> ${formatPath(to)}`);
         copyRaw(from, to, trace);
       } else {

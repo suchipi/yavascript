@@ -182,7 +182,7 @@ From `doc-scan.js` (`doc-scan.log`):
 | `// TODO create actual QuickJS context` | `src/layer1/api/repl/start-repl.ts:19` | `startRepl(context)` does `Object.assign(globalThis, context)`, so the "context" leaks permanently into the real global scope |
 | `// TODO: process.on("exit", ...)` | `src/layer1/api/node-compat/node-compat.ts:48` | |
 | `// not yet implemented` sticky/setgid/setuid | `src/layer1/api/commands/chmod/chmod.ts:25-29` | the object form of `chmod` can't set these bits |
-| `// TODO: birth time` | `src/layer1/api/filesystem/copy.ts:95` | |
+| `// TODO: birth time` | `src/layer1/api/filesystem/copy.ts:105` | |
 | `// TODO: query cpu count, max memory...` | `src/layer1/api/_install-api.ts:5` | |
 | `/* XXX: handle double-width characters */` | `src/layer1/api/repl/repl-engine.ts:253` | |
 

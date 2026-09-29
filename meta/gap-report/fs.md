@@ -8,26 +8,19 @@ Binary: `dist/yavascript` (`--version` prints `git-d8cc554c0810`), macOS. In the
 
 Sorted most severe first. Severity is one of bug / doc-mismatch / gap / rough-edge / question.
 
-### 1. bug - `copy` a file onto itself with `whenTargetExists: "overwrite"` empties it
-
-- Repro: `printf KEEP > self.txt; $Y -e 'copy("self.txt", "self.txt", {whenTargetExists: "overwrite"})' </dev/null; echo $?; wc -c < self.txt`
-- Expected: the content survives. `cp self.txt self.txt` refuses with `are identical (not copied)` and exits 1.
-- Actual: exit 0, stderr `copy: OVERWRITING self.txt -> self.txt`, and the file is now 0 bytes. `copy("sd/f.txt", "sd", {whenTargetExists: "overwrite"})` does the same.
-- Cause: `copy.ts:60` opens the target with `O_TRUNC` before the source has been read, and nothing checks whether source and target are the same file.
-
-### 2. bug - `copy` a directory to a bare relative name throws `ZeroSegmentsError`
+### 1. bug - `copy` a directory to a bare relative name throws `ZeroSegmentsError`
 
 - Repro: `mkdir src && echo a > src/a.txt && $Y -e 'copy("src", "newdir")' </dev/null`
 - Expected: copies `src` to `newdir`, like `cp -R src newdir`.
 - Actual: `PathErrors.ZeroSegmentsError: 'replaceLast' is attempting to create a Path with zero segments, which is invalid`, exit 1. `copy("src", "./newdir")` and absolute targets work.
-- Cause: the copy-into-itself check at `copy.ts:212-218` calls `new Path(to).dirname()` when the target doesn't exist yet, and `dirname` of a one-segment path throws.
+- Cause: the copy-into-itself check at `copy.ts:222-228` calls `new Path(to).dirname()` when the target doesn't exist yet, and `dirname` of a one-segment path throws.
 
-### 3. doc-mismatch - `copy` is documented as `cp -R` but preserves file times, and `whenTargetExists` never applies to directories
+### 2. doc-mismatch - `copy` is documented as `cp -R` but preserves file times, and `whenTargetExists` never applies to directories
 
 1. File atime/mtime are preserved (`touch -t 202001020304 a.txt; $Y -e 'copy("a.txt", "out-a.txt")'; ls -l out-a.txt` shows `Jan 2 2020`), which plain `cp -R` does not do. This is fine behavior but undocumented.
 2. `whenTargetExists` never applies to directories: an existing dir is always merged into. Also undocumented.
 
-### 4. doc-mismatch - `rename` is documented as `mv` but cannot move things into directories
+### 3. doc-mismatch - `rename` is documented as `mv` but cannot move things into directories
 
 - Repro:
   - `echo 3 > three.txt; mkdir dirA; $Y -e 'rename("three.txt", "dirA")'` gives `Error: Is a directory (errno = 21)`. `mv` moves the file into `dirA/`.
@@ -36,20 +29,20 @@ Sorted most severe first. Severity is one of bug / doc-mismatch / gap / rough-ed
 - Also: unlike `copy`, there is no `whenTargetExists` option. `rename` over an existing file always clobbers it.
 - Cause: `rename.ts:27` is a bare `os.rename`.
 
-### 5. doc-mismatch - the `Path` class docs say every path-accepting function also accepts Path objects, but `splitToSegments` and `detectSeparator` reject them
+### 4. doc-mismatch - the `Path` class docs say every path-accepting function also accepts Path objects, but `splitToSegments` and `detectSeparator` reject them
 
 - Repro: `$Y -e 'Path.splitToSegments(new Path("a/b"))'` and `$Y -e 'Path.detectSeparator(new Path("a/b"))'`
 - Expected: works, per the class doc ("All functions in yavascript which accept path strings as arguments also accept Path objects").
 - Actual: `TypeError: Expected value of type union(string, arrayOf(string)), but received "a/b"`
 - Cause: `src/layer1/api/path/path.ts:26-29` and `38`
 
-### 6. doc-mismatch - `__filename` is not always "the absolute path to the currently-executing file"
+### 5. doc-mismatch - `__filename` is not always "the absolute path to the currently-executing file"
 
 - Repro: `$Y -e 'echo(__filename); echo(exists(__filename))'` prints `<cwd>/<evalScript>` and `false`. That is a synthetic, nonexistent path, and the docs don't mention it.
 - Repro: `$Y -e 'JSON.stringify(new Function("return __filename")())'` prints `"<input>"`, a relative, fake filename. `new Function("return __dirname")()` throws `PathErrors.ZeroSegmentsError: 'replaceLast' is attempting to create a Path with zero segments, which is invalid`, because `dirname` of the one-segment `<input>` throws.
 - Repro: `Reflect.get(globalThis, "__filename")` inside a script throws `Error: Cannot determine the caller filename for the given stack level. Maybe you're using eval?`. The native frame shifts the stack depth that `_install-api.ts:214` hardcodes as `get__filename(2)`. Direct access, `globalThis.__filename`, destructuring from `globalThis`, and calling the descriptor's getter all work.
 
-### 7. doc-mismatch - `Path.prototype.relativeTo` is purely lexical, which the docs don't say, and gives wrong answers for unnormalized or mixed input
+### 6. doc-mismatch - `Path.prototype.relativeTo` is purely lexical, which the docs don't say, and gives wrong answers for unnormalized or mixed input
 
 - Repro: `$Y -e '[new Path("/a/c").relativeTo("/a/b/.."), new Path("/a/b/../c").relativeTo("/a"), new Path("a/b").relativeTo("/x")].map(String)'`
 - Expected: `"./c"` (because `/a/b/..` is `/a`), `"./c"`, and either an error or a cwd-resolved answer for relative vs absolute input.
@@ -57,23 +50,23 @@ Sorted most severe first. Severity is one of bug / doc-mismatch / gap / rough-ed
 - Also: the options argument isn't validated. `relativeTo("/a", "yes")` is accepted.
 - Cause: `nice-path:284-313`
 
-### 8. doc-mismatch - `Path.from` exists and is bound as public API, but it is undocumented
+### 7. doc-mismatch - `Path.from` exists and is bound as public API, but it is undocumented
 
 - Repro: `$Y -e 'String(Path.from(["a","","b"]))'` prints `"a/b"`. `typeof Path.from` is `"function"`.
 - It's bound deliberately at `src/layer1/api/path/path.ts:196` but missing from `path.inc.d.ts`, so it isn't typed or documented. This matters because it's the validating counterpart to `fromRaw`: `Path.fromRaw(["a","","b"],"/")` produces `"a//b"`.
 
-### 9. doc-mismatch (minor) - `isFile` follows symlinks, but only `isDir`'s doc says so
+### 8. doc-mismatch (minor) - `isFile` follows symlinks, but only `isDir`'s doc says so
 
 - Repro: in a dir with `link-file -> file.txt`, `$Y -e 'isFile("link-file")'` prints `true`, and `isFile` of a dangling link is `false`.
 - The `isDir` doc spells out its symlink behavior. The `isFile` doc ("points to a regular file") doesn't.
 
-### 10. gap - `writeFile` only takes `string | ArrayBuffer`, not typed arrays or DataView, and `.buffer` is a trap
+### 9. gap - `writeFile` only takes `string | ArrayBuffer`, not typed arrays or DataView, and `.buffer` is a trap
 
 - Repro: `$Y -e 'writeFile("w.bin", new Uint8Array([0,1,2,255]))'` gives `TypeError: 'data' argument must be either a string or an ArrayBuffer`. The same happens for a `DataView`.
 - The obvious workaround is wrong for views. `const u = new Uint8Array([9,9,1,2,9]).subarray(2,4); writeFile("w.bin", u.buffer)` writes 5 bytes, not 2.
 - Cause: `writeFile.ts:17-21`
 
-### 11. gap - no high-level stat, append, symlink creation, or temp file/dir API
+### 10. gap - no high-level stat, append, symlink creation, or temp file/dir API
 
 I grepped `yavascript.d.ts` and none of these exist as yavascript-level functions:
 
@@ -86,50 +79,50 @@ I grepped `yavascript.d.ts` and none of these exist as yavascript-level function
 
 Also missing: a `rename` that falls back to copy+remove across filesystems (see the coverage notes, I didn't verify it). For comparison, `touch`, `chmod`, `mkdir`, `ls`, `readlink`, `realpath`, and `glob` do exist.
 
-### 12. rough-edge - errors often leave out the path
+### 11. rough-edge - errors often leave out the path
 
 - `$Y -e 'isReadable("missing")'` gives `Error: No such file or directory (errno = 2)` with no path property. The same goes for `isExecutable`, `remove("missing")`, and `rename` (`rename.ts:29-33` attaches `from`/`to` properties, but the message doesn't include them).
 - `readFile("somedir")` gives `Error: Is a directory (errno = 21)` with no path at all, in both string and `{binary:true}` mode.
 
-### 13. rough-edge - `isWritable` returns `false` for missing paths while `isReadable`/`isExecutable` throw
+### 12. rough-edge - `isWritable` returns `false` for missing paths while `isReadable`/`isExecutable` throw
 
 - Repro: in a writable dir, `$Y -e 'isWritable("missing")'` prints `false`, while `isReadable("missing")` and `isExecutable("missing")` throw.
 - The doc's wording "could be written to" suggests `true` here, since `writeFile("missing", ...)` would succeed.
 - Cause: `isWritable.ts:15-19` doesn't run the `F_OK` pre-check that `isReadable.ts:16` / `isExecutable.ts:16` do.
 - The throwing siblings also throw on things other than "nothing exists", which the doc doesn't mention: `Not a directory` for `"file.txt/"`, `Permission denied` for a path under a mode-000 dir, and `Too many levels of symbolic links` for a looping link.
 
-### 14. rough-edge - a trailing slash changes fs results depending on whether you pass a string or a Path
+### 13. rough-edge - a trailing slash changes fs results depending on whether you pass a string or a Path
 
 - Repro (with `link-dir -> dir`, `file.txt`): `$Y -e '[isLink("link-dir/"), isLink(new Path("link-dir/")), exists("file.txt/"), exists(new Path("file.txt/"))]'` prints `[false, true, false, true]`.
 - `new Path("a/")` drops the trailing slash (segments `["a"]`), so the "follow the link" / "must be a dir" meaning of `/` is lost.
 
-### 15. rough-edge - unclear type errors from `copy` options and from `Path`
+### 14. rough-edge - unclear type errors from `copy` options and from `Path`
 
-- `copy("a","b",{logging: null})` gives `TypeError: cannot convert to object`, because the destructuring at `copy.ts:170-173` happens before validation.
+- `copy("a","b",{logging: null})` gives `TypeError: cannot convert to object`, because the destructuring at `copy.ts:180-183` happens before validation.
 - `Path` methods give generic messages like `new Path(42)` -> `TypeError: Expected value of type arrayOf(union(string, Path, arrayOf(union(string, Path)))), but received [42]`. `new Path(undefined)` shows `received ["<undefined>"]`. The fs functions have clear messages like `'path' argument must be either a string or a Path object`.
 
-### 16. rough-edge - "readonly" statics can be reassigned
+### 15. rough-edge - "readonly" statics can be reassigned
 
 - Repro: `$Y -e 'Path.OS_SEGMENT_SEPARATOR = "X"; Path.OS_SEGMENT_SEPARATOR'` prints `"X"`, and the new value sticks (used as the `fromRaw` and `detectSeparator` default).
 - The typings say `static readonly`.
 - Cause: `path.ts:17-23`
 
-### 17. rough-edge - string encoding edge cases are silent
+### 16. rough-edge - string encoding edge cases are silent
 
 - `writeFile("w.txt", "a\ud800b")` writes bytes `61 ED A0 80 62`, which is invalid UTF-8 (a lone surrogate encoded as WTF-8).
 - `readFile` of invalid UTF-8 (`ff fe 00 61 62 63 c3`) returns `"��\u0000abc�"` with no warning. The docs just say "reads the file as UTF-8".
 
-### 18. question - `extname(".bashrc")` returns `".bashrc"`
+### 17. question - `extname(".bashrc")` returns `".bashrc"`
 
 - Repro: `$Y -e '[new Path(".bashrc").extname(), extname(".bashrc"), new Path(".bashrc").extname({full:true})]'` prints all `".bashrc"`.
 - Node's `path.extname(".bashrc")` returns `""`, because a leading dot marks a hidden file, not an extension. Is this intended? Either way, worth documenting.
 
-### 19. question - Windows: separator fallback for single-segment paths
+### 18. question - Windows: separator fallback for single-segment paths
 
 - `nice-path:135` (in `_internalConstructorAllowInvalid`, which the constructor calls) builds the separator with `detectSeparator(parts, "/")`, a hardcoded `"/"`, instead of `Path.OS_SEGMENT_SEPARATOR`. On Windows, `new Path("foo").concat("bar")` would therefore presumably be `foo/bar`.
 - I can only confirm the code path here. On macOS `new Path("foo").separator` is `"/"` either way. The docs promise `OS_SEGMENT_SEPARATOR` as the default only for `fromRaw` and `detectSeparator`, so this may be intended.
 
-### 20. question - smaller `Path` oddities
+### 19. question - smaller `Path` oddities
 
 - `new Path("/a/b").startsWith("")` is `true`, but `new Path("a/b").startsWith("")` and `new Path("/a/b").endsWith("")` are `false`. That's because `""` parses to the root segment `[""]`.
 - `indexOf("a", -1)` and `indexOf("a", -100)` on `/a/b/a` return `1`. Negative `fromIndex` is treated like 0, not as an offset from the end like `Array.prototype.indexOf`.
@@ -191,18 +184,18 @@ Also missing: a `rename` that falls back to copy+remove across filesystems (see 
 ## Test coverage notes
 
 - **`meta/tests/src/filesystem.test.ts`**
-  - `rename` has one test (resolving `L/../x.txt` the way the OS does). Nothing covers moving into a directory (finding 4), overwriting an existing file, or the `from`/`to` error properties.
+  - `rename` has one test (resolving `L/../x.txt` the way the OS does). Nothing covers moving into a directory (finding 3), overwriting an existing file, or the `from`/`to` error properties.
   - `isFile`, `isExecutable`, `isReadable`, and `isWritable` have no behavior tests (only the globals listing in `globals.test.ts` / `context.test.ts`).
-  - `copy` has tests for overwrite truncation, file -> dir with the default `"error"`, merging into an existing tree, directory symlinks, copying a dir into itself, directory modes, and permission errors. All of them use absolute paths, which is how finding 2 got through. Nothing covers copying a file onto itself (finding 1), `whenTargetExists: "skip"`, file symlinks or dangling symlinks inside the source, what the `logging` callbacks receive, a missing source, or a dir -> existing file target.
+  - `copy` has tests for overwrite truncation, copying a file onto itself, file -> dir with the default `"error"`, merging into an existing tree, directory symlinks, copying a dir into itself, directory modes, and permission errors. All but the file-onto-itself test use absolute paths, which is how finding 1 got through. Nothing covers `whenTargetExists: "skip"`, file symlinks or dangling symlinks inside the source, what the `logging` callbacks receive, a missing source, or a dir -> existing file target.
   - `remove` has no test for a missing path.
   - `readFile` has no tests for error cases or Path arguments.
   - `writeFile` has no tests for ArrayBuffer, overwrite, or Path arguments.
   - Apart from an incidental `exists(found)` on `which`'s result in `which.test.ts`, no test passes a `Path` object to a filesystem function.
 - **`meta/tests/src/path.test.ts`**
-  - `relativeTo` is never called with unnormalized or mixed relative/absolute input (finding 7).
+  - `relativeTo` is never called with unnormalized or mixed relative/absolute input (finding 6).
   - `dirname` is only tested on absolute paths (`dirname.test.ts` and `Path.dirname`), never on a relative or one-segment path.
   - No tests for `isAbsolute`, `concat`, `fromRaw`, `isPath`, `includes`, `OS_ENV_VAR_SEPARATOR`, `OS_PROGRAM_EXTENSIONS`, or `Path.from`.
-- **`meta/tests/src/__filename-and-__dirname.test.ts`** plus the `fixture-scripts` snapshot cover only `-e` and a script importing an ESM module. Uncovered: `require()`d CJS, symlinked scripts, `.ts` files, callbacks/async, `new Function` (finding 6), and shadowing with `const`.
+- **`meta/tests/src/__filename-and-__dirname.test.ts`** plus the `fixture-scripts` snapshot cover only `-e` and a script importing an ESM module. Uncovered: `require()`d CJS, symlinked scripts, `.ts` files, callbacks/async, `new Function` (finding 5), and shadowing with `const`.
 - **Not verified in this audit**:
   - `rename` across filesystems (EXDEV): I didn't test it, to avoid touching anything outside the sandbox. `rename.ts:27` is a bare `os.rename` with no fallback, so it presumably fails where `mv` would succeed.
-  - All Windows-specific paths: drive-letter handling via `appendSlashIfWindowsDriveLetter` (which the `isReadable`/`isWritable`/`isExecutable` implementations don't call), the separator fallback (finding 19), and the `stat` path in `isDir`/`isLink` in place of `lstat`.
+  - All Windows-specific paths: drive-letter handling via `appendSlashIfWindowsDriveLetter` (which the `isReadable`/`isWritable`/`isExecutable` implementations don't call), the separator fallback (finding 18), and the `stat` path in `isDir`/`isLink` in place of `lstat`.

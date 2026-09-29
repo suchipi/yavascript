@@ -611,6 +611,27 @@ test('copy - whenTargetExists "overwrite" truncates the target', async () => {
   expect(fs.readFileSync(target, "utf-8")).toBe("SRC-A");
 });
 
+test('copy - whenTargetExists "overwrite" refuses to copy a file onto itself', async () => {
+  const dir = scratch("same-file");
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, "self.txt"), "KEEP");
+  fs.linkSync(path.join(dir, "self.txt"), path.join(dir, "hardlink.txt"));
+
+  for (const [from, to] of [
+    ["self.txt", "self.txt"],
+    ["self.txt", "."],
+    ["self.txt", "hardlink.txt"],
+  ]) {
+    const result = await evaluate(
+      `copy(${JSON.stringify(from)}, ${JSON.stringify(to)}, { whenTargetExists: "overwrite", logging: { info() {} } })`,
+      { cwd: dir },
+    );
+    expect(result.code).toBe(1);
+    expect(result.stderr).toMatch(/Source and target are the same file/);
+    expect(fs.readFileSync(path.join(dir, "self.txt"), "utf-8")).toBe("KEEP");
+  }
+});
+
 test("copy - file into a dir honors whenTargetExists", async () => {
   const source = scratch("src.txt");
   const destDir = scratch("destdir");
