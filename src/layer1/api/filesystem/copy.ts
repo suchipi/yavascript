@@ -221,10 +221,11 @@ export function copy(
 
   if (sourceInfo === "dir") {
     const fromReal = new Path(os.realpath(from));
+    const toAbsolute = Path.isAbsolute(to) ? new Path(to) : new Path(pwd(), to);
     const toReal = new Path(
       exists(to)
         ? os.realpath(to)
-        : os.realpath(new Path(to).dirname().toString()),
+        : os.realpath(toAbsolute.dirname().toString()),
     );
     if (toReal.startsWith(fromReal)) {
       throw makeErrorWithProperties("Cannot copy a directory into itself", {

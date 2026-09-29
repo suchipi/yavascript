@@ -706,6 +706,20 @@ test(
   HANG_TEST_TIMEOUT,
 );
 
+test("copy - a dir to a bare relative name", async () => {
+  const dir = scratch("bare-name");
+  fs.mkdirSync(path.join(dir, "src"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "src", "a.txt"), "A");
+
+  const result = await evaluate(
+    `copy("src", "newdir", { logging: { info() {} } })`,
+    { cwd: dir },
+  );
+  expect(result).toMatchObject({ code: 0, stderr: "" });
+
+  expect(fs.readFileSync(path.join(dir, "newdir", "a.txt"), "utf-8")).toBe("A");
+});
+
 test("copy - into an existing tree merges instead of nesting subdirectories", async () => {
   const source = scratch("src");
   const target = scratch("dst");
