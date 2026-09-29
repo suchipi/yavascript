@@ -22,6 +22,18 @@ function escapeGlobMetachars(text: string): string {
   return text.replace(/[*?[\]{}()!+@\\]/g, "\\$&");
 }
 
+// Path splits on "\" as well as "/", but on POSIX "\" is an ordinary filename
+// character, and an escape character in a pattern.
+function toPath(str: string): Path {
+  return os.platform === "win32"
+    ? new Path(str)
+    : (Path.from(str.split("/"), "/") as Path);
+}
+
+function unescapeLiteralSegment(segment: string): string {
+  return os.platform === "win32" ? segment : segment.replace(/\\(.)/g, "$1");
+}
+
 function compile(pattern: string, startingDir: string) {
   const negated = isNegated(pattern);
   let body = negated ? pattern.slice(1) : pattern;
@@ -49,10 +61,12 @@ function compile(pattern: string, startingDir: string) {
       splitAt++;
     }
 
-    const literal = segments.slice(0, splitAt);
+    const literal = segments.slice(0, splitAt).map(unescapeLiteralSegment);
     const rest = segments.slice(splitAt);
 
-    base = Path.normalize([startingDir, ...literal].join("/")).toString();
+    base = toPath([startingDir, ...literal].join("/"))
+      .normalize()
+      .toString();
     text = escapeGlobMetachars(base);
     if (rest.length > 0) {
       text += "/" + rest.join("/");
@@ -145,11 +159,11 @@ export function glob(
     const dirsFromPatterns = absolutePatterns.map((absolutePattern) => {
       // The leading parts of the pattern which don't contain glob metachars
       const leadingParts: Array<string> = [];
-      for (const part of Path.splitToSegments(absolutePattern)) {
+      for (const part of toPath(absolutePattern).segments) {
         if (HAS_GLOB_METACHARS_RE.test(part)) {
           break;
         }
-        leadingParts.push(part);
+        leadingParts.push(unescapeLiteralSegment(part));
       }
 
       const result = Path.fromRaw(
@@ -212,7 +226,9 @@ export function glob(
     throw new Error(`No such directory: ${dir} (from ${pwd()})`);
   }
 
-  const normDir = Path.normalize(dir);
+  const normDir = is(dir, types.Path)
+    ? dir.normalize()
+    : toPath(dir).normalize();
   if (!normDir.isAbsolute()) {
     throw new Error(
       `'dir' option must be an absolute path, but received: ${quote(dir)}`,
@@ -230,9 +246,9 @@ export function glob(
 
   // A pattern that climbs out of the starting dir with ".." has to be searched
   // from wherever it lands, not from the starting dir.
-  let traversalRoot = new Path(startingDir);
+  let traversalRoot = toPath(startingDir);
   for (const { base } of allPatterns) {
-    const basePath = new Path(base);
+    const basePath = toPath(base);
     if (traversalRoot.startsWith(basePath)) {
       traversalRoot = basePath;
     }
@@ -365,5 +381,5 @@ export function glob(
   }
   find(traversalRoot.toString());
 
-  return matches.map((str) => new Path(str));
+  return matches.map(toPath);
 }
