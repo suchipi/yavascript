@@ -509,6 +509,13 @@ describe("repl directives", () => {
       }
     `);
   });
+
+  test("\\load is not a directive", async () => {
+    const session = await startReplSession();
+    await session.line("\\load somefile.js");
+    await session.exit();
+    expect(session.result().stdout).toContain("Unknown directive: load\n");
+  });
 });
 
 describe("repl cursor motion", () => {
@@ -1675,25 +1682,5 @@ describe("repl imports", () => {
     await session.line(`console.log("typeof:", typeof fromUtf8)`);
     await session.exit();
     expect(session.result().stdout).toContain("typeof: function");
-  });
-});
-
-describe("repl \\load", () => {
-  test("a script that throws leaves the repl usable", async () => {
-    const session = await startReplSession();
-
-    // Each line has to be seen through before the next keys are written: an
-    // exception thrown while reading drops the rest of the bytes read with it.
-    await session.input(
-      `\\load ${rootDir("meta/tests/fixtures/repl-load/throws.js")}${KEYS.enter}`,
-      "the loaded script ran",
-    );
-    await session.input(`1 + 1${KEYS.enter}`, /\n2\n|could not load/);
-    // Ctrl-C twice rather than Ctrl-D, because Ctrl-D only exits on an empty
-    // line and what the failed line left behind is what this test is about.
-    session.send(KEYS.ctrlC, KEYS.ctrlC);
-    await session.finish();
-
-    expect(session.result().stdout).toContain("\n2\n");
   });
 });

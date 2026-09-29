@@ -76,16 +76,9 @@ export function startRepl(lang: string) {
   }
 
   /* return true if the string after cmd can be evaluted as JS */
-  function handleDirective(cmd: string, expr: string) {
+  function handleDirective(cmd: string) {
     if (cmd === "h" || cmd === "?" || cmd == "help") {
       help();
-    } else if (cmd === "load") {
-      let filename = expr.substring(cmd.length + 1).trim();
-      if (filename.lastIndexOf(".") <= filename.lastIndexOf("/")) {
-        filename += ".js";
-      }
-      engine.runScript(filename);
-      return false;
     } else if (cmd === "t") {
       showTime = !showTime;
     } else if (cmd === "clear") {
@@ -162,7 +155,7 @@ export function startRepl(lang: string) {
       }
       const directive = extractDirective(line);
       if (directive.length > 0) {
-        if (!handleDirective(directive, line)) {
+        if (!handleDirective(directive)) {
           return null;
         }
         return line.substring(directive.length + 1);
