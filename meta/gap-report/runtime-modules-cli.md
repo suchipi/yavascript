@@ -15,29 +15,28 @@ Helpers (both in the sandbox):
 | --- | --- | --- | --- |
 | 1 | bug | `-e`, REPL | An import followed by code on its line, by trailing whitespace, or by a line starting with `[`/`(` breaks |
 | 2 | bug | `Context` | `modules: { "quickjs:bytecode": false }` fails with a file error; `console: false` is ignored; bad options are accepted |
-| 3 | gap | module loading | ESM `import` of a CommonJS module/package doesn't work |
-| 4 | bug | REPL `\load` | Errors print to stderr with internal frames; no compile step; missing from `\h` |
-| 5 | bug | `InteractivePrompt` | A throwing `printInput`/`getCompletions` drops the rest of the input read with it; `getCompletions`'s result isn't checked |
-| 6 | bug | module resolution | Errors point at yavascript's internals; `require` discards the resolver's error; no `code` |
-| 7 | bug | URL modules | A `.json` or `.yaml` URL loads as an empty module unless the import has `with { type }` |
-| 8 | doc-mismatch | `Worker.terminate` | Doesn't terminate the thread; a busy worker keeps the process alive forever |
-| 9 | doc-mismatch | `StructuredClonable` | `RegExp`, `DataView`, `Error` are listed but rejected |
-| 10 | gap | module resolution | No `exports`, extensionless `main`, `.cjs`, `.mts`/`.cts` |
-| 11 | gap | node-compat | No named exports from `node:process`; no `process.stdout`/`cwd`/`on`/... |
-| 12 | gap | `-e`, REPL | No top-level `await` or `import.meta` |
-| 13 | gap | CLI | No way to run a script from stdin |
-| 14 | gap | `InteractivePrompt` | No `stop()`, no end callback, async `handleInput` not awaited |
-| 15 | rough-edge | REPL | Multi-line is JS-only (Coffee/Civet blocks impossible); directives run on continuation lines |
-| 16 | rough-edge | REPL | Can't start when the config dir can't be created |
-| 17 | rough-edge | `Worker` | Worker globals differ from main (no `runInWorker`/`Context`, leaked internals), undocumented; a worker file can't use top-level `await` |
-| 18 | doc-mismatch | `InteractivePrompt.printInput` | Output must match the input's width |
-| 19 | rough-edge | REPL completion | Tab evaluates getters and prints their exceptions |
-| 20 | rough-edge | import attributes | `type` names differ from `--lang`; unknown types silently ignored |
-| 21 | doc-mismatch | module system | yavascript's resolution rules aren't documented anywhere |
-| 22 | rough-edge | CLI | Missing-file and compile errors show errno text and internal frames |
-| 23 | rough-edge | CLI | `-v` prints no trailing newline |
-| 24 | question | CLI | `yavascript -- script.js` opens the REPL |
-| 25 | question | module evaluation | Unsettled top-level `await` exits 0 silently |
+| 3 | bug | REPL `\load` | Errors print to stderr with internal frames; no compile step; missing from `\h` |
+| 4 | bug | `InteractivePrompt` | A throwing `printInput`/`getCompletions` drops the rest of the input read with it; `getCompletions`'s result isn't checked |
+| 5 | bug | module resolution | Errors point at yavascript's internals; `require` discards the resolver's error; no `code` |
+| 6 | bug | URL modules | A `.json` or `.yaml` URL loads as an empty module unless the import has `with { type }` |
+| 7 | doc-mismatch | `Worker.terminate` | Doesn't terminate the thread; a busy worker keeps the process alive forever |
+| 8 | doc-mismatch | `StructuredClonable` | `RegExp`, `DataView`, `Error` are listed but rejected |
+| 9 | gap | module interop | No named imports from CJS; no `exports`, extensionless `main`, `.cjs`, `.mts`/`.cts` |
+| 10 | gap | node-compat | No named exports from `node:process`; no `process.stdout`/`cwd`/`on`/... |
+| 11 | gap | `-e`, REPL | No top-level `await` or `import.meta` |
+| 12 | gap | CLI | No way to run a script from stdin |
+| 13 | gap | `InteractivePrompt` | No `stop()`, no end callback, async `handleInput` not awaited |
+| 14 | rough-edge | REPL | Multi-line is JS-only (Coffee/Civet blocks impossible); directives run on continuation lines |
+| 15 | rough-edge | REPL | Can't start when the config dir can't be created |
+| 16 | rough-edge | `Worker` | Worker globals differ from main (no `runInWorker`/`Context`, leaked internals), undocumented; a worker file can't use top-level `await` |
+| 17 | doc-mismatch | `InteractivePrompt.printInput` | Output must match the input's width |
+| 18 | rough-edge | REPL completion | Tab evaluates getters and prints their exceptions |
+| 19 | rough-edge | import attributes | `type` names differ from `--lang`; unknown types silently ignored |
+| 20 | doc-mismatch | module system | yavascript's resolution rules aren't documented anywhere |
+| 21 | rough-edge | CLI | Missing-file and compile errors show errno text and internal frames |
+| 22 | rough-edge | CLI | `-v` prints no trailing newline |
+| 23 | question | CLI | `yavascript -- script.js` opens the REPL |
+| 24 | question | module evaluation | Unsettled top-level `await` exits 0 silently |
 
 ## Findings
 
@@ -60,15 +59,7 @@ Helpers (both in the sandbox):
 - Actual: `caught: Failed to load module: No such file or directory (errno = 2, filename = quickjs:bytecode)`. With `console: false`, `typeof console` is still `"object"`; adding `yavascriptGlobals: false` makes it `"undefined"`. `{ bogus: 1 }` and `"nope"` are accepted without complaint. None of these interactions are in `context.inc.d.ts:53-174`, and neither is the rule that `date`, `promise` and `moduleGlobals` can't be disabled while `yavascriptGlobals` is on.
 - Cause: the up-front check (`context.ts:19-28`) covers only `date`, `promise` and `moduleGlobals`, but loading the yavascript globals also requires `quickjs:bytecode` inside the new context (`context.ts:36-43`), and layer 1 installs its own `console`.
 
-### 3. gap: ESM `import` of a CommonJS module doesn't work; only `require` understands the CJS wrapper
-
-- API: module loading, cjs-interop
-- Repro: `./y.sh interop/default-import.js`, `./y.sh interop/named-import.js`, `./y.sh interop/ns-import.js`, `cd nm && ../y.sh esm-import-cjs-pkg.js` (`langs/lib-cjs.js` is `module.exports = { a: 1, b: 2 };`; `nm/node_modules/pkg-cjs` uses `exports.value = ...`)
-- Expected (Node semantics): `import x from "./lib-cjs.js"` or `import pkg from "pkg-cjs"` gives `module.exports`; ideally named imports work too.
-- Actual: default import fails with `SyntaxError: Could not find export 'default' in module '.../lib-cjs.js'` (location `<internal>/quickjs.c:31305`, no user file or line); a named import fails with `Could not find export 'a'`; `import * as ns` and `await import(...)` give an object whose only keys are the internal `__cjsExports` and `__isCjsModule`. Since most `node_modules` packages are CJS, ESM code can't import them.
-- Cause: `wrapCommonJSCode` (`cjs-interop.ts:64-102`) only exports `__isCjsModule` and `__cjsExports`, and only `patchRequire` (`cjs-interop.ts:23-41`) unwraps them.
-
-### 4. bug: a failing `\load` prints its error differently from other REPL errors, and `\load` has no compile step
+### 3. bug: a failing `\load` prints its error differently from other REPL errors, and `\load` has no compile step
 
 - API: default REPL, `\load` directive
 - Repro: `DEADLINE=4000 node drive.js '\load repl/throws{cr}|1+1{cr}|{x04}'` (`repl/throws.js` throws); a typo: `DEADLINE=4000 node drive.js '\load repl/nope{cr}|2+2{cr}|{x04}'`; `DEADLINE=4000 node drive.js '\load repl/loadme.ts{cr}|{x04}'`
@@ -76,7 +67,7 @@ Helpers (both in the sandbox):
 - Actual: the prompt comes back, but the error goes to stderr followed by 9 of yavascript's own frames (`at runScript (native)`, `at handleDirective (yavascript-internals/dist/bundles/layer1.js:...)`, ... `at termReadHandler (...)`), where an error typed at the prompt goes to stdout with only the user's frames. The typo gives `ReferenceError: could not load 'repl/nope.js'` the same way. `\load repl/loadme.ts` fails with `SyntaxError: missing initializer for const variable` on the type annotation. `\load` isn't listed by `\h`.
 - Cause: `handleDirective` (`src/layer1/api/repl/js-repl.ts:82-88`) calls `engine.runScript`, which runs the file as a classic script, outside `evalAndPrint`'s try/catch (`js-repl.ts:105-134`), so the throw is caught by the engine's fallback in `readlineHandleCmd` (`src/layer1/api/repl/repl-engine.ts:852-863`), which prints it to stderr in full. `help` (`js-repl.ts:66-76`) leaves `\load` out.
 
-### 5. bug: a throwing `printInput` or `getCompletions` drops the rest of the input read with it, and `getCompletions`'s result isn't checked
+### 4. bug: a throwing `printInput` or `getCompletions` drops the rest of the input read with it, and `getCompletions`'s result isn't checked
 
 - API: `InteractivePrompt` (`src/layer1/api/repl/repl-engine.ts`)
 - Repro: `DEADLINE=4000 node drive.js 'bom{cr}|two{cr}|{x04}' ip/throwing-callbacks.js printInput` (`printInput` throws when the line is `"bo"`); `DEADLINE=4000 node drive.js 'boom{tab}{cr}|two{cr}|{x04}' ip/throwing-callbacks.js getCompletions`; `DEADLINE=4000 node drive.js 'ap{tab}|x{cr}|{x04}' ip/badcompl.js` (`getCompletions` returns `undefined`)
@@ -84,7 +75,7 @@ Helpers (both in the sandbox):
 - Actual: stderr gets `Error: printInput threw` plus internal `layer1.js` frames, and the `m` and Enter that arrived in the same read are lost, so the handler next receives `"botwo"`. A throwing `getCompletions` does the same to whatever follows the Tab (`"boomtwo"`). Returning `undefined` from `getCompletions` prints `TypeError: cannot read property 'candidates' of undefined` from `completion`. The exit code stays 0.
 - Cause: `termReadHandler` (`repl-engine.ts:207-226`) feeds each byte to `handleByte` without a try/catch, so a throw from a key handler abandons the rest of the buffer; only the accepted-line path is guarded (`readlineHandleCmd`, `repl-engine.ts:852-863`). `completion` reads `res.candidates` without checking `res` (`repl-engine.ts:636-637`).
 
-### 6. bug: module resolution errors point at yavascript's internals, and `import` and `require` report the same failure differently
+### 5. bug: module resolution errors point at yavascript's internals, and `import` and `require` report the same failure differently
 
 - API: module resolution (`import`, `import()`, `require`)
 - Repro: `./y.sh errs/missing-import.js`; `./y.sh -e 'try { require("some-missing-package") } catch (e) { console.log(JSON.stringify({ name: e.name, msg: e.message, keys: Object.keys(e), code: e.code })) }'`
@@ -92,7 +83,7 @@ Helpers (both in the sandbox):
 - Actual: `errs/missing-import.js` prints `Error: Couldn't resolve module 'some-missing-package' from '.../missing-import.js' (moduleName = ..., fromFile = ...)` with `at makeErrorWithProperties (yavascript-internals/dist/bundles/layer1.js:3096:35)` and `fileName: "yavascript-internals/dist/bundles/layer1.js"`, and no frame at the import. `require()` of the same name throws `Cannot find module (request = "some-missing-package", fromFile = "...")`, with own keys `request` and `fromFile`, which throws away the resolver's error. Neither has a `code`.
 - Cause: `ModuleDelegate.resolve` throws from inside yavascript (`src/layer1/module-hooks.ts:138-144`); `newRequire` catches that and throws its own error instead (`src/layer1/cjs-interop.ts:13-20`).
 
-### 7. bug: a `.json` or `.yaml` module loaded from a URL is silently empty unless the import has `with { type }`
+### 6. bug: a `.json` or `.yaml` module loaded from a URL is silently empty unless the import has `with { type }`
 
 - API: `http:`/`https:` module protocols (`src/layer1/module-protocols/http.ts`, `https.ts`)
 - Repro: serve `url-data/` (`data.json` is `{"a": 1}`, `data.yaml` is `a: 1`) with `python3 -m http.server 0 --bind 127.0.0.1`, then `./y.sh -e 'import("http://127.0.0.1:PORT/data.json").then(m => console.log(JSON.stringify(Object.keys(m)), JSON.stringify(m.default)))'`
@@ -100,25 +91,26 @@ Helpers (both in the sandbox):
 - Actual: `[] undefined`, exit 0, with no error or warning. `data.yaml` gives the same. With `{ with: { type: "json" } }` the `.json` URL gives `{"a":1}`. A `.ts` URL loads correctly, because autodetect compiles it.
 - Cause: `readModule` (`http.ts:33-41`, which `https.ts` delegates to) picks a compiler only from the `type` attribute and otherwise runs `compilers.autodetect` on the response body, ignoring the URL's extension, so data files are compiled as source code.
 
-### 8. doc-mismatch: `Worker.prototype.terminate()` doesn't terminate the worker thread
+### 7. doc-mismatch: `Worker.prototype.terminate()` doesn't terminate the worker thread
 
 - API: `Worker.terminate` (`src/layer3/worker.inc.d.ts:80-83`: "Terminate the worker thread. Equivalent to setting `onmessage` to `null`.")
 - Repro: `cd worker && T=4 ../y.sh terminate-forever.js` (the worker runs a `setInterval`; main calls `w.terminate()` 200ms after the first message)
 - Expected (per "Terminate the worker thread"): the worker stops and the process exits.
 - Actual: `main: terminate()` is logged, then `worker still alive, tick 10`, `tick 20`, ... keep printing until the 4s timeout kills the process (exit 124). Only the second sentence of the doc is true. There is no API that actually stops a worker, so a stuck worker or `runInWorker` function can't be cancelled and keeps the process alive.
 
-### 9. doc-mismatch: `StructuredClonable` lists types that `postMessage` refuses
+### 8. doc-mismatch: `StructuredClonable` lists types that `postMessage` refuses
 
 - API: `Worker.postMessage`, `StructuredClonable` (`src/layer3/worker.inc.d.ts:86-112`), `runInWorker` doc (`runInWorker.inc.d.ts:28-33`)
 - Repro: `cd worker && ../y.sh clonable.js`
 - Expected: every type in the union, plus the runInWorker doc's "instances of native Error constructors", can be posted.
 - Actual: `DataView`, `RegExp` and `Error` throw `TypeError: attempting to serialize unsupported object class: DATAVIEW` / `REGEXP` / `ERROR`. A Symbol gives the cryptic `InternalError: unsupported tag (-8)`. Works: `Boolean`/`String` wrappers, `SharedArrayBuffer`, `Date`, bigint, typed arrays, `undefined`, plain and nested objects. Class instances and `Path` arrive as plain objects with the prototype lost, which the doc doesn't mention.
 
-### 10. gap: Node-style package resolution is missing `exports`, extensionless `main`, `.cjs`, `.mts`/`.cts`
+### 9. gap: Node-style module interop is missing named imports from CommonJS, `exports`, extensionless `main`, `.cjs`, `.mts`/`.cts`
 
-- API: module resolution (`src/layer1/module-hooks.ts`), extension handlers
-- Repro: `cd nm && ../y.sh main.js`
+- API: module resolution (`src/layer1/module-hooks.ts`), cjs-interop, extension handlers
+- Repro: `cd nm && ../y.sh main.js`; `./y.sh interop/named-import.js`
 - Actual:
+  - `import { a } from "../langs/lib-cjs.js"` (`module.exports = { a: 1, b: 2 };`) fails with `SyntaxError: Could not find export 'a' in module '.../lib-cjs.js'`, located at `<internal>/quickjs.c:31305` with no user file or line. The default import and `await import(...)` give `module.exports`, but no names are exported from it; Node finds them statically. `import * as ns` also lists the internal `__cjsExports` and `__isCjsModule` keys next to `default`. Cause: `wrapCommonJSCode` (`cjs-interop.ts`).
   - `require("pkg-exports")` and `require("pkg-exports/sub")` (a package with only an `exports` map): `Cannot find module`. `exports` is never read.
   - `require("pkg-main-noext")` (`"main": "lib/index"`): `Cannot find module`. `potentialFilesForPath` (`module-hooks.ts:25-49`) accepts `main` only if it names an existing file exactly.
   - `require("./file.cjs")` (`module.exports = ...`): `ReferenceError: 'module' is not defined`. There's no `.cjs` compiler, so the CJS wrapper is never applied.
@@ -127,7 +119,7 @@ Helpers (both in the sandbox):
   - `require.main` is `undefined`.
   - Works: `main` naming a full filename, `.mjs`, CJS packages requiring relative files, `__dirname`/`__filename`/`module.id` inside CJS, module instance caching.
 
-### 11. gap: `node:process` has no named exports, and `process` lacks the Node members scripts use most
+### 10. gap: `node:process` has no named exports, and `process` lacks the Node members scripts use most
 
 - API: node-compat (`src/layer1/api/node-compat/node-compat.ts`)
 - Repro: `cd node && ../y.sh esm-process-named.js`, `../y.sh esm-process.js`, `../y.sh proc.js a b`; `./y.sh -e 'const r = {}; for (const m of ["fs", "path", "os", "child_process", "util", "events", "node:path", "buffer", "process", "node:process"]) { try { require(m); r[m] = "ok" } catch (e) { r[m] = e.message.split(" (")[0] } } JSON.stringify(r)'`
@@ -137,27 +129,27 @@ Helpers (both in the sandbox):
   - `require("fs")`, `"path"`, `"os"`, `"child_process"`, `"util"`, `"events"`, `"buffer"` and `node:` variants throw a bare `Cannot find module`, with no hint toward yavascript's equivalents.
   - The doc does say "a subset", hence gap, but `process.stdout.write`, `process.cwd()` and named imports from `node:process` are the first Node-isms a ported script hits. Also, `process.exit` is declared as returning `void` rather than `never` (`node-compat.inc.d.ts:45`).
 
-### 12. gap: no top-level `await` (or `import.meta`) in `-e` or the REPL
+### 11. gap: no top-level `await` (or `import.meta`) in `-e` or the REPL
 
 - API: CLI `-e`, REPL
 - Repro: `./y.sh -e 'await Promise.resolve(5)'`; `DEADLINE=5000 node drive.js 'await Promise.resolve(5){cr}|Promise.resolve(6){cr}|{x04}'`; `./y.sh -e 'import.meta.url'`
 - Actual: `SyntaxError: expecting ';'` in both `await` cases, and a promise result prints as `Promise {}` with no state or value, so an async result can't be seen at the prompt without `.then(console.log)`. `import.meta` gives `SyntaxError: import.meta only valid in module code`. Files do support top-level await (`errs/tla-throw.js`); `-e` and the REPL use `engine.evalScript` (`src/layer5b/targets/eval.ts:17-20`, `js-repl.ts:116-119`). Many yavascript APIs have async variants, so this is a notable gap for 1.0.
 
-### 13. gap: there's no way to run a script from stdin
+### 12. gap: there's no way to run a script from stdin
 
 - API: CLI
 - Repro: `./y.sh -`; `IN='console.log("from stdin", 1 + 1)\n' ./y.sh /dev/stdin`; `timeout 5 ../../../dist/yavascript /dev/stdin < stdin-script.js`; `cat stdin-script.js | CLICOLOR=0 HOME=$PWD/home timeout 5 ../../../dist/yavascript | cat -v`
 - Expected: some documented way to do `curl ... | yavascript` or `yavascript - < script.js`, like `node -`, `bash -s`, `deno run -`.
 - Actual: `-` gives `Error: No such file or directory (errno = 2, path = .../-)`. `/dev/stdin` from a pipe gives `Failed to load module: Illegal seek (errno = 29, filename = /dev/fd/0)`; from a file redirect it resolves to a nonexistent path (`filename = /dev/fd/stdin-script.js`). Piping into bare `yavascript` feeds the script through the REPL line by line: every character is echoed followed by `ESC[J`, and `> ` prompts and `undefined` results are mixed into the output.
 
-### 14. gap: InteractivePrompt can't be stopped from code, doesn't report that it stopped, and doesn't wait for an async `handleInput`
+### 13. gap: InteractivePrompt can't be stopped from code, doesn't report that it stopped, and doesn't wait for an async `handleInput`
 
 - API: `InteractivePrompt` (`src/layer1/api/repl/interactive-prompt.ts:58-75`)
 - Repro: `DELAY=600 DEADLINE=4000 node drive.js 'one{cr}|two{cr}|{x04}' ip/async-handler.js` (handler: `async (input) => { await sleep.async(200); console.log("finished handling:", input) }`); `IN='one\n' ./y.sh ip/async-handler.js`
 - Actual: output is `async> one`, `async> finished handling: one`, `two`, `async> finished handling: two`. The next prompt is printed as soon as `handleInput` returns its promise, so the handler's output lands after the prompt and the user can type while it is still running. With piped input, the process exits at EOF before `finished handling: one` is ever printed.
 - Also: `start()` throws away the engine handle that has `stop()` (`interactive-prompt.ts:66-74` discards what `startReplEngine` returns, `repl-engine.ts:895-901`), so instances have no `stop()`/`close()` (`typeof p.stop` is `undefined` in `ip/basic.js`), and there's no callback or promise for "the user pressed Ctrl+D". Double Ctrl+C and stdin reaching EOF always call `exit(0)` (`repl-engine.ts:138`), so a program can't clean up or pick its exit code (shells use 130). These are what a confirm prompt or a multi-step wizard needs.
 
-### 15. rough-edge: REPL multi-line handling is JS-only, and directives are processed on continuation lines
+### 14. rough-edge: REPL multi-line handling is JS-only, and directives are processed on continuation lines
 
 - API: default REPL (`src/layer1/api/repl/js-repl.ts`)
 - Repro (the second command types a backslash followed by `tsecond`):
@@ -171,14 +163,14 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
   - CoffeeScript: `square = (x) ->` is evaluated at once as `square = function(x) {}`, then `  x * x` runs alone (`ReferenceError: 'x' is not defined`), and `square 4` returns `undefined`. Indentation-based blocks can't be entered in the Coffee or Civet REPLs, because completeness comes from the JS colorizer's bracket balance (`js-repl.ts:149-156`).
   - Inside an unterminated template literal, a continuation line starting with `\` is taken as a directive: `Unknown directive: tsecond`, the line is dropped, and the REPL stays inside the template. A continuation line that is exactly `?` prints help instead. `preprocessLine` (`js-repl.ts:158-171`) runs on every line, continuation lines included.
 
-### 16. rough-edge: the REPL can't start if its config dir can't be created
+### 15. rough-edge: the REPL can't start if its config dir can't be created
 
 - API: default REPL, `InteractivePrompt` with `historyFileName` (`src/layer1/api/repl/history-file.ts`)
 - Repro: `YS_HOME=/dev/null DEADLINE=4000 node drive.js '1+1{cr}|{x04}'` and `YS_HOME=/dev/null DEADLINE=4000 node drive.js 'x{cr}|{x04}' ip/basic.js hist.txt`
 - Expected: `interactive-prompt.inc.d.ts:97-100` says that when there's nowhere to write, history is kept for the session only.
 - Actual: `Error: Cannot use mkdir to create directory '/dev/null/Library/Application Support/yavascript' because '/dev/null' is a file, not a directory.` and exit 1 before any prompt. Only an unset `HOME` falls back to session history; an unwritable one (read-only containers, `HOME=/`) makes the REPL unusable. The `HistoryFile` constructor (`history-file.ts:13-27`) doesn't catch `mkdir`/`touch` failures.
 
-### 17. rough-edge: Worker globals differ from the main thread, contrary to the doc, and a worker file can't use top-level `await`
+### 16. rough-edge: Worker globals differ from the main thread, contrary to the doc, and a worker file can't use top-level `await`
 
 - API: `Worker` (`src/layer3/worker.inc.d.ts:1-10`: "loads all of the YavaScript API globals into the Worker's global context")
 - Repro: `cd worker && ../y.sh main2.js globals`, `../y.sh main2.js missing`, `../y.sh main2.js undefined-options`, `../y.sh wcheck2.js`
@@ -189,20 +181,20 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
   - `new Worker("./does-not-exist.js")` throws `Error: Failed to normalize module name`, without the path.
   - `new Worker(file, undefined)` throws `TypeError: invalid 'in' operand`, though `options` is optional in the type (`worker.ts:47-48` checks `args.length` and then uses `in` on `args[1]`).
 
-### 18. doc-mismatch: InteractivePrompt `printInput` output must be exactly as wide as the input
+### 17. doc-mismatch: InteractivePrompt `printInput` output must be exactly as wide as the input
 
 - API: `InteractivePrompt` `printInput` (`interactive-prompt.inc.d.ts:70-80`: "so that you can colour it or mark it up")
 - Repro: `RAW=1 DEADLINE=4000 node drive.js 'ab{cr}|{x04}' ip/printinput.js` (`printInput` writes `"<" + input.toUpperCase() + ">"`)
 - Actual raw stdout: `[1]> <A>` `ESC[J` `ESC[D` `<AB>` `ESC[J`. After drawing `<A>` (3 columns), the engine moves left 1 column (the input's length) before redrawing, so a terminal shows `[1]> <A<AB>` with the cursor in the wrong place. Only zero-width markup (ANSI colors) works. Cause: `update()` (`repl-engine.ts:287-329`) computes cursor columns from `cmd`, not from what `printInput` wrote.
 
-### 19. rough-edge: REPL Tab completion evaluates getters and prints their exceptions
+### 18. rough-edge: REPL Tab completion evaluates getters and prints their exceptions
 
 - API: default REPL completion (`src/layer1/api/repl/js-completions.ts`)
 - Repro: `DEADLINE=5000 node drive.js 'cp.{tab}|1+1{cr}|{x04}'`; `DEADLINE=6000 node drive.js 'globalThis.bad = { get boom() { throw new Error("getter threw") } }; 0{cr}|bad.boom.{tab}|2+2{cr}|{x04}'`
 - Expected: nothing happens when there's no object to complete against. The comment on `evalForCompletion` (`js-completions.ts:27-32`) says unresolvable names must not escape and print a stack trace over the line.
 - Actual: Tab prints `ReferenceError: 'cp' is not defined. Did you mean 'copy'?` (the stub global's getter) or `Error: getter threw`, each with 7 to 9 internal frames, over the line being edited. Cause: `getContextObject` reads `obj[base]` directly (`js-completions.ts:85-89`), outside the try/catch. `suffixForCandidate` (`js-completions.ts:181-190`) also runs getters on a double Tab.
 
-### 20. rough-edge: `with { type }` names don't line up with `--lang`, and unknown types are silently ignored
+### 19. rough-edge: `with { type }` names don't line up with `--lang`, and unknown types are silently ignored
 
 - API: import attributes, extension handlers (`src/layer1/extension-handlers/`)
 - Repro: `cd data && ../y.sh attr-types.js`; `./y.sh -e 'import("./data/data.txt", { with: { type: "bogus" } }).then(m => console.log(Object.keys(m)), e => console.log("rejected:", e.message))'`
@@ -211,13 +203,13 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
   - An unregistered `type` (`"ts"`, `"coffee"`, `"bogus"`) is silently ignored and the file is parsed as JS, so the error is a misleading `SyntaxError` (`missing initializer for const variable`, `unexpected token in expression: '>'`) rather than "unsupported import type", and a file that happens to be valid JS loads as JS.
   - `import * as ns from "./data.json"` exposes the internal `__cjsExports` and `__isCjsModule` keys next to `default`.
 
-### 21. doc-mismatch: yavascript's module resolution rules aren't documented anywhere
+### 20. doc-mismatch: yavascript's module resolution rules aren't documented anywhere
 
 - API: module system
 - Repro: `./y.sh order/main.js` (a directory with both `x.js` and `x.ts`; `import x from "./x"` prints `from ts`); `./y.sh -e 'require("quickjs:engine").ModuleDelegate.searchExtensions'` gives `[".civet", ".ts", ".tsx", ".coffee", ".jsx", ".js"]`
-- The only resolution doc is QuickJS's `modulesys.md`, which says `searchExtensions` "Defaults to `[".js"]`" (`meta/website/docs/modulesys.md:34`) and that `.json` isn't loaded by extension alone (`:75-83`). In yavascript, extensionless imports prefer `.civet`/`.ts`/`.tsx`/`.coffee`/`.jsx` over `.js` (`src/layer1/extension-handlers/_load-all.ts:16-23`); `.json` loads by extension as JSON5; `.yaml`/`.yml`/`.toml` load by extension, except from a URL (finding 7); `node_modules` is searched using `main` but not `exports` (finding 10); CommonJS is detected heuristically from the source text; `require` unwraps CJS but `import` doesn't (finding 3). The README's "Languages" section (`README.md:116-124`) names the languages and nothing else.
+- The only resolution doc is QuickJS's `modulesys.md`, which says `searchExtensions` "Defaults to `[".js"]`" (`meta/website/docs/modulesys.md:34`) and that `.json` isn't loaded by extension alone (`:75-83`). In yavascript, extensionless imports prefer `.civet`/`.ts`/`.tsx`/`.coffee`/`.jsx` over `.js` (`src/layer1/extension-handlers/_load-all.ts:16-23`); `.json` loads by extension as JSON5; `.yaml`/`.yml`/`.toml` load by extension, except from a URL (finding 6); `node_modules` is searched using `main` but not `exports` (finding 9); CommonJS is detected heuristically from the source text; `require` unwraps CJS, while `import` gets `module.exports` as the default export and no named exports (finding 9). The README's "Languages" section (`README.md:116-124`) names the languages and nothing else.
 
-### 22. rough-edge: missing-file and compile errors show raw errno text and internal stack frames
+### 21. rough-edge: missing-file and compile errors show raw errno text and internal stack frames
 
 - API: CLI run-file target
 - Repro: `./y.sh nonexistent.js`, `./y.sh --help extra`, `./y.sh langs` (a directory), `./y.sh -r nope.js -e 1`, `./y.sh langs/bad2.ts`
@@ -225,19 +217,19 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
   - `Error: No such file or directory (errno = 2, path = /.../nonexistent.js)` followed by 11 frames such as `at <internal>/quickjs-os.c:1015:0` and `at runFileTarget (yavascript-internals/dist/bundles/layer5b-arm64.js:29160:26)`. A directory gives `Failed to load module: Input/output error (errno = 5, ...)`. `--help extra` tries to run a file named `--help`. All exit 1, while the `invalid` target uses 3. Cause: `realpath` in `src/layer5b/targets/run-file.ts:43` throws straight into `runMain`'s `printError`.
   - A TS compile error prints `SyntaxError: Error transforming .../bad2.ts: Unexpected token (2:17)`, then 46 internal frames (sucrase's parser, `call (native)`, `module-impl.js`) and `fileName: "yavascript-internals/dist/bundles/layer1.js"`, with no frame at the user's file. The plain-JS equivalent (`langs/bad2.js`) prints `at .../bad2.js:2:17`. Message formats per compiler are already covered by formats report #20.
 
-### 23. rough-edge: `yavascript -v` / `--version` print no trailing newline
+### 22. rough-edge: `yavascript -v` / `--version` print no trailing newline
 
 - API: CLI
 - Repro: `./y.sh -v | od -c | head -2`
 - Actual: `git-d8cc554c0810` is immediately followed by the next output (`[exit=0]`), so a shell prompt lands on the same line. `--help`, `--license` and `--print-types` all end in `\n`. Cause: `std.out.puts(version)` (`src/layer5b/targets/version.ts:8`).
 
-### 24. question: `yavascript -- script.js` opens the REPL and ignores the file
+### 23. question: `yavascript -- script.js` opens the REPL and ignores the file
 
 - API: CLI (`src/layer5b/determine-target.ts:110-118`)
 - Repro: `T=3 ./y.sh -- args.js x` prints `> ` and, with stdin at EOF, exits 0 without running `args.js`.
 - Question: this is snapshotted as intended (`meta/tests/src/determine-target.test.ts:46-47`: `["--", "-v"]` is `repl`), but `node -- file.js` and similar CLIs run the first argument after `--`. Someone writing `yavascript -- "$script" "$@"` defensively gets a REPL, and in CI a silent exit 0 with the script never run. Related (exec report F1): `--lang` is also consumed after a script filename, so user scripts can't accept a `--lang` flag (`./y.sh args.js --lang potato` exits 3 with `Invalid --lang`).
 
-### 25. question: an unsettled top-level `await` exits 0 silently
+### 24. question: an unsettled top-level `await` exits 0 silently
 
 - API: module evaluation
 - Repro: `cd errs && ../y.sh tla-never.js` (`console.log("before"); await new Promise(() => {}); console.log("after");`)
@@ -260,6 +252,7 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
 - `import.meta`: `url` (`file://...`), `main` (true in the entry, false in imports), `require`, `resolve`, `attributes` (`undefined` without `with`); `__filename`/`__dirname` in TS.
 - Import attributes: static `with { type: "json" }` on a `.txt` file (same module shape as a plain `.json` import, JSON5 syntax accepted), dynamic `import(..., { with })`, `require(..., { with })`, `require.resolve(..., { with })`; `.json`/`.json5`/`.yaml`/`.toml` by extension (import and require).
 - `require`: relative CJS, instance caching, `__dirname`/`__filename`/`module.id` in CJS, `require("process")`/`require("node:process") === process`; `.mjs` files and packages whose `main` is a full filename. Module-not-found errors keep `err.name` as `Error`.
+- ESM `import` of CommonJS: the default import and `await import(...)` of a CJS file or package give `module.exports`.
 - URL modules: self-contained `https://` and `http://` modules (`ms@2.1.3/+esm`); an `http://` module's relative and root-relative imports resolve against its URL, and `with { type: "json" }` on a URL works.
 - `Worker`: messages in both directions, `initialData`, `onerror` for a throw and for a rejection in the worker (with `message`, `filename`, `lineno`, `error`), `exit()` in a worker gives a clear error, static and dynamic imports of TS/Coffee/Civet and extensionless paths inside a worker, a worker file with a shebang, `overrideCode` with an absolute nonexistent filename (`import.meta.url` matches), wrong argument count throws a clear error.
 - `runInWorker`: sync and async return values, `require` inside the function resolves relative to the caller's file, yavascript globals inside, `throw "string"` from an async function rejects. A function that throws synchronously, rejects with an Error, or returns something that can't be cloned makes the call reject, and an unhandled rejection of it exits 1.
@@ -271,13 +264,13 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
 ## Test coverage notes
 
 - `meta/tests/src/eval.test.ts` covers an import line followed or preceded by other lines, but nothing covers an import followed by code on the same line, by trailing whitespace, or by a line starting with `[` or `(` (finding 1).
-- No tests for a throwing `printInput`/`getCompletions` or a `getCompletions` that returns `undefined` (finding 5), directives inside continuation lines or multi-line Coffee/Civet (finding 15), unwritable config dirs (finding 16), or async `handleInput` (finding 14). The one `\load` test only checks that the REPL keeps going after a throwing script; nothing covers how its error is printed or `\load` of a `.ts` file (finding 4). The `printInput` test in `interactive-prompt.test.ts` draws output wider than the input, but its snapshot goes through the ANSI sanitizer, which removes the cursor moves finding 18 is about.
-- `meta/tests/src/worker.test.ts` has no test for `terminate()` on a busy worker (finding 8), non-clonable payloads (finding 9), nested workers, `runInWorker`/`Context` inside workers, or a worker file with top-level `await` (finding 17).
+- No tests for a throwing `printInput`/`getCompletions` or a `getCompletions` that returns `undefined` (finding 4), directives inside continuation lines or multi-line Coffee/Civet (finding 14), unwritable config dirs (finding 15), or async `handleInput` (finding 13). The one `\load` test only checks that the REPL keeps going after a throwing script; nothing covers how its error is printed or `\load` of a `.ts` file (finding 3). The `printInput` test in `interactive-prompt.test.ts` draws output wider than the input, but its snapshot goes through the ANSI sanitizer, which removes the cursor moves finding 17 is about.
+- `meta/tests/src/worker.test.ts` has no test for `terminate()` on a busy worker (finding 7), non-clonable payloads (finding 8), nested workers, `runInWorker`/`Context` inside workers, or a worker file with top-level `await` (finding 16).
 - `meta/tests/src/context.test.ts` covers `date: false` and `promise: false` with the default yavascript globals, but not `moduleGlobals: false`, `modules: { "quickjs:bytecode": false }`, `console: false`, or unknown and non-object options (finding 2).
-- No test asserts the exit code for an unsettled top-level await (finding 25).
-- `meta/tests/src/cjs-interop.test.ts` has no ESM `import` of a CommonJS file (finding 3). Its "a JSON file required through an import attribute" test passes `{ type: "json" }` rather than `{ with: { type: "json" } }` on a `.json` file, so it would pass whether or not attributes are honored.
-- No fixture has a `node_modules` directory or a `package.json`, so package resolution (`main`, `exports`, index files) is untested (finding 10). No `.cjs`/`.mts`/`.cts` fixtures.
-- `meta/tests/src/import-attributes.test.ts` covers static `import ... with { type }` on extensionless fixtures and `require(..., { with })`. A local dynamic `import(..., { with })`, `type: "json"` on a file using JSON5 syntax, and the `type` names and unknown values in finding 20 are untested.
-- `meta/tests/src/http-modules.test.ts` covers `http:` URL modules only, and never imports a `.json` or `.yaml` URL without an attribute (finding 7); the `https:` and `npm:` protocols have no tests.
-- No test for `node:process` named imports or for `process` members beyond the snapshot of globals (finding 11).
-- No CLI test for running a script from stdin (`yavascript -`, `/dev/stdin`; finding 13), a missing script file (finding 22), or the `-v` output bytes (finding 23).
+- No test asserts the exit code for an unsettled top-level await (finding 24).
+- `meta/tests/src/cjs-interop.test.ts` covers the default import and `await import(...)` of a CommonJS file, but no named import (finding 9). Its "a JSON file required through an import attribute" test passes `{ type: "json" }` rather than `{ with: { type: "json" } }` on a `.json` file, so it would pass whether or not attributes are honored.
+- No fixture has a `node_modules` directory or a `package.json`, so package resolution (`main`, `exports`, index files) is untested (finding 9). No `.cjs`/`.mts`/`.cts` fixtures.
+- `meta/tests/src/import-attributes.test.ts` covers static `import ... with { type }` on extensionless fixtures and `require(..., { with })`. A local dynamic `import(..., { with })`, `type: "json"` on a file using JSON5 syntax, and the `type` names and unknown values in finding 19 are untested.
+- `meta/tests/src/http-modules.test.ts` covers `http:` URL modules only, and never imports a `.json` or `.yaml` URL without an attribute (finding 6); the `https:` and `npm:` protocols have no tests.
+- No test for `node:process` named imports or for `process` members beyond the snapshot of globals (finding 10).
+- No CLI test for running a script from stdin (`yavascript -`, `/dev/stdin`; finding 12), a missing script file (finding 21), or the `-v` output bytes (finding 22).

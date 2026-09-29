@@ -91,12 +91,18 @@ export const __cjsExports = module.exports;
   .trim()
   .replace(/\n/g, " ");
 
+// ESM code that only looks like CJS may have its own; two is a SyntaxError
+const DEFAULT_EXPORT_RE = /\bexport\s+default\b|\bexport\s*\{[^}]*\bdefault\b/;
+
 export function wrapCommonJSCode(code: string): {
   code: string;
   mapper: LineOffsetMapper;
 } {
+  const postamble = DEFAULT_EXPORT_RE.test(code)
+    ? cjsPostamble
+    : `${cjsPostamble} export default module.exports;`;
   return {
-    code: `${cjsPreamble}\n${code}\n${cjsPostamble}`,
+    code: `${cjsPreamble}\n${code}\n${postamble}`,
     mapper: { lineOffset: -1 },
   };
 }

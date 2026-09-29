@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { evaluate } from "./test-helpers";
+import { evaluate, rootDir, runYavascript } from "./test-helpers";
 
 describe("wrapping code for CommonJS interop", () => {
   test("module.exports = something", async () => {
@@ -14,7 +14,7 @@ describe("wrapping code for CommonJS interop", () => {
        "stderr": "",
        "stdout": "let __isCjsModule = false; const exports = new Proxy({}, {   set(obj, prop, value) {     __isCjsModule = true;     return Reflect.set(obj, prop, value);   } }); const module = new Proxy({   exports,   id: __filename }, {   set(obj, prop, value) {     if (prop === "exports") {       __isCjsModule = true;     }     return Reflect.set(obj, prop, value);   } });
      module.exports = something
-     export { __isCjsModule }; export const __cjsExports = module.exports;
+     export { __isCjsModule }; export const __cjsExports = module.exports; export default module.exports;
      ",
      }
     `);
@@ -32,7 +32,7 @@ describe("wrapping code for CommonJS interop", () => {
        "stderr": "",
        "stdout": "let __isCjsModule = false; const exports = new Proxy({}, {   set(obj, prop, value) {     __isCjsModule = true;     return Reflect.set(obj, prop, value);   } }); const module = new Proxy({   exports,   id: __filename }, {   set(obj, prop, value) {     if (prop === "exports") {       __isCjsModule = true;     }     return Reflect.set(obj, prop, value);   } });
      exports.something = whatever
-     export { __isCjsModule }; export const __cjsExports = module.exports;
+     export { __isCjsModule }; export const __cjsExports = module.exports; export default module.exports;
      ",
      }
     `);
@@ -50,7 +50,7 @@ describe("wrapping code for CommonJS interop", () => {
        "stderr": "",
        "stdout": "let __isCjsModule = false; const exports = new Proxy({}, {   set(obj, prop, value) {     __isCjsModule = true;     return Reflect.set(obj, prop, value);   } }); const module = new Proxy({   exports,   id: __filename }, {   set(obj, prop, value) {     if (prop === "exports") {       __isCjsModule = true;     }     return Reflect.set(obj, prop, value);   } });
      Object.defineProperty(exports, 'yeah', void 0);
-     export { __isCjsModule }; export const __cjsExports = module.exports;
+     export { __isCjsModule }; export const __cjsExports = module.exports; export default module.exports;
      ",
      }
     `);
@@ -68,7 +68,7 @@ describe("wrapping code for CommonJS interop", () => {
        "stderr": "",
        "stdout": "let __isCjsModule = false; const exports = new Proxy({}, {   set(obj, prop, value) {     __isCjsModule = true;     return Reflect.set(obj, prop, value);   } }); const module = new Proxy({   exports,   id: __filename }, {   set(obj, prop, value) {     if (prop === "exports") {       __isCjsModule = true;     }     return Reflect.set(obj, prop, value);   } });
      Object.defineProperty(exports, "yeah", void 0);
-     export { __isCjsModule }; export const __cjsExports = module.exports;
+     export { __isCjsModule }; export const __cjsExports = module.exports; export default module.exports;
      ",
      }
     `);
@@ -88,6 +88,19 @@ describe("wrapping code for CommonJS interop", () => {
      ",
      }
     `);
+  });
+});
+
+describe("import of a CommonJS module", () => {
+  test("the default export is module.exports", async () => {
+    const result = await runYavascript([
+      rootDir("meta/tests/fixtures/cjs-interop/esm-imports-cjs.js"),
+    ]);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: `{"lib":{"a":1,"b":2},"nsDefault":{"a":1,"b":2},"dynamicDefault":{"a":1,"b":2},"esmDefault":"esm default"}\n`,
+    });
   });
 });
 
