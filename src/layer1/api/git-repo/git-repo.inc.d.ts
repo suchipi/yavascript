@@ -161,11 +161,13 @@ declare class GitRepo {
   branchName(): string | null;
 
   /**
-   * Returns a boolean indicating whether there are uncommited changes in the
+   * Returns a boolean indicating whether there are uncommitted changes in the
    * git repo. `true` means there are changes, `false` means there are no
-   * changes (ie. the repo is clean).
+   * changes (ie. the repo is clean). Staged changes, unstaged changes, and
+   * untracked files that aren't ignored all count as changes.
    *
-   * This is done by running `git status --quiet` within the repo directory.
+   * This is done by running `git status --porcelain` within the repo
+   * directory; any output means the repo is dirty.
    */
   isWorkingTreeDirty(): boolean;
 

@@ -214,7 +214,7 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
 - Repro: `./y.sh nonexistent.js`, `./y.sh --help extra`, `./y.sh langs` (a directory), `./y.sh -r nope.js -e 1`, `./y.sh langs/bad2.ts`
 - Actual:
   - `Error: No such file or directory (errno = 2, path = /.../nonexistent.js)` followed by 11 frames such as `at <internal>/quickjs-os.c:1015:0` and `at runFileTarget (yavascript-internals/dist/bundles/layer5b-arm64.js:29160:26)`. A directory gives `Failed to load module: Input/output error (errno = 5, ...)`. `--help extra` tries to run a file named `--help`. All exit 1, while the `invalid` target uses 3. Cause: `realpath` in `src/layer5b/targets/run-file.ts:43` throws straight into `runMain`'s `printError`.
-  - A TS compile error prints `SyntaxError: Error transforming .../bad2.ts: Unexpected token (2:17)`, then 46 internal frames (sucrase's parser, `call (native)`, `module-impl.js`) and `fileName: "yavascript-internals/dist/bundles/layer1.js"`, with no frame at the user's file. The plain-JS equivalent (`langs/bad2.js`) prints `at .../bad2.js:2:17`. Message formats per compiler are already covered by formats report #20.
+  - A TS compile error prints `SyntaxError: Error transforming .../bad2.ts: Unexpected token (2:17)`, then 46 internal frames (sucrase's parser, `call (native)`, `module-impl.js`) and `fileName: "yavascript-internals/dist/bundles/layer1.js"`, with no frame at the user's file. The plain-JS equivalent (`langs/bad2.js`) prints `at .../bad2.js:2:17`. Message formats per compiler are already covered by formats report #19.
 
 ### 22. rough-edge: `yavascript -v` / `--version` print no trailing newline
 
@@ -236,7 +236,7 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
 
 ### Already-reported issues seen again (not re-investigated)
 
-- `--lang ts -e` with statements fails because of `expression: true` (formats #19). The same happens for `--lang civet -e 'x := 3'` (`SyntaxError: Unexpected token (1:2)`).
+- `--lang ts -e` with statements fails because of `expression: true` (formats #18). The same happens for `--lang civet -e 'x := 3'` (`SyntaxError: Unexpected token (1:2)`).
 - `runInWorker` doc example without `await` prints `Promise {}` (`worker/doc-example.js`).
 - `process.version` is `v16.19.0`; no `fetch`/`URL`/`Buffer`/`queueMicrotask`/`setImmediate`/`atob` (`node/proc.js`).
 - `startRepl` context goes onto `globalThis` (`ip/startrepl.js`: `typeof myVar` is `"number"` at the prompt).

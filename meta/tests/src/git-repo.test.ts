@@ -250,6 +250,53 @@ test("GitRepo methods describe repoDir even when GIT_DIR points at another repo"
   });
 });
 
+test("isWorkingTreeDirty counts staged, unstaged, and untracked changes", async () => {
+  const dir = gitFixturesDir("dirty-check");
+  makeRepo(dir, "main", "initial");
+  fs.writeFileSync(path.join(dir, ".gitignore"), "ignored.txt\n");
+  fs.writeFileSync(path.join(dir, "tracked.txt"), "one\n");
+  git(["-C", dir, "add", "."]);
+  git([
+    "-C",
+    dir,
+    "-c",
+    "user.email=test@example.com",
+    "-c",
+    "user.name=Test",
+    "commit",
+    "-q",
+    "-m",
+    "add files",
+  ]);
+
+  const isDirty = async () => {
+    const result = await evaluate(
+      `
+        logger.info = () => {};
+        console.log(new GitRepo(${JSON.stringify(dir)}).isWorkingTreeDirty());
+      `,
+      { env: gitEnv() },
+    );
+    expect(result).toMatchObject({ code: 0, stderr: "" });
+    return result.stdout.trim();
+  };
+
+  expect(await isDirty()).toBe("false");
+
+  fs.writeFileSync(path.join(dir, "ignored.txt"), "ignored\n");
+  expect(await isDirty()).toBe("false");
+
+  fs.writeFileSync(path.join(dir, "untracked.txt"), "untracked\n");
+  expect(await isDirty()).toBe("true");
+  fs.rmSync(path.join(dir, "untracked.txt"));
+
+  fs.writeFileSync(path.join(dir, "tracked.txt"), "two\n");
+  expect(await isDirty()).toBe("true");
+
+  git(["-C", dir, "add", "tracked.txt"]);
+  expect(await isDirty()).toBe("true");
+});
+
 test("GitRepo.findRoot finds a checkout whose .git is a file", async () => {
   const result = await evaluate(`
     console.log(GitRepo.findRoot(${JSON.stringify(path.join(worktreeLikeDir, "src"))}).toString());

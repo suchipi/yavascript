@@ -149,14 +149,14 @@ export class GitRepo {
   isWorkingTreeDirty(): boolean {
     const repoDir = this.repoDir.toString();
 
-    const result = exec(["git", "diff", "--quiet"], {
+    const result = exec(["git", "status", "--porcelain"], {
       env: envWithoutGitVars(),
       failOnNonZeroStatus: false,
       captureOutput: true,
       cwd: repoDir,
     });
-    if (result.status !== 0 && result.status !== 1) {
-      throw makeErrorWithProperties("'git diff --quiet' failed", {
+    if (result.status !== 0) {
+      throw makeErrorWithProperties("'git status --porcelain' failed", {
         status: result.status,
         stderr: result.stderr,
         stdout: result.stdout,
@@ -165,7 +165,7 @@ export class GitRepo {
       });
     }
 
-    return result.status === 1;
+    return result.stdout.trim() !== "";
   }
 
   isIgnored(path: string | Path): boolean {

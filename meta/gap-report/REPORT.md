@@ -9,7 +9,7 @@ Binary: `dist/yavascript` built from `d8cc554` (`--version` prints `git-d8cc554c
 | `exec`/`$`/`ChildProcess`, `glob`, `env`, `parseScriptArgs`, `openUrl` | [exec-glob-env-args.md](exec-glob-env-args.md) | 29 |
 | `types`, `is`, `assert`, `number`/`string`/..., JSX | [types-is-assert-jsx.md](types-is-assert-jsx.md) | 17 |
 | `console`, `inspect`, colors, grep, `logger`, `RegExp.escape`, `String.dedent`, `Promise.map` | [console-strings-grep-logger.md](console-strings-grep-logger.md) | 20 |
-| YAML, CSV, TOML, `GitRepo`, `yavascript`, `help` | [formats-git-yavascript-help.md](formats-git-yavascript-help.md) | 31 |
+| YAML, CSV, TOML, `GitRepo`, `yavascript`, `help` | [formats-git-yavascript-help.md](formats-git-yavascript-help.md) | 30 |
 | d.ts vs runtime, QuickJS `std`/`os`, doc quality, built-ins | [crosscut.md](crosscut.md) | 27 |
 | Worker, `Context`, REPL, Node compat, modules, languages, CLI | [runtime-modules-cli.md](runtime-modules-cli.md) | 24 |
 
@@ -31,7 +31,6 @@ The test suite passes on this build (713 passed, 1 skipped). None of the bugs in
 | `mkdir` a bare relative name | `mkdir("newdir")` throws `PathErrors.ZeroSegmentsError`. `./newdir`, absolute paths and `mkdirp("newdir")` work. | `mkdir.ts:116` calls `dirname` on the target, and `dirname` of a one-segment path throws | commands #1 |
 | `-e` and REPL imports | An import followed by code on the same line, by trailing whitespace, or by a line starting with `[` or `(` fails with a `SyntaxError`, `ReferenceError` or `TypeError` | `esm-to-require.ts:18` writes `[;\s]*` inside a template literal, where `\s` is just `s`; `:86-97` never adds a `;` after a rewritten import | runtime #1 |
 | `.json`/`.yaml` URL imports | Importing `http(s)://.../data.json` or `.yaml` without `with { type }` silently gives an empty module, while a local `.json` import works without the attribute | `http.ts:33-41` (shared by `https.ts`) picks a compiler only from the `type` attribute and otherwise runs `autodetect`, ignoring the extension | runtime #6 |
-| `GitRepo.isWorkingTreeDirty` | Runs `git diff --quiet`, so staged and untracked changes report a clean tree | `git-repo.ts:152` | formats #2 |
 | `logger.info`/`warn` object args, uncaught errors | Inspected objects are colored based on whether stdout is a TTY, so a redirected stderr still gets ANSI escapes when stdout is a terminal (and the reverse) | `make-inspect-log.ts:18` and `print-error.ts:40,46` call `forPrint()` without a file | console #1 |
 | `glob` | `\` is treated as a separator in wildcard-free segments and in results, so a file named `back\slash.js` can't be matched literally and comes back as `back/slash.js` | `glob.ts:55` (`Path.normalize`) and `:368` (`new Path`) | exec F3 |
 | `InteractivePrompt` | A throwing `printInput` or `getCompletions` drops the rest of the bytes read with it (the next line arrives as `"botwo"`); a `getCompletions` returning `undefined` gives a cryptic TypeError | `repl-engine.ts:207-226` has no try/catch per byte; `:636-637` | runtime #4 |
@@ -56,12 +55,12 @@ These are behaviors that would be breaking to change later. Each one is working 
 | `inspect.custom` protocol | The hook has to mutate the `inputs` object; its return value is ignored. Node's `Symbol.for("nodejs.util.inspect.custom")` isn't honored. | console #5, crosscut #14 |
 | `exec` `env` option | Replaces the whole environment rather than merging. Intended per tests, but undocumented. | exec F7 |
 | `--lang` after the script filename | Consumed by yavascript (snapshot-tested as intended), so scripts can't have their own `--lang` flag | exec F1 |
-| TOML version | @iarna/toml implements TOML 0.5, so mixed-type arrays are rejected, and the library is unmaintained | formats #10 |
+| TOML version | @iarna/toml implements TOML 0.5, so mixed-type arrays are rejected, and the library is unmaintained | formats #9 |
 | `process.version` | Claims Node `v16.19.0`, so libraries that gate on it take old code paths | crosscut #24 |
 | `yavascript.ecmaVersion` | `"ES2023"`, but `WeakRef` (ES2021) is missing and many ES2025 features are present | crosscut #23 |
 | `npm:` imports | Rewritten to the Skypack CDN (marked `HACK` in `npm.ts:5`), so 1.0 would depend on a third-party CDN staying up | crosscut #27 |
-| `yavascript.compilers` | Replacing one changes how files load (a real extension point, undocumented). `esmToCjs` exists and is snapshot-tested but undocumented. | formats #5, #21 |
-| `help()` target | Still points at GitHub markdown, not the website (the open item in `todo.md`). The website's docusaurus `url` is still the template placeholder. | formats #30 |
+| `yavascript.compilers` | Replacing one changes how files load (a real extension point, undocumented). `esmToCjs` exists and is snapshot-tested but undocumented. | formats #4, #20 |
+| `help()` target | Still points at GitHub markdown, not the website (the open item in `todo.md`). The website's docusaurus `url` is still the template placeholder. | formats #29 |
 | `setTimeout` extra args | Dropped instead of passed to the callback | crosscut #25 |
 | `yavascript -- script.js` | Opens the REPL and ignores the file (snapshot-tested as intended). `node -- file.js` runs the file, and in CI this form exits 0 without running the script. | runtime #23 |
 | Unsettled top-level `await` | The script stops at the `await` and exits 0 silently. Node exits 13 with a warning. | runtime #24 |
@@ -75,12 +74,11 @@ Grouped. Details and repros are in the area reports.
 - **Typings accept code that fails at runtime:** 12 `BigInt.*` methods (`tdiv`, `sqrt`, ...) are declared but don't exist. `std.sprintf` is typed as returning `void`. `types.optional` is documented but untyped, and doesn't coerce. `JSX.createElement(type, ...children)` is typed but not implemented. (crosscut #2-3; types #3, #6)
 - **Typings reject code that works:** `is`/`assert.type` narrow object shapes, arrays, classes, `BigInt` and `Symbol` to the wrong type (`{a: Number}` narrows to `{ a: TypeValidator<number> }`). No `JSX.IntrinsicElements`, so every `<div>` errors in a strict `.tsx` file. `env.FOO = 5` and `types.arrayOf` hints for `parseScriptArgs` are rejected. The `runInWorker` type rejects sync functions. (types #1-2; exec F11, F13; crosscut #7)
 - **Undeclared runtime APIs:** `process.platform`, `performance`, `Path.from`, `yavascript.compilers.esmToCjs`, `types.objectOrNull`/`anyTypeValidator`/`unknownTypeValidator`, and the leaked internal `types.objectStr`. (crosscut #8-9)
-- **Wrong examples:** `new GitRepo(".")` throws, and neither `GitRepo` nor `findRoot` documents that relative paths are rejected. The `quickjs:cmdline` example imports a nonexistent `scriptArgs`. `ModuleDelegate` examples use a nonexistent global. The `runInWorker` example is missing `await`. The JSX Fragment example logs the wrong variable. A stale `is` signature is still in the docs. (formats #3; crosscut #4-5, #7, #12)
+- **Wrong examples:** `new GitRepo(".")` throws, and neither `GitRepo` nor `findRoot` documents that relative paths are rejected. The `quickjs:cmdline` example imports a nonexistent `scriptArgs`. `ModuleDelegate` examples use a nonexistent global. The `runInWorker` example is missing `await`. The JSX Fragment example logs the wrong variable. A stale `is` signature is still in the docs. (formats #2; crosscut #4-5, #7, #12)
 - **Wrong descriptions:**
   - `exec` with `failOnNonZeroStatus: false` is said to return `{ status, signal }`, but a program that can't be spawned throws.
   - `captureOutput: "utf-8"` (only `"utf8"` works).
   - `ChildProcessOptions` says `logger.trace` writes to stderr (it's a no-op).
-  - `isWorkingTreeDirty` described as running `git status --quiet`, which isn't a real flag.
   - `process.exitCode` docs name nonexistent `std` functions.
   - `exit.code` in a Worker is said to throw (it's silently ignored).
   - `which` documents an `options.trace` that doesn't exist.
@@ -92,7 +90,7 @@ Grouped. Details and repros are in the area reports.
   - `YAML.stringify` is described as working like `JSON.stringify` (it doesn't).
   - The YAML multi-doc error tells you to call a `YAML.parseAllDocuments()` that doesn't exist.
 
-  (exec F2, F6, F8-F12; formats #2, #4, #6-7; commands #5-6; crosscut #6, #10-11)
+  (exec F2, F6, F8-F12; formats #3, #5-6; commands #5-6; crosscut #6, #10-11)
 - **Runtime and modules:**
   - `StructuredClonable` lists `RegExp`, `DataView` and `Error`, which `postMessage` rejects.
   - `Worker.terminate()` is described as terminating the thread.
