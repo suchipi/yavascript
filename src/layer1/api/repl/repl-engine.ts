@@ -201,7 +201,7 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
 
   function sigintHandler() {
     /* send Ctrl-C to readline */
-    handleByte(3);
+    handleByteReportingErrors(3);
   }
 
   function termReadHandler() {
@@ -221,7 +221,28 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
     }
 
     for (let idx = 0; idx < bytesRead; idx++) {
-      handleByte(termReadBuf[idx]);
+      handleByteReportingErrors(termReadBuf[idx]);
+    }
+  }
+
+  function printErrorToStderr(err: unknown) {
+    const printError = (
+      require("../../print-error") as typeof import("../../print-error")
+    ).default;
+    printError(err, std.err);
+  }
+
+  function handleByteReportingErrors(byte: number) {
+    try {
+      handleByte(byte);
+    } catch (err) {
+      std.puts("\n");
+      std.out.flush();
+      printErrorToStderr(err);
+      // Not redrawn until the next key, since a throwing printInput would
+      // just throw again
+      readlinePrintPrompt();
+      std.out.flush();
     }
   }
 
@@ -634,6 +655,16 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
     let nRows: number;
     const isRepeatedTab = lastFun === completion;
     const res = options.getCompletions(cmd, cursorPos);
+    if (
+      res == null ||
+      !Array.isArray(res.candidates) ||
+      !res.candidates.every((item) => typeof item === "string") ||
+      typeof res.prefixLength !== "number"
+    ) {
+      throw new TypeError(
+        "getCompletions must return an object with 'candidates' (an array of strings) and 'prefixLength' (a number)",
+      );
+    }
     const tab = res.candidates;
     if (tab.length === 0) {
       return;
@@ -853,10 +884,7 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
     try {
       handleAcceptedLine(line);
     } catch (err) {
-      const printError = (
-        require("../../print-error") as typeof import("../../print-error")
-      ).default;
-      printError(err, std.err);
+      printErrorToStderr(err);
     } finally {
       cmdReadlineStart();
     }

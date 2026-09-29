@@ -184,7 +184,7 @@ From `doc-scan.js` (`doc-scan.log`):
 | `// not yet implemented` sticky/setgid/setuid | `src/layer1/api/commands/chmod/chmod.ts:25-29` | the object form of `chmod` can't set these bits |
 | `// TODO: birth time` | `src/layer1/api/filesystem/copy.ts:105` | |
 | `// TODO: query cpu count, max memory...` | `src/layer1/api/_install-api.ts:5` | |
-| `/* XXX: handle double-width characters */` | `src/layer1/api/repl/repl-engine.ts:253` | |
+| `/* XXX: handle double-width characters */` | `src/layer1/api/repl/repl-engine.ts:274` | |
 
 No "experimental", "unstable" or "deprecated" markers were found in `src/` or `yavascript.d.ts`.
 

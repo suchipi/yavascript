@@ -11,7 +11,7 @@ Binary: `dist/yavascript` built from `d8cc554` (`--version` prints `git-d8cc554c
 | `console`, `inspect`, colors, grep, `logger`, `RegExp.escape`, `String.dedent`, `Promise.map` | [console-strings-grep-logger.md](console-strings-grep-logger.md) | 20 |
 | YAML, CSV, TOML, `GitRepo`, `yavascript`, `help` | [formats-git-yavascript-help.md](formats-git-yavascript-help.md) | 30 |
 | d.ts vs runtime, QuickJS `std`/`os`, doc quality, built-ins | [crosscut.md](crosscut.md) | 27 |
-| Worker, `Context`, REPL, Node compat, modules, languages, CLI | [runtime-modules-cli.md](runtime-modules-cli.md) | 24 |
+| Worker, `Context`, REPL, Node compat, modules, languages, CLI | [runtime-modules-cli.md](runtime-modules-cli.md) | 23 |
 
 The test suite passes on this build (713 passed, 1 skipped). None of the bugs in section 1 are covered by it.
 
@@ -21,7 +21,7 @@ The test suite passes on this build (713 passed, 1 skipped). None of the bugs in
 
 | API | Problem | Cause | Ref |
 | --- | --- | --- | --- |
-| `Worker.terminate()` | Doesn't stop the thread; a busy worker keeps the process alive forever. There's no way to cancel a worker or a `runInWorker` call. | | runtime #7 |
+| `Worker.terminate()` | Doesn't stop the thread; a busy worker keeps the process alive forever. There's no way to cancel a worker or a `runInWorker` call. | | runtime #6 |
 | `quickjs:bytecode` | A module from `bytecode.fromFile(..., { sourceType: "module" })` passed to `toValue()` but never called makes the process abort at exit with code 134 (`JS_FreeRuntime` assertion) | not investigated; the assertion is in the QuickJS fork | crosscut #1 |
 
 ### Broken or wrong on common paths
@@ -30,11 +30,10 @@ The test suite passes on this build (713 passed, 1 skipped). None of the bugs in
 | --- | --- | --- | --- |
 | `mkdir` a bare relative name | `mkdir("newdir")` throws `PathErrors.ZeroSegmentsError`. `./newdir`, absolute paths and `mkdirp("newdir")` work. | `mkdir.ts:116` calls `dirname` on the target, and `dirname` of a one-segment path throws | commands #1 |
 | `-e` and REPL imports | An import followed by code on the same line, by trailing whitespace, or by a line starting with `[` or `(` fails with a `SyntaxError`, `ReferenceError` or `TypeError` | `esm-to-require.ts:18` writes `[;\s]*` inside a template literal, where `\s` is just `s`; `:86-97` never adds a `;` after a rewritten import | runtime #1 |
-| `.json`/`.yaml` URL imports | Importing `http(s)://.../data.json` or `.yaml` without `with { type }` silently gives an empty module, while a local `.json` import works without the attribute | `http.ts:33-41` (shared by `https.ts`) picks a compiler only from the `type` attribute and otherwise runs `autodetect`, ignoring the extension | runtime #6 |
+| `.json`/`.yaml` URL imports | Importing `http(s)://.../data.json` or `.yaml` without `with { type }` silently gives an empty module, while a local `.json` import works without the attribute | `http.ts:33-41` (shared by `https.ts`) picks a compiler only from the `type` attribute and otherwise runs `autodetect`, ignoring the extension | runtime #5 |
 | `logger.info`/`warn` object args, uncaught errors | Inspected objects are colored based on whether stdout is a TTY, so a redirected stderr still gets ANSI escapes when stdout is a terminal (and the reverse) | `make-inspect-log.ts:18` and `print-error.ts:40,46` call `forPrint()` without a file | console #1 |
-| `InteractivePrompt` | A throwing `printInput` or `getCompletions` drops the rest of the bytes read with it (the next line arrives as `"botwo"`); a `getCompletions` returning `undefined` gives a cryptic TypeError | `repl-engine.ts:207-226` has no try/catch per byte; `:636-637` | runtime #4 |
 | REPL `\load` | A throwing file prints to stderr with 9 internal frames; `.ts` files can't be loaded; `\load` is missing from `\h` | `js-repl.ts:82-88` runs the file with `engine.runScript`, outside `evalAndPrint`'s try/catch | runtime #3 |
-| Module-not-found errors | The location points into `layer1.js` instead of the importing line; `require` throws away the resolver's error; neither has a `code` | `module-hooks.ts:138-144`, `cjs-interop.ts:13-20` | runtime #5 |
+| Module-not-found errors | The location points into `layer1.js` instead of the importing line; `require` throws away the resolver's error; neither has a `code` | `module-hooks.ts:138-144`, `cjs-interop.ts:13-20` | runtime #4 |
 | `new Context(...)` options | `modules: { "quickjs:bytecode": false }` fails with a file error, `console: false` is ignored, and unknown or non-object options are accepted | `context.ts:19-28` checks only `date`, `promise` and `moduleGlobals` | runtime #2 |
 | `console.log` | When inspect fails (revoked Proxy, throwing `inspect.custom`), stderr gets a bare message like `revoked proxy` with no context | `make-inspect-log.ts:55` writes only `err.message` | console #2 |
 | `parseScriptArgs` | `---` and `--!` become a flag named `""` | clef-parse's `isFlag` and `convert-case.js` | exec F3 |
@@ -61,10 +60,10 @@ These are behaviors that would be breaking to change later. Each one is working 
 | `yavascript.compilers` | Replacing one changes how files load (a real extension point, undocumented). `esmToCjs` exists and is snapshot-tested but undocumented. | formats #4, #20 |
 | `help()` target | Still points at GitHub markdown, not the website (the open item in `todo.md`). The website's docusaurus `url` is still the template placeholder. | formats #29 |
 | `setTimeout` extra args | Dropped instead of passed to the callback | crosscut #25 |
-| `yavascript -- script.js` | Opens the REPL and ignores the file (snapshot-tested as intended). `node -- file.js` runs the file, and in CI this form exits 0 without running the script. | runtime #23 |
-| Unsettled top-level `await` | The script stops at the `await` and exits 0 silently. Node exits 13 with a warning. | runtime #24 |
-| Import attribute `type` names | `type: "typescript"` works but `type: "ts"` (a valid `--lang`) is silently ignored, as is any unknown type | runtime #19 |
-| Worker globals | Inside a worker there's no `runInWorker`, `Context`, nested `Worker` or `scriptArgs`, and the layer internals aren't cleaned up. The docs say workers get all the globals. | runtime #16 |
+| `yavascript -- script.js` | Opens the REPL and ignores the file (snapshot-tested as intended). `node -- file.js` runs the file, and in CI this form exits 0 without running the script. | runtime #22 |
+| Unsettled top-level `await` | The script stops at the `await` and exits 0 silently. Node exits 13 with a warning. | runtime #23 |
+| Import attribute `type` names | `type: "typescript"` works but `type: "ts"` (a valid `--lang`) is silently ignored, as is any unknown type | runtime #18 |
+| Worker globals | Inside a worker there's no `runInWorker`, `Context`, nested `Worker` or `scriptArgs`, and the layer internals aren't cleaned up. The docs say workers get all the globals. | runtime #15 |
 
 ## 3. Docs that don't match behavior
 
@@ -96,7 +95,7 @@ Grouped. Details and repros are in the area reports.
   - `InteractivePrompt`'s `printInput` only works if its output is exactly as wide as the input.
   - yavascript's module resolution rules aren't documented anywhere. The only doc is QuickJS's, which says `searchExtensions` defaults to `[".js"]`.
 
-  (runtime #7-8, #17, #20)
+  (runtime #6-7, #16, #19)
 - **Generated web docs** drop doc comments on option-object properties, so `Context`'s `yavascriptGlobals` or `bytecode`'s `strip` are never explained. `generated-doc-links.json5` has 7 broken anchors and no entries for `yavascript`, `process`, `global`, or the timers. (crosscut #13, #15)
 - **Build nit:** the repo-root `yavascript.d.ts` is never run through prettier, because prettier 3 honors `.gitignore` and `dist` is ignored. So it differs from `--print-types` in about 40 formatting spots. (`meta/ninja/dts.ninja.ts:48-52`, crosscut #16)
 
@@ -132,7 +131,7 @@ Each area report ends with its own coverage notes; these are the ones that cut a
 - **Tests that can't catch what they look like they check:**
   - Every `mkdir` test without `recursive` uses an absolute path, which is how the bare-relative-name bug (commands #1) got through.
   - The `mkdir` recursive "relative path" and "absolute path" tests snapshot an empty stderr, so they pin the missing info line (commands #10) instead of testing it.
-  - The `printInput` test in `interactive-prompt.test.ts` goes through the ANSI sanitizer, which strips the cursor moves that runtime #17 is about.
+  - The `printInput` test in `interactive-prompt.test.ts` goes through the ANSI sanitizer, which strips the cursor moves that runtime #16 is about.
   - The `cjs-interop.test.ts` "a JSON file required through an import attribute" test passes `{ type: "json" }` instead of `{ with: { type: "json" } }`, on a `.json` file, so it passes whether or not attributes are honored.
 - **No TypeScript usage tests:** nothing typechecks `is`/`assert.type` narrowing or JSX against the published d.ts, which is how the wrong narrowing went unnoticed (types #1-2). The `.tsx` fixtures run but are never typechecked; under `strict` they give TS7026.
 - **Path objects in fs functions:** apart from an incidental `exists(...)` on `which`'s result in `which.test.ts`, no test passes a `Path` to a filesystem function.

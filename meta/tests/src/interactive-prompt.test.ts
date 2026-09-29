@@ -130,8 +130,6 @@ describe("InteractivePrompt", () => {
       { promptMarker: "ip> " },
     );
 
-    // Each line has to be seen through before the next keys are written: an
-    // exception thrown while reading drops the rest of the bytes read with it.
     await session.input(`boom${KEYS.enter}`, `handled: "boom"`);
     await session.input(`after${KEYS.enter}`, /handled: "(boom)?after"/);
     // Ctrl-C twice rather than Ctrl-D, because Ctrl-D only exits on an empty
@@ -140,6 +138,30 @@ describe("InteractivePrompt", () => {
     await session.finish();
 
     expect(session.result().stderr).toContain(`handled: "after"`);
+  });
+
+  test("a throwing printInput doesn't drop the rest of the input read with it", async () => {
+    const session = await startReplSession(
+      promptScript(`
+        new InteractivePrompt(
+          (input) => { console.log("got:", JSON.stringify(input)); },
+          {
+            prompt: () => "ip> ",
+            printInput: (input) => {
+              if (input === "bo") throw new Error("printInput threw");
+              std.puts(input);
+            },
+          },
+        ).start();
+      `),
+      { promptMarker: "ip> " },
+    );
+    await session.input(`bom${KEYS.enter}`, `got: "bom"`);
+    await session.exit();
+
+    const { stderr } = session.result();
+    expect(stderr).toContain("Error: printInput threw");
+    expect(stderr.match(/printInput threw/g)).toHaveLength(1);
   });
 
   test("submits each line as-is, with no multiline continuation", async () => {
@@ -252,6 +274,40 @@ describe("InteractivePrompt completion", () => {
       ip> 
       "
     `);
+  });
+
+  test("a throwing getCompletions doesn't drop the rest of the input read with it", async () => {
+    const session = await startReplSession(
+      promptScript(`
+        new InteractivePrompt((i) => console.log("got:", JSON.stringify(i)), {
+          prompt: () => "ip> ",
+          getCompletions: () => { throw new Error("getCompletions threw"); },
+        }).start();
+      `),
+      { promptMarker: "ip> " },
+    );
+    await session.input(`boom${KEYS.tab}${KEYS.enter}`, `got: "boom"`);
+    await session.exit();
+
+    expect(session.result().stderr).toContain("Error: getCompletions threw");
+  });
+
+  test("getCompletions returning something malformed gives a clear error", async () => {
+    const session = await startReplSession(
+      promptScript(`
+        new InteractivePrompt((i) => console.log("got:", JSON.stringify(i)), {
+          prompt: () => "ip> ",
+          getCompletions: () => undefined,
+        }).start();
+      `),
+      { promptMarker: "ip> " },
+    );
+    await session.input(`ap${KEYS.tab}x${KEYS.enter}`, `got: "apx"`);
+    await session.exit();
+
+    expect(session.result().stderr).toContain(
+      "TypeError: getCompletions must return an object with 'candidates' (an array of strings) and 'prefixLength' (a number)",
+    );
   });
 
   test("tab twice lists the candidates", async () => {
