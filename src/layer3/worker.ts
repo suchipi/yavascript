@@ -68,14 +68,15 @@ export class Worker extends os.Worker {
         filename: absoluteModulePath.toString(),
       });
     } else {
-      // Loading the file through require rather than inlining its source means
-      // its own imports go through yavascript's module hooks, which aren't
-      // installed until the bootstrap above has run.
-      workerCode = `require(${JSON.stringify(absoluteModulePath.toString())});`;
+      // Loading the file through a dynamic import rather than a static one (or
+      // inlining its source) means its own imports go through yavascript's
+      // module hooks, which aren't installed until the bootstrap above has
+      // run. Unlike require, it can load a module that uses top-level await.
+      workerCode = `await import(${JSON.stringify(absoluteModulePath.toString())});`;
     }
 
-    // The bootstrap module can't share a name with the file it requires, or
-    // the engine sees the module requiring itself.
+    // The bootstrap module can't share a name with the file it imports, or
+    // the engine sees the module importing itself.
     const entryModuleName = hasOverrideCode
       ? absoluteModulePath.toString()
       : absoluteModulePath.toString() + "$worker-entry";

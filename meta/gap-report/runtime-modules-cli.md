@@ -28,7 +28,7 @@ Helpers (both in the sandbox):
 | 13 | gap | `InteractivePrompt` | No `stop()`, no end callback, async `handleInput` not awaited |
 | 14 | rough-edge | REPL | Multi-line is JS-only (Coffee/Civet blocks impossible); directives run on continuation lines |
 | 15 | rough-edge | REPL | Can't start when the config dir can't be created |
-| 16 | rough-edge | `Worker` | Worker globals differ from main (no `runInWorker`/`Context`, leaked internals), undocumented; a worker file can't use top-level `await` |
+| 16 | rough-edge | `Worker` | Worker globals differ from main (no `runInWorker`/`Context`, leaked internals), undocumented |
 | 17 | doc-mismatch | `InteractivePrompt.printInput` | Output must match the input's width |
 | 18 | rough-edge | REPL completion | Tab evaluates getters and prints their exceptions |
 | 19 | rough-edge | import attributes | `type` names differ from `--lang`; unknown types silently ignored |
@@ -170,14 +170,13 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
 - Expected: `interactive-prompt.inc.d.ts:97-100` says that when there's nowhere to write, history is kept for the session only.
 - Actual: `Error: Cannot use mkdir to create directory '/dev/null/Library/Application Support/yavascript' because '/dev/null' is a file, not a directory.` and exit 1 before any prompt. Only an unset `HOME` falls back to session history; an unwritable one (read-only containers, `HOME=/`) makes the REPL unusable. The `HistoryFile` constructor (`history-file.ts:13-27`) doesn't catch `mkdir`/`touch` failures.
 
-### 16. rough-edge: Worker globals differ from the main thread, contrary to the doc, and a worker file can't use top-level `await`
+### 16. rough-edge: Worker globals differ from the main thread, contrary to the doc
 
 - API: `Worker` (`src/layer3/worker.inc.d.ts:1-10`: "loads all of the YavaScript API globals into the Worker's global context")
-- Repro: `cd worker && ../y.sh main2.js globals`, `../y.sh main2.js missing`, `../y.sh main2.js undefined-options`, `../y.sh wcheck2.js`
+- Repro: `cd worker && ../y.sh main2.js globals`, `../y.sh main2.js missing`, `../y.sh main2.js undefined-options`
 - Actual:
   - Inside a worker, `typeof runInWorker` and `typeof Context` are `"undefined"`; `Worker` is the raw `quickjs:os` Worker (`Worker === require("quickjs:os").Worker` is `true`); `new Worker(...)` throws `TypeError: cannot create a worker inside a worker`; `scriptArgs` (and so `process.argv`) is `[]`. None of this is documented.
-  - `__yavascript_layer1_internals` and `__yavascript_layer2_internals` stay on the worker's global (enumerable), though the main thread deletes them (crosscut report #17 covers the main-thread leaks). Cause: the worker bootstrap (`src/layer3/worker.ts:89-98`) only runs layers 1 and 2 and never cleans up.
-  - A worker file that uses top-level `await` never runs: `onerror` gets `cannot synchronously load module '.../w-tla.js' because it uses top-level await`. The bootstrap loads the worker file with `require(...)` (`worker.ts:74`), which can't load a module with top-level await. Main-thread scripts support it.
+  - `__yavascript_layer1_internals` and `__yavascript_layer2_internals` stay on the worker's global (enumerable), though the main thread deletes them (crosscut report #17 covers the main-thread leaks). Cause: the worker bootstrap (`src/layer3/worker.ts:90-99`) only runs layers 1 and 2 and never cleans up.
   - `new Worker("./does-not-exist.js")` throws `Error: Failed to normalize module name`, without the path.
   - `new Worker(file, undefined)` throws `TypeError: invalid 'in' operand`, though `options` is optional in the type (`worker.ts:47-48` checks `args.length` and then uses `in` on `args[1]`).
 
@@ -254,7 +253,7 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
 - `require`: relative CJS, instance caching, `__dirname`/`__filename`/`module.id` in CJS, `require("process")`/`require("node:process") === process`; `.mjs` files and packages whose `main` is a full filename. Module-not-found errors keep `err.name` as `Error`.
 - ESM `import` of CommonJS: the default import and `await import(...)` of a CJS file or package give `module.exports`.
 - URL modules: self-contained `https://` and `http://` modules (`ms@2.1.3/+esm`); an `http://` module's relative and root-relative imports resolve against its URL, and `with { type: "json" }` on a URL works.
-- `Worker`: messages in both directions, `initialData`, `onerror` for a throw and for a rejection in the worker (with `message`, `filename`, `lineno`, `error`), `exit()` in a worker gives a clear error, static and dynamic imports of TS/Coffee/Civet and extensionless paths inside a worker, a worker file with a shebang, `overrideCode` with an absolute nonexistent filename (`import.meta.url` matches), wrong argument count throws a clear error.
+- `Worker`: messages in both directions, `initialData`, `onerror` for a throw and for a rejection in the worker (with `message`, `filename`, `lineno`, `error`), `exit()` in a worker gives a clear error, static and dynamic imports of TS/Coffee/Civet and extensionless paths inside a worker, a worker file with a shebang or top-level `await`, `overrideCode` with an absolute nonexistent filename (`import.meta.url` matches), wrong argument count throws a clear error.
 - `runInWorker`: sync and async return values, `require` inside the function resolves relative to the caller's file, yavascript globals inside, `throw "string"` from an async function rejects. A function that throws synchronously, rejects with an Error, or returns something that can't be cloned makes the call reject, and an unhandled rejection of it exits 1.
 - `Context`: `eval`, separate `globalThis`, yavascript globals by default, `yavascriptGlobals: false`, nested `Context`, `console.log` inside, syntax and runtime errors thrown to the caller, absolute `require` (JS and TS), dynamic `import()`, timers inside a context fire; `date: false`, `promise: false` and `moduleGlobals: false` with the default yavascript globals are rejected with a clear message; with `yavascriptGlobals: false`, the `date`, `mapSet`, `timers`, `inspect`, `print`, `regExp`, `proxy`, `typedArrays`, `json` and `stringNormalize` options each remove what they say; no `scriptArgs` inside, as documented.
 - REPL: single-line JS imports, imports in the TS/TSX REPL, ESM default imports, `startRepl` with context and `NOTHING`, `startRepl` with an invalid lang throws a clear error, Civet `x := 3`, `\h`, `\t`, `\load` of a valid JS file, TS `<Type>value`. The REPL exits 0 when stdin reaches EOF.
@@ -265,7 +264,7 @@ DEADLINE=6000 node drive.js 'const s = `first{cr}|\tsecond`{cr}|JSON.stringify(s
 
 - `meta/tests/src/eval.test.ts` covers an import line followed or preceded by other lines, but nothing covers an import followed by code on the same line, by trailing whitespace, or by a line starting with `[` or `(` (finding 1).
 - No tests for a throwing `printInput`/`getCompletions` or a `getCompletions` that returns `undefined` (finding 4), directives inside continuation lines or multi-line Coffee/Civet (finding 14), unwritable config dirs (finding 15), or async `handleInput` (finding 13). The one `\load` test only checks that the REPL keeps going after a throwing script; nothing covers how its error is printed or `\load` of a `.ts` file (finding 3). The `printInput` test in `interactive-prompt.test.ts` draws output wider than the input, but its snapshot goes through the ANSI sanitizer, which removes the cursor moves finding 17 is about.
-- `meta/tests/src/worker.test.ts` has no test for `terminate()` on a busy worker (finding 7), non-clonable payloads (finding 8), nested workers, `runInWorker`/`Context` inside workers, or a worker file with top-level `await` (finding 16).
+- `meta/tests/src/worker.test.ts` has no test for `terminate()` on a busy worker (finding 7), non-clonable payloads (finding 8), nested workers, or `runInWorker`/`Context` inside workers (finding 16).
 - `meta/tests/src/context.test.ts` covers `date: false` and `promise: false` with the default yavascript globals, but not `moduleGlobals: false`, `modules: { "quickjs:bytecode": false }`, `console: false`, or unknown and non-object options (finding 2).
 - No test asserts the exit code for an unsettled top-level await (finding 24).
 - `meta/tests/src/cjs-interop.test.ts` covers the default import and `await import(...)` of a CommonJS file, but no named import (finding 9). Its "a JSON file required through an import attribute" test passes `{ type: "json" }` rather than `{ with: { type: "json" } }` on a `.json` file, so it would pass whether or not attributes are honored.

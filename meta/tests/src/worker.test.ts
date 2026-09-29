@@ -189,6 +189,51 @@ test(
 );
 
 test(
+  "a worker file can use top-level await",
+  async () => {
+    const result = await runWorkerModule("tla-worker.js");
+
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: "top-level await worker ok\n",
+    });
+  },
+  HANG_TEST_TIMEOUT,
+);
+
+test(
+  "a throw at a worker file's top level reaches onerror",
+  async () => {
+    const result = await runWorkerModule("throw-worker.js");
+
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: "onerror: thrown at the top level\n",
+    });
+  },
+  HANG_TEST_TIMEOUT,
+);
+
+test(
+  "a throw after a worker file's top-level await reaches onerror",
+  async () => {
+    const result = await runWorkerModule("tla-throw-worker.js");
+
+    expect(result.timedOut).toBe(false);
+    expect(result).toMatchObject({
+      code: 0,
+      stderr: "",
+      stdout: "onerror: thrown after top-level await\n",
+    });
+  },
+  HANG_TEST_TIMEOUT,
+);
+
+test(
   "overrideCode works with a relative moduleFilename that isn't on disk",
   async () => {
     const result = await runYavascriptWithTimeout([
