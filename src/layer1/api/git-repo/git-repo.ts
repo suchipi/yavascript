@@ -68,16 +68,19 @@ export class GitRepo {
     );
 
     if (typeof repoDir === "string") {
-      this.repoDir = new Path(repoDir).normalize();
-    } else {
-      this.repoDir = repoDir.normalize();
+      repoDir = new Path(repoDir);
     }
 
+    this.repoDir = repoDir.normalize();
     if (!this.repoDir.isAbsolute()) {
-      throw makeErrorWithProperties(
-        "Couldn't resolve absolute path to repo dir.",
-        { repoDir, cwd: pwd() },
-      );
+      this.repoDir = pwd().concat(repoDir).normalize();
+
+      if (!this.repoDir.isAbsolute()) {
+        throw makeErrorWithProperties(
+          "Couldn't resolve absolute path to repo dir.",
+          { repoDir, cwd: pwd() },
+        );
+      }
     }
 
     const dotGitDir = new Path(this.repoDir, ".git");
