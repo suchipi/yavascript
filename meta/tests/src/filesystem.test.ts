@@ -617,19 +617,67 @@ test('copy - whenTargetExists "overwrite" refuses to copy a file onto itself', a
   fs.writeFileSync(path.join(dir, "self.txt"), "KEEP");
   fs.linkSync(path.join(dir, "self.txt"), path.join(dir, "hardlink.txt"));
 
-  for (const [from, to] of [
-    ["self.txt", "self.txt"],
-    ["self.txt", "."],
-    ["self.txt", "hardlink.txt"],
-  ]) {
-    const result = await evaluate(
+  const copyOverwriting = (from: string, to: string) =>
+    evaluate(
       `copy(${JSON.stringify(from)}, ${JSON.stringify(to)}, { whenTargetExists: "overwrite", logging: { info() {} } })`,
       { cwd: dir },
     );
-    expect(result.code).toBe(1);
-    expect(result.stderr).toMatch(/Source and target are the same file/);
-    expect(fs.readFileSync(path.join(dir, "self.txt"), "utf-8")).toBe("KEEP");
-  }
+
+  expect(await copyOverwriting("self.txt", "self.txt")).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": null,
+      "stderr": "Error: Source and target are the same file (from = "self.txt", to = "self.txt")
+      at somewhere
+    {
+      fileName: "yavascript-internals/dist/bundles/layer1.js"
+      lineNumber: <redacted>
+      columnNumber: <redacted>
+      from: "self.txt"
+      to: "self.txt"
+    }
+    ",
+      "stdout": "",
+    }
+  `);
+  expect(await copyOverwriting("self.txt", ".")).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": null,
+      "stderr": "Error: Source and target are the same file (from = "self.txt", to = "./self.txt")
+      at somewhere
+    {
+      fileName: "yavascript-internals/dist/bundles/layer1.js"
+      lineNumber: <redacted>
+      columnNumber: <redacted>
+      from: "self.txt"
+      to: "./self.txt"
+    }
+    ",
+      "stdout": "",
+    }
+  `);
+  expect(
+    await copyOverwriting("self.txt", "hardlink.txt"),
+  ).toMatchInlineSnapshot(`
+    {
+      "code": 1,
+      "error": null,
+      "stderr": "Error: Source and target are the same file (from = "self.txt", to = "hardlink.txt")
+      at somewhere
+    {
+      fileName: "yavascript-internals/dist/bundles/layer1.js"
+      lineNumber: <redacted>
+      columnNumber: <redacted>
+      from: "self.txt"
+      to: "hardlink.txt"
+    }
+    ",
+      "stdout": "",
+    }
+  `);
+
+  expect(fs.readFileSync(path.join(dir, "self.txt"), "utf-8")).toBe("KEEP");
 });
 
 test("copy - file into a dir honors whenTargetExists", async () => {
@@ -715,7 +763,14 @@ test("copy - a dir to a bare relative name", async () => {
     `copy("src", "newdir", { logging: { info() {} } })`,
     { cwd: dir },
   );
-  expect(result).toMatchObject({ code: 0, stderr: "" });
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "code": 0,
+      "error": null,
+      "stderr": "",
+      "stdout": "",
+    }
+  `);
 
   expect(fs.readFileSync(path.join(dir, "newdir", "a.txt"), "utf-8")).toBe("A");
 });
