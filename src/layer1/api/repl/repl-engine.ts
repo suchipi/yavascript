@@ -201,7 +201,7 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
 
   function sigintHandler() {
     /* send Ctrl-C to readline */
-    handleByteReportingErrors(3);
+    handleByte(3);
   }
 
   function termReadHandler() {
@@ -221,7 +221,7 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
     }
 
     for (let idx = 0; idx < bytesRead; idx++) {
-      handleByteReportingErrors(termReadBuf[idx]);
+      handleByte(termReadBuf[idx]);
     }
   }
 
@@ -232,9 +232,26 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
     printError(err, std.err);
   }
 
-  function handleByteReportingErrors(byte: number) {
+  let utf8State = 0;
+  let utf8Val = 0;
+
+  function handleByte(byte: number) {
     try {
-      handleByte(byte);
+      if (!utf8) {
+        handleChar(byte);
+      } else if (utf8State !== 0 && byte >= 0x80 && byte < 0xc0) {
+        utf8Val = (utf8Val << 6) | (byte & 0x3f);
+        utf8State--;
+        if (utf8State === 0) {
+          handleChar(utf8Val);
+        }
+      } else if (byte >= 0xc0 && byte < 0xf8) {
+        utf8State = 1 + Number(byte >= 0xe0) + Number(byte >= 0xf0);
+        utf8Val = byte & ((1 << (6 - utf8State)) - 1);
+      } else {
+        utf8State = 0;
+        handleChar(byte);
+      }
     } catch (err) {
       std.puts("\n");
       std.out.flush();
@@ -243,27 +260,6 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
       // just throw again
       readlinePrintPrompt();
       std.out.flush();
-    }
-  }
-
-  let utf8State = 0;
-  let utf8Val = 0;
-
-  function handleByte(byte: number) {
-    if (!utf8) {
-      handleChar(byte);
-    } else if (utf8State !== 0 && byte >= 0x80 && byte < 0xc0) {
-      utf8Val = (utf8Val << 6) | (byte & 0x3f);
-      utf8State--;
-      if (utf8State === 0) {
-        handleChar(utf8Val);
-      }
-    } else if (byte >= 0xc0 && byte < 0xf8) {
-      utf8State = 1 + Number(byte >= 0xe0) + Number(byte >= 0xf0);
-      utf8Val = byte & ((1 << (6 - utf8State)) - 1);
-    } else {
-      utf8State = 0;
-      handleChar(byte);
     }
   }
 
