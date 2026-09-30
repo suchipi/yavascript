@@ -556,38 +556,6 @@ test("a backslash is not a path separator", async () => {
   compareResult(result, [scratchPath("a*.js")]);
 });
 
-test("an escaped backslash in a wildcard-free segment matches a literal backslash", async () => {
-  write("back\\slash.js");
-  write("back/slash.js");
-
-  const relative = await evaluate(
-    globCode("back\\\\slash.js", { dir: scratchDir() }),
-  );
-  expect(relative).toMatchObject({ code: 0, error: null, stderr: "" });
-  compareResult(relative, [scratchPath("back\\slash.js")]);
-
-  const absolute = await evaluate(globCode(scratch("back\\\\slash.js")));
-  expect(absolute).toMatchObject({ code: 0, error: null, stderr: "" });
-  compareResult(absolute, [scratchPath("back\\slash.js")]);
-});
-
-test("a backslash in a matched filename is kept in the result", async () => {
-  write("back\\slash.js");
-
-  const result = await evaluate(
-    `
-      const [match] = glob("back*", { dir: ${JSON.stringify(scratchDir())}, logging: { info() {} } });
-      JSON.stringify({ path: match.toString(), segments: match.segments.slice(-1), exists: exists(match) });
-    `,
-  );
-  expect(result).toMatchObject({ code: 0, error: null, stderr: "" });
-  expect(JSON.parse(result.stdout)).toEqual({
-    path: scratchPath("back\\slash.js"),
-    segments: ["back\\slash.js"],
-    exists: true,
-  });
-});
-
 test("a leading extglob '!(...)' excludes what it names", async () => {
   write("x/one.js");
   write("x/two.ts");

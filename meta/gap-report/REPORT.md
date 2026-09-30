@@ -6,7 +6,7 @@ Binary: `dist/yavascript` built from `d8cc554` (`--version` prints `git-d8cc554c
 | --- | --- | --- |
 | Filesystem, `Path`, `__filename`/`__dirname` | [fs.md](fs.md) | 18 |
 | Shell-style commands and "did you mean" stubs | [commands.md](commands.md) | 24 |
-| `exec`/`$`/`ChildProcess`, `glob`, `env`, `parseScriptArgs`, `openUrl` | [exec-glob-env-args.md](exec-glob-env-args.md) | 28 |
+| `exec`/`$`/`ChildProcess`, `glob`, `env`, `parseScriptArgs`, `openUrl` | [exec-glob-env-args.md](exec-glob-env-args.md) | 29 |
 | `types`, `is`, `assert`, `number`/`string`/..., JSX | [types-is-assert-jsx.md](types-is-assert-jsx.md) | 17 |
 | `console`, `inspect`, colors, grep, `logger`, `RegExp.escape`, `String.dedent`, `Promise.map` | [console-strings-grep-logger.md](console-strings-grep-logger.md) | 20 |
 | YAML, CSV, TOML, `GitRepo`, `yavascript`, `help` | [formats-git-yavascript-help.md](formats-git-yavascript-help.md) | 30 |
@@ -32,10 +32,11 @@ The test suite passes on this build (713 passed, 1 skipped). None of the bugs in
 | `-e` and REPL imports | An import followed by code on the same line, by trailing whitespace, or by a line starting with `[` or `(` fails with a `SyntaxError`, `ReferenceError` or `TypeError` | `esm-to-require.ts:18` writes `[;\s]*` inside a template literal, where `\s` is just `s`; `:86-97` never adds a `;` after a rewritten import | runtime #1 |
 | `.json`/`.yaml` URL imports | Importing `http(s)://.../data.json` or `.yaml` without `with { type }` silently gives an empty module, while a local `.json` import works without the attribute | `http.ts:33-41` (shared by `https.ts`) picks a compiler only from the `type` attribute and otherwise runs `autodetect`, ignoring the extension | runtime #4 |
 | `logger.info`/`warn` object args, uncaught errors | Inspected objects are colored based on whether stdout is a TTY, so a redirected stderr still gets ANSI escapes when stdout is a terminal (and the reverse) | `make-inspect-log.ts:18` and `print-error.ts:40,46` call `forPrint()` without a file | console #1 |
+| `glob` | `\` is treated as a separator in wildcard-free segments and in results, so a file named `back\slash.js` can't be matched literally and comes back as `back/slash.js` | `glob.ts:55` (`Path.normalize`) and `:368` (`new Path`) | exec F3 |
 | Module-not-found errors | The location points into `layer1.js` instead of the importing line; `require` throws away the resolver's error; neither has a `code` | `module-hooks.ts:138-144`, `cjs-interop.ts:13-20` | runtime #3 |
 | `new Context(...)` options | `modules: { "quickjs:bytecode": false }` fails with a file error, `console: false` is ignored, and unknown or non-object options are accepted | `context.ts:19-28` checks only `date`, `promise` and `moduleGlobals` | runtime #2 |
 | `console.log` | When inspect fails (revoked Proxy, throwing `inspect.custom`), stderr gets a bare message like `revoked proxy` with no context | `make-inspect-log.ts:55` writes only `err.message` | console #2 |
-| `parseScriptArgs` | `---` and `--!` become a flag named `""` | clef-parse's `isFlag` and `convert-case.js` | exec F3 |
+| `parseScriptArgs` | `---` and `--!` become a flag named `""` | clef-parse's `isFlag` and `convert-case.js` | exec F4 |
 
 ## 2. Decisions to make before 1.0
 
@@ -50,7 +51,7 @@ These are behaviors that would be breaking to change later. Each one is working 
 | `console` surface | Only `log`/`info`/`warn`/`error`/`clear`. `console.debug`, `trace`, `time`, `table`, `group`, `count`, `assert` are missing and crash npm code that calls them. No `%s` substitution. `console.log` uses different options from `inspect`. `Error.cause` and `AggregateError.errors` aren't shown. | console #3-4, #6-7 |
 | Color policy | `NO_COLOR` and `FORCE_COLOR` are ignored (only `CLICOLOR`/`CLICOLOR_FORCE` are honored). The color functions always emit escapes, and there's no public "has colors" check. | console #6, #8 |
 | `inspect.custom` protocol | The hook has to mutate the `inputs` object; its return value is ignored. Node's `Symbol.for("nodejs.util.inspect.custom")` isn't honored. | console #5, crosscut #14 |
-| `exec` `env` option | Replaces the whole environment rather than merging. Intended per tests, but undocumented. | exec F6 |
+| `exec` `env` option | Replaces the whole environment rather than merging. Intended per tests, but undocumented. | exec F7 |
 | `--lang` after the script filename | Consumed by yavascript (snapshot-tested as intended), so scripts can't have their own `--lang` flag | exec F1 |
 | TOML version | @iarna/toml implements TOML 0.5, so mixed-type arrays are rejected, and the library is unmaintained | formats #9 |
 | `process.version` | Claims Node `v16.19.0`, so libraries that gate on it take old code paths | crosscut #24 |
@@ -69,7 +70,7 @@ These are behaviors that would be breaking to change later. Each one is working 
 Grouped. Details and repros are in the area reports.
 
 - **Typings accept code that fails at runtime:** 12 `BigInt.*` methods (`tdiv`, `sqrt`, ...) are declared but don't exist. `std.sprintf` is typed as returning `void`. `types.optional` is documented but untyped, and doesn't coerce. `JSX.createElement(type, ...children)` is typed but not implemented. (crosscut #2-3; types #3, #6)
-- **Typings reject code that works:** `is`/`assert.type` narrow object shapes, arrays, classes, `BigInt` and `Symbol` to the wrong type (`{a: Number}` narrows to `{ a: TypeValidator<number> }`). No `JSX.IntrinsicElements`, so every `<div>` errors in a strict `.tsx` file. `env.FOO = 5` and `types.arrayOf` hints for `parseScriptArgs` are rejected. The `runInWorker` type rejects sync functions. (types #1-2; exec F10, F12; crosscut #7)
+- **Typings reject code that works:** `is`/`assert.type` narrow object shapes, arrays, classes, `BigInt` and `Symbol` to the wrong type (`{a: Number}` narrows to `{ a: TypeValidator<number> }`). No `JSX.IntrinsicElements`, so every `<div>` errors in a strict `.tsx` file. `env.FOO = 5` and `types.arrayOf` hints for `parseScriptArgs` are rejected. The `runInWorker` type rejects sync functions. (types #1-2; exec F11, F13; crosscut #7)
 - **Undeclared runtime APIs:** `process.platform`, `performance`, `Path.from`, `yavascript.compilers.esmToCjs`, `types.objectOrNull`/`anyTypeValidator`/`unknownTypeValidator`, and the leaked internal `types.objectStr`. (crosscut #8-9)
 - **Wrong examples:** `new GitRepo(".")` throws, and neither `GitRepo` nor `findRoot` documents that relative paths are rejected. The `quickjs:cmdline` example imports a nonexistent `scriptArgs`. `ModuleDelegate` examples use a nonexistent global. The `runInWorker` example is missing `await`. The JSX Fragment example logs the wrong variable. A stale `is` signature is still in the docs. (formats #2; crosscut #4-5, #7, #12)
 - **Wrong descriptions:**
@@ -87,7 +88,7 @@ Grouped. Details and repros are in the area reports.
   - `YAML.stringify` is described as working like `JSON.stringify` (it doesn't).
   - The YAML multi-doc error tells you to call a `YAML.parseAllDocuments()` that doesn't exist.
 
-  (exec F2, F5, F7-F11; formats #3, #5-6; commands #5-6; crosscut #6, #10-11)
+  (exec F2, F6, F8-F12; formats #3, #5-6; commands #5-6; crosscut #6, #10-11)
 - **Runtime and modules:**
   - `StructuredClonable` lists `RegExp`, `DataView` and `Error`, which `postMessage` rejects.
   - `Worker.terminate()` is described as terminating the thread.
