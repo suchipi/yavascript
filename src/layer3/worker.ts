@@ -68,10 +68,6 @@ export class Worker extends os.Worker {
         filename: absoluteModulePath.toString(),
       });
     } else {
-      // Loading the file through a dynamic import rather than a static one (or
-      // inlining its source) means its own imports go through yavascript's
-      // module hooks, which aren't installed until the bootstrap above has
-      // run. Unlike require, it can load a module that uses top-level await.
       workerCode = `await import(${JSON.stringify(absoluteModulePath.toString())});`;
     }
 
