@@ -27,13 +27,13 @@ describe("non-recursive", () => {
       { cwd: rootDir() },
     );
     expect(result).toMatchInlineSnapshot(`
-     {
-       "code": 0,
-       "error": null,
-       "stderr": "mkdir: 'meta/tests/fixtures/mkdir/relative'
-     ",
-       "stdout": "",
-     }
+      {
+        "code": 0,
+        "error": null,
+        "stderr": "mkdir: '<rootDir>/meta/tests/fixtures/mkdir/relative'
+      ",
+        "stdout": "",
+      }
     `);
 
     expect(fs.existsSync(target)).toBe(true);
@@ -332,10 +332,23 @@ describe("recursive via mkdirp", () => {
     fs.writeFileSync(path.join(dir, "f"), "hi");
 
     const result = await evaluate(`mkdirp("f/sub")`, { cwd: dir });
-    expect(result.code).toBe(1);
-    expect(result.stderr).toMatch(
-      /Cannot use mkdir to create directory 'f\/sub' because 'f' is a file, not a directory\./,
-    );
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "code": 1,
+        "error": null,
+        "stderr": "Error: Cannot use mkdir to create directory '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/first_segment_collision/f/sub' because '<rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/first_segment_collision/f' is a file, not a directory. (path = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/first_segment_collision/f/sub }, pathSoFar = Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/first_segment_collision/f })
+        at somewhere
+      {
+        fileName: "yavascript-internals/dist/bundles/layer1.js"
+        lineNumber: <redacted>
+        columnNumber: <redacted>
+        path: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/first_segment_collision/f/sub }
+        pathSoFar: Path { <rootDir>/meta/tests/fixtures/mkdir/recursive_mkdirp/first_segment_collision/f }
+      }
+      ",
+        "stdout": "",
+      }
+    `);
   });
 });
 

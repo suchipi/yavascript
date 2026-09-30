@@ -36,6 +36,10 @@ export function mkdir(
     "when present, 'options.recursive' must be a boolean",
   );
 
+  if (!path.isAbsolute()) {
+    path = pwd().concat(path).normalize();
+  }
+
   const mode = options?.mode ?? 0o775;
   assert.type(
     mode,
