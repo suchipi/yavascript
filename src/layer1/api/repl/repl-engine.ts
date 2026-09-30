@@ -256,8 +256,6 @@ export function startReplEngine(options: ReplEngineOptions): ReplEngineHandle {
       std.puts("\n");
       std.out.flush();
       printErrorToStderr(err);
-      // Not redrawn until the next key, since a throwing printInput would
-      // just throw again
       readlinePrintPrompt();
       std.out.flush();
     }
