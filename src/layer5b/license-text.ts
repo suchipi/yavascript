@@ -577,7 +577,7 @@ YavaScript script interpreter
 
 MIT License
 
-Copyright (c) 2022 Lily Skye
+Copyright (c) 2022-2026 Lily Skye
 
 ${MIT}
 `;
