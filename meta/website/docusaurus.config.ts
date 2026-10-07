@@ -59,7 +59,7 @@ const config: Config = {
           editUrl:
             'https://github.com/suchipi/yavascript/tree/main/meta/website/',
         },
-        blog: false,
+        blog: {},
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -98,6 +98,11 @@ const config: Config = {
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'API Documentation',
+        },
+        {
+          to: '/blog',
+          label: 'Blog',
+          position: 'left',
         },
         {
           href: 'https://github.com/suchipi/yavascript',
