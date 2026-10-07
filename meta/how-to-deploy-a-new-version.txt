@@ -8,6 +8,6 @@
 - run `env YAVASCRIPT_VERSION=whatever meta/scripts/assemble-tgz.sh` to make all the archives for each version in the meta/tgz-release folder and then upload all those as release artifacts on github
 - build docker images with meta/docker/build-image.sh with the env var `YS_DOCKER_TAG` set to the version string WITHOUT v prefix, and then again with it set to "latest"
   - note that this also pushes the images
-- use meta/scripts/set-package-version.js to change the version in package.json back to 0.0.0-git and commit and push that
+- use meta/scripts/set-package-version.js to change the version in package.json back to ending with `+git` and commit and push that
 
 I think that's it
