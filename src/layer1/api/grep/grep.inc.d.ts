@@ -49,7 +49,7 @@ declare const grepArray: {
  * lines matching the specified pattern, as an array of strings or detail
  * objects.
  *
- * @param str - The string to search through.
+ * @param path - The path to the file to search through.
  * @param pattern - The pattern to find. Can be a string or a RegExp.
  * @param options - Options which control matching behavior.
  *

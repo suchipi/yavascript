@@ -89,7 +89,7 @@ Reads the file content at `path`, splits it on `\n`, and then returns the
 lines matching the specified pattern, as an array of strings or detail
 objects.
 
-- `@param` _str_ — The string to search through.
+- `@param` _path_ — The path to the file to search through.
 - `@param` _pattern_ — The pattern to find. Can be a string or a RegExp.
 - `@param` _options_ — Options which control matching behavior.
 
