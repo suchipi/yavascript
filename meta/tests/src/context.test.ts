@@ -318,6 +318,23 @@ test("promise: false with the default yavascript globals exits normally", async 
   });
 });
 
+// Failing with segfault; needs to be fixed
+test("regExp: false with the default yavascript globals exits normally", async () => {
+  const result = await evaluate(`
+    try {
+      new Context({ regExp: false });
+      console.log("constructed");
+    } catch (err) {
+      console.log("threw: " + err.message);
+    }
+  `);
+
+  expect(result).toMatchObject({
+    code: 0,
+    stderr: "",
+  });
+});
+
 test("eval behavior when eval: false option is specified", async () => {
   const result = await evaluate(`
     const ctx = new Context({
