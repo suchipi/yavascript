@@ -1,7 +1,7 @@
 ---
 title: One Point Oh
 description: After four years in the making, maybe it wasn't worth the wait. (2 minute read)
-date: "2026-10-07"
+date: "2026-10-08"
 authors:
   name: Lily Skye
   url: https://suchipi.com/
