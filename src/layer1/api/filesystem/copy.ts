@@ -71,6 +71,8 @@ function copyRaw(
     fdsToCloseLater[to] = toFd;
     const toFile = std.fdopen(toFd, "w");
     filesToCloseLater[to] = toFile;
+    // toFile owns toFd now
+    delete fdsToCloseLater[to];
 
     const bufferSize = 16 * 1024 * 1024; // 16MB
     fromFile.writeTo(toFile, bufferSize);
