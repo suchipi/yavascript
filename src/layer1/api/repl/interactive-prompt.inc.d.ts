@@ -55,6 +55,14 @@ interface InteractivePromptConstructor {
   /**
    * Make a prompt which calls `handleInput` with each line the user enters.
    * Nothing is printed and no input is read until you call `start`.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt((input) => {
+   *   console.log("you typed:", input);
+   * });
+   * prompt.start();
+   * ```
    */
   new (
     handleInput: (input: string) => void,
@@ -64,6 +72,13 @@ interface InteractivePromptConstructor {
        * for each new line, so it can change as your program does.
        *
        * Defaults to `"> "`.
+       *
+       * **Example**
+       * ```ts
+       * const prompt = new InteractivePrompt(console.log, {
+       *   prompt: () => `${pwd().basename()}> `,
+       * });
+       * ```
        */
       prompt?: () => string;
 
@@ -76,6 +91,13 @@ interface InteractivePromptConstructor {
        * which is what any highlighting needs, since a character typed now can
        * change how earlier ones should look. Leave it out and the line is
        * echoed plainly as it is typed.
+       *
+       * **Example**
+       * ```ts
+       * const prompt = new InteractivePrompt(console.log, {
+       *   printInput: (input) => std.puts(cyan(input)),
+       * });
+       * ```
        */
       printInput?: (input: string) => void;
 
@@ -97,12 +119,30 @@ interface InteractivePromptConstructor {
        * Should the environment variable a platform relies on be unset, there is
        * nowhere to write the file, and history is kept for the current session
        * only as though no name had been given.
+       *
+       * **Example**
+       * ```ts
+       * const prompt = new InteractivePrompt(console.log, {
+       *   historyFileName: "my-tool-history.txt",
+       * });
+       * ```
        */
       historyFileName?: string;
 
       /**
        * The completions available at `cursorIndex` within `line`. Called every
        * time the user presses Tab.
+       *
+       * **Example**
+       * ```ts
+       * const commands = ["help", "status", "quit"];
+       * const prompt = new InteractivePrompt(console.log, {
+       *   getCompletions: (line, cursorIndex) => ({
+       *     candidates: commands.filter((command) => command.startsWith(line)),
+       *     prefixLength: cursorIndex,
+       *   }),
+       * });
+       * ```
        */
       getCompletions?: (
         line: string,
@@ -118,6 +158,14 @@ interface InteractivePromptConstructor {
  * A prompt which reads lines from the user, with readline-style editing keys,
  * history recall and Tab completion. See the `InteractivePrompt` global for the
  * full list of keys it binds.
+ *
+ * **Example**
+ * ```ts
+ * const prompt: InteractivePrompt = new InteractivePrompt((input) => {
+ *   console.log(input.toUpperCase());
+ * });
+ * prompt.start();
+ * ```
  */
 interface InteractivePrompt {
   /**
@@ -125,6 +173,12 @@ interface InteractivePrompt {
    * each new line, so it can change as your program does.
    *
    * Defaults to `"> "`.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt(console.log);
+   * prompt.prompt = () => "$ ";
+   * ```
    */
   prompt?: () => string;
 
@@ -137,6 +191,12 @@ interface InteractivePrompt {
    * which is what any highlighting needs, since a character typed now can
    * change how earlier ones should look. Leave it out and the line is echoed
    * plainly as it is typed.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt(console.log);
+   * prompt.printInput = (input) => std.puts(bold(input));
+   * ```
    */
   printInput?: (input: string) => void;
 
@@ -156,12 +216,28 @@ interface InteractivePrompt {
    * Should the environment variable a platform relies on be unset, there is
    * nowhere to write the file, and history is kept for the current session only
    * as though no name had been given.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt(console.log);
+   * prompt.historyFileName = "my-tool-history.txt";
+   * ```
    */
   historyFileName?: string;
 
   /**
    * The completions available at `cursorIndex` within `line`. Called every time
    * the user presses Tab.
+   *
+   * **Example**
+   * ```ts
+   * const commands = ["help", "status", "quit"];
+   * const prompt = new InteractivePrompt(console.log);
+   * prompt.getCompletions = (line, cursorIndex) => ({
+   *   candidates: commands.filter((command) => command.startsWith(line)),
+   *   prefixLength: cursorIndex,
+   * });
+   * ```
    */
   getCompletions?: (
     line: string,
@@ -172,6 +248,14 @@ interface InteractivePrompt {
    * Called with each line the user accepts by pressing Enter. Lines arrive one
    * at a time; nothing is held back waiting for a multi-line construct to be
    * finished off.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt(() => {});
+   * prompt.handleInput = (input) => {
+   *   console.log("you typed:", input);
+   * };
+   * ```
    */
   handleInput: (input: string) => void;
 
@@ -181,6 +265,15 @@ interface InteractivePrompt {
    * This returns straight away instead of blocking; the prompt keeps running
    * off the event loop afterwards. It stops when the user presses Ctrl+D on an
    * empty line, or exits the process when they press Ctrl+C twice in a row.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt((input) => {
+   *   console.log("you typed:", input);
+   * });
+   * prompt.start();
+   * console.log("this prints before the user has typed anything");
+   * ```
    */
   start(): void;
 }
@@ -188,6 +281,14 @@ interface InteractivePrompt {
 /**
  * The candidate completions for a position in a line, as returned by
  * `InteractivePrompt`'s `getCompletions`.
+ *
+ * **Example**
+ * ```ts
+ * const completions: InteractivePromptCompletions = {
+ *   candidates: ["parse", "stringify"],
+ *   prefixLength: 0,
+ * };
+ * ```
  */
 interface InteractivePromptCompletions {
   /**
@@ -195,6 +296,14 @@ interface InteractivePromptCompletions {
    * the parts still missing. When several of them match, pressing Tab a second
    * time lists these for the user to pick from, so they need to read as
    * complete words on their own.
+   *
+   * **Example**
+   * ```ts
+   * const completions: InteractivePromptCompletions = {
+   *   candidates: ["status", "stash", "switch"],
+   *   prefixLength: 1,
+   * };
+   * ```
    */
   candidates: Array<string>;
   /**
@@ -214,6 +323,14 @@ interface InteractivePromptCompletions {
    * typed in whole, which is how you offer something that follows a finished
    * word instead of completing one: once `JSON.parse` is fully typed, offering
    * `(` gives the user `JSON.parse(`.
+   *
+   * **Example**
+   * ```ts
+   * const completions: InteractivePromptCompletions = {
+   *   candidates: ["parse"],
+   *   prefixLength: "pars".length,
+   * };
+   * ```
    */
   prefixLength: number;
 }

@@ -10,6 +10,14 @@ A separate global context (or 'realm') within which code can be executed.
 This is the same as [import("quickjs:context")](/meta/generated-docs/quickjs-context.md#quickjscontext-namespace), but with a
 `yavascriptGlobals` option added.
 
+**Example**
+
+```ts
+const context = new Context();
+context.eval("globalThis.x = 5");
+console.log(context.eval("x * 2"));
+```
+
 ```ts
 declare class Context {
   constructor(options?: {
@@ -90,6 +98,17 @@ Note that new contexts don't have a `scriptArgs` global. If you need one
 to be present in the new context, you can add one onto the Context's
 `globalThis` property.
 
+**Example**
+
+```ts
+const sandbox = new Context({
+  yavascriptGlobals: false,
+  moduleGlobals: false,
+  timers: false,
+});
+console.log(sandbox.eval("typeof setTimeout"));
+```
+
 ```ts
 constructor(options?: {
   date?: boolean;
@@ -126,6 +145,14 @@ The `globalThis` object used by this context.
 
 You can add to or remove from it to change what is visible to the context.
 
+**Example**
+
+```ts
+const context = new Context();
+Object.assign(context.globalThis, { greeting: "hello" });
+console.log(context.eval("greeting"));
+```
+
 ```ts
 globalThis: typeof globalThis;
 ```
@@ -138,6 +165,14 @@ Runs code within the context and returns the result.
 
 > NOTE: This function will work even if you created the Context with option
 > `eval: false` (which only disables eval _within_ the context).
+
+**Example**
+
+```ts
+const context = new Context();
+const doubled = context.eval("[1, 2, 3].map((n) => n * 2)");
+console.log(doubled);
+```
 
 ```ts
 eval(code: string): any;

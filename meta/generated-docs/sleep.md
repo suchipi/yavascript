@@ -18,6 +18,14 @@ block the current thread.
 `sleep.sync` is running. If this is not the behavior you want, use
 `sleep.async` instead.
 
+**Example**
+
+```ts
+sleep(100);
+sleep.sync(100);
+await sleep.async(100);
+```
+
 ```ts
 var sleep: {
   (milliseconds: number): void;
@@ -38,6 +46,14 @@ alias for `sleep.sync`.
 No other JavaScript code can run while `sleep()` is running. If this is
 not the behavior you want, use `sleep.async` instead.
 
+**Example**
+
+```ts
+console.log("waiting...");
+sleep(500);
+console.log("done");
+```
+
 ```ts
 (milliseconds: number): void;
 ```
@@ -51,6 +67,14 @@ milliseconds, but maybe a tiny bit longer.
 
 No other JavaScript code can run while `sleep.sync` is running. If this is
 not the behavior you want, use `sleep.async` instead.
+
+**Example**
+
+```ts
+while (!exists("server.pid")) {
+  sleep.sync(100);
+}
+```
 
 ```ts
 sync(milliseconds: number): void;
@@ -70,6 +94,14 @@ behavior you want, use `sleep.sync` instead.
 
 If `milliseconds` isn't a finite number, the returned Promise gets
 rejected with a TypeError.
+
+**Example**
+
+```ts
+console.log("waiting...");
+await sleep.async(500);
+console.log("done");
+```
 
 ```ts
 async(milliseconds: number): Promise<void>;

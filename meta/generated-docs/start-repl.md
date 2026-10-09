@@ -9,6 +9,12 @@ Launch the Yavascript REPL (read-eval-print-loop).
 - `@param` _context_ — Variables to make available as globals within the repl.
 - `@param` _lang_ — The language to use in the repl. Defaults to "javascript".
 
+**Example**
+
+```ts
+startRepl({ answer: 42 }, "typescript");
+```
+
 ```ts
 const startRepl: {
   (
@@ -42,6 +48,17 @@ const startRepl: {
 
 A special value; when expressions result in this value, the repl will
 print nothing instead of printing this value.
+
+**Example**
+
+```ts
+startRepl({
+  quietly: (fn: () => void) => {
+    fn();
+    return startRepl.NOTHING;
+  },
+});
+```
 
 ```ts
 NOTHING: symbol;

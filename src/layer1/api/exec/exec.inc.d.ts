@@ -71,13 +71,36 @@
 declare const exec: Exec;
 
 declare type BaseExecOptions = {
-  /** Sets the current working directory for the child process. */
+  /**
+   * Sets the current working directory for the child process.
+   *
+   * **Example**
+   * ```ts
+   * exec("ls -la", { cwd: "src" });
+   * ```
+   */
   cwd?: string | Path;
 
-  /** Sets environment variables within the process. */
+  /**
+   * Sets environment variables within the process.
+   *
+   * **Example**
+   * ```ts
+   * exec(["printenv", "GREETING"], { env: { GREETING: "hello" } });
+   * ```
+   */
   env?: { [key: string | number]: string | number | boolean };
 
-  /** Options which control logging. */
+  /**
+   * Options which control logging.
+   *
+   * **Example**
+   * ```ts
+   * exec("echo hi", {
+   *   logging: { trace: console.error, info: console.error },
+   * });
+   * ```
+   */
   logging?: {
     /**
      * If provided, this logging function will be called multiple times as
@@ -102,6 +125,12 @@ declare type BaseExecOptions = {
      *
      * Defaults to the current value of {@link logger.info}. `logger.info`
      * defaults to a function which logs to stderr.
+     *
+     * **Example**
+     * ```ts
+     * const info = (...args: Array<any>) => console.error("[exec]", ...args);
+     * exec("echo hi", { logging: { info } });
+     * ```
      */
     info?: (...args: Array<any>) => void;
   };
@@ -111,6 +140,14 @@ declare type BaseExecOptions = {
    * status code.
    *
    * Defaults to true.
+   *
+   * **Example**
+   * ```ts
+   * const result = exec("git diff --quiet", { failOnNonZeroStatus: false });
+   * if (result.status !== 0) {
+   *   console.log("There are unstaged changes");
+   * }
+   * ```
    */
   failOnNonZeroStatus?: boolean;
 
@@ -119,6 +156,12 @@ declare type BaseExecOptions = {
    * and returned instead of being printed to the screen.
    *
    * Defaults to false. true is an alias for "utf8".
+   *
+   * **Example**
+   * ```ts
+   * const { stdout } = exec("git rev-parse HEAD", { captureOutput: true });
+   * console.log(stdout.trim());
+   * ```
    */
   captureOutput?: boolean | "utf8" | "arraybuffer";
 
@@ -128,6 +171,13 @@ declare type BaseExecOptions = {
    * the process to be done running.
    *
    * Defaults to true.
+   *
+   * **Example**
+   * ```ts
+   * const child = exec("sleep 1", { block: false });
+   * console.log("this prints while the child process is still running");
+   * child.wait();
+   * ```
    */
   block?: boolean;
 };
@@ -141,6 +191,12 @@ declare interface Exec {
    *
    * @param args - The command to run.
    * @param options - Options; see {@link BaseExecOptions}
+   *
+   * **Example**
+   * ```ts
+   * exec(["git", "status", "--short"]);
+   * exec("git status --short", { cwd: "src" });
+   * ```
    */
   <
     ExecOptions extends BaseExecOptions = {
@@ -158,6 +214,12 @@ declare interface Exec {
   /**
    * Parse the provided value into an array of command-line argument strings,
    * using the same logic that {@link exec} and {@link ChildProcess} use.
+   *
+   * **Example**
+   * ```ts
+   * const argv = exec.toArgv(`git commit -m "initial commit"`);
+   * console.log(argv); // ["git", "commit", "-m", "initial commit"]
+   * ```
    */
   toArgv(args: Array<string | Path | number> | string | Path): Array<string>;
 }
@@ -189,8 +251,7 @@ type ExecWaitResult<ExecOptions extends BaseExecOptions> = ExecOptions extends
         ? { stdout: ArrayBuffer; stderr: ArrayBuffer }
         : {}) &
       (ExecOptions["failOnNonZeroStatus"] extends false
-        ?
-            | { status: number; signal: undefined }
-            | { status: undefined; signal: number }
+        ? | { status: number; signal: undefined }
+          | { status: undefined; signal: number }
         : {})
   : void;

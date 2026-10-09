@@ -6,6 +6,12 @@ hide_title: true
 For compatibility with Node.js scripts, the global object is accessible via
 the global variable named "global".
 
+**Example**
+
+```ts
+console.log(global === globalThis);
+```
+
 ```ts
 var global: typeof globalThis;
 ```
@@ -21,6 +27,13 @@ For instance, `process.env` is a getter that returns [env](./env.md#env-object),
 
 If you are writing yavascript-specific code, you should use yavascript's APIs
 instead of `process`.
+
+**Example**
+
+```ts
+console.log(process.version, process.arch);
+console.log(process.argv);
+```
 
 ```ts
 var process: {
@@ -86,6 +99,12 @@ arch: string;
 
 Same as the global [env](./env.md#env-object).
 
+**Example**
+
+```ts
+console.log(process.env.HOME);
+```
+
 ```ts
 readonly env: {
   [key: string]: string | undefined;
@@ -96,6 +115,13 @@ readonly env: {
 
 Same as the global [scriptArgs](./cmdline.md#scriptargs-value).
 
+**Example**
+
+```ts
+const args = process.argv.slice(2);
+console.log(args);
+```
+
 ```ts
 readonly argv: Array<string>;
 ```
@@ -103,6 +129,12 @@ readonly argv: Array<string>;
 ### process.argv0 (readonly string property)
 
 Same as `scriptArgs[0]`.
+
+**Example**
+
+```ts
+console.log(process.argv0);
+```
 
 ```ts
 readonly argv0: string;
@@ -113,6 +145,12 @@ readonly argv0: string;
 Shortcut for `os.realpath(os.execPath())`, using the QuickJS [os](./os.md#quickjsos-namespace)
 module.
 
+**Example**
+
+```ts
+exec([process.execPath, "--version"]);
+```
+
 ```ts
 readonly execPath: string;
 ```
@@ -122,6 +160,12 @@ readonly execPath: string;
 Uses `std.getExitCode()` and `std.setExitCode()` from the QuickJS
 [std](./std.md#quickjsstd-namespace) module.
 
+**Example**
+
+```ts
+process.exitCode = 1;
+```
+
 ```ts
 exitCode: number;
 ```
@@ -129,6 +173,15 @@ exitCode: number;
 ### process.exit (method)
 
 Uses `std.exit()` from the QuickJS [std](./std.md#quickjsstd-namespace) module.
+
+**Example**
+
+```ts
+if (process.argv.length < 3) {
+  console.error("Please specify an input file");
+  process.exit(1);
+}
+```
 
 ```ts
 exit(code?: number | null | undefined): void;

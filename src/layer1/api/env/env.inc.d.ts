@@ -3,6 +3,13 @@
  * from it to read environment variables, write into it to set environment
  * variables, and/or delete properties from it to unset environment variables.
  * Any value you write will be coerced into a string.
+ *
+ * **Example**
+ * ```ts
+ * console.log(env.HOME);
+ * env.NODE_ENV = "production";
+ * delete env.DEBUG;
+ * ```
  */
 declare const env: { [key: string]: string | undefined };
 
@@ -23,6 +30,14 @@ declare const env: { [key: string]: string | undefined };
  * coercable to boolean.
  * @param logging logger override for the warning printed when an environment
  * variable has an unsupported value. Defaults to {@link logger}.
+ *
+ * **Example**
+ * ```ts
+ * const verbose = readEnvBool("VERBOSE", false);
+ * if (verbose) {
+ *   console.log("verbose logging enabled");
+ * }
+ * ```
  */
 declare function readEnvBool<T>(
   key: string,

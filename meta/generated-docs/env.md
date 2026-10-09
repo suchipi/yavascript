@@ -8,6 +8,14 @@ from it to read environment variables, write into it to set environment
 variables, and/or delete properties from it to unset environment variables.
 Any value you write will be coerced into a string.
 
+**Example**
+
+```ts
+console.log(env.HOME);
+env.NODE_ENV = "production";
+delete env.DEBUG;
+```
+
 ```ts
 const env: {
   [key: string]: string | undefined;
@@ -32,6 +40,15 @@ Generally, the `fallback` parameter is set to `true`, `false`, or `null`.
   coercable to boolean.
 - `@param` _logging_ — logger override for the warning printed when an environment
   variable has an unsupported value. Defaults to [logger](/meta/generated-docs/logger.md#logger-object).
+
+**Example**
+
+```ts
+const verbose = readEnvBool("VERBOSE", false);
+if (verbose) {
+  console.log("verbose logging enabled");
+}
+```
 
 ```ts
 declare function readEnvBool<T>(

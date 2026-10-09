@@ -18,6 +18,13 @@
  * > When specifying more than one pattern string, paths must match ALL of the
  * > patterns to be included in the returned Array. In other words, it uses
  * > "logical AND" behavior when you give it more than one pattern.
+ *
+ * **Example**
+ * ```ts
+ * const markdownFiles = glob("*.md");
+ * const sources = glob(["src/*.ts", "!src/*.d.ts"]);
+ * console.log(markdownFiles, sources);
+ * ```
  */
 declare function glob(
   patterns: string | Array<string>,
@@ -26,6 +33,15 @@ declare function glob(
 
 /**
  * Options for {@link glob}.
+ *
+ * **Example**
+ * ```ts
+ * const options: GlobOptions = {
+ *   dir: pwd().concat("src"),
+ *   followSymlinks: true,
+ * };
+ * const files = glob("*.ts", options);
+ * ```
  */
 declare type GlobOptions = {
   /**
@@ -33,10 +49,24 @@ declare type GlobOptions = {
    * directories, traversing into them.
    *
    * Defaults to false.
+   *
+   * **Example**
+   * ```ts
+   * const files = glob("*.md", { followSymlinks: true });
+   * ```
    */
   followSymlinks?: boolean;
 
-  /** Options which control logging. */
+  /**
+   * Options which control logging.
+   *
+   * **Example**
+   * ```ts
+   * glob("src/*.ts", {
+   *   logging: { trace: console.error, info: console.error },
+   * });
+   * ```
+   */
   logging?: {
     /**
      * If provided, this function will be called multiple times as `glob`
@@ -61,12 +91,25 @@ declare type GlobOptions = {
      *
      * Defaults to the current value of {@link logger.info}. `logger.info`
      * defaults to a function which writes to stderr.
+     *
+     * **Example**
+     * ```ts
+     * glob("src/*.ts", {
+     *   logging: { info: (...args) => console.error("[glob]", ...args) },
+     * });
+     * ```
      */
     info?: (...args: Array<any>) => void;
   };
 
   /**
-   * Directory to interpret glob patterns relative to. Defaults to `pwd()`.
+   * Directory to interpret glob patterns relative to. Must be an absolute
+   * path. Defaults to `pwd()`.
+   *
+   * **Example**
+   * ```ts
+   * const files = glob("*.ts", { dir: pwd().concat("src") });
+   * ```
    */
   dir?: string | Path;
 };

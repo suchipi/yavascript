@@ -15,6 +15,14 @@ Its interface is similar to `JSON.parse` and `JSON.stringify`, but CSV does
 not support the spacing/replacer/reviver options that `JSON.parse` and
 `JSON.stringify` have.
 
+**Example**
+
+```ts
+const rows = CSV.parse("name,age\nAlice,30\n");
+rows.push(["Bob", "25"]);
+console.log(CSV.stringify(rows));
+```
+
 ```ts
 const CSV: {
   parse(input: string): Array<Array<string>>;
@@ -29,6 +37,15 @@ Parse a CSV string into an Array of Arrays of strings.
 The outer array holds the rows, and the inner arrays hold the items in
 each row.
 
+**Example**
+
+```ts
+const rows = CSV.parse(readFile("data.csv"));
+for (const [name, age] of rows) {
+  console.log(name, age);
+}
+```
+
 ```ts
 parse(input: string): Array<Array<string>>;
 ```
@@ -39,6 +56,16 @@ Convert an Array of Arrays of strings into a CSV string.
 
 The outer array holds the rows, and the inner arrays hold the items in
 each row.
+
+**Example**
+
+```ts
+const csv = CSV.stringify([
+  ["name", "age"],
+  ["Alice", "30"],
+]);
+writeFile("people.csv", csv);
+```
 
 ```ts
 stringify(input: Array<Array<string>>): string;

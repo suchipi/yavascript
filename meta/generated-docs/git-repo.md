@@ -133,6 +133,13 @@ static findRoot(fromPath: string | Path): Path;
 
 Creates a new `GitRepo` object for the given repo on disk.
 
+**Example**
+
+```ts
+const repo = new GitRepo(GitRepo.findRoot(pwd()));
+console.log(repo.branchName());
+```
+
 ```ts
 constructor(repoDir: string | Path);
 ```
@@ -141,6 +148,13 @@ constructor(repoDir: string | Path);
 
 The root folder of the git repo that this `GitRepo` object represents (the
 folder that contains the '.git' folder).
+
+**Example**
+
+```ts
+const repo = new GitRepo(GitRepo.findRoot(pwd()));
+cd(repo.repoDir);
+```
 
 ```ts
 repoDir: Path;
@@ -201,6 +215,15 @@ Returns a boolean indicating whether there are uncommitted changes in the
 git repo. `true` means there are changes, `false` means there are no
 changes (ie. the repo is clean). Staged changes, unstaged changes, and
 untracked files that aren't ignored all count as changes.
+
+**Example**
+
+```ts
+const repo = new GitRepo(GitRepo.findRoot(pwd()));
+if (repo.isWorkingTreeDirty()) {
+  console.log("You have uncommitted changes");
+}
+```
 
 ```ts
 isWorkingTreeDirty(): boolean;

@@ -111,6 +111,12 @@ declare type BaseExecOptions = {
 
 Sets the current working directory for the child process.
 
+**Example**
+
+```ts
+exec("ls -la", { cwd: "src" });
+```
+
 ```ts
 cwd?: string | Path;
 ```
@@ -118,6 +124,12 @@ cwd?: string | Path;
 ## BaseExecOptions.env (object property)
 
 Sets environment variables within the process.
+
+**Example**
+
+```ts
+exec(["printenv", "GREETING"], { env: { GREETING: "hello" } });
+```
 
 ```ts
 env?: {
@@ -128,6 +140,14 @@ env?: {
 ## BaseExecOptions.logging (object property)
 
 Options which control logging.
+
+**Example**
+
+```ts
+exec("echo hi", {
+  logging: { trace: console.error, info: console.error },
+});
+```
 
 ```ts
 logging?: {
@@ -164,6 +184,13 @@ messages. Less verbose than `logging.trace`.
 Defaults to the current value of [logger.info](/meta/generated-docs/logger.md#loggerinfo-function-property). `logger.info`
 defaults to a function which logs to stderr.
 
+**Example**
+
+```ts
+const info = (...args: Array<any>) => console.error("[exec]", ...args);
+exec("echo hi", { logging: { info } });
+```
+
 ```ts
 info?: (...args: Array<any>) => void;
 ```
@@ -174,6 +201,15 @@ Whether an Error should be thrown when the process exits with a nonzero
 status code.
 
 Defaults to true.
+
+**Example**
+
+```ts
+const result = exec("git diff --quiet", { failOnNonZeroStatus: false });
+if (result.status !== 0) {
+  console.log("There are unstaged changes");
+}
+```
 
 ```ts
 failOnNonZeroStatus?: boolean;
@@ -186,6 +222,13 @@ and returned instead of being printed to the screen.
 
 Defaults to false. true is an alias for "utf8".
 
+**Example**
+
+```ts
+const { stdout } = exec("git rev-parse HEAD", { captureOutput: true });
+console.log(stdout.trim());
+```
+
 ```ts
 captureOutput?: boolean | "utf8" | "arraybuffer";
 ```
@@ -197,6 +240,14 @@ exec returns an object with a "wait" method which can be used to wait for
 the process to be done running.
 
 Defaults to true.
+
+**Example**
+
+```ts
+const child = exec("sleep 1", { block: false });
+console.log("this prints while the child process is still running");
+child.wait();
+```
 
 ```ts
 block?: boolean;
@@ -234,6 +285,13 @@ run.
 - `@param` _args_ — The command to run.
 - `@param` _options_ — Options; see [BaseExecOptions](/meta/generated-docs/exec.md#baseexecoptions-type)
 
+**Example**
+
+```ts
+exec(["git", "status", "--short"]);
+exec("git status --short", { cwd: "src" });
+```
+
 ```ts
 <ExecOptions extends BaseExecOptions = {
   failOnNonZeroStatus: true;
@@ -248,6 +306,13 @@ run.
 
 Parse the provided value into an array of command-line argument strings,
 using the same logic that [exec](/meta/generated-docs/exec.md#exec-interface) and [ChildProcess](/meta/generated-docs/ChildProcess.md#childprocess-interface) use.
+
+**Example**
+
+```ts
+const argv = exec.toArgv(`git commit -m "initial commit"`);
+console.log(argv); // ["git", "commit", "-m", "initial commit"]
+```
 
 ```ts
 toArgv(args: Array<string | Path | number> | string | Path): Array<string>;

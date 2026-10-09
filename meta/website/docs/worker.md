@@ -12,6 +12,17 @@ Worker's global context.
 It behaves similar to [Web
 Workers](https://developer.mozilla.org/en-US/docs/Web/API/Worker).
 
+**Example**
+
+```ts
+const worker = new Worker("./my-worker.js");
+worker.onmessage = (event) => {
+  console.log("worker says:", event.data);
+  worker.terminate();
+};
+worker.postMessage({ task: "start" });
+```
+
 ```ts
 declare class Worker {
   constructor(
@@ -53,6 +64,19 @@ assigned filename for import.meta, module resolution, etc.
 If `options.initialData` is present, it'll be available within the worker
 as the static `initialData` property on the Worker constructor.
 
+**Example**
+
+```ts
+const worker = new Worker("inline-worker.js", {
+  overrideCode: "Worker.parent.postMessage(Worker.initialData.name)",
+  initialData: { name: "bob" },
+});
+worker.onmessage = (event) => {
+  console.log(event.data);
+  worker.terminate();
+};
+```
+
 ```ts
 constructor(moduleFilename: string, options?: {
   overrideCode?: string;
@@ -68,6 +92,15 @@ initial data.
 
 Outside of a worker, this is always `undefined`.
 
+**Example**
+
+```ts
+const data = Worker.initialData;
+if (data !== undefined) {
+  console.log("Running inside a worker with:", data);
+}
+```
+
 ```ts
 static initialData: StructuredClonable;
 ```
@@ -76,6 +109,14 @@ static initialData: StructuredClonable;
 
 Worker-side communication channel back to the parent context that invoked
 it (ie. the main thread).
+
+**Example**
+
+```ts
+Worker.parent.onmessage = (event) => {
+  Worker.parent.postMessage({ received: event.data });
+};
+```
 
 ```ts
 static parent: {
@@ -90,6 +131,13 @@ static parent: {
 
 Send a message from the main thread to the worker.
 
+**Example**
+
+```ts
+const worker = new Worker("./my-worker.js");
+worker.postMessage({ task: "resize", width: 800 });
+```
+
 ```ts
 postMessage(msg: StructuredClonable): void;
 ```
@@ -98,6 +146,15 @@ postMessage(msg: StructuredClonable): void;
 
 This function is called when a message arrives from the Worker. You may
 override this property with your own function.
+
+**Example**
+
+```ts
+const worker = new Worker("./my-worker.js");
+worker.onmessage = (event) => {
+  console.log("message from the worker:", event.data);
+};
+```
 
 ```ts
 onmessage: null | ((event: {
@@ -112,6 +169,15 @@ rejected in the worker, this `onerror` function will be run.
 
 When `onerror` is unset, errors print to stderr.
 
+**Example**
+
+```ts
+const worker = new Worker("./my-worker.js");
+worker.onerror = (event) => {
+  console.error(`${event.filename}:${event.lineno}: ${event.message}`);
+};
+```
+
 ```ts
 onerror: null | ((event: {
   message: string;
@@ -125,6 +191,15 @@ onerror: null | ((event: {
 
 Terminate the worker thread. Equivalent to setting `onmessage` to `null`.
 
+**Example**
+
+```ts
+const worker = new Worker("./my-worker.js");
+worker.onmessage = () => {
+  worker.terminate();
+};
+```
+
 ```ts
 terminate(): void;
 ```
@@ -132,6 +207,16 @@ terminate(): void;
 ## StructuredClonable (type)
 
 Types which can be sent to/from Workers.
+
+**Example**
+
+```ts
+const message: StructuredClonable = {
+  name: "resize",
+  sizes: [640, 1280],
+  createdAt: new Date(),
+};
+```
 
 ```ts
 declare type StructuredClonable =

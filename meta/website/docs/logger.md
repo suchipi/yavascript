@@ -11,6 +11,14 @@ amount and style of log output from yavascript API functions.
 
 This object behaves similarly to the shell builtin `set -x`.
 
+**Example**
+
+```ts
+logger.trace = console.error;
+logger.info = () => {};
+exec("echo hi");
+```
+
 ```ts
 const logger: {
   trace: (...args: Array<any>) => void;
@@ -27,6 +35,13 @@ functions which receive `logging.trace` as an option, like [which](./which.md#wh
 
 The default value of `logger.trace` is a no-op function.
 
+**Example**
+
+```ts
+logger.trace = (...args) => console.error("[trace]", ...args);
+which("git");
+```
+
 ```ts
 trace: (...args: Array<any>) => void;
 ```
@@ -39,6 +54,13 @@ functions which receive `logging.info` as an option, like [exec](./exec.md#exec-
 
 The default value of `logger.info` writes dimmed text to stderr.
 
+**Example**
+
+```ts
+logger.info = () => {};
+exec("echo hi");
+```
+
 ```ts
 info: (...args: Array<any>) => void;
 ```
@@ -49,6 +71,13 @@ This property is used as the default value for `warn` in yavascript API
 functions which receive `logging.warn` as an option, like [readEnvBool](./env.md#readenvbool-function).
 
 The default value of `logger.warn` writes yellow text to stderr.
+
+**Example**
+
+```ts
+logger.warn = (...args) => console.error("warning:", ...args);
+readEnvBool("VERBOSE", false);
+```
 
 ```ts
 warn: (...args: Array<any>) => void;

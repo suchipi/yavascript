@@ -16,6 +16,26 @@ interface PromiseConstructor {
    * Promise will be awaited before being passed into your mapper function.
    * Additionally, async iterables are supported; if iterable.next() returns a
    * Promise, it will be awaited.
+   *
+   * **Example**
+   * ```ts
+   * const files = glob("src/*.ts");
+   *
+   * const lineCounts = await Promise.map(
+   *   files,
+   *   async (file) => {
+   *     // readFile blocks the thread, so we use runInWorker to run
+   *     // it in another thread
+   *     const lengthFromWorker = await runInWorker(file.toString(), (file) => {
+   *       return readFile(file).split("\n").length;
+   *     });
+   *     return lengthFromWorker;
+   *   },
+   *   { concurrency: 4 },
+   * );
+   *
+   * console.log(lineCounts);
+   * ```
    */
   map<T, U>(
     inputs: Iterable<T | Promise<T>> | AsyncIterable<T | Promise<T>>,
@@ -23,11 +43,23 @@ interface PromiseConstructor {
     {
       /**
        * How many jobs are allowed to run at once.
+       *
+       * **Example**
+       * ```ts
+       * const delays = [300, 200, 100];
+       * await Promise.map(delays, (ms) => sleep.async(ms), { concurrency: 2 });
+       * ```
        */
       concurrency,
     }?: {
       /**
        * How many jobs are allowed to run at once.
+       *
+       * **Example**
+       * ```ts
+       * const delays = [300, 200, 100];
+       * await Promise.map(delays, (ms) => sleep.async(ms), { concurrency: 2 });
+       * ```
        */
       concurrency?: number;
     },

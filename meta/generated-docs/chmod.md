@@ -13,6 +13,13 @@ Set the permission bits for the specified file.
 
 Provides the same functionality as the unix binary of the same name.
 
+**Example**
+
+```ts
+chmod(0o755, "script.sh");
+chmod("add", { user: "execute" }, "script.sh");
+```
+
 ```ts
 const chmod: Chmod;
 ```
@@ -20,6 +27,14 @@ const chmod: Chmod;
 # Chmod (interface)
 
 The interface for the global function `chmod`, which has two call signatures.
+
+**Example**
+
+```ts
+const setPermissions: Chmod = chmod;
+setPermissions("644", "notes.txt");
+setPermissions("remove", { others: "read" }, "notes.txt");
+```
 
 ```ts
 interface Chmod {
@@ -40,6 +55,13 @@ Provides the same functionality as the unix binary of the same name.
 
 - `@param` _permissions_ — The permission bits to set. This can be a number, or a string containing an octal number.
 - `@param` _path_ — The path to the file.
+
+**Example**
+
+```ts
+chmod(0o755, "script.sh");
+chmod("644", "notes.txt");
+```
 
 ```ts
 (permissions: number | string, path: string | Path): void;
@@ -94,6 +116,13 @@ Some example objects:
 { all: "full" }
 ```
 
+**Example**
+
+```ts
+chmod("add", { user: "execute" }, "script.sh");
+chmod("set", { ug: "rw", o: "r" }, "notes.txt");
+```
+
 ```ts
 <Operation extends Chmod.Operation>(operation: Operation, permissions: Partial<Record<Chmod.Who, Chmod.Permission>>, path: string | Path): void;
 ```
@@ -136,6 +165,13 @@ declare namespace Chmod {
 
 A string representing who a permission applies to.
 
+**Example**
+
+```ts
+const who: Chmod.Who = "group";
+chmod("add", { [who]: "write" }, "notes.txt");
+```
+
 ```ts
 type Who =
   | "user"
@@ -155,6 +191,13 @@ type Who =
 
 A string representing how the permissions should be changed.
 
+**Example**
+
+```ts
+const operation: Chmod.Operation = "remove";
+chmod(operation, { others: "read" }, "notes.txt");
+```
+
 ```ts
 type Operation = "add" | "set" | "remove";
 ```
@@ -162,6 +205,13 @@ type Operation = "add" | "set" | "remove";
 ## Chmod.Permission (exported type)
 
 A string representing the access level for the given permission.
+
+**Example**
+
+```ts
+const permission: Chmod.Permission = "readwrite";
+chmod("set", { user: permission }, "notes.txt");
+```
 
 ```ts
 type Permission =

@@ -8,6 +8,12 @@
  *
  * See also {@link grepFile}, {@link grepArray}, {@link String.prototype.grep},
  * and {@link Array.prototype.grep}.
+ *
+ * **Example**
+ * ```ts
+ * const lines = grepString("apple\nbanana\ncherry", /an/);
+ * console.log(lines); // ["banana"]
+ * ```
  */
 declare const grepString: {
   (
@@ -29,6 +35,12 @@ declare const grepString: {
  *
  * See also {@link grepString}, {@link grepFile}, {@link String.prototype.grep},
  * and {@link Array.prototype.grep}.
+ *
+ * **Example**
+ * ```ts
+ * const matches = grepArray(["apple", "banana", "cherry"], "an");
+ * console.log(matches); // ["banana"]
+ * ```
  */
 declare const grepArray: {
   <T>(
@@ -55,6 +67,12 @@ declare const grepArray: {
  *
  * See also {@link grepArray}, {@link grepString},
  * {@link String.prototype.grep}, and {@link Array.prototype.grep}.
+ *
+ * **Example**
+ * ```ts
+ * const todos = grepFile("README.md", /TODO/);
+ * console.log(todos);
+ * ```
  */
 declare const grepFile: {
   (
@@ -82,6 +100,12 @@ interface String {
    *
    * See also {@link grepString}, {@link grepArray}, {@link grepFile}, and
    * {@link Array.prototype.grep}.
+   *
+   * **Example**
+   * ```ts
+   * const lines = "apple\nbanana\ncherry".grep(/an/);
+   * console.log(lines); // ["banana"]
+   * ```
    */
   grep: {
     (
@@ -104,6 +128,12 @@ interface Array<T> {
    *
    * See also {@link grepString}, {@link grepArray}, {@link grepFile}, and
    * {@link String.prototype.grep}.
+   *
+   * **Example**
+   * ```ts
+   * const matches = ["apple", "banana", "cherry"].grep(/an/);
+   * console.log(matches); // ["banana"]
+   * ```
    */
   grep: {
     (
@@ -119,6 +149,13 @@ declare interface GrepOptions {
   /**
    * When `inverse` is true, the grep function returns those lines which DON'T
    * match the pattern, instead of those which do. Defaults to `false`.
+   *
+   * **Example**
+   * ```ts
+   * const fruits = "apple\nbanana\ncherry";
+   * const nonMatching = grepString(fruits, /an/, { inverse: true });
+   * console.log(nonMatching); // ["apple", "cherry"]
+   * ```
    */
   inverse?: boolean;
 
@@ -126,6 +163,13 @@ declare interface GrepOptions {
    * When `details` is true, the grep function returns an array of
    * {@link GrepMatchDetail} objects instead of an array of strings. Defaults to
    * `false`.
+   *
+   * **Example**
+   * ```ts
+   * const fruits = "apple\nbanana\ncherry";
+   * const details = grepString(fruits, /an/, { details: true });
+   * console.log(details[0].lineNumber, details[0].lineContent);
+   * ```
    */
   details?: boolean;
 }
@@ -134,14 +178,36 @@ declare interface GrepOptions {
  * When `grepString`, `grepArray`, `grepFile`, or `String.prototype.grep` are
  * called with the `{ details: true }` option set, an Array of `GrepMatchDetail`
  * objects is returned.
+ *
+ * **Example**
+ * ```ts
+ * const [detail] = grepString("apple\nbanana", /an/, { details: true });
+ * console.log(detail.lineNumber, detail.lineContent, detail.matches);
+ * ```
  */
 declare interface GrepMatchDetail<ItemType = string> {
   lineNumber: number;
   lineContent: ItemType;
   matches: RegExpMatchArray;
 
-  /** Same as lineNumber - 1. */
+  /**
+   * Same as lineNumber - 1.
+   *
+   * **Example**
+   * ```ts
+   * const [detail] = grepString("apple\nbanana", /an/, { details: true });
+   * console.log(detail.index === detail.lineNumber - 1);
+   * ```
+   */
   index: number;
-  /** Alias for lineContent. */
+  /**
+   * Alias for lineContent.
+   *
+   * **Example**
+   * ```ts
+   * const [detail] = grepString("apple\nbanana", /an/, { details: true });
+   * console.log(detail.content === detail.lineContent);
+   * ```
+   */
   content: ItemType;
 }

@@ -5,6 +5,14 @@ hide_title: true
 
 Any integer in the range [0, 255].
 
+**Example**
+
+```ts
+const red: byte = 255;
+const green: byte = 128;
+console.log(red, green);
+```
+
 ```ts
 declare type byte =
   | 0

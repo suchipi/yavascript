@@ -4,6 +4,11 @@
  * Alias for `mkdir(path, { recursive: true })`.
  *
  * Provides the same functionality as `mkdir -p`.
+ *
+ * **Example**
+ * ```ts
+ * mkdirp("build/assets/images");
+ * ```
  */
 declare function mkdirp(
   path: string | Path,

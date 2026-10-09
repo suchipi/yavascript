@@ -58,6 +58,15 @@
  * `Path`s corresponding to the input command-line args. `args` is an Array of
  * positional arguments, as found on the command-line. `metadata` contains
  * information about what name and type the flags got mapped to.
+ *
+ * **Example**
+ * ```ts
+ * const { flags, args } = parseScriptArgs({
+ *   output: Path,
+ *   verbose: Boolean,
+ * });
+ * console.log(flags.output, flags.verbose, args);
+ * ```
  */
 declare function parseScriptArgs(
   hints?: {
@@ -79,26 +88,70 @@ declare function parseScriptArgs(
  * including what case changes were applied to the keys, which hints were used,
  * and which properties had their type guessed because no corresponding hint was
  * available.
+ *
+ * **Example**
+ * ```ts
+ * const result: ParseScriptArgsResult = parseScriptArgs();
+ * console.log(result.flags, result.args, result.metadata);
+ * ```
  */
 declare interface ParseScriptArgsResult {
   /**
    * The values for any command-line `--flags`, with key names converted to `lowerCamelCase`.
+   *
+   * **Example**
+   * ```ts
+   * const { flags } = parseScriptArgs({ dryRun: Boolean }, ["--dry-run"]);
+   * console.log(flags.dryRun); // true
+   * ```
    */
   flags: { [key: string]: any };
   /**
    * An array of those command-line arguments which weren't associated with a flag.
+   *
+   * **Example**
+   * ```ts
+   * const argv = ["--verbose", "one.txt", "two.txt"];
+   * const { args } = parseScriptArgs({ verbose: Boolean }, argv);
+   * console.log(args); // ["one.txt", "two.txt"]
+   * ```
    */
   args: Array<string>;
   /**
    * Information about the parsing process, including what case changes were
    * applied to the keys, which hints were used, and which properties had their
    * type guessed because no corresponding hint was available.
+   *
+   * **Example**
+   * ```ts
+   * const argv = ["--dry-run", "--count", "3"];
+   * const { metadata } = parseScriptArgs({ count: Number }, argv);
+   * console.log(metadata);
+   * // {
+   * //   keys: {
+   * //     "--dry-run": "dryRun",
+   * //     "--count": "count",
+   * //   },
+   * //   hints: {
+   * //     count: "number",
+   * //   },
+   * //   guesses: {
+   * //     dryRun: "boolean",
+   * //   },
+   * // }
+   * ```
    */
   metadata: {
     /**
      * An object whose keys are the verbatim flags from the command-line, and
      * whose values are the lowerCamelCase names they were converted to in the
      * `flags` property of the {@link ParseScriptArgsResult}.
+     *
+     * **Example**
+     * ```ts
+     * const { metadata } = parseScriptArgs({}, ["--dry-run"]);
+     * console.log(metadata.keys["--dry-run"]); // "dryRun"
+     * ```
      */
     keys: {
       [key: string]: string | undefined;
@@ -107,6 +160,13 @@ declare interface ParseScriptArgsResult {
      * An object whose keys are the lowerCamelCase flag names, and whose values
      * are strings indicating the hint values that were specified for those
      * flags.
+     *
+     * **Example**
+     * ```ts
+     * const hints = { count: Number };
+     * const { metadata } = parseScriptArgs(hints, ["--count", "3"]);
+     * console.log(metadata.hints.count); // "number"
+     * ```
      */
     hints: {
       [key: string]: "path" | "number" | "boolean" | "string" | undefined;
@@ -120,6 +180,12 @@ declare interface ParseScriptArgsResult {
      *
      * If you're seeing incorrect inference, consider passing a `hints` argument
      * to {@link parseScriptArgs}.
+     *
+     * **Example**
+     * ```ts
+     * const { metadata } = parseScriptArgs({}, ["--count", "3"]);
+     * console.log(metadata.guesses.count); // "number"
+     * ```
      */
     guesses: {
       [key: string]: "number" | "boolean" | "string" | undefined;

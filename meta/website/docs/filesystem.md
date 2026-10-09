@@ -50,6 +50,13 @@ const readFile: {
 
 Read the contents of a file from disk, as a UTF-8 string.
 
+**Example**
+
+```ts
+const text = readFile("README.md");
+console.log(text.length);
+```
+
 ```ts
 (path: string | Path): string;
 ```
@@ -58,6 +65,13 @@ Read the contents of a file from disk, as a UTF-8 string.
 
 Read the contents of a file from disk, as a UTF-8 string.
 
+**Example**
+
+```ts
+const text = readFile("README.md", {});
+console.log(text.length);
+```
+
 ```ts
 (path: string | Path, options: {}): string;
 ```
@@ -65,6 +79,13 @@ Read the contents of a file from disk, as a UTF-8 string.
 ### readFile(...) (call signature)
 
 Read the contents of a file from disk, as a UTF-8 string.
+
+**Example**
+
+```ts
+const text = readFile("README.md", { binary: false });
+console.log(text.length);
+```
 
 ```ts
 (path: string | Path, options: {
@@ -75,6 +96,13 @@ Read the contents of a file from disk, as a UTF-8 string.
 ### readFile(...) (call signature)
 
 Read the contents of a file from disk, as an ArrayBuffer.
+
+**Example**
+
+```ts
+const buffer = readFile("image.png", { binary: true });
+console.log(buffer.byteLength);
+```
 
 ```ts
 (path: string | Path, options: {
@@ -88,6 +116,13 @@ Write the contents of a string or ArrayBuffer to a file.
 
 Strings are written using the UTF-8 encoding.
 
+**Example**
+
+```ts
+writeFile("notes.txt", "remember to buy milk\n");
+writeFile("bytes.bin", new Uint8Array([1, 2, 3]).buffer);
+```
+
 ```ts
 declare function writeFile(
   path: string | Path,
@@ -99,6 +134,14 @@ declare function writeFile(
 
 Function which returns true if the path points to a regular file.
 
+**Example**
+
+```ts
+if (isFile("README.md")) {
+  console.log(readFile("README.md"));
+}
+```
+
 ```ts
 declare function isFile(path: string | Path): boolean;
 ```
@@ -109,6 +152,14 @@ Function which returns true if the path points to a directory, or if the
 path points to a symlink which points to a directory. Otherwise, it returns
 false.
 
+**Example**
+
+```ts
+if (!isDir("build")) {
+  mkdir("build");
+}
+```
+
 ```ts
 declare function isDir(path: string | Path): boolean;
 ```
@@ -116,6 +167,14 @@ declare function isDir(path: string | Path): boolean;
 ## isLink (function)
 
 Returns true if the path points to a symlink.
+
+**Example**
+
+```ts
+if (isLink("link-to-readme")) {
+  console.log(readlink("link-to-readme"));
+}
+```
 
 ```ts
 declare function isLink(path: string | Path): boolean;
@@ -128,6 +187,14 @@ current user.
 
 If nothing exists at that path, an error will be thrown.
 
+**Example**
+
+```ts
+if (!isExecutable("script.sh")) {
+  chmod("add", { user: "execute" }, "script.sh");
+}
+```
+
 ```ts
 declare function isExecutable(path: string | Path): boolean;
 ```
@@ -139,6 +206,14 @@ user.
 
 If nothing exists at that path, an error will be thrown.
 
+**Example**
+
+```ts
+if (isReadable("notes.txt")) {
+  console.log(readFile("notes.txt"));
+}
+```
+
 ```ts
 declare function isReadable(path: string | Path): boolean;
 ```
@@ -147,6 +222,14 @@ declare function isReadable(path: string | Path): boolean;
 
 Returns true if a resource at the provided path could be written to by the
 current user.
+
+**Example**
+
+```ts
+if (isWritable("notes.txt")) {
+  writeFile("notes.txt", "remember to buy milk\n");
+}
+```
 
 ```ts
 declare function isWritable(path: string | Path): boolean;
@@ -160,6 +243,14 @@ If the directory isn't empty, its contents will be deleted, too.
 
 Provides the same functionality as the command `rm -r`.
 
+**Example**
+
+```ts
+if (exists("build")) {
+  remove("build");
+}
+```
+
 ```ts
 declare function remove(path: string | Path): void;
 ```
@@ -169,6 +260,14 @@ declare function remove(path: string | Path): void;
 Returns true if a file or directory exists at the specified path.
 
 Provides the same functionality as the command `test -e`.
+
+**Example**
+
+```ts
+if (!exists("settings.toml")) {
+  writeFile("settings.toml", 'name = "my-project"\n');
+}
+```
 
 ```ts
 declare function exists(path: string | Path): boolean;
@@ -181,6 +280,13 @@ Folders are copied recursively.
 
 Provides the same functionality as the command `cp -R`.
 
+**Example**
+
+```ts
+copy("README.md", "README.backup.md");
+copy("src", "src-backup");
+```
+
 ```ts
 declare function copy(
   from: string | Path,
@@ -192,6 +298,13 @@ declare function copy(
 ## CopyOptions (type)
 
 Options for [copy](./filesystem.md#copy-function).
+
+**Example**
+
+```ts
+const options: CopyOptions = { whenTargetExists: "skip" };
+copy("src", "src-backup", options);
+```
 
 ```ts
 declare type CopyOptions = {
@@ -210,6 +323,12 @@ something else already exists.
 
 Defaults to "error".
 
+**Example**
+
+```ts
+copy("config.toml", "notes.txt", { whenTargetExists: "overwrite" });
+```
+
 ```ts
 whenTargetExists?: "overwrite" | "skip" | "error";
 ```
@@ -217,6 +336,14 @@ whenTargetExists?: "overwrite" | "skip" | "error";
 ### CopyOptions.logging (object property)
 
 Options which control logging.
+
+**Example**
+
+```ts
+copy("src", "src-backup", {
+  logging: { trace: console.error, info: console.error },
+});
+```
 
 ```ts
 logging?: {
@@ -253,6 +380,14 @@ messages.
 Defaults to the current value of [logger.info](./logger.md#loggerinfo-function-property). `logger.info`
 defaults to a function which writes to stderr.
 
+**Example**
+
+```ts
+copy("src", "src-backup", {
+  logging: { info: (...args) => console.error("[copy]", ...args) },
+});
+```
+
 ```ts
 info?: (...args: Array<any>) => void;
 ```
@@ -262,6 +397,12 @@ info?: (...args: Array<any>) => void;
 Rename the file or directory at the specified path.
 
 Provides the same functionality as the command `mv`.
+
+**Example**
+
+```ts
+rename("notes.txt", "notes-old.txt");
+```
 
 ```ts
 declare function rename(from: string | Path, to: string | Path): void;

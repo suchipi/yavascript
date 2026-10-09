@@ -154,6 +154,12 @@ Failure to uphold this guarantee indicates a bug.
 For more info, including info on how to change how JSX is compiled, see
 [JSX](/meta/generated-docs/jsx.md#jsx-namespace).
 
+**Example**
+
+```ts
+JSX.pragma = "React.createElement";
+```
+
 ```ts
 let pragma: string;
 ```
@@ -180,6 +186,12 @@ Failure to uphold this guarantee indicates a bug.
 
 For more info, including info on how to change how JSX is compiled, see
 [JSX](/meta/generated-docs/jsx.md#jsx-namespace).
+
+**Example**
+
+```ts
+JSX.pragmaFrag = "React.Fragment";
+```
 
 ```ts
 let pragmaFrag: string;
@@ -230,6 +242,15 @@ const Element: unique symbol;
 
 The TypeScript type for JSX Element objects created by the default
 implementation of `JSX.createElement`.
+
+**Example**
+
+```tsx
+const link: JSX.Element<{ href: string }, "a"> = (
+  <a href="https://example.com" />
+);
+console.log(link.type, link.props.href);
+```
 
 ```ts
 interface Element<
@@ -316,6 +337,13 @@ If you modify properties on the JSX global such that `JSX.Fragment` is no
 longer used (eg. by replacing it with `React.Fragment`), this type may no
 longer be relevant.
 
+**Example**
+
+```tsx
+const fragment: JSX.Fragment = <>hi</>;
+console.log(fragment.type === JSX.Fragment);
+```
+
 ```ts
 type Fragment = Element<{}, typeof Fragment>;
 ```
@@ -338,6 +366,22 @@ Failure to uphold this guarantee indicates a bug.
 
 For more info, including info on how to change how JSX is compiled, see
 [JSX](/meta/generated-docs/jsx.md#jsx-namespace).
+
+**Example**
+
+```tsx
+const link = JSX.createElement(
+  "a",
+  { href: "https://example.com" },
+  "click here",
+);
+console.log(link.props.href, link.props.children);
+
+// Same as:
+
+const link = <a href="https://example.com">click here</a>;
+console.log(link.props.href, link.props.children);
+```
 
 ```ts
 let createElement: {

@@ -17,6 +17,16 @@ process if the process exits normally.
 > Attempting to call `exit` or set `exit.code` within a Worker will fail and
 > throw an error.
 
+**Example**
+
+```ts
+if (!exists("config.toml")) {
+  console.error("config.toml is missing");
+  exit(1);
+}
+exit.code = 2;
+```
+
 ```ts
 const exit: {
   (code?: number): never;

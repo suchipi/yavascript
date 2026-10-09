@@ -23,6 +23,14 @@ globbing solution.
 > patterns to be included in the returned Array. In other words, it uses
 > "logical AND" behavior when you give it more than one pattern.
 
+**Example**
+
+```ts
+const markdownFiles = glob("*.md");
+const sources = glob(["src/*.ts", "!src/*.d.ts"]);
+console.log(markdownFiles, sources);
+```
+
 ```ts
 declare function glob(
   patterns: string | Array<string>,
@@ -33,6 +41,16 @@ declare function glob(
 ## GlobOptions (type)
 
 Options for [glob](./glob.md#glob-function).
+
+**Example**
+
+```ts
+const options: GlobOptions = {
+  dir: pwd().concat("src"),
+  followSymlinks: true,
+};
+const files = glob("*.ts", options);
+```
 
 ```ts
 declare type GlobOptions = {
@@ -52,6 +70,12 @@ directories, traversing into them.
 
 Defaults to false.
 
+**Example**
+
+```ts
+const files = glob("*.md", { followSymlinks: true });
+```
+
 ```ts
 followSymlinks?: boolean;
 ```
@@ -59,6 +83,14 @@ followSymlinks?: boolean;
 ### GlobOptions.logging (object property)
 
 Options which control logging.
+
+**Example**
+
+```ts
+glob("src/*.ts", {
+  logging: { trace: console.error, info: console.error },
+});
+```
 
 ```ts
 logging?: {
@@ -95,13 +127,28 @@ messages. Less verbose than `logging.trace`.
 Defaults to the current value of [logger.info](./logger.md#loggerinfo-function-property). `logger.info`
 defaults to a function which writes to stderr.
 
+**Example**
+
+```ts
+glob("src/*.ts", {
+  logging: { info: (...args) => console.error("[glob]", ...args) },
+});
+```
+
 ```ts
 info?: (...args: Array<any>) => void;
 ```
 
 ### GlobOptions.dir (property)
 
-Directory to interpret glob patterns relative to. Defaults to `pwd()`.
+Directory to interpret glob patterns relative to. Must be an absolute
+path. Defaults to `pwd()`.
+
+**Example**
+
+```ts
+const files = glob("*.ts", { dir: pwd().concat("src") });
+```
 
 ```ts
 dir?: string | Path;

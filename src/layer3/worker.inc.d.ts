@@ -7,6 +7,16 @@
  *
  * It behaves similar to [Web
  * Workers](https://developer.mozilla.org/en-US/docs/Web/API/Worker).
+ *
+ * **Example**
+ * ```ts
+ * const worker = new Worker("./my-worker.js");
+ * worker.onmessage = (event) => {
+ *   console.log("worker says:", event.data);
+ *   worker.terminate();
+ * };
+ * worker.postMessage({ task: "start" });
+ * ```
  */
 declare class Worker {
   /**
@@ -20,6 +30,18 @@ declare class Worker {
    *
    * If `options.initialData` is present, it'll be available within the worker
    * as the static `initialData` property on the Worker constructor.
+   *
+   * **Example**
+   * ```ts
+   * const worker = new Worker("inline-worker.js", {
+   *   overrideCode: "Worker.parent.postMessage(Worker.initialData.name)",
+   *   initialData: { name: "bob" },
+   * });
+   * worker.onmessage = (event) => {
+   *   console.log(event.data);
+   *   worker.terminate();
+   * };
+   * ```
    */
   constructor(
     moduleFilename: string,
@@ -35,30 +57,75 @@ declare class Worker {
    * initial data.
    *
    * Outside of a worker, this is always `undefined`.
+   *
+   * **Example**
+   * ```ts
+   * const data = Worker.initialData;
+   * if (data !== undefined) {
+   *   console.log("Running inside a worker with:", data);
+   * }
+   * ```
    */
   static initialData: StructuredClonable;
 
   /**
    * Worker-side communication channel back to the parent context that invoked
    * it (ie. the main thread).
+   *
+   * **Example**
+   * ```ts
+   * Worker.parent.onmessage = (event) => {
+   *   Worker.parent.postMessage({ received: event.data });
+   * };
+   * ```
    */
   static parent: {
-    /** Send a message from the worker back to the main thread. */
+    /**
+     * Send a message from the worker back to the main thread.
+     *
+     * **Example**
+     * ```ts
+     * Worker.parent.postMessage({ status: "done", result: 42 });
+     * ```
+     */
     postMessage(msg: StructuredClonable): void;
 
     /**
      * This function is called when a message arrives from the parent. You may
      * override this property with your own function.
+     *
+     * **Example**
+     * ```ts
+     * Worker.parent.onmessage = (event) => {
+     *   console.log("message from the main thread:", event.data);
+     * };
+     * ```
      */
     onmessage: null | ((event: { data: StructuredClonable }) => void);
   };
 
-  /** Send a message from the main thread to the worker. */
+  /**
+   * Send a message from the main thread to the worker.
+   *
+   * **Example**
+   * ```ts
+   * const worker = new Worker("./my-worker.js");
+   * worker.postMessage({ task: "resize", width: 800 });
+   * ```
+   */
   postMessage(msg: StructuredClonable): void;
 
   /**
    * This function is called when a message arrives from the Worker. You may
    * override this property with your own function.
+   *
+   * **Example**
+   * ```ts
+   * const worker = new Worker("./my-worker.js");
+   * worker.onmessage = (event) => {
+   *   console.log("message from the worker:", event.data);
+   * };
+   * ```
    */
   onmessage: null | ((event: { data: StructuredClonable }) => void);
 
@@ -67,6 +134,14 @@ declare class Worker {
    * rejected in the worker, this `onerror` function will be run.
    *
    * When `onerror` is unset, errors print to stderr.
+   *
+   * **Example**
+   * ```ts
+   * const worker = new Worker("./my-worker.js");
+   * worker.onerror = (event) => {
+   *   console.error(`${event.filename}:${event.lineno}: ${event.message}`);
+   * };
+   * ```
    */
   onerror:
     | null
@@ -79,11 +154,30 @@ declare class Worker {
 
   /**
    * Terminate the worker thread. Equivalent to setting `onmessage` to `null`.
+   *
+   * **Example**
+   * ```ts
+   * const worker = new Worker("./my-worker.js");
+   * worker.onmessage = () => {
+   *   worker.terminate();
+   * };
+   * ```
    */
   terminate(): void;
 }
 
-/** Types which can be sent to/from Workers. */
+/**
+ * Types which can be sent to/from Workers.
+ *
+ * **Example**
+ * ```ts
+ * const message: StructuredClonable = {
+ *   name: "resize",
+ *   sizes: [640, 1280],
+ *   createdAt: new Date(),
+ * };
+ * ```
+ */
 declare type StructuredClonable =
   | string
   | number

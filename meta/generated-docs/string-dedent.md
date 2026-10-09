@@ -38,6 +38,17 @@ Note that the first line of the string must be empty.
 See its readme on npm for more info:
 https://www.npmjs.com/package/string-dedent
 
+**Example**
+
+```ts
+const usage = String.dedent`
+  Usage: my-script [options]
+
+    --help  Show this message
+`;
+console.log(usage);
+```
+
 ```ts
 dedent: {
   (input: string): string;
@@ -53,6 +64,13 @@ The first line of `input` MUST be empty.
 
 For more info, see: https://www.npmjs.com/package/string-dedent#usage
 
+**Example**
+
+```ts
+const text = String.dedent("\n    first line\n      second line\n");
+console.log(text);
+```
+
 ```ts
 (input: string): string;
 ```
@@ -64,6 +82,17 @@ The first line of the template literal MUST be empty.
 
 For more info, see: https://www.npmjs.com/package/string-dedent#usage
 
+**Example**
+
+```ts
+const name = "world";
+const message = String.dedent`
+  Hello, ${name}!
+    This line stays indented by two spaces.
+`;
+console.log(message);
+```
+
 ```ts
 (strings: readonly string[] | ArrayLike<string>, ...substitutions: unknown[]): string;
 ```
@@ -74,6 +103,18 @@ Wrap another template tag function such that tagged literals
 become dedented before being passed to the wrapped function.
 
 For more info, see: https://www.npmjs.com/package/string-dedent#usage
+
+**Example**
+
+```ts
+const shout = (strings: ArrayLike<string>, ...values: any[]) =>
+  String.raw({ raw: strings }, ...values).toUpperCase();
+const dedentedShout = String.dedent(shout);
+console.log(dedentedShout`
+  hello
+    world
+`);
+```
 
 ```ts
 <Func extends (strings: readonly string[] | ArrayLike<string>, ...substitutions: any[]) => string>(input: Func): Func;

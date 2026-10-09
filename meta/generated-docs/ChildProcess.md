@@ -38,6 +38,14 @@ should use [exec](/meta/generated-docs/exec.md#exec-interface) or [$](/meta/gene
 special cases, like when specifying custom stdio for a process, or spawning a
 non-blocking long-running process.
 
+**Example**
+
+```ts
+const child = new ChildProcess(["echo", "hi"]);
+child.start();
+child.waitUntilComplete();
+```
+
 ```ts
 declare interface ChildProcess {
   args: Array<string>;
@@ -70,6 +78,13 @@ declare interface ChildProcess {
 The argv for the process. The first entry in this array is the program to
 run.
 
+**Example**
+
+```ts
+const child = new ChildProcess("echo hi there");
+console.log(child.args);
+```
+
 ```ts
 args: Array<string>;
 ```
@@ -78,6 +93,13 @@ args: Array<string>;
 
 The current working directory for the process.
 
+**Example**
+
+```ts
+const child = new ChildProcess(["ls"], { cwd: "src" });
+console.log(child.cwd.toString());
+```
+
 ```ts
 cwd: Path;
 ```
@@ -85,6 +107,15 @@ cwd: Path;
 ## ChildProcess.env (object property)
 
 The environment variables for the process.
+
+**Example**
+
+```ts
+const child = new ChildProcess(["printenv", "GREETING"]);
+child.env.GREETING = "hello";
+child.start();
+child.waitUntilComplete();
+```
 
 ```ts
 env: {
@@ -98,6 +129,18 @@ The standard I/O streams for the process. Generally these are the same as
 `std.in`, `std.out`, and `std.err`, but they can be customized to write
 output elsewhere.
 
+**Example**
+
+```ts
+const logFile = std.open("output.log", "w");
+const child = new ChildProcess(["echo", "hi"]);
+child.stdio.out = logFile;
+child.stdio.err = logFile;
+child.start();
+child.waitUntilComplete();
+logFile.close();
+```
+
 ```ts
 stdio: {
   in: FILE;
@@ -110,6 +153,15 @@ stdio: {
 
 Where the process reads stdin from
 
+**Example**
+
+```ts
+const child = new ChildProcess(["cat"]);
+child.stdio.in = std.open("notes.txt", "r");
+child.start();
+child.waitUntilComplete();
+```
+
 ```ts
 in: FILE;
 ```
@@ -118,6 +170,15 @@ in: FILE;
 
 Where the process writes stdout to
 
+**Example**
+
+```ts
+const child = new ChildProcess(["date"]);
+child.stdio.out = std.open("date.txt", "w");
+child.start();
+child.waitUntilComplete();
+```
+
 ```ts
 out: FILE;
 ```
@@ -125,6 +186,15 @@ out: FILE;
 ### ChildProcess.stdio.err (FILE property)
 
 Where the process writes stderr to
+
+**Example**
+
+```ts
+const child = new ChildProcess(["ls", "does-not-exist"]);
+child.stdio.err = std.open("errors.log", "w");
+child.start();
+child.waitUntilComplete();
+```
 
 ```ts
 err: FILE;
@@ -146,6 +216,14 @@ get pid(): number | null;
 
 Spawns the process and returns its pid (process id).
 
+**Example**
+
+```ts
+const child = new ChildProcess(["sleep", "1"]);
+const pid = child.start();
+console.log(pid);
+```
+
 ```ts
 start(): number;
 ```
@@ -153,6 +231,15 @@ start(): number;
 ## ChildProcess.waitUntilComplete (method)
 
 Blocks the calling thread until the process exits or is killed.
+
+**Example**
+
+```ts
+const child = new ChildProcess(["sleep", "1"]);
+child.start();
+const { status, signal } = child.waitUntilComplete();
+console.log(status, signal);
+```
 
 ```ts
 waitUntilComplete(): {
@@ -200,6 +287,16 @@ declare type ChildProcessState =
 Options to be passed to the ChildProcess constructor. Their purposes and
 types match the same-named properties found on the resulting ChildProcess.
 
+**Example**
+
+```ts
+const options: ChildProcessOptions = {
+  cwd: "src",
+  env: { GREETING: "hello" },
+};
+const child = new ChildProcess(["printenv", "GREETING"], options);
+```
+
 ```ts
 declare type ChildProcessOptions = {
   cwd?: string | Path;
@@ -221,6 +318,14 @@ declare type ChildProcessOptions = {
 
 The current working directory for the process.
 
+**Example**
+
+```ts
+const child = new ChildProcess(["ls"], { cwd: "src" });
+child.start();
+child.waitUntilComplete();
+```
+
 ```ts
 cwd?: string | Path;
 ```
@@ -228,6 +333,16 @@ cwd?: string | Path;
 ## ChildProcessOptions.env (object property)
 
 The environment variables for the process.
+
+**Example**
+
+```ts
+const child = new ChildProcess(["printenv", "GREETING"], {
+  env: { GREETING: "hello" },
+});
+child.start();
+child.waitUntilComplete();
+```
 
 ```ts
 env?: {
@@ -241,6 +356,18 @@ The standard I/O streams for the process. Generally these are the same as
 `std.in`, `std.out`, and `std.err`, but they can be customized to write
 output elsewhere.
 
+**Example**
+
+```ts
+const logFile = std.open("output.log", "w");
+const child = new ChildProcess(["echo", "hi"], {
+  stdio: { out: logFile, err: logFile },
+});
+child.start();
+child.waitUntilComplete();
+logFile.close();
+```
+
 ```ts
 stdio?: {
   in?: FILE;
@@ -253,6 +380,16 @@ stdio?: {
 
 Where the process reads stdin from
 
+**Example**
+
+```ts
+const child = new ChildProcess(["cat"], {
+  stdio: { in: std.open("notes.txt", "r") },
+});
+child.start();
+child.waitUntilComplete();
+```
+
 ```ts
 in?: FILE;
 ```
@@ -260,6 +397,16 @@ in?: FILE;
 ### ChildProcessOptions.stdio.out (FILE property)
 
 Where the process writes stdout to
+
+**Example**
+
+```ts
+const child = new ChildProcess(["date"], {
+  stdio: { out: std.open("date.txt", "w") },
+});
+child.start();
+child.waitUntilComplete();
+```
 
 ```ts
 out?: FILE;
@@ -269,6 +416,16 @@ out?: FILE;
 
 Where the process writes stderr to
 
+**Example**
+
+```ts
+const child = new ChildProcess(["ls", "does-not-exist"], {
+  stdio: { err: std.open("errors.log", "w") },
+});
+child.start();
+child.waitUntilComplete();
+```
+
 ```ts
 err?: FILE;
 ```
@@ -276,6 +433,14 @@ err?: FILE;
 ## ChildProcessOptions.logging (object property)
 
 Options which control logging
+
+**Example**
+
+```ts
+const child = new ChildProcess(["echo", "hi"], {
+  logging: { trace: console.error },
+});
+```
 
 ```ts
 logging?: {
@@ -290,6 +455,16 @@ times to provide information about the lifecycle of the process.
 
 Defaults to the current value of [logger.trace](/meta/generated-docs/logger.md#loggertrace-function-property). `logger.trace`
 defaults to a function which writes to stderr.
+
+**Example**
+
+```ts
+const child = new ChildProcess(["echo", "hi"], {
+  logging: { trace: (...args) => console.error("[child]", ...args) },
+});
+child.start();
+child.waitUntilComplete();
+```
 
 ```ts
 trace?: (...args: Array<any>) => void;
@@ -313,6 +488,14 @@ Construct a new ChildProcess.
 
 - `@param` _args_ — The argv for the process. The first entry in this array is the program to run.
 - `@param` _options_ — Options for the process (cwd, env, stdio, etc)
+
+**Example**
+
+```ts
+const child = new ChildProcess(["ls", "-la"], { cwd: "src" });
+child.start();
+child.waitUntilComplete();
+```
 
 ```ts
 new (args: string | Path | Array<string | number | Path>, options?: ChildProcessOptions): ChildProcess;

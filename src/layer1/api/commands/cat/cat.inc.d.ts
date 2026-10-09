@@ -11,16 +11,34 @@
 declare const cat: {
   /**
    * Read the contents of one or more files from disk, as one UTF-8 string.
+   *
+   * **Example**
+   * ```ts
+   * const notes = cat("notes.txt");
+   * console.log(notes.length);
+   * ```
    */
   (paths: string | Path | Array<string | Path>): string;
 
   /**
    * Read the contents of one or more files from disk, as one UTF-8 string.
+   *
+   * **Example**
+   * ```ts
+   * const combined = cat(["README.md", "notes.txt"], {});
+   * console.log(combined.length);
+   * ```
    */
   (paths: string | Path | Array<string | Path>, options: {}): string;
 
   /**
    * Read the contents of one or more files from disk, as one UTF-8 string.
+   *
+   * **Example**
+   * ```ts
+   * const notes = cat("notes.txt", { binary: false });
+   * console.log(notes.length);
+   * ```
    */
   (
     paths: string | Path | Array<string | Path>,
@@ -29,6 +47,12 @@ declare const cat: {
 
   /**
    * Read the contents of one or more files from disk, as one ArrayBuffer.
+   *
+   * **Example**
+   * ```ts
+   * const bytes = cat("image.png", { binary: true });
+   * console.log(bytes.byteLength);
+   * ```
    */
   (
     paths: string | Path | Array<string | Path>,

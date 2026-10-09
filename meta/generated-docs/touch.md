@@ -8,6 +8,12 @@ Otherwise, create an empty file at that path.
 
 - `@param` _path_ — The target path for the file.
 
+**Example**
+
+```ts
+touch("build-finished.txt");
+```
+
 ```ts
 declare function touch(path: string | Path): void;
 ```

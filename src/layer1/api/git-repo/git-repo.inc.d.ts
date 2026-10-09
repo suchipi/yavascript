@@ -108,12 +108,24 @@ declare class GitRepo {
 
   /**
    * Creates a new `GitRepo` object for the given repo on disk.
+   *
+   * **Example**
+   * ```ts
+   * const repo = new GitRepo(GitRepo.findRoot(pwd()));
+   * console.log(repo.branchName());
+   * ```
    */
   constructor(repoDir: string | Path);
 
   /**
    * The root folder of the git repo that this `GitRepo` object represents (the
    * folder that contains the '.git' folder).
+   *
+   * **Example**
+   * ```ts
+   * const repo = new GitRepo(GitRepo.findRoot(pwd()));
+   * cd(repo.repoDir);
+   * ```
    */
   repoDir: Path;
 
@@ -165,6 +177,14 @@ declare class GitRepo {
    * git repo. `true` means there are changes, `false` means there are no
    * changes (ie. the repo is clean). Staged changes, unstaged changes, and
    * untracked files that aren't ignored all count as changes.
+   *
+   * **Example**
+   * ```ts
+   * const repo = new GitRepo(GitRepo.findRoot(pwd()));
+   * if (repo.isWorkingTreeDirty()) {
+   *   console.log("You have uncommitted changes");
+   * }
+   * ```
    */
   isWorkingTreeDirty(): boolean;
 

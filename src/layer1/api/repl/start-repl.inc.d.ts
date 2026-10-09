@@ -3,6 +3,11 @@
  *
  * @param context Variables to make available as globals within the repl.
  * @param lang The language to use in the repl. Defaults to "javascript".
+ *
+ * **Example**
+ * ```ts
+ * startRepl({ answer: 42 }, "typescript");
+ * ```
  */
 declare const startRepl: {
   (
@@ -22,6 +27,16 @@ declare const startRepl: {
   /**
    * A special value; when expressions result in this value, the repl will
    * print nothing instead of printing this value.
+   *
+   * **Example**
+   * ```ts
+   * startRepl({
+   *   quietly: (fn: () => void) => {
+   *     fn();
+   *     return startRepl.NOTHING;
+   *   },
+   * });
+   * ```
    */
   NOTHING: symbol;
 };

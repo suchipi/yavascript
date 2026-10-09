@@ -4,6 +4,12 @@ declare const assert: {
    *
    * @param value - The value to test for truthiness
    * @param message - An optional error message to use. If unspecified, "Assertion failed" will be used.
+   *
+   * **Example**
+   * ```ts
+   * const files = ls();
+   * assert(files.length > 0, "Expected the current directory to have files");
+   * ```
    */
   <ValueType>(
     value: ValueType,
@@ -18,6 +24,13 @@ declare const assert: {
    * @param value - The value to test the type of
    * @param type - The type that `value` should be, as either a `TypeValidator` (from the `types.*` namespace) or a value which can be coerced into a `TypeValidator` via the `types.coerce` function, like `String`, `Boolean`, etc.
    * @param message - An optional error message to use. If unspecified, a generic-but-descriptive message will be used.
+   *
+   * **Example**
+   * ```ts
+   * const port: unknown = 8080;
+   * assert.type(port, Number, "port must be a number");
+   * console.log(port.toFixed(0));
+   * ```
    */
   type: <T extends TypeValidator<any> | CoerceableToTypeValidator>(
     value: any,

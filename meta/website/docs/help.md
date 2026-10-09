@@ -9,6 +9,12 @@ of YavaScript.
 For the latest help docs, see:
 https://github.com/suchipi/yavascript/blob/main/meta/generated-docs/README.md
 
+**Example**
+
+```ts
+help();
+```
+
 ```ts
 declare function help(): void;
 ```

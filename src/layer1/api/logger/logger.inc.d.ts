@@ -6,6 +6,13 @@
  * amount and style of log output from yavascript API functions.
  *
  * This object behaves similarly to the shell builtin `set -x`.
+ *
+ * **Example**
+ * ```ts
+ * logger.trace = console.error;
+ * logger.info = () => {};
+ * exec("echo hi");
+ * ```
  */
 declare const logger: {
   /**
@@ -14,6 +21,12 @@ declare const logger: {
    * {@link exec}, {@link copy} and {@link glob}.
    *
    * The default value of `logger.trace` is a no-op function.
+   *
+   * **Example**
+   * ```ts
+   * logger.trace = (...args) => console.error("[trace]", ...args);
+   * which("git");
+   * ```
    */
   trace: (...args: Array<any>) => void;
 
@@ -23,6 +36,12 @@ declare const logger: {
    * {@link copy}, and {@link glob}.
    *
    * The default value of `logger.info` writes dimmed text to stderr.
+   *
+   * **Example**
+   * ```ts
+   * logger.info = () => {};
+   * exec("echo hi");
+   * ```
    */
   info: (...args: Array<any>) => void;
 
@@ -31,6 +50,12 @@ declare const logger: {
    * functions which receive `logging.warn` as an option, like {@link readEnvBool}.
    *
    * The default value of `logger.warn` writes yellow text to stderr.
+   *
+   * **Example**
+   * ```ts
+   * logger.warn = (...args) => console.error("warning:", ...args);
+   * readEnvBool("VERBOSE", false);
+   * ```
    */
   warn: (...args: Array<any>) => void;
 };

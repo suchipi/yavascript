@@ -8,6 +8,12 @@ emulator to clear the screen and clear your terminal scrollback.
 
 Identical to [console.clear](./console.md#consoleclear-method).
 
+**Example**
+
+```ts
+clear();
+```
+
 ```ts
 declare function clear(): void;
 ```
@@ -35,6 +41,12 @@ Functionally identical to [console.info](./console.md#consoleinfo-method), [echo
 [print](./print.md#print-function). Contrast with [console.error](./console.md#consoleerror-method), which prints to stderr
 instead of stdout.
 
+**Example**
+
+```ts
+console.log("hello", 42, { some: "object" });
+```
+
 ```ts
 log(message?: any, ...optionalParams: any[]): void;
 ```
@@ -50,6 +62,12 @@ Functionally identical to [console.log](./console.md#consolelog-method), [echo](
 [print](./print.md#print-function). Contrast with [console.error](./console.md#consoleerror-method), which prints to stderr
 instead of stdout.
 
+**Example**
+
+```ts
+console.info("Build finished in", 12, "seconds");
+```
+
 ```ts
 info(message?: any, ...optionalParams: any[]): void;
 ```
@@ -63,6 +81,12 @@ formatted using [inspect](./inspect.md#inspect-inspectfunction).
 
 Functionally identical to [console.error](./console.md#consoleerror-method). Contrast with
 [console.log](./console.md#consolelog-method), which prints to stdout instead of stderr.
+
+**Example**
+
+```ts
+console.warn("config.toml not found; using defaults");
+```
 
 ```ts
 warn(message?: any, ...optionalParams: any[]): void;
@@ -78,6 +102,12 @@ formatted using [inspect](./inspect.md#inspect-inspectfunction).
 Functionally identical to [console.warn](./console.md#consolewarn-method). Contrast with
 [console.log](./console.md#consolelog-method), which prints to stdout instead of stderr.
 
+**Example**
+
+```ts
+console.error("Something went wrong:", new Error("oh no"));
+```
+
 ```ts
 error(message?: any, ...optionalParams: any[]): void;
 ```
@@ -88,6 +118,12 @@ Prints special ANSI escape characters to stdout which instruct your terminal
 emulator to clear the screen and clear your terminal scrollback.
 
 Identical to [clear](./console.md#clear-function).
+
+**Example**
+
+```ts
+console.clear();
+```
 
 ```ts
 clear(): void;

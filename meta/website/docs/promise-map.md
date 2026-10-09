@@ -36,6 +36,27 @@ Promise will be awaited before being passed into your mapper function.
 Additionally, async iterables are supported; if iterable.next() returns a
 Promise, it will be awaited.
 
+**Example**
+
+```ts
+const files = glob("src/*.ts");
+
+const lineCounts = await Promise.map(
+  files,
+  async (file) => {
+    // readFile blocks the thread, so we use runInWorker to run
+    // it in another thread
+    const lengthFromWorker = await runInWorker(file.toString(), (file) => {
+      return readFile(file).split("\n").length;
+    });
+    return lengthFromWorker;
+  },
+  { concurrency: 4 },
+);
+
+console.log(lineCounts);
+```
+
 ```ts
 map<T, U>(inputs: Iterable<T | Promise<T>> | AsyncIterable<T | Promise<T>>, mapper: (input: T, index: number, length: number) => Promise<U>, {
   concurrency

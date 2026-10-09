@@ -3,6 +3,13 @@
  *
  * This is the same as {@link import("quickjs:context")}, but with a
  * `yavascriptGlobals` option added.
+ *
+ * **Example**
+ * ```ts
+ * const context = new Context();
+ * context.eval("globalThis.x = 5");
+ * console.log(context.eval("x * 2"));
+ * ```
  */
 declare class Context {
   /**
@@ -49,9 +56,27 @@ declare class Context {
    * Note that new contexts don't have a `scriptArgs` global. If you need one
    * to be present in the new context, you can add one onto the Context's
    * `globalThis` property.
+   *
+   * **Example**
+   * ```ts
+   * const sandbox = new Context({
+   *   yavascriptGlobals: false,
+   *   moduleGlobals: false,
+   *   timers: false,
+   * });
+   * console.log(sandbox.eval("typeof setTimeout"));
+   * ```
    */
   constructor(options?: {
-    /** Enables `Date`. Defaults to `true`. */
+    /**
+     * Enables `Date`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ date: false, yavascriptGlobals: false });
+     * console.log(context.eval("typeof Date"));
+     * ```
+     */
     date?: boolean;
 
     /**
@@ -60,22 +85,68 @@ declare class Context {
      * > NOTE: The {@link Context.eval} method will still work even with this
      * > option set to false. This option only disables eval *within* the
      * > context.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ eval: false });
+     * console.log(context.eval("1 + 1"));
+     * ```
      */
     eval?: boolean;
 
-    /** Enables `String.prototype.normalize`. Defaults to `true`. */
+    /**
+     * Enables `String.prototype.normalize`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ stringNormalize: false });
+     * console.log(context.eval("typeof String.prototype.normalize"));
+     * ```
+     */
     stringNormalize?: boolean;
 
-    /** Enables `RegExp`. Defaults to `true`. */
+    /**
+     * Enables `RegExp`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ regExp: false, yavascriptGlobals: false });
+     * console.log(context.eval("typeof RegExp"));
+     * ```
+     */
     regExp?: boolean;
 
-    /** Enables `JSON`. Defaults to `true`. */
+    /**
+     * Enables `JSON`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ json: false });
+     * console.log(context.eval("typeof JSON"));
+     * ```
+     */
     json?: boolean;
 
-    /** Enables `Proxy`. Defaults to `true`. */
+    /**
+     * Enables `Proxy`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ proxy: false, yavascriptGlobals: false });
+     * console.log(context.eval("typeof Proxy"));
+     * ```
+     */
     proxy?: boolean;
 
-    /** Enables `Map` and `Set`. Defaults to `true`. */
+    /**
+     * Enables `Map` and `Set`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ mapSet: false, yavascriptGlobals: false });
+     * console.log(context.eval("typeof Map"), context.eval("typeof Set"));
+     * ```
+     */
     mapSet?: boolean;
 
     /**
@@ -97,6 +168,12 @@ declare class Context {
      * - DataView
      *
      * Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ typedArrays: false });
+     * console.log(context.eval("typeof Uint8Array"));
+     * ```
      */
     typedArrays?: boolean;
 
@@ -109,10 +186,30 @@ declare class Context {
      * - async generators
      *
      * Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({
+     *   promise: false,
+     *   yavascriptGlobals: false,
+     * });
+     * console.log(context.eval("typeof Promise"));
+     * ```
      */
     promise?: boolean;
 
-    /** Enables `inspect`. Defaults to `true`. */
+    /**
+     * Enables `inspect`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({
+     *   inspect: false,
+     *   yavascriptGlobals: false,
+     * });
+     * console.log(context.eval("typeof inspect"));
+     * ```
+     */
     inspect?: boolean;
     /**
      * Enables the QuickJS `console` object. Defaults to `true`.
@@ -120,6 +217,15 @@ declare class Context {
      * YavaScript extends the builtin QuickJS `console` by passing its arguments
      * through `inspect`. To gain this functionality, pass option
      * `yavascriptGlobals: true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({
+     *   console: false,
+     *   yavascriptGlobals: false,
+     * });
+     * console.log(context.eval("typeof console"));
+     * ```
      */
     console?: boolean;
     /**
@@ -128,13 +234,36 @@ declare class Context {
      * YavaScript extends the builtin QuickJS `print` by passing its arguments
      * through `inspect`. To gain this functionality, pass option
      * `yavascriptGlobals: true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ print: false, yavascriptGlobals: false });
+     * console.log(context.eval("typeof print"));
+     * ```
      */
     print?: boolean;
-    /** Enables `require`. Defaults to `true`. */
+    /**
+     * Enables `require`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({
+     *   moduleGlobals: false,
+     *   yavascriptGlobals: false,
+     * });
+     * console.log(context.eval("typeof require"));
+     * ```
+     */
     moduleGlobals?: boolean;
     /**
      * Enables `setTimeout`, `clearTimeout`, `setInterval`, and
      * `clearInterval`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ timers: false });
+     * console.log(context.eval("typeof setTimeout"));
+     * ```
      */
     timers?: boolean;
 
@@ -149,26 +278,120 @@ declare class Context {
      * > things (like `instanceof Function`) therefore won't work, but
      * > everything that matters in practice will work just fine. All other
      * > globals get created within the child context.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ yavascriptGlobals: false });
+     * console.log(context.eval("typeof exec"));
+     * ```
      */
     yavascriptGlobals?: boolean;
 
-    /** Enable builtin modules. */
+    /**
+     * Enable builtin modules.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({
+     *   yavascriptGlobals: false,
+     *   modules: { "quickjs:os": false, "quickjs:std": false },
+     * });
+     * ```
+     */
     modules?: {
-      /** Enables the "quickjs:bytecode" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:bytecode" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:bytecode": false },
+       * });
+       * ```
+       */
       "quickjs:bytecode"?: boolean;
-      /** Enables the "quickjs:cmdline" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:cmdline" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:cmdline": false },
+       * });
+       * ```
+       */
       "quickjs:cmdline"?: boolean;
-      /** Enables the "quickjs:context" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:context" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   modules: { "quickjs:context": false },
+       * });
+       * ```
+       */
       "quickjs:context"?: boolean;
-      /** Enables the "quickjs:encoding" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:encoding" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:encoding": false },
+       * });
+       * ```
+       */
       "quickjs:encoding"?: boolean;
-      /** Enables the "quickjs:engine" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:engine" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:engine": false },
+       * });
+       * ```
+       */
       "quickjs:engine"?: boolean;
-      /** Enables the "quickjs:os" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:os" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:os": false },
+       * });
+       * ```
+       */
       "quickjs:os"?: boolean;
-      /** Enables the "quickjs:std" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:std" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:std": false },
+       * });
+       * ```
+       */
       "quickjs:std"?: boolean;
-      /** Enables the "quickjs:timers" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:timers" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   modules: { "quickjs:timers": false },
+       * });
+       * ```
+       */
       "quickjs:timers"?: boolean;
     };
   });
@@ -177,6 +400,13 @@ declare class Context {
    * The `globalThis` object used by this context.
    *
    * You can add to or remove from it to change what is visible to the context.
+   *
+   * **Example**
+   * ```ts
+   * const context = new Context();
+   * Object.assign(context.globalThis, { greeting: "hello" });
+   * console.log(context.eval("greeting"));
+   * ```
    */
   globalThis: typeof globalThis;
 
@@ -187,6 +417,13 @@ declare class Context {
    *
    * > NOTE: This function will work even if you created the Context with option
    * > `eval: false` (which only disables eval *within* the context).
+   *
+   * **Example**
+   * ```ts
+   * const context = new Context();
+   * const doubled = context.eval("[1, 2, 3].map((n) => n * 2)");
+   * console.log(doubled);
+   * ```
    */
   eval(code: string): any;
 }

@@ -61,6 +61,14 @@ For the win32 style, UNC paths are supported. POSIX-style paths starting with
 array to represent the left-hand-side of the leading slash. For instance,
 "/usr/bin" would have segments `["", "usr", "bin"]`.
 
+**Example**
+
+```ts
+const projectDir = new Path("/home/suchipi", "Code/my-project");
+const readme = projectDir.concat("README.md");
+console.log(readme.toString(), readme.segments, readme.separator);
+```
+
 ```ts
 declare class Path {
   static readonly OS_SEGMENT_SEPARATOR: "/" | "\\";
@@ -123,6 +131,12 @@ Its value is either a forward slash (`"/"`) or a backslash (`"\"`). Its value
 is a backslash on windows, and a forward slash on all other operating
 systems.
 
+**Example**
+
+```ts
+console.log(Path.OS_SEGMENT_SEPARATOR);
+```
+
 ```ts
 static readonly OS_SEGMENT_SEPARATOR: "/" | "\\";
 ```
@@ -143,7 +157,7 @@ The `PATH` environment variable can be accessed by yavascript programs via
 environment variable via:
 
 ```ts
-const folders: Array<string> = env.PATH.split(Path.OS_ENV_VAR_SEPARATOR);
+const entries: Array<string> = env.PATH.split(Path.OS_ENV_VAR_SEPARATOR);
 ```
 
 ```ts
@@ -164,6 +178,13 @@ used.
 
 On all other operating systems, this Set is empty.
 
+**Example**
+
+```ts
+const extensions = Array.from(Path.OS_PROGRAM_EXTENSIONS);
+console.log(extensions);
+```
+
 ```ts
 static readonly OS_PROGRAM_EXTENSIONS: ReadonlySet<string>;
 ```
@@ -173,6 +194,15 @@ static readonly OS_PROGRAM_EXTENSIONS: ReadonlySet<string>;
 Returns a boolean indicating whether `other` is a Path instance.
 
 - `@param` _other_ — Any value
+
+**Example**
+
+```ts
+function countSegments(input: string | Path) {
+  return Path.isPath(input) ? input.segments.length : -1;
+}
+console.log(countSegments(pwd()), countSegments("README.md"));
+```
 
 ```ts
 static isPath(other: unknown): other is Path;
@@ -202,6 +232,13 @@ Searches the provided path string or strings for a path separator character
 neither is found, it returns the `fallback` arg, which defaults to the
 current OS's path segment separator (`Path.OS_SEGMENT_SEPARATOR`).
 
+**Example**
+
+```ts
+console.log(Path.detectSeparator("C:\\Users\\suchipi")); // "\"
+console.log(Path.detectSeparator("README.md", "/")); // "/"
+```
+
 ```ts
 static detectSeparator<Fallback extends string | null = string>(input: Array<string> | string, fallback: Fallback = Path.OS_SEGMENT_SEPARATOR): string | Fallback;
 ```
@@ -218,6 +255,13 @@ non-leading `.` and `..` segments. In other words:
 Note that any `.` or `..` segments at the beginning of the path (ie.
 "leading segments") are not removed.
 
+**Example**
+
+```ts
+const path = Path.normalize("/home/suchipi", "./Code/../Downloads");
+console.log(path.toString()); // "/home/suchipi/Downloads"
+```
+
 ```ts
 static normalize(...inputs: Array<string | Path | Array<string | Path>>): Path;
 ```
@@ -231,6 +275,13 @@ is, whether it starts with either a slash (`/` or `\`) or a drive letter
 Note that Windows UNC Paths (eg. `\\MYSERVER\share$\`) are considered
 absolute.
 
+**Example**
+
+```ts
+console.log(Path.isAbsolute("/usr/bin")); // true
+console.log(Path.isAbsolute("./src/index.ts")); // false
+```
+
 ```ts
 static isAbsolute(path: string | Path): boolean;
 ```
@@ -243,6 +294,13 @@ most cases, you won't need to do this, and can use `new Path(...)` instead.
 If unspecified, the `separator` parameter defaults to
 `Path.OS_SEGMENT_SEPARATOR`.
 
+**Example**
+
+```ts
+const path = Path.fromRaw(["", "usr", "bin"], "/");
+console.log(path.toString()); // "/usr/bin"
+```
+
 ```ts
 static fromRaw(segments: Array<string>, separator?: string): Path;
 ```
@@ -251,6 +309,13 @@ static fromRaw(segments: Array<string>, separator?: string): Path;
 
 Creates a new Path object using the provided input(s), which will be
 concatenated together in order left-to-right.
+
+**Example**
+
+```ts
+const path = new Path("/usr", "local/bin", ["node"]);
+console.log(path.toString()); // "/usr/local/bin/node"
+```
 
 ```ts
 constructor(...inputs: Array<string | Path | Array<string | Path>>);
@@ -264,6 +329,13 @@ For `/tmp/foo.txt`, it'd be `["", "tmp", "foo.txt"]`.
 
 For `C:\something\somewhere.txt`, it'd be `["C:", "something", "somewhere.txt"]`.
 
+**Example**
+
+```ts
+const path = new Path("/tmp/foo.txt");
+console.log(path.segments); // ["", "tmp", "foo.txt"]
+```
+
 ```ts
 segments: Array<string>;
 ```
@@ -273,6 +345,13 @@ segments: Array<string>;
 The path separator that should be used to turn this path into a string.
 
 Will be either `"/"` or `"\"`.
+
+**Example**
+
+```ts
+const path = new Path("C:\\Users\\suchipi");
+console.log(path.separator); // "\"
+```
 
 ```ts
 separator: string;
@@ -290,6 +369,13 @@ the target Path. In other words:
 Note that any `.` or `..` segments at the beginning of the path (ie.
 "leading segments") are not removed.
 
+**Example**
+
+```ts
+const path = new Path("/home/suchipi/./Code/../Downloads");
+console.log(path.normalize().toString()); // "/home/suchipi/Downloads"
+```
+
 ```ts
 normalize(): Path;
 ```
@@ -300,6 +386,14 @@ Creates a new Path by appending additional path segments onto the end of
 the target Path's segments.
 
 The returned Path will use the same separator as the target Path.
+
+**Example**
+
+```ts
+const srcDir = new Path("/home/suchipi/my-project/src");
+const indexFile = srcDir.concat("lib", "index.ts");
+console.log(indexFile.toString()); // "/home/suchipi/my-project/src/lib/index.ts"
+```
 
 ```ts
 concat(...other: Array<string | Path | Array<string | Path>>): Path;
@@ -314,6 +408,16 @@ is, whether it starts with either a slash (`/` or `\`) or a drive letter
 Note that Windows UNC Paths (eg. `\\MYSERVER\share$\`) are considered
 absolute.
 
+**Example**
+
+```ts
+let path = new Path("./src/index.ts");
+if (!path.isAbsolute()) {
+  path = pwd().concat(path).normalize();
+}
+console.log(path);
+```
+
 ```ts
 isAbsolute(): boolean;
 ```
@@ -324,7 +428,16 @@ Creates a new Path object containing the same segments and separator as
 the target Path.
 
 Note that although it contains the same segments, the new Path does not use
-the same Array instance for segments as the target Path is was cloned from.
+the same Array instance for segments as the target Path it was cloned from.
+
+**Example**
+
+```ts
+const original = new Path("/usr/bin");
+const cloned = original.clone();
+cloned.segments.push("node");
+console.log(original.toString(), cloned.toString()); // "/usr/bin", "/usr/bin/node"
+```
 
 ```ts
 clone(): this;
@@ -337,6 +450,14 @@ Creates a new Path which expresses the target Path relative to `dir`.
 - `@param` _dir_ — The directory to create a new path relative to.
 - `@param` _options_ — Options that affect the resulting path (see [PathRelativeToOptions](/meta/generated-docs/path.md#pathrelativetooptions-interface)).
 
+**Example**
+
+```ts
+const file = new Path("/home/suchipi/my-project/src/index.ts");
+const relative = file.relativeTo("/home/suchipi/my-project");
+console.log(relative.toString()); // "./src/index.ts"
+```
+
 ```ts
 relativeTo(dir: Path | string, options?: PathRelativeToOptions): Path;
 ```
@@ -345,6 +466,13 @@ relativeTo(dir: Path | string, options?: PathRelativeToOptions): Path;
 
 Turns the target Path into a string by joining its segments using its
 separator as the delimiter.
+
+**Example**
+
+```ts
+const path = new Path("/usr", "bin");
+console.log("Installing to " + path.toString());
+```
 
 ```ts
 toString(): string;
@@ -356,6 +484,13 @@ Alias for `toString`. The presence of this method causes Path objects to be
 serialized as strings when they (or an object referencing them) get(s) passed
 into JSON.stringify.
 
+**Example**
+
+```ts
+const config = { outDir: new Path("/home/suchipi/my-project/dist") };
+console.log(JSON.stringify(config)); // "{\"outDir\":\"/home/suchipi/my-project/dist\"}"
+```
+
 ```ts
 toJSON(): string;
 ```
@@ -364,6 +499,13 @@ toJSON(): string;
 
 Returns the final segment of the target Path. If the target Path has no
 segments, an empty string (`""`) is returned.
+
+**Example**
+
+```ts
+const path = new Path("/home/suchipi/notes.txt");
+console.log(path.basename()); // "notes.txt"
+```
 
 ```ts
 basename(): string;
@@ -375,6 +517,13 @@ Returns the trailing file extension of this path.
 
 - `@param` _options_ — Works the same as the options parameter for the global [extname](/meta/generated-docs/extname.md#extname-function) (see [ExtnameOptions](/meta/generated-docs/extname.md#extnameoptions-interface)).
 
+**Example**
+
+```ts
+const path = new Path("src/types.d.ts");
+console.log(path.extname(), path.extname({ full: true })); // ".ts", ".d.ts"
+```
+
 ```ts
 extname(options?: ExtnameOptions): string;
 ```
@@ -383,6 +532,13 @@ extname(options?: ExtnameOptions): string;
 
 Creates a new Path containing all of the segments in the target Path except
 for the last one; ie. the path to the directory that contains the target Path.
+
+**Example**
+
+```ts
+const path = new Path("/home/suchipi/notes.txt");
+console.log(path.dirname().toString()); // "/home/suchipi"
+```
 
 ```ts
 dirname(): Path;
@@ -405,6 +561,13 @@ This means that, given two Paths A and B:
 
 Path B does _not_ start with Path A, because `".config" !== ".config2"`.
 
+**Example**
+
+```ts
+const path = new Path("/home/user/.config/app.toml");
+console.log(path.startsWith("/home/user")); // true
+```
+
 ```ts
 startsWith(value: string | Path | Array<string | Path>): boolean;
 ```
@@ -426,6 +589,13 @@ This means that, given two Paths A and B:
 
 Path A does _not_ end with Path B, because `"1user" !== "user"`.
 
+**Example**
+
+```ts
+const path = new Path("/home/user/.config/app.toml");
+console.log(path.endsWith(".config/app.toml")); // true
+```
+
 ```ts
 endsWith(value: string | Path | Array<string | Path>): boolean;
 ```
@@ -438,6 +608,13 @@ or `-1` if `value` doesn't appear in the target Path.
 - `@param` _value_ — The value to search for. If the value contains more than one path segment, the returned index will refer to the location of the value's first path segment.
 - `@param` _fromIndex_ — The index into the target Path's segments to begin searching at. Defaults to `0`.
 
+**Example**
+
+```ts
+const path = new Path("/home/user/my-project/node_modules/kleur");
+console.log(path.indexOf("node_modules")); // 4
+```
+
 ```ts
 indexOf(value: string | Path | Array<string | Path>, fromIndex?: number | undefined): number;
 ```
@@ -448,6 +625,15 @@ Returns a boolean indicating whether `value` appears in the target Path.
 
 - `@param` _value_ — The value to search for.
 - `@param` _fromIndex_ — The index into the target Path's segments to begin searching at. Defaults to `0`.
+
+**Example**
+
+```ts
+const path = new Path("/home/user/my-project/node_modules/kleur");
+if (path.includes("node_modules")) {
+  console.log("This file belongs to a dependency");
+}
+```
 
 ```ts
 includes(value: string | Path | Array<string | Path>, fromIndex?: number | undefined): boolean;
@@ -468,6 +654,14 @@ use [Path.prototype.replaceAll](/meta/generated-docs/path.md#pathprototypereplac
 
 See also [Path.prototype.replaceLast](/meta/generated-docs/path.md#pathprototypereplacelast-method).
 
+**Example**
+
+```ts
+const source = new Path("/my-project/src/utils/math.ts");
+const output = source.replace("src", "dist");
+console.log(output.toString()); // "/my-project/dist/utils/math.ts"
+```
+
 ```ts
 replace(value: string | Path | Array<string | Path>, replacement: string | Path | Array<string | Path>): Path;
 ```
@@ -487,6 +681,13 @@ use [Path.prototype.replace](/meta/generated-docs/path.md#pathprototypereplace-m
 
 See also [Path.prototype.replaceLast](/meta/generated-docs/path.md#pathprototypereplacelast-method).
 
+**Example**
+
+```ts
+const path = new Path("/a/tmp/b/tmp/c");
+console.log(path.replaceAll("tmp", "temp").toString()); // "/a/temp/b/temp/c"
+```
+
 ```ts
 replaceAll(value: string | Path | Array<string | Path>, replacement: string | Path | Array<string | Path>): Path;
 ```
@@ -501,6 +702,14 @@ as `new Path(replacement)`; ie. non-empty.
 
 - `@param` _replacement_ — The new final segment(s) for the returned Path
 
+**Example**
+
+```ts
+const source = new Path("/my-project/src/index.ts");
+const compiled = source.replaceLast("blah.js");
+console.log(compiled.toString()); // "/my-project/src/blah.js"
+```
+
 ```ts
 replaceLast(replacement: string | Path | Array<string | Path>): Path;
 ```
@@ -512,6 +721,14 @@ segments as another Path.
 
 To check only segments and not separator, use [Path.prototype.hasEqualSegments](/meta/generated-docs/path.md#pathprototypehasequalsegments-method).
 
+**Example**
+
+```ts
+const binDir = new Path("/usr/bin");
+console.log(binDir.equals("/usr/bin")); // true
+console.log(binDir.equals("/usr/local/bin")); // false
+```
+
 ```ts
 equals(other: string | Path | Array<string | Path>): boolean;
 ```
@@ -521,6 +738,14 @@ equals(other: string | Path | Array<string | Path>): boolean;
 Return a boolean indicating whether this Path has the same segments as
 another Path. **Separator is not checked; use [Path.prototype.equals](/meta/generated-docs/path.md#pathprototypeequals-method) for that.**
 
+**Example**
+
+```ts
+const posixPath = new Path("src/index.ts");
+const win32Path = new Path("src\\index.ts");
+console.log(posixPath.hasEqualSegments(win32Path)); // false
+```
+
 ```ts
 hasEqualSegments(other: string | Path | Array<string | Path>): boolean;
 ```
@@ -528,6 +753,14 @@ hasEqualSegments(other: string | Path | Array<string | Path>): boolean;
 # PathRelativeToOptions (interface)
 
 Options for [Path.prototype.relativeTo](/meta/generated-docs/path.md#pathprototyperelativeto-method).
+
+**Example**
+
+```ts
+const options: PathRelativeToOptions = { noLeadingDot: true };
+const file = new Path("/my-project/src/index.ts");
+console.log(file.relativeTo("/my-project", options).toString()); // "src/index.ts"
+```
 
 ```ts
 declare interface PathRelativeToOptions {
@@ -540,6 +773,14 @@ declare interface PathRelativeToOptions {
 Defaults to false. When true, a leading `./` will be omitted from the
 path, if present. Note that a leading `../` will never be omitted.
 
+**Example**
+
+```ts
+const file = new Path("/my-project/src/index.ts");
+const relative = file.relativeTo("/my-project", { noLeadingDot: true });
+console.log(relative.toString()); // "src/index.ts"
+```
+
 ```ts
 noLeadingDot?: boolean;
 ```
@@ -547,6 +788,18 @@ noLeadingDot?: boolean;
 # PathErrors (namespace)
 
 Errors which can be thrown by [Path](/meta/generated-docs/path.md#path-class)'s methods/constructor.
+
+**Example**
+
+```ts
+try {
+  Path.normalize("/home/../..");
+} catch (error) {
+  if (error instanceof PathErrors.NormalizeGoingOutsideRootError) {
+    console.error("That path goes above the filesystem root");
+  }
+}
+```
 
 ```ts
 declare namespace PathErrors {

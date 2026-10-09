@@ -17,6 +17,15 @@ If the program can't be found, `null` is returned.
 - `@param` _options.suffixes_ — A list of filename extension suffixes to include in the search, ie [".exe"]. Defaults to `Path.OS_PROGRAM_EXTENSIONS`.
 - `@param` _options.trace_ — A logging function that will be called at various times during the execution of `which`. Defaults to [logger.trace](/meta/generated-docs/logger.md#loggertrace-function-property).
 
+**Example**
+
+```ts
+const gitPath = which("git");
+if (gitPath == null) {
+  throw new Error("git is not installed");
+}
+```
+
 ```ts
 declare function which(binaryName: string, options?: WhichOptions): Path | null;
 ```
@@ -38,6 +47,14 @@ declare type WhichOptions = {
 A list of folders where programs may be found. Defaults to
 `env.PATH?.split(Path.OS_ENV_VAR_SEPARATOR) || []`.
 
+**Example**
+
+```ts
+const tool = which("my-tool", {
+  searchPaths: ["./bin", "/usr/local/bin"],
+});
+```
+
 ```ts
 searchPaths?: Array<Path | string>;
 ```
@@ -47,6 +64,12 @@ searchPaths?: Array<Path | string>;
 A list of filename extension suffixes to include in the search, ie
 `[".exe"]`. Defaults to [Path.OS_PROGRAM_EXTENSIONS](/meta/generated-docs/path.md#pathos_program_extensions-static-property).
 
+**Example**
+
+```ts
+const node = which("node", { suffixes: [".exe", ".cmd"] });
+```
+
 ```ts
 suffixes?: Array<string>;
 ```
@@ -54,6 +77,12 @@ suffixes?: Array<string>;
 ## WhichOptions.logging (object property)
 
 Options which control logging.
+
+**Example**
+
+```ts
+which("git", { logging: { trace: console.error } });
+```
 
 ```ts
 logging?: {

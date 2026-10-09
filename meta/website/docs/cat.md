@@ -35,6 +35,13 @@ const cat: {
 
 Read the contents of one or more files from disk, as one UTF-8 string.
 
+**Example**
+
+```ts
+const notes = cat("notes.txt");
+console.log(notes.length);
+```
+
 ```ts
 (paths: string | Path | Array<string | Path>): string;
 ```
@@ -43,6 +50,13 @@ Read the contents of one or more files from disk, as one UTF-8 string.
 
 Read the contents of one or more files from disk, as one UTF-8 string.
 
+**Example**
+
+```ts
+const combined = cat(["README.md", "notes.txt"], {});
+console.log(combined.length);
+```
+
 ```ts
 (paths: string | Path | Array<string | Path>, options: {}): string;
 ```
@@ -50,6 +64,13 @@ Read the contents of one or more files from disk, as one UTF-8 string.
 ### cat(...) (call signature)
 
 Read the contents of one or more files from disk, as one UTF-8 string.
+
+**Example**
+
+```ts
+const notes = cat("notes.txt", { binary: false });
+console.log(notes.length);
+```
 
 ```ts
 (paths: string | Path | Array<string | Path>, options: {
@@ -60,6 +81,13 @@ Read the contents of one or more files from disk, as one UTF-8 string.
 ### cat(...) (call signature)
 
 Read the contents of one or more files from disk, as one ArrayBuffer.
+
+**Example**
+
+```ts
+const bytes = cat("image.png", { binary: true });
+console.log(bytes.byteLength);
+```
 
 ```ts
 (paths: string | Path | Array<string | Path>, options: {

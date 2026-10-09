@@ -8,6 +8,12 @@ hide_title: true
 Any value can be logged, not just strings. Non-string values will be
 formatted using [inspect](./inspect.md#inspect-inspectfunction).
 
+**Example**
+
+```ts
+print("hello", [1, 2, 3]);
+```
+
 ```ts
 declare function print(...args: any): void;
 ```

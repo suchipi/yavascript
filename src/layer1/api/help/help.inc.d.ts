@@ -4,5 +4,10 @@
  *
  * For the latest help docs, see:
  * https://github.com/suchipi/yavascript/blob/main/meta/generated-docs/README.md
+ *
+ * **Example**
+ * ```ts
+ * help();
+ * ```
  */
 declare function help(): void;

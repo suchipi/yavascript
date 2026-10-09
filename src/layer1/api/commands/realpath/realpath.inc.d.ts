@@ -7,5 +7,11 @@
  *
  * > If you want to convert a relative path to an absolute path, but the path's
  * > target might NOT exist, use {@link Path.normalize}.
+ *
+ * **Example**
+ * ```ts
+ * const absolutePath = realpath("./src/../README.md");
+ * console.log(absolutePath);
+ * ```
  */
 declare function realpath(path: string | Path): Path;

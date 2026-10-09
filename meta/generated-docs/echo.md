@@ -10,6 +10,12 @@ Provides the same functionality as the shell builtin of the same name.
 
 `echo` is functionally identical to `console.log`.
 
+**Example**
+
+```ts
+echo("hello", 42, { some: "object" });
+```
+
 ```ts
 const echo: typeof console.log;
 ```

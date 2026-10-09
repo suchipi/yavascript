@@ -11,6 +11,13 @@
  * "Blocking the thread" means no other JavaScript code can run while `sleep` or
  * `sleep.sync` is running. If this is not the behavior you want, use
  * `sleep.async` instead.
+ *
+ * **Example**
+ * ```ts
+ * sleep(100);
+ * sleep.sync(100);
+ * await sleep.async(100);
+ * ```
  */
 declare var sleep: {
   /**
@@ -23,6 +30,13 @@ declare var sleep: {
    *
    * No other JavaScript code can run while `sleep()` is running. If this is
    * not the behavior you want, use `sleep.async` instead.
+   *
+   * **Example**
+   * ```ts
+   * console.log("waiting...");
+   * sleep(500);
+   * console.log("done");
+   * ```
    */
   (milliseconds: number): void;
 
@@ -34,6 +48,13 @@ declare var sleep: {
    *
    * No other JavaScript code can run while `sleep.sync` is running. If this is
    * not the behavior you want, use `sleep.async` instead.
+   *
+   * **Example**
+   * ```ts
+   * while (!exists("server.pid")) {
+   *   sleep.sync(100);
+   * }
+   * ```
    */
   sync(milliseconds: number): void;
 
@@ -50,6 +71,13 @@ declare var sleep: {
    *
    * If `milliseconds` isn't a finite number, the returned Promise gets
    * rejected with a TypeError.
+   *
+   * **Example**
+   * ```ts
+   * console.log("waiting...");
+   * await sleep.async(500);
+   * console.log("done");
+   * ```
    */
   async(milliseconds: number): Promise<void>;
 };

@@ -73,6 +73,11 @@ declare namespace JSX {
    *
    * For more info, including info on how to change how JSX is compiled, see
    * {@link JSX}.
+   *
+   * **Example**
+   * ```ts
+   * JSX.pragma = "React.createElement";
+   * ```
    */
   export let pragma: string;
 
@@ -97,6 +102,11 @@ declare namespace JSX {
    *
    * For more info, including info on how to change how JSX is compiled, see
    * {@link JSX}.
+   *
+   * **Example**
+   * ```ts
+   * JSX.pragmaFrag = "React.Fragment";
+   * ```
    */
   export let pragmaFrag: string;
 
@@ -142,6 +152,12 @@ declare namespace JSX {
   /**
    * The TypeScript type for JSX Element objects created by the default
    * implementation of `JSX.createElement`.
+   *
+   * **Example**
+   * ```tsx
+   * const link: JSX.Element<{ href: string }, "a"> = <a href="https://example.com" />;
+   * console.log(link.type, link.props.href);
+   * ```
    */
   export interface Element<
     Props = { [key: string | symbol | number]: any },
@@ -196,6 +212,12 @@ declare namespace JSX {
    * If you modify properties on the JSX global such that `JSX.Fragment` is no
    * longer used (eg. by replacing it with `React.Fragment`), this type may no
    * longer be relevant.
+   *
+   * **Example**
+   * ```tsx
+   * const fragment: JSX.Fragment = <>hi</>;
+   * console.log(fragment.type === JSX.Fragment);
+   * ```
    */
   export type Fragment = Element<{}, typeof Fragment>;
 
@@ -217,6 +239,20 @@ declare namespace JSX {
    * For more info, including info on how to change how JSX is compiled, see
    * {@link JSX}.
    *
+   * **Example**
+   * ```tsx
+   * const link = JSX.createElement(
+   *   "a",
+   *   { href: "https://example.com" },
+   *   "click here",
+   * );
+   * console.log(link.props.href, link.props.children);
+   *
+   * // Same as:
+   *
+   * const link = <a href="https://example.com">click here</a>;
+   * console.log(link.props.href, link.props.children);
+   * ```
    */
   export let createElement: {
     <Type extends string | typeof Fragment | ((...args: any) => any)>(

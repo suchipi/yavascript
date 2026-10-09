@@ -6,5 +6,10 @@
  * > NOTE: This can print any value, not just strings.
  *
  * `echo` is functionally identical to `console.log`.
+ *
+ * **Example**
+ * ```ts
+ * echo("hello", 42, { some: "object" });
+ * ```
  */
 declare const echo: typeof console.log;

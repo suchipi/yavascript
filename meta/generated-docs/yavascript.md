@@ -18,6 +18,12 @@ The `yavascript` global contains metadata about the currently-running
 yavascript binary, as well as access to yavascript's compilers for
 compile-to-js languages.
 
+**Example**
+
+```ts
+console.log(yavascript.version, yavascript.arch, yavascript.ecmaVersion);
+```
+
 ```ts
 const yavascript: {
   version: string;
@@ -98,6 +104,14 @@ Or, more formally: either a "V" version string or a "GIT" version string:
   first 12 digits of a git commit SHA, optionally followed by the
   character '-' and any arbitrary content afterwards.
 
+**Example**
+
+```ts
+if (yavascript.version.startsWith("git-")) {
+  console.warn("Running a development build of yavascript");
+}
+```
+
 ```ts
 version: string;
 ```
@@ -105,6 +119,13 @@ version: string;
 ## yavascript.arch (property)
 
 The processor architecture of the currently-running `yavascript` binary.
+
+**Example**
+
+```ts
+const downloadName = `my-tool-${yavascript.arch}.tar.gz`;
+console.log(downloadName);
+```
 
 ```ts
 arch: "x86_64" | "arm64";
@@ -117,6 +138,12 @@ yavascript binary.
 
 Possible values (depending on yavascript version): "ES2020", "ES2023".
 
+**Example**
+
+```ts
+console.log(`This yavascript supports ${yavascript.ecmaVersion} syntax`);
+```
+
 ```ts
 ecmaVersion: string;
 ```
@@ -126,6 +153,14 @@ ecmaVersion: string;
 The compilers yavascript uses internally to load files.
 
 Each function returns a JavaScript source code string.
+
+**Example**
+
+```ts
+const { ts, coffee } = yavascript.compilers;
+console.log(ts("const x: number = 1;"));
+console.log(coffee("x = 1"));
+```
 
 ```ts
 compilers: {
@@ -167,6 +202,15 @@ The function yavascript uses internally to load JavaScript files.
 You might think this would be a no-op, but we do some CommonJS/ECMAScript
 Module interop transformations here.
 
+**Example**
+
+```ts
+const output = yavascript.compilers.js("export const x = 1;", {
+  filename: "x.js",
+});
+console.log(output);
+```
+
 ```ts
 js(code: string, options?: {
   filename?: string | Path;
@@ -180,6 +224,13 @@ The function yavascript uses internally to load [TypeScript JSX](https://www.typ
 
 yavascript uses [Sucrase 3.35.0](https://sucrase.io/) to load TypeScript JSX syntax. yavascript doesn't do typechecking of TypeScript syntax.
 
+**Example**
+
+```ts
+const tsx = "const link = <a href={url as string} />;";
+console.log(yavascript.compilers.tsx(tsx));
+```
+
 ```ts
 tsx(code: string, options?: {
   filename?: string | Path;
@@ -192,6 +243,15 @@ tsx(code: string, options?: {
 The function yavascript uses internally to load [TypeScript](https://www.typescriptlang.org/) files.
 
 yavascript uses [Sucrase 3.35.0](https://sucrase.io/) to load TypeScript syntax. yavascript doesn't do typechecking of TypeScript syntax.
+
+**Example**
+
+```ts
+const output = yavascript.compilers.ts("const x: number = 1;", {
+  filename: "x.ts",
+});
+console.log(output);
+```
 
 ```ts
 ts(code: string, options?: {
@@ -209,6 +269,13 @@ yavascript uses [Sucrase 3.35.0](https://sucrase.io/) to load JSX syntax.
 See [JSX](/meta/generated-docs/jsx.md#jsx-namespace) for info about configuring JSX pragma, swapping out the
 default `createElement` implementation, etc.
 
+**Example**
+
+```ts
+const jsx = 'const link = <a href="https://example.com" />;';
+console.log(yavascript.compilers.jsx(jsx));
+```
+
 ```ts
 jsx(code: string, options?: {
   filename?: string | Path;
@@ -222,6 +289,12 @@ The function yavascript uses internally to load [CoffeeScript](https://coffeescr
 
 yavascript embeds CoffeeScript 2.7.0.
 
+**Example**
+
+```ts
+console.log(yavascript.compilers.coffee("square = (x) -> x * x"));
+```
+
 ```ts
 coffee(code: string, options?: {
   filename?: string | Path;
@@ -234,6 +307,13 @@ coffee(code: string, options?: {
 The function yavascript uses internally to load [Civet](https://civet.dev/) files.
 
 yavascript embeds Civet 0.9.0.
+
+**Example**
+
+```ts
+const civet = "square := (x: number) => x * x";
+console.log(yavascript.compilers.civet(civet));
+```
 
 ```ts
 civet(code: string, options?: {
@@ -258,6 +338,13 @@ until it finds one which doesn't have a syntax error:
 If none of the languages work, the file's original content gets used so
 that a syntax error can be reported to the user.
 
+**Example**
+
+```ts
+const output = yavascript.compilers.autodetect("square = (x) -> x * x");
+console.log(output);
+```
+
 ```ts
 autodetect(code: string, options?: {
   filename?: string | Path;
@@ -272,6 +359,12 @@ string.
 
 It's the same string that gets logged when you run yavascript with the
 `--print-types` command-line flag.
+
+**Example**
+
+```ts
+writeFile("yavascript.d.ts", yavascript.getTypesDts());
+```
 
 ```ts
 getTypesDts(): string;

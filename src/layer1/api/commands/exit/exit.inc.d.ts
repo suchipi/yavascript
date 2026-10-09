@@ -11,6 +11,15 @@
  *
  * > Attempting to call `exit` or set `exit.code` within a Worker will fail and
  * > throw an error.
+ *
+ * **Example**
+ * ```ts
+ * if (!exists("config.toml")) {
+ *   console.error("config.toml is missing");
+ *   exit(1);
+ * }
+ * exit.code = 2;
+ * ```
  */
 declare const exit: {
   (code?: number): never;

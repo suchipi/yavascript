@@ -14,6 +14,11 @@
  *
  * For the latest help docs, see:
  * https://github.com/suchipi/yavascript/blob/main/meta/generated-docs/README.md
+ *
+ * **Example**
+ * ```ts
+ * help();
+ * ```
  */
 declare function help(): void;
 
@@ -21,6 +26,11 @@ declare function help(): void;
  * The `yavascript` global contains metadata about the currently-running
  * yavascript binary, as well as access to yavascript's compilers for
  * compile-to-js languages.
+ *
+ * **Example**
+ * ```ts
+ * console.log(yavascript.version, yavascript.arch, yavascript.ecmaVersion);
+ * ```
  */
 declare const yavascript: {
   /**
@@ -39,11 +49,24 @@ declare const yavascript: {
    * - "GIT" version strings start with the prefix "git-", followed by the
    *   first 12 digits of a git commit SHA, optionally followed by the
    *   character '-' and any arbitrary content afterwards.
+   *
+   * **Example**
+   * ```ts
+   * if (yavascript.version.startsWith("git-")) {
+   *   console.warn("Running a development build of yavascript");
+   * }
+   * ```
    */
   version: string;
 
   /**
    * The processor architecture of the currently-running `yavascript` binary.
+   *
+   * **Example**
+   * ```ts
+   * const downloadName = `my-tool-${yavascript.arch}.tar.gz`;
+   * console.log(downloadName);
+   * ```
    */
   arch: "x86_64" | "arm64";
 
@@ -52,6 +75,11 @@ declare const yavascript: {
    * yavascript binary.
    *
    * Possible values (depending on yavascript version): "ES2020", "ES2023".
+   *
+   * **Example**
+   * ```ts
+   * console.log(`This yavascript supports ${yavascript.ecmaVersion} syntax`);
+   * ```
    */
   ecmaVersion: string;
 
@@ -59,6 +87,13 @@ declare const yavascript: {
    * The compilers yavascript uses internally to load files.
    *
    * Each function returns a JavaScript source code string.
+   *
+   * **Example**
+   * ```ts
+   * const { ts, coffee } = yavascript.compilers;
+   * console.log(ts("const x: number = 1;"));
+   * console.log(coffee("x = 1"));
+   * ```
    */
   compilers: {
     /**
@@ -66,6 +101,14 @@ declare const yavascript: {
      *
      * You might think this would be a no-op, but we do some CommonJS/ECMAScript
      * Module interop transformations here.
+     *
+     * **Example**
+     * ```ts
+     * const output = yavascript.compilers.js("export const x = 1;", {
+     *   filename: "x.js",
+     * });
+     * console.log(output);
+     * ```
      */
     js(
       code: string,
@@ -76,6 +119,12 @@ declare const yavascript: {
      * The function yavascript uses internally to load [TypeScript JSX](https://www.typescriptlang.org/docs/handbook/jsx.html) files.
      *
      * yavascript uses [Sucrase 3.35.0](https://sucrase.io/) to load TypeScript JSX syntax. yavascript doesn't do typechecking of TypeScript syntax.
+     *
+     * **Example**
+     * ```ts
+     * const tsx = "const link = <a href={url as string} />;";
+     * console.log(yavascript.compilers.tsx(tsx));
+     * ```
      */
     tsx(
       code: string,
@@ -86,6 +135,14 @@ declare const yavascript: {
      * The function yavascript uses internally to load [TypeScript](https://www.typescriptlang.org/) files.
      *
      * yavascript uses [Sucrase 3.35.0](https://sucrase.io/) to load TypeScript syntax. yavascript doesn't do typechecking of TypeScript syntax.
+     *
+     * **Example**
+     * ```ts
+     * const output = yavascript.compilers.ts("const x: number = 1;", {
+     *   filename: "x.ts",
+     * });
+     * console.log(output);
+     * ```
      */
     ts(
       code: string,
@@ -99,6 +156,12 @@ declare const yavascript: {
      *
      * See {@link JSX} for info about configuring JSX pragma, swapping out the
      * default `createElement` implementation, etc.
+     *
+     * **Example**
+     * ```ts
+     * const jsx = 'const link = <a href="https://example.com" />;';
+     * console.log(yavascript.compilers.jsx(jsx));
+     * ```
      */
     jsx(
       code: string,
@@ -109,6 +172,11 @@ declare const yavascript: {
      * The function yavascript uses internally to load [CoffeeScript](https://coffeescript.org/) files.
      *
      * yavascript embeds CoffeeScript 2.7.0.
+     *
+     * **Example**
+     * ```ts
+     * console.log(yavascript.compilers.coffee("square = (x) -> x * x"));
+     * ```
      */
     coffee(
       code: string,
@@ -118,7 +186,13 @@ declare const yavascript: {
     /**
      * The function yavascript uses internally to load [Civet](https://civet.dev/) files.
      *
-     * yavascript embeds Civet 0.9.0.
+     * yavascript embeds Civet 0.11.16.
+     *
+     * **Example**
+     * ```ts
+     * const civet = "square := (x: number) => x * x";
+     * console.log(yavascript.compilers.civet(civet));
+     * ```
      */
     civet(
       code: string,
@@ -139,6 +213,12 @@ declare const yavascript: {
      *
      * If none of the languages work, the file's original content gets used so
      * that a syntax error can be reported to the user.
+     *
+     * **Example**
+     * ```ts
+     * const output = yavascript.compilers.autodetect("square = (x) -> x * x");
+     * console.log(output);
+     * ```
      */
     autodetect(
       code: string,
@@ -152,6 +232,11 @@ declare const yavascript: {
    *
    * It's the same string that gets logged when you run yavascript with the
    * `--print-types` command-line flag.
+   *
+   * **Example**
+   * ```ts
+   * writeFile("yavascript.d.ts", yavascript.getTypesDts());
+   * ```
    */
   getTypesDts(): string;
 };
@@ -161,6 +246,13 @@ declare const yavascript: {
  * from it to read environment variables, write into it to set environment
  * variables, and/or delete properties from it to unset environment variables.
  * Any value you write will be coerced into a string.
+ *
+ * **Example**
+ * ```ts
+ * console.log(env.HOME);
+ * env.NODE_ENV = "production";
+ * delete env.DEBUG;
+ * ```
  */
 declare const env: { [key: string]: string | undefined };
 
@@ -181,6 +273,14 @@ declare const env: { [key: string]: string | undefined };
  * coercable to boolean.
  * @param logging logger override for the warning printed when an environment
  * variable has an unsupported value. Defaults to {@link logger}.
+ *
+ * **Example**
+ * ```ts
+ * const verbose = readEnvBool("VERBOSE", false);
+ * if (verbose) {
+ *   console.log("verbose logging enabled");
+ * }
+ * ```
  */
 declare function readEnvBool<T>(
   key: string,
@@ -250,6 +350,15 @@ declare function readEnvBool<T>(
  * `Path`s corresponding to the input command-line args. `args` is an Array of
  * positional arguments, as found on the command-line. `metadata` contains
  * information about what name and type the flags got mapped to.
+ *
+ * **Example**
+ * ```ts
+ * const { flags, args } = parseScriptArgs({
+ *   output: Path,
+ *   verbose: Boolean,
+ * });
+ * console.log(flags.output, flags.verbose, args);
+ * ```
  */
 declare function parseScriptArgs(
   hints?: {
@@ -271,26 +380,70 @@ declare function parseScriptArgs(
  * including what case changes were applied to the keys, which hints were used,
  * and which properties had their type guessed because no corresponding hint was
  * available.
+ *
+ * **Example**
+ * ```ts
+ * const result: ParseScriptArgsResult = parseScriptArgs();
+ * console.log(result.flags, result.args, result.metadata);
+ * ```
  */
 declare interface ParseScriptArgsResult {
   /**
    * The values for any command-line `--flags`, with key names converted to `lowerCamelCase`.
+   *
+   * **Example**
+   * ```ts
+   * const { flags } = parseScriptArgs({ dryRun: Boolean }, ["--dry-run"]);
+   * console.log(flags.dryRun); // true
+   * ```
    */
   flags: { [key: string]: any };
   /**
    * An array of those command-line arguments which weren't associated with a flag.
+   *
+   * **Example**
+   * ```ts
+   * const argv = ["--verbose", "one.txt", "two.txt"];
+   * const { args } = parseScriptArgs({ verbose: Boolean }, argv);
+   * console.log(args); // ["one.txt", "two.txt"]
+   * ```
    */
   args: Array<string>;
   /**
    * Information about the parsing process, including what case changes were
    * applied to the keys, which hints were used, and which properties had their
    * type guessed because no corresponding hint was available.
+   *
+   * **Example**
+   * ```ts
+   * const argv = ["--dry-run", "--count", "3"];
+   * const { metadata } = parseScriptArgs({ count: Number }, argv);
+   * console.log(metadata);
+   * // {
+   * //   keys: {
+   * //     "--dry-run": "dryRun",
+   * //     "--count": "count",
+   * //   },
+   * //   hints: {
+   * //     count: "number",
+   * //   },
+   * //   guesses: {
+   * //     dryRun: "boolean",
+   * //   },
+   * // }
+   * ```
    */
   metadata: {
     /**
      * An object whose keys are the verbatim flags from the command-line, and
      * whose values are the lowerCamelCase names they were converted to in the
      * `flags` property of the {@link ParseScriptArgsResult}.
+     *
+     * **Example**
+     * ```ts
+     * const { metadata } = parseScriptArgs({}, ["--dry-run"]);
+     * console.log(metadata.keys["--dry-run"]); // "dryRun"
+     * ```
      */
     keys: {
       [key: string]: string | undefined;
@@ -299,6 +452,13 @@ declare interface ParseScriptArgsResult {
      * An object whose keys are the lowerCamelCase flag names, and whose values
      * are strings indicating the hint values that were specified for those
      * flags.
+     *
+     * **Example**
+     * ```ts
+     * const hints = { count: Number };
+     * const { metadata } = parseScriptArgs(hints, ["--count", "3"]);
+     * console.log(metadata.hints.count); // "number"
+     * ```
      */
     hints: {
       [key: string]: "path" | "number" | "boolean" | "string" | undefined;
@@ -312,6 +472,12 @@ declare interface ParseScriptArgsResult {
      *
      * If you're seeing incorrect inference, consider passing a `hints` argument
      * to {@link parseScriptArgs}.
+     *
+     * **Example**
+     * ```ts
+     * const { metadata } = parseScriptArgs({}, ["--count", "3"]);
+     * console.log(metadata.guesses.count); // "number"
+     * ```
      */
     guesses: {
       [key: string]: "number" | "boolean" | "string" | undefined;
@@ -347,21 +513,45 @@ declare interface ParseScriptArgsResult {
 declare const readFile: {
   /**
    * Read the contents of a file from disk, as a UTF-8 string.
+   *
+   * **Example**
+   * ```ts
+   * const text = readFile("README.md");
+   * console.log(text.length);
+   * ```
    */
   (path: string | Path): string;
 
   /**
    * Read the contents of a file from disk, as a UTF-8 string.
+   *
+   * **Example**
+   * ```ts
+   * const text = readFile("README.md", {});
+   * console.log(text.length);
+   * ```
    */
   (path: string | Path, options: {}): string;
 
   /**
    * Read the contents of a file from disk, as a UTF-8 string.
+   *
+   * **Example**
+   * ```ts
+   * const text = readFile("README.md", { binary: false });
+   * console.log(text.length);
+   * ```
    */
   (path: string | Path, options: { binary: false }): string;
 
   /**
    * Read the contents of a file from disk, as an ArrayBuffer.
+   *
+   * **Example**
+   * ```ts
+   * const buffer = readFile("image.png", { binary: true });
+   * console.log(buffer.byteLength);
+   * ```
    */
   (path: string | Path, options: { binary: true }): ArrayBuffer;
 };
@@ -370,6 +560,12 @@ declare const readFile: {
  * Write the contents of a string or ArrayBuffer to a file.
  *
  * Strings are written using the UTF-8 encoding.
+ *
+ * **Example**
+ * ```ts
+ * writeFile("notes.txt", "remember to buy milk\n");
+ * writeFile("bytes.bin", new Uint8Array([1, 2, 3]).buffer);
+ * ```
  */
 declare function writeFile(
   path: string | Path,
@@ -378,6 +574,13 @@ declare function writeFile(
 
 /**
  * Function which returns true if the path points to a regular file.
+ *
+ * **Example**
+ * ```ts
+ * if (isFile("README.md")) {
+ *   console.log(readFile("README.md"));
+ * }
+ * ```
  */
 declare function isFile(path: string | Path): boolean;
 
@@ -385,11 +588,25 @@ declare function isFile(path: string | Path): boolean;
  * Function which returns true if the path points to a directory, or if the
  * path points to a symlink which points to a directory. Otherwise, it returns
  * false.
+ *
+ * **Example**
+ * ```ts
+ * if (!isDir("build")) {
+ *   mkdir("build");
+ * }
+ * ```
  */
 declare function isDir(path: string | Path): boolean;
 
 /**
  * Returns true if the path points to a symlink.
+ *
+ * **Example**
+ * ```ts
+ * if (isLink("link-to-readme")) {
+ *   console.log(readlink("link-to-readme"));
+ * }
+ * ```
  */
 declare function isLink(path: string | Path): boolean;
 
@@ -398,6 +615,13 @@ declare function isLink(path: string | Path): boolean;
  * current user.
  *
  * If nothing exists at that path, an error will be thrown.
+ *
+ * **Example**
+ * ```ts
+ * if (!isExecutable("script.sh")) {
+ *   chmod("add", { user: "execute" }, "script.sh");
+ * }
+ * ```
  */
 declare function isExecutable(path: string | Path): boolean;
 
@@ -406,12 +630,26 @@ declare function isExecutable(path: string | Path): boolean;
  * user.
  *
  * If nothing exists at that path, an error will be thrown.
+ *
+ * **Example**
+ * ```ts
+ * if (isReadable("notes.txt")) {
+ *   console.log(readFile("notes.txt"));
+ * }
+ * ```
  */
 declare function isReadable(path: string | Path): boolean;
 
 /**
  * Returns true if a resource at the provided path could be written to by the
  * current user.
+ *
+ * **Example**
+ * ```ts
+ * if (isWritable("notes.txt")) {
+ *   writeFile("notes.txt", "remember to buy milk\n");
+ * }
+ * ```
  */
 declare function isWritable(path: string | Path): boolean;
 
@@ -421,6 +659,13 @@ declare function isWritable(path: string | Path): boolean;
  * If the directory isn't empty, its contents will be deleted, too.
  *
  * Provides the same functionality as the command `rm -r`.
+ *
+ * **Example**
+ * ```ts
+ * if (exists("build")) {
+ *   remove("build");
+ * }
+ * ```
  */
 declare function remove(path: string | Path): void;
 
@@ -428,6 +673,13 @@ declare function remove(path: string | Path): void;
  * Returns true if a file or directory exists at the specified path.
  *
  * Provides the same functionality as the command `test -e`.
+ *
+ * **Example**
+ * ```ts
+ * if (!exists("settings.toml")) {
+ *   writeFile("settings.toml", 'name = "my-project"\n');
+ * }
+ * ```
  */
 declare function exists(path: string | Path): boolean;
 
@@ -436,6 +688,12 @@ declare function exists(path: string | Path): boolean;
  * Folders are copied recursively.
  *
  * Provides the same functionality as the command `cp -R`.
+ *
+ * **Example**
+ * ```ts
+ * copy("README.md", "README.backup.md");
+ * copy("src", "src-backup");
+ * ```
  */
 declare function copy(
   from: string | Path,
@@ -445,6 +703,12 @@ declare function copy(
 
 /**
  * Options for {@link copy}.
+ *
+ * **Example**
+ * ```ts
+ * const options: CopyOptions = { whenTargetExists: "skip" };
+ * copy("src", "src-backup", options);
+ * ```
  */
 declare type CopyOptions = {
   /**
@@ -452,10 +716,24 @@ declare type CopyOptions = {
    * something else already exists.
    *
    * Defaults to "error".
+   *
+   * **Example**
+   * ```ts
+   * copy("config.toml", "notes.txt", { whenTargetExists: "overwrite" });
+   * ```
    */
   whenTargetExists?: "overwrite" | "skip" | "error";
 
-  /** Options which control logging. */
+  /**
+   * Options which control logging.
+   *
+   * **Example**
+   * ```ts
+   * copy("src", "src-backup", {
+   *   logging: { trace: console.error, info: console.error },
+   * });
+   * ```
+   */
   logging?: {
     /**
      * If provided, this function will be called multiple times as `copy`
@@ -480,6 +758,13 @@ declare type CopyOptions = {
      *
      * Defaults to the current value of {@link logger.info}. `logger.info`
      * defaults to a function which writes to stderr.
+     *
+     * **Example**
+     * ```ts
+     * copy("src", "src-backup", {
+     *   logging: { info: (...args) => console.error("[copy]", ...args) },
+     * });
+     * ```
      */
     info?: (...args: Array<any>) => void;
   };
@@ -489,6 +774,11 @@ declare type CopyOptions = {
  * Rename the file or directory at the specified path.
  *
  * Provides the same functionality as the command `mv`.
+ *
+ * **Example**
+ * ```ts
+ * rename("notes.txt", "notes-old.txt");
+ * ```
  */
 declare function rename(from: string | Path, to: string | Path): void;
 
@@ -513,6 +803,13 @@ declare function rename(from: string | Path, to: string | Path): void;
  * "/" (eg. "/usr/bin") have an empty string at the beginning of their segments
  * array to represent the left-hand-side of the leading slash. For instance,
  * "/usr/bin" would have segments `["", "usr", "bin"]`.
+ *
+ * **Example**
+ * ```ts
+ * const projectDir = new Path("/home/suchipi", "Code/my-project");
+ * const readme = projectDir.concat("README.md");
+ * console.log(readme.toString(), readme.segments, readme.separator);
+ * ```
  */
 declare class Path {
   /**
@@ -522,6 +819,11 @@ declare class Path {
    * Its value is either a forward slash (`"/"`) or a backslash (`"\"`). Its value
    * is a backslash on windows, and a forward slash on all other operating
    * systems.
+   *
+   * **Example**
+   * ```ts
+   * console.log(Path.OS_SEGMENT_SEPARATOR);
+   * ```
    */
   static readonly OS_SEGMENT_SEPARATOR: "/" | "\\";
 
@@ -540,7 +842,7 @@ declare class Path {
    * environment variable via:
    *
    * ```ts
-   * const folders: Array<string> = env.PATH.split(Path.OS_ENV_VAR_SEPARATOR);
+   * const entries: Array<string> = env.PATH.split(Path.OS_ENV_VAR_SEPARATOR);
    * ```
    */
   static readonly OS_ENV_VAR_SEPARATOR: ":" | ";";
@@ -557,6 +859,12 @@ declare class Path {
    * used.
    *
    * On all other operating systems, this Set is empty.
+   *
+   * **Example**
+   * ```ts
+   * const extensions = Array.from(Path.OS_PROGRAM_EXTENSIONS);
+   * console.log(extensions);
+   * ```
    */
   static readonly OS_PROGRAM_EXTENSIONS: ReadonlySet<string>;
 
@@ -564,6 +872,14 @@ declare class Path {
    * Returns a boolean indicating whether `other` is a Path instance.
    *
    * @param other - Any value
+   *
+   * **Example**
+   * ```ts
+   * function countSegments(input: string | Path) {
+   *   return Path.isPath(input) ? input.segments.length : -1;
+   * }
+   * console.log(countSegments(pwd()), countSegments("README.md"));
+   * ```
    */
   static isPath(other: unknown): other is Path;
 
@@ -586,6 +902,12 @@ declare class Path {
    * (either forward slash or backslash), and returns the one it finds. If
    * neither is found, it returns the `fallback` arg, which defaults to the
    * current OS's path segment separator (`Path.OS_SEGMENT_SEPARATOR`).
+   *
+   * **Example**
+   * ```ts
+   * console.log(Path.detectSeparator("C:\\Users\\suchipi")); // "\"
+   * console.log(Path.detectSeparator("README.md", "/")); // "/"
+   * ```
    */
   static detectSeparator<Fallback extends string | null = string>(
     input: Array<string> | string,
@@ -603,6 +925,12 @@ declare class Path {
    *
    * Note that any `.` or `..` segments at the beginning of the path (ie.
    * "leading segments") are not removed.
+   *
+   * **Example**
+   * ```ts
+   * const path = Path.normalize("/home/suchipi", "./Code/../Downloads");
+   * console.log(path.toString()); // "/home/suchipi/Downloads"
+   * ```
    */
   static normalize(
     ...inputs: Array<string | Path | Array<string | Path>>
@@ -615,6 +943,12 @@ declare class Path {
    *
    * Note that Windows UNC Paths (eg. `\\MYSERVER\share$\`) are considered
    * absolute.
+   *
+   * **Example**
+   * ```ts
+   * console.log(Path.isAbsolute("/usr/bin")); // true
+   * console.log(Path.isAbsolute("./src/index.ts")); // false
+   * ```
    */
   static isAbsolute(path: string | Path): boolean;
 
@@ -624,12 +958,24 @@ declare class Path {
    *
    * If unspecified, the `separator` parameter defaults to
    * `Path.OS_SEGMENT_SEPARATOR`.
+   *
+   * **Example**
+   * ```ts
+   * const path = Path.fromRaw(["", "usr", "bin"], "/");
+   * console.log(path.toString()); // "/usr/bin"
+   * ```
    */
   static fromRaw(segments: Array<string>, separator?: string): Path;
 
   /**
    * Creates a new Path object using the provided input(s), which will be
    * concatenated together in order left-to-right.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/usr", "local/bin", ["node"]);
+   * console.log(path.toString()); // "/usr/local/bin/node"
+   * ```
    */
   constructor(...inputs: Array<string | Path | Array<string | Path>>);
 
@@ -639,6 +985,12 @@ declare class Path {
    * For `/tmp/foo.txt`, it'd be `["", "tmp", "foo.txt"]`.
    *
    * For `C:\something\somewhere.txt`, it'd be `["C:", "something", "somewhere.txt"]`.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/tmp/foo.txt");
+   * console.log(path.segments); // ["", "tmp", "foo.txt"]
+   * ```
    */
   segments: Array<string>;
 
@@ -646,6 +998,12 @@ declare class Path {
    * The path separator that should be used to turn this path into a string.
    *
    * Will be either `"/"` or `"\"`.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("C:\\Users\\suchipi");
+   * console.log(path.separator); // "\"
+   * ```
    */
   separator: string;
 
@@ -659,6 +1017,12 @@ declare class Path {
    *
    * Note that any `.` or `..` segments at the beginning of the path (ie.
    * "leading segments") are not removed.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/home/suchipi/./Code/../Downloads");
+   * console.log(path.normalize().toString()); // "/home/suchipi/Downloads"
+   * ```
    */
   normalize(): Path;
 
@@ -667,6 +1031,13 @@ declare class Path {
    * the target Path's segments.
    *
    * The returned Path will use the same separator as the target Path.
+   *
+   * **Example**
+   * ```ts
+   * const srcDir = new Path("/home/suchipi/my-project/src");
+   * const indexFile = srcDir.concat("lib", "index.ts");
+   * console.log(indexFile.toString()); // "/home/suchipi/my-project/src/lib/index.ts"
+   * ```
    */
   concat(...other: Array<string | Path | Array<string | Path>>): Path;
 
@@ -677,6 +1048,15 @@ declare class Path {
    *
    * Note that Windows UNC Paths (eg. `\\MYSERVER\share$\`) are considered
    * absolute.
+   *
+   * **Example**
+   * ```ts
+   * let path = new Path("./src/index.ts");
+   * if (!path.isAbsolute()) {
+   *   path = pwd().concat(path).normalize();
+   * }
+   * console.log(path);
+   * ```
    */
   isAbsolute(): boolean;
 
@@ -685,7 +1065,15 @@ declare class Path {
    * the target Path.
    *
    * Note that although it contains the same segments, the new Path does not use
-   * the same Array instance for segments as the target Path is was cloned from.
+   * the same Array instance for segments as the target Path it was cloned from.
+   *
+   * **Example**
+   * ```ts
+   * const original = new Path("/usr/bin");
+   * const cloned = original.clone();
+   * cloned.segments.push("node");
+   * console.log(original.toString(), cloned.toString()); // "/usr/bin", "/usr/bin/node"
+   * ```
    */
   clone(): this;
 
@@ -694,12 +1082,25 @@ declare class Path {
    *
    * @param dir - The directory to create a new path relative to.
    * @param options - Options that affect the resulting path (see {@link PathRelativeToOptions}).
+   *
+   * **Example**
+   * ```ts
+   * const file = new Path("/home/suchipi/my-project/src/index.ts");
+   * const relative = file.relativeTo("/home/suchipi/my-project");
+   * console.log(relative.toString()); // "./src/index.ts"
+   * ```
    */
   relativeTo(dir: Path | string, options?: PathRelativeToOptions): Path;
 
   /**
    * Turns the target Path into a string by joining its segments using its
    * separator as the delimiter.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/usr", "bin");
+   * console.log("Installing to " + path.toString());
+   * ```
    */
   toString(): string;
 
@@ -707,12 +1108,24 @@ declare class Path {
    * Alias for `toString`. The presence of this method causes Path objects to be
    * serialized as strings when they (or an object referencing them) get(s) passed
    * into JSON.stringify.
+   *
+   * **Example**
+   * ```ts
+   * const config = { outDir: new Path("/home/suchipi/my-project/dist") };
+   * console.log(JSON.stringify(config)); // "{\"outDir\":\"/home/suchipi/my-project/dist\"}"
+   * ```
    */
   toJSON(): string;
 
   /**
    * Returns the final segment of the target Path. If the target Path has no
    * segments, an empty string (`""`) is returned.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/home/suchipi/notes.txt");
+   * console.log(path.basename()); // "notes.txt"
+   * ```
    */
   basename(): string;
 
@@ -720,12 +1133,24 @@ declare class Path {
    * Returns the trailing file extension of this path.
    *
    * @param options - Works the same as the options parameter for the global {@link extname} (see {@link ExtnameOptions}).
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("src/types.d.ts");
+   * console.log(path.extname(), path.extname({ full: true })); // ".ts", ".d.ts"
+   * ```
    */
   extname(options?: ExtnameOptions): string;
 
   /**
    * Creates a new Path containing all of the segments in the target Path except
    * for the last one; ie. the path to the directory that contains the target Path.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/home/suchipi/notes.txt");
+   * console.log(path.dirname().toString()); // "/home/suchipi"
+   * ```
    */
   dirname(): Path;
 
@@ -744,6 +1169,12 @@ declare class Path {
    * ```
    *
    * Path B does *not* start with Path A, because `".config" !== ".config2"`.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/home/user/.config/app.toml");
+   * console.log(path.startsWith("/home/user")); // true
+   * ```
    */
   startsWith(value: string | Path | Array<string | Path>): boolean;
 
@@ -762,6 +1193,12 @@ declare class Path {
    * ```
    *
    * Path A does *not* end with Path B, because `"1user" !== "user"`.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/home/user/.config/app.toml");
+   * console.log(path.endsWith(".config/app.toml")); // true
+   * ```
    */
   endsWith(value: string | Path | Array<string | Path>): boolean;
 
@@ -771,6 +1208,12 @@ declare class Path {
    *
    * @param value - The value to search for. If the value contains more than one path segment, the returned index will refer to the location of the value's first path segment.
    * @param fromIndex - The index into the target Path's segments to begin searching at. Defaults to `0`.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/home/user/my-project/node_modules/kleur");
+   * console.log(path.indexOf("node_modules")); // 4
+   * ```
    */
   indexOf(
     value: string | Path | Array<string | Path>,
@@ -782,6 +1225,14 @@ declare class Path {
    *
    * @param value - The value to search for.
    * @param fromIndex - The index into the target Path's segments to begin searching at. Defaults to `0`.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/home/user/my-project/node_modules/kleur");
+   * if (path.includes("node_modules")) {
+   *   console.log("This file belongs to a dependency");
+   * }
+   * ```
    */
   includes(
     value: string | Path | Array<string | Path>,
@@ -801,6 +1252,13 @@ declare class Path {
    * @param replacement - What it should be replaced with
    *
    * See also {@link Path.prototype.replaceLast}.
+   *
+   * **Example**
+   * ```ts
+   * const source = new Path("/my-project/src/utils/math.ts");
+   * const output = source.replace("src", "dist");
+   * console.log(output.toString()); // "/my-project/dist/utils/math.ts"
+   * ```
    */
   replace(
     value: string | Path | Array<string | Path>,
@@ -820,6 +1278,12 @@ declare class Path {
    * @param replacement - What it should be replaced with
    *
    * See also {@link Path.prototype.replaceLast}.
+   *
+   * **Example**
+   * ```ts
+   * const path = new Path("/a/tmp/b/tmp/c");
+   * console.log(path.replaceAll("tmp", "temp").toString()); // "/a/temp/b/temp/c"
+   * ```
    */
   replaceAll(
     value: string | Path | Array<string | Path>,
@@ -834,6 +1298,13 @@ declare class Path {
    * as `new Path(replacement)`; ie. non-empty.
    *
    * @param replacement - The new final segment(s) for the returned Path
+   *
+   * **Example**
+   * ```ts
+   * const source = new Path("/my-project/src/index.ts");
+   * const compiled = source.replaceLast("blah.js");
+   * console.log(compiled.toString()); // "/my-project/src/blah.js"
+   * ```
    */
   replaceLast(replacement: string | Path | Array<string | Path>): Path;
 
@@ -842,28 +1313,69 @@ declare class Path {
    * segments as another Path.
    *
    * To check only segments and not separator, use {@link Path.prototype.hasEqualSegments}.
+   *
+   * **Example**
+   * ```ts
+   * const binDir = new Path("/usr/bin");
+   * console.log(binDir.equals("/usr/bin")); // true
+   * console.log(binDir.equals("/usr/local/bin")); // false
+   * ```
    */
   equals(other: string | Path | Array<string | Path>): boolean;
 
   /**
    * Return a boolean indicating whether this Path has the same segments as
    * another Path. **Separator is not checked; use {@link Path.prototype.equals} for that.**
+   *
+   * **Example**
+   * ```ts
+   * const posixPath = new Path("src/index.ts");
+   * const win32Path = new Path("src\\index.ts");
+   * console.log(posixPath.hasEqualSegments(win32Path)); // false
+   * ```
    */
   hasEqualSegments(other: string | Path | Array<string | Path>): boolean;
 }
 
 /**
  * Options for {@link Path.prototype.relativeTo}.
+ *
+ * **Example**
+ * ```ts
+ * const options: PathRelativeToOptions = { noLeadingDot: true };
+ * const file = new Path("/my-project/src/index.ts");
+ * console.log(file.relativeTo("/my-project", options).toString()); // "src/index.ts"
+ * ```
  */
 declare interface PathRelativeToOptions {
   /**
    * Defaults to false. When true, a leading `./` will be omitted from the
    * path, if present. Note that a leading `../` will never be omitted.
+   *
+   * **Example**
+   * ```ts
+   * const file = new Path("/my-project/src/index.ts");
+   * const relative = file.relativeTo("/my-project", { noLeadingDot: true });
+   * console.log(relative.toString()); // "src/index.ts"
+   * ```
    */
   noLeadingDot?: boolean;
 }
 
-/** Errors which can be thrown by {@link Path}'s methods/constructor. */
+/**
+ * Errors which can be thrown by {@link Path}'s methods/constructor.
+ *
+ * **Example**
+ * ```ts
+ * try {
+ *   Path.normalize("/home/../..");
+ * } catch (error) {
+ *   if (error instanceof PathErrors.NormalizeGoingOutsideRootError) {
+ *     console.error("That path goes above the filesystem root");
+ *   }
+ * }
+ * ```
+ */
 declare namespace PathErrors {
   export class HolesInSegmentsError extends Error {}
   export class ZeroSegmentsError extends Error {}
@@ -913,16 +1425,34 @@ declare function basename(path: string | Path): string;
 declare const cat: {
   /**
    * Read the contents of one or more files from disk, as one UTF-8 string.
+   *
+   * **Example**
+   * ```ts
+   * const notes = cat("notes.txt");
+   * console.log(notes.length);
+   * ```
    */
   (paths: string | Path | Array<string | Path>): string;
 
   /**
    * Read the contents of one or more files from disk, as one UTF-8 string.
+   *
+   * **Example**
+   * ```ts
+   * const combined = cat(["README.md", "notes.txt"], {});
+   * console.log(combined.length);
+   * ```
    */
   (paths: string | Path | Array<string | Path>, options: {}): string;
 
   /**
    * Read the contents of one or more files from disk, as one UTF-8 string.
+   *
+   * **Example**
+   * ```ts
+   * const notes = cat("notes.txt", { binary: false });
+   * console.log(notes.length);
+   * ```
    */
   (
     paths: string | Path | Array<string | Path>,
@@ -931,6 +1461,12 @@ declare const cat: {
 
   /**
    * Read the contents of one or more files from disk, as one ArrayBuffer.
+   *
+   * **Example**
+   * ```ts
+   * const bytes = cat("image.png", { binary: true });
+   * console.log(bytes.byteLength);
+   * ```
    */
   (
     paths: string | Path | Array<string | Path>,
@@ -943,6 +1479,12 @@ declare const cat: {
  * path is specified, moves to the user's home directory.
  *
  * Provides the same functionality as the shell builtin of the same name.
+ *
+ * **Example**
+ * ```ts
+ * cd("src");
+ * console.log(pwd().toString());
+ * ```
  */
 declare function cd(path?: string | Path): void;
 
@@ -950,11 +1492,24 @@ declare function cd(path?: string | Path): void;
  * Set the permission bits for the specified file.
  *
  * Provides the same functionality as the unix binary of the same name.
+ *
+ * **Example**
+ * ```ts
+ * chmod(0o755, "script.sh");
+ * chmod("add", { user: "execute" }, "script.sh");
+ * ```
  */
 declare const chmod: Chmod;
 
 /**
  * The interface for the global function `chmod`, which has two call signatures.
+ *
+ * **Example**
+ * ```ts
+ * const setPermissions: Chmod = chmod;
+ * setPermissions("644", "notes.txt");
+ * setPermissions("remove", { others: "read" }, "notes.txt");
+ * ```
  */
 interface Chmod {
   /**
@@ -964,6 +1519,12 @@ interface Chmod {
    *
    * @param permissions The permission bits to set. This can be a number, or a string containing an octal number.
    * @param path The path to the file.
+   *
+   * **Example**
+   * ```ts
+   * chmod(0o755, "script.sh");
+   * chmod("644", "notes.txt");
+   * ```
    */
   (permissions: number | string, path: string | Path): void;
 
@@ -1014,6 +1575,12 @@ interface Chmod {
    * { ug: "rw", o: "w" }
    * { all: "full" }
    * ```
+   *
+   * **Example**
+   * ```ts
+   * chmod("add", { user: "execute" }, "script.sh");
+   * chmod("set", { ug: "rw", o: "r" }, "notes.txt");
+   * ```
    */
   <Operation extends Chmod.Operation>(
     operation: Operation,
@@ -1023,7 +1590,15 @@ interface Chmod {
 }
 
 declare namespace Chmod {
-  /** A string representing who a permission applies to. */
+  /**
+   * A string representing who a permission applies to.
+   *
+   * **Example**
+   * ```ts
+   * const who: Chmod.Who = "group";
+   * chmod("add", { [who]: "write" }, "notes.txt");
+   * ```
+   */
   export type Who =
     | "user"
     | "group"
@@ -1037,10 +1612,26 @@ declare namespace Chmod {
     | "go"
     | "uo";
 
-  /** A string representing how the permissions should be changed. */
+  /**
+   * A string representing how the permissions should be changed.
+   *
+   * **Example**
+   * ```ts
+   * const operation: Chmod.Operation = "remove";
+   * chmod(operation, { others: "read" }, "notes.txt");
+   * ```
+   */
   export type Operation = "add" | "set" | "remove";
 
-  /** A string representing the access level for the given permission. */
+  /**
+   * A string representing the access level for the given permission.
+   *
+   * **Example**
+   * ```ts
+   * const permission: Chmod.Permission = "readwrite";
+   * chmod("set", { user: permission }, "notes.txt");
+   * ```
+   */
   export type Permission =
     | "read"
     | "write"
@@ -1075,6 +1666,11 @@ declare function dirname(path: string | Path): Path;
  * > NOTE: This can print any value, not just strings.
  *
  * `echo` is functionally identical to `console.log`.
+ *
+ * **Example**
+ * ```ts
+ * echo("hello", 42, { some: "object" });
+ * ```
  */
 declare const echo: typeof console.log;
 
@@ -1091,6 +1687,15 @@ declare const echo: typeof console.log;
  *
  * > Attempting to call `exit` or set `exit.code` within a Worker will fail and
  * > throw an error.
+ *
+ * **Example**
+ * ```ts
+ * if (!exists("config.toml")) {
+ *   console.error("config.toml is missing");
+ *   exit(1);
+ * }
+ * exit.code = 2;
+ * ```
  */
 declare const exit: {
   (code?: number): never;
@@ -1105,6 +1710,12 @@ declare const exit: {
  *
  * @param pathOrFilename The input path
  * @param options Options which affect the return value. See {@link ExtnameOptions}.
+ *
+ * **Example**
+ * ```ts
+ * const extension = extname("src/index.test.ts");
+ * console.log(extension); // .ts
+ * ```
  */
 declare function extname(
   pathOrFilename: string | Path,
@@ -1113,11 +1724,23 @@ declare function extname(
 
 /**
  * Options for {@link extname} and {@link Path.prototype.extname}.
+ *
+ * **Example**
+ * ```ts
+ * const options: ExtnameOptions = { full: true };
+ * console.log(extname("types.d.ts", options)); // .d.ts
+ * ```
  */
 declare interface ExtnameOptions {
   /**
    * Whether to get compound extensions, like `.d.ts` or `.test.js`, instead of
    * just the final extension (`.ts` or `.js` in this example).
+   *
+   * **Example**
+   * ```ts
+   * console.log(extname("types.d.ts", { full: true })); // .d.ts
+   * console.log(extname("types.d.ts", { full: false })); // .ts
+   * ```
    */
   full?: boolean;
 }
@@ -1128,6 +1751,13 @@ declare interface ExtnameOptions {
  *
  * If `ls()` is called with no directory, the present working directory
  * (`pwd()`) is used.
+ *
+ * **Example**
+ * ```ts
+ * for (const path of ls("src")) {
+ *   console.log(path.basename());
+ * }
+ * ```
  */
 declare function ls(dir?: string | Path): Array<Path>;
 
@@ -1135,6 +1765,12 @@ declare function ls(dir?: string | Path): Array<Path>;
  * Create a directory (folder).
  *
  * Provides the same functionality as the unix binary of the same name.
+ *
+ * **Example**
+ * ```ts
+ * mkdir("build");
+ * mkdir("build/assets/images", { recursive: true });
+ * ```
  */
 declare function mkdir(
   path: string | Path,
@@ -1154,6 +1790,11 @@ declare function mkdir(
  * Alias for `mkdir(path, { recursive: true })`.
  *
  * Provides the same functionality as `mkdir -p`.
+ *
+ * **Example**
+ * ```ts
+ * mkdirp("build/assets/images");
+ * ```
  */
 declare function mkdirp(
   path: string | Path,
@@ -1173,6 +1814,11 @@ declare function mkdirp(
  * printf](https://en.cppreference.com/w/c/io/fprintf) are supported. Integer
  * format types (e.g. `%d`) truncate the Numbers or BigInts to 32 bits. Use the
  * l modifier (e.g. `%ld`) to truncate to 64 bits.
+ *
+ * **Example**
+ * ```ts
+ * printf("%s is %d years old\n", "Alice", 30);
+ * ```
  */
 declare function printf(format: string, ...args: Array<any>): void;
 
@@ -1180,18 +1826,36 @@ declare function printf(format: string, ...args: Array<any>): void;
  * Returns the process's current working directory.
  *
  * Provides the same functionality as the shell builtin of the same name.
+ *
+ * **Example**
+ * ```ts
+ * const here = pwd();
+ * console.log(here);
+ * ```
  */
 declare const pwd: {
   /**
    * Returns the process's current working directory.
    *
    * Provides the same functionality as the shell builtin of the same name.
+   *
+   * **Example**
+   * ```ts
+   * const readmePath = pwd().concat("README.md");
+   * console.log(readmePath);
+   * ```
    */
   (): Path;
 
   /**
    * A frozen, read-only `Path` object containing what `pwd()` was when
    * yavascript first started up.
+   *
+   * **Example**
+   * ```ts
+   * cd("src");
+   * cd(pwd.initial);
+   * ```
    */
   readonly initial: Path;
 };
@@ -1202,6 +1866,12 @@ declare const pwd: {
  * Returns the target of the symlink, which may be absolute or relative.
  *
  * Provides the same functionality as the unix binary of the same name.
+ *
+ * **Example**
+ * ```ts
+ * const target = readlink("link-to-readme");
+ * console.log(target);
+ * ```
  */
 declare function readlink(path: string | Path): Path;
 
@@ -1214,6 +1884,12 @@ declare function readlink(path: string | Path): Path;
  *
  * > If you want to convert a relative path to an absolute path, but the path's
  * > target might NOT exist, use {@link Path.normalize}.
+ *
+ * **Example**
+ * ```ts
+ * const absolutePath = realpath("./src/../README.md");
+ * console.log(absolutePath);
+ * ```
  */
 declare function realpath(path: string | Path): Path;
 
@@ -1230,6 +1906,13 @@ declare function realpath(path: string | Path): Path;
  * "Blocking the thread" means no other JavaScript code can run while `sleep` or
  * `sleep.sync` is running. If this is not the behavior you want, use
  * `sleep.async` instead.
+ *
+ * **Example**
+ * ```ts
+ * sleep(100);
+ * sleep.sync(100);
+ * await sleep.async(100);
+ * ```
  */
 declare var sleep: {
   /**
@@ -1242,6 +1925,13 @@ declare var sleep: {
    *
    * No other JavaScript code can run while `sleep()` is running. If this is
    * not the behavior you want, use `sleep.async` instead.
+   *
+   * **Example**
+   * ```ts
+   * console.log("waiting...");
+   * sleep(500);
+   * console.log("done");
+   * ```
    */
   (milliseconds: number): void;
 
@@ -1253,6 +1943,13 @@ declare var sleep: {
    *
    * No other JavaScript code can run while `sleep.sync` is running. If this is
    * not the behavior you want, use `sleep.async` instead.
+   *
+   * **Example**
+   * ```ts
+   * while (!exists("server.pid")) {
+   *   sleep.sync(100);
+   * }
+   * ```
    */
   sync(milliseconds: number): void;
 
@@ -1269,6 +1966,13 @@ declare var sleep: {
    *
    * If `milliseconds` isn't a finite number, the returned Promise gets
    * rejected with a TypeError.
+   *
+   * **Example**
+   * ```ts
+   * console.log("waiting...");
+   * await sleep.async(500);
+   * console.log("done");
+   * ```
    */
   async(milliseconds: number): Promise<void>;
 };
@@ -1279,6 +1983,11 @@ declare var sleep: {
  * Otherwise, create an empty file at that path.
  *
  * @param path The target path for the file.
+ *
+ * **Example**
+ * ```ts
+ * touch("build-finished.txt");
+ * ```
  */
 declare function touch(path: string | Path): void;
 
@@ -1292,6 +2001,14 @@ declare function touch(path: string | Path): void;
  * @param options.searchPaths A list of folders where programs may be found. Defaults to `env.PATH?.split(Path.OS_ENV_VAR_SEPARATOR) || []`.
  * @param options.suffixes A list of filename extension suffixes to include in the search, ie [".exe"]. Defaults to `Path.OS_PROGRAM_EXTENSIONS`.
  * @param options.trace A logging function that will be called at various times during the execution of `which`. Defaults to {@link logger.trace}.
+ *
+ * **Example**
+ * ```ts
+ * const gitPath = which("git");
+ * if (gitPath == null) {
+ *   throw new Error("git is not installed");
+ * }
+ * ```
  */
 declare function which(binaryName: string, options?: WhichOptions): Path | null;
 
@@ -1299,16 +2016,35 @@ declare type WhichOptions = {
   /**
    * A list of folders where programs may be found. Defaults to
    * `env.PATH?.split(Path.OS_ENV_VAR_SEPARATOR) || []`.
+   *
+   * **Example**
+   * ```ts
+   * const tool = which("my-tool", {
+   *   searchPaths: ["./bin", "/usr/local/bin"],
+   * });
+   * ```
    */
   searchPaths?: Array<Path | string>;
 
   /**
    * A list of filename extension suffixes to include in the search, ie
    * `[".exe"]`. Defaults to {@link Path.OS_PROGRAM_EXTENSIONS}.
+   *
+   * **Example**
+   * ```ts
+   * const node = which("node", { suffixes: [".exe", ".cmd"] });
+   * ```
    */
   suffixes?: Array<string>;
 
-  /** Options which control logging. */
+  /**
+   * Options which control logging.
+   *
+   * **Example**
+   * ```ts
+   * which("git", { logging: { trace: console.error } });
+   * ```
+   */
   logging?: {
     /**
      * If provided, this logging function will be called multiple times as
@@ -1329,7 +2065,15 @@ declare type WhichOptions = {
   };
 };
 
-/** The type of the return value of {@link whoami}. */
+/**
+ * The type of the return value of {@link whoami}.
+ *
+ * **Example**
+ * ```ts
+ * const user: WhoAmIResult = whoami();
+ * console.log(user.name, user.uid, user.gid);
+ * ```
+ */
 declare interface WhoAmIResult {
   name: string;
   uid: number;
@@ -1342,9 +2086,14 @@ declare interface WhoAmIResult {
  * Provides functionality similar to the unix binaries `whoami` and `id`.
  *
  * NOTE: Doesn't work on Windows; throws an error.
+ *
+ * **Example**
+ * ```ts
+ * const { name } = whoami();
+ * console.log(`Running as ${name}`);
+ * ```
  */
 declare function whoami(): WhoAmIResult;
-
 
 /**
  * Runs a child process and blocks until it exits. You can call it with either a
@@ -1419,13 +2168,36 @@ declare function whoami(): WhoAmIResult;
 declare const exec: Exec;
 
 declare type BaseExecOptions = {
-  /** Sets the current working directory for the child process. */
+  /**
+   * Sets the current working directory for the child process.
+   *
+   * **Example**
+   * ```ts
+   * exec("ls -la", { cwd: "src" });
+   * ```
+   */
   cwd?: string | Path;
 
-  /** Sets environment variables within the process. */
+  /**
+   * Sets environment variables within the process.
+   *
+   * **Example**
+   * ```ts
+   * exec(["printenv", "GREETING"], { env: { GREETING: "hello" } });
+   * ```
+   */
   env?: { [key: string | number]: string | number | boolean };
 
-  /** Options which control logging. */
+  /**
+   * Options which control logging.
+   *
+   * **Example**
+   * ```ts
+   * exec("echo hi", {
+   *   logging: { trace: console.error, info: console.error },
+   * });
+   * ```
+   */
   logging?: {
     /**
      * If provided, this logging function will be called multiple times as
@@ -1450,6 +2222,12 @@ declare type BaseExecOptions = {
      *
      * Defaults to the current value of {@link logger.info}. `logger.info`
      * defaults to a function which logs to stderr.
+     *
+     * **Example**
+     * ```ts
+     * const info = (...args: Array<any>) => console.error("[exec]", ...args);
+     * exec("echo hi", { logging: { info } });
+     * ```
      */
     info?: (...args: Array<any>) => void;
   };
@@ -1459,6 +2237,14 @@ declare type BaseExecOptions = {
    * status code.
    *
    * Defaults to true.
+   *
+   * **Example**
+   * ```ts
+   * const result = exec("git diff --quiet", { failOnNonZeroStatus: false });
+   * if (result.status !== 0) {
+   *   console.log("There are unstaged changes");
+   * }
+   * ```
    */
   failOnNonZeroStatus?: boolean;
 
@@ -1467,6 +2253,12 @@ declare type BaseExecOptions = {
    * and returned instead of being printed to the screen.
    *
    * Defaults to false. true is an alias for "utf8".
+   *
+   * **Example**
+   * ```ts
+   * const { stdout } = exec("git rev-parse HEAD", { captureOutput: true });
+   * console.log(stdout.trim());
+   * ```
    */
   captureOutput?: boolean | "utf8" | "arraybuffer";
 
@@ -1476,6 +2268,13 @@ declare type BaseExecOptions = {
    * the process to be done running.
    *
    * Defaults to true.
+   *
+   * **Example**
+   * ```ts
+   * const child = exec("sleep 1", { block: false });
+   * console.log("this prints while the child process is still running");
+   * child.wait();
+   * ```
    */
   block?: boolean;
 };
@@ -1489,6 +2288,12 @@ declare interface Exec {
    *
    * @param args - The command to run.
    * @param options - Options; see {@link BaseExecOptions}
+   *
+   * **Example**
+   * ```ts
+   * exec(["git", "status", "--short"]);
+   * exec("git status --short", { cwd: "src" });
+   * ```
    */
   <
     ExecOptions extends BaseExecOptions = {
@@ -1506,6 +2311,12 @@ declare interface Exec {
   /**
    * Parse the provided value into an array of command-line argument strings,
    * using the same logic that {@link exec} and {@link ChildProcess} use.
+   *
+   * **Example**
+   * ```ts
+   * const argv = exec.toArgv(`git commit -m "initial commit"`);
+   * console.log(argv); // ["git", "commit", "-m", "initial commit"]
+   * ```
    */
   toArgv(args: Array<string | Path | number> | string | Path): Array<string>;
 }
@@ -1537,9 +2348,8 @@ type ExecWaitResult<ExecOptions extends BaseExecOptions> = ExecOptions extends
         ? { stdout: ArrayBuffer; stderr: ArrayBuffer }
         : {}) &
       (ExecOptions["failOnNonZeroStatus"] extends false
-        ?
-            | { status: number; signal: undefined }
-            | { status: undefined; signal: number }
+        ? | { status: number; signal: undefined }
+          | { status: undefined; signal: number }
         : {})
   : void;
 
@@ -1554,41 +2364,132 @@ type ExecWaitResult<ExecOptions extends BaseExecOptions> = ExecOptions extends
  * should use {@link exec} or {@link $} instead. However, you may need to use it in some
  * special cases, like when specifying custom stdio for a process, or spawning a
  * non-blocking long-running process.
+ *
+ * **Example**
+ * ```ts
+ * const child = new ChildProcess(["echo", "hi"]);
+ * child.start();
+ * child.waitUntilComplete();
+ * ```
  */
 declare interface ChildProcess {
   /**
    * The argv for the process. The first entry in this array is the program to
    * run.
+   *
+   * **Example**
+   * ```ts
+   * const child = new ChildProcess("echo hi there");
+   * console.log(child.args);
+   * ```
    */
   args: Array<string>;
 
-  /** The current working directory for the process. */
+  /**
+   * The current working directory for the process.
+   *
+   * **Example**
+   * ```ts
+   * const child = new ChildProcess(["ls"], { cwd: "src" });
+   * console.log(child.cwd.toString());
+   * ```
+   */
   cwd: Path;
 
-  /** The environment variables for the process. */
+  /**
+   * The environment variables for the process.
+   *
+   * **Example**
+   * ```ts
+   * const child = new ChildProcess(["printenv", "GREETING"]);
+   * child.env.GREETING = "hello";
+   * child.start();
+   * child.waitUntilComplete();
+   * ```
+   */
   env: { [key: string]: string };
 
   /**
    * The standard I/O streams for the process. Generally these are the same as
    * `std.in`, `std.out`, and `std.err`, but they can be customized to write
    * output elsewhere.
+   *
+   * **Example**
+   * ```ts
+   * const logFile = std.open("output.log", "w");
+   * const child = new ChildProcess(["echo", "hi"]);
+   * child.stdio.out = logFile;
+   * child.stdio.err = logFile;
+   * child.start();
+   * child.waitUntilComplete();
+   * logFile.close();
+   * ```
    */
   stdio: {
-    /** Where the process reads stdin from */
+    /**
+     * Where the process reads stdin from
+     *
+     * **Example**
+     * ```ts
+     * const child = new ChildProcess(["cat"]);
+     * child.stdio.in = std.open("notes.txt", "r");
+     * child.start();
+     * child.waitUntilComplete();
+     * ```
+     */
     in: FILE;
-    /** Where the process writes stdout to */
+    /**
+     * Where the process writes stdout to
+     *
+     * **Example**
+     * ```ts
+     * const child = new ChildProcess(["date"]);
+     * child.stdio.out = std.open("date.txt", "w");
+     * child.start();
+     * child.waitUntilComplete();
+     * ```
+     */
     out: FILE;
-    /** Where the process writes stderr to */
+    /**
+     * Where the process writes stderr to
+     *
+     * **Example**
+     * ```ts
+     * const child = new ChildProcess(["ls", "does-not-exist"]);
+     * child.stdio.err = std.open("errors.log", "w");
+     * child.start();
+     * child.waitUntilComplete();
+     * ```
+     */
     err: FILE;
   };
 
   get state(): ChildProcessState;
   get pid(): number | null;
 
-  /** Spawns the process and returns its pid (process id). */
+  /**
+   * Spawns the process and returns its pid (process id).
+   *
+   * **Example**
+   * ```ts
+   * const child = new ChildProcess(["sleep", "1"]);
+   * const pid = child.start();
+   * console.log(pid);
+   * ```
+   */
   start(): number;
 
-  /** Blocks the calling thread until the process exits or is killed. */
+  /**
+   * Blocks the calling thread until the process exits or is killed.
+   *
+   * **Example**
+   * ```ts
+   * const child = new ChildProcess(["sleep", "1"]);
+   * child.start();
+   * const { status, signal } = child.waitUntilComplete();
+   * console.log(status, signal);
+   * ```
+   */
   waitUntilComplete():
     | { status: number; signal: undefined }
     | { status: undefined; signal: number };
@@ -1624,29 +2525,111 @@ declare type ChildProcessState =
 /**
  * Options to be passed to the ChildProcess constructor. Their purposes and
  * types match the same-named properties found on the resulting ChildProcess.
+ *
+ * **Example**
+ * ```ts
+ * const options: ChildProcessOptions = {
+ *   cwd: "src",
+ *   env: { GREETING: "hello" },
+ * };
+ * const child = new ChildProcess(["printenv", "GREETING"], options);
+ * ```
  */
 declare type ChildProcessOptions = {
-  /** The current working directory for the process. */
+  /**
+   * The current working directory for the process.
+   *
+   * **Example**
+   * ```ts
+   * const child = new ChildProcess(["ls"], { cwd: "src" });
+   * child.start();
+   * child.waitUntilComplete();
+   * ```
+   */
   cwd?: string | Path;
 
-  /** The environment variables for the process. */
+  /**
+   * The environment variables for the process.
+   *
+   * **Example**
+   * ```ts
+   * const child = new ChildProcess(["printenv", "GREETING"], {
+   *   env: { GREETING: "hello" },
+   * });
+   * child.start();
+   * child.waitUntilComplete();
+   * ```
+   */
   env?: { [key: string]: string };
 
   /**
    * The standard I/O streams for the process. Generally these are the same as
    * `std.in`, `std.out`, and `std.err`, but they can be customized to write
    * output elsewhere.
+   *
+   * **Example**
+   * ```ts
+   * const logFile = std.open("output.log", "w");
+   * const child = new ChildProcess(["echo", "hi"], {
+   *   stdio: { out: logFile, err: logFile },
+   * });
+   * child.start();
+   * child.waitUntilComplete();
+   * logFile.close();
+   * ```
    */
   stdio?: {
-    /** Where the process reads stdin from */
+    /**
+     * Where the process reads stdin from
+     *
+     * **Example**
+     * ```ts
+     * const child = new ChildProcess(["cat"], {
+     *   stdio: { in: std.open("notes.txt", "r") },
+     * });
+     * child.start();
+     * child.waitUntilComplete();
+     * ```
+     */
     in?: FILE;
-    /** Where the process writes stdout to */
+    /**
+     * Where the process writes stdout to
+     *
+     * **Example**
+     * ```ts
+     * const child = new ChildProcess(["date"], {
+     *   stdio: { out: std.open("date.txt", "w") },
+     * });
+     * child.start();
+     * child.waitUntilComplete();
+     * ```
+     */
     out?: FILE;
-    /** Where the process writes stderr to */
+    /**
+     * Where the process writes stderr to
+     *
+     * **Example**
+     * ```ts
+     * const child = new ChildProcess(["ls", "does-not-exist"], {
+     *   stdio: { err: std.open("errors.log", "w") },
+     * });
+     * child.start();
+     * child.waitUntilComplete();
+     * ```
+     */
     err?: FILE;
   };
 
-  /** Options which control logging */
+  /**
+   * Options which control logging
+   *
+   * **Example**
+   * ```ts
+   * const child = new ChildProcess(["echo", "hi"], {
+   *   logging: { trace: console.error },
+   * });
+   * ```
+   */
   logging?: {
     /**
      * Optional trace function which, if present, will be called at various
@@ -1654,6 +2637,15 @@ declare type ChildProcessOptions = {
      *
      * Defaults to the current value of {@link logger.trace}. `logger.trace`
      * defaults to a function which writes to stderr.
+     *
+     * **Example**
+     * ```ts
+     * const child = new ChildProcess(["echo", "hi"], {
+     *   logging: { trace: (...args) => console.error("[child]", ...args) },
+     * });
+     * child.start();
+     * child.waitUntilComplete();
+     * ```
      */
     trace?: (...args: Array<any>) => void;
   };
@@ -1665,6 +2657,13 @@ declare interface ChildProcessConstructor {
    *
    * @param args - The argv for the process. The first entry in this array is the program to run.
    * @param options - Options for the process (cwd, env, stdio, etc)
+   *
+   * **Example**
+   * ```ts
+   * const child = new ChildProcess(["ls", "-la"], { cwd: "src" });
+   * child.start();
+   * child.waitUntilComplete();
+   * ```
    */
   new (
     args: string | Path | Array<string | number | Path>,
@@ -1696,6 +2695,13 @@ declare var ChildProcess: ChildProcessConstructor;
  * > When specifying more than one pattern string, paths must match ALL of the
  * > patterns to be included in the returned Array. In other words, it uses
  * > "logical AND" behavior when you give it more than one pattern.
+ *
+ * **Example**
+ * ```ts
+ * const markdownFiles = glob("*.md");
+ * const sources = glob(["src/*.ts", "!src/*.d.ts"]);
+ * console.log(markdownFiles, sources);
+ * ```
  */
 declare function glob(
   patterns: string | Array<string>,
@@ -1704,6 +2710,15 @@ declare function glob(
 
 /**
  * Options for {@link glob}.
+ *
+ * **Example**
+ * ```ts
+ * const options: GlobOptions = {
+ *   dir: pwd().concat("src"),
+ *   followSymlinks: true,
+ * };
+ * const files = glob("*.ts", options);
+ * ```
  */
 declare type GlobOptions = {
   /**
@@ -1711,10 +2726,24 @@ declare type GlobOptions = {
    * directories, traversing into them.
    *
    * Defaults to false.
+   *
+   * **Example**
+   * ```ts
+   * const files = glob("*.md", { followSymlinks: true });
+   * ```
    */
   followSymlinks?: boolean;
 
-  /** Options which control logging. */
+  /**
+   * Options which control logging.
+   *
+   * **Example**
+   * ```ts
+   * glob("src/*.ts", {
+   *   logging: { trace: console.error, info: console.error },
+   * });
+   * ```
+   */
   logging?: {
     /**
      * If provided, this function will be called multiple times as `glob`
@@ -1739,12 +2768,25 @@ declare type GlobOptions = {
      *
      * Defaults to the current value of {@link logger.info}. `logger.info`
      * defaults to a function which writes to stderr.
+     *
+     * **Example**
+     * ```ts
+     * glob("src/*.ts", {
+     *   logging: { info: (...args) => console.error("[glob]", ...args) },
+     * });
+     * ```
      */
     info?: (...args: Array<any>) => void;
   };
 
   /**
-   * Directory to interpret glob patterns relative to. Defaults to `pwd()`.
+   * Directory to interpret glob patterns relative to. Must be an absolute
+   * path. Defaults to `pwd()`.
+   *
+   * **Example**
+   * ```ts
+   * const files = glob("*.ts", { dir: pwd().concat("src") });
+   * ```
    */
   dir?: string | Path;
 };
@@ -1754,6 +2796,11 @@ declare type GlobOptions = {
  * emulator to clear the screen and clear your terminal scrollback.
  *
  * Identical to {@link console.clear}.
+ *
+ * **Example**
+ * ```ts
+ * clear();
+ * ```
  */
 declare function clear(): void;
 
@@ -1767,6 +2814,11 @@ interface Console {
    * Functionally identical to {@link console.info}, {@link echo}, and
    * {@link print}. Contrast with {@link console.error}, which prints to stderr
    * instead of stdout.
+   *
+   * **Example**
+   * ```ts
+   * console.log("hello", 42, { some: "object" });
+   * ```
    */
   log(message?: any, ...optionalParams: any[]): void;
 
@@ -1779,6 +2831,11 @@ interface Console {
    * Functionally identical to {@link console.log}, {@link echo}, and
    * {@link print}. Contrast with {@link console.error}, which prints to stderr
    * instead of stdout.
+   *
+   * **Example**
+   * ```ts
+   * console.info("Build finished in", 12, "seconds");
+   * ```
    */
   info(message?: any, ...optionalParams: any[]): void;
 
@@ -1790,6 +2847,11 @@ interface Console {
    *
    * Functionally identical to {@link console.error}. Contrast with
    * {@link console.log}, which prints to stdout instead of stderr.
+   *
+   * **Example**
+   * ```ts
+   * console.warn("config.toml not found; using defaults");
+   * ```
    */
   warn(message?: any, ...optionalParams: any[]): void;
 
@@ -1801,6 +2863,11 @@ interface Console {
    *
    * Functionally identical to {@link console.warn}. Contrast with
    * {@link console.log}, which prints to stdout instead of stderr.
+   *
+   * **Example**
+   * ```ts
+   * console.error("Something went wrong:", new Error("oh no"));
+   * ```
    */
   error(message?: any, ...optionalParams: any[]): void;
 
@@ -1809,6 +2876,12 @@ interface Console {
    * emulator to clear the screen and clear your terminal scrollback.
    *
    * Identical to {@link clear}.
+   *
+   * **Example**
+   * ```ts
+   * console.clear();
+
+   * ```
    */
   clear(): void;
 }
@@ -1820,78 +2893,299 @@ declare var console: Console;
  *
  * Any value can be logged, not just strings. Non-string values will be
  * formatted using {@link inspect}.
+ *
+ * **Example**
+ * ```ts
+ * print("hello", [1, 2, 3]);
+ * ```
  */
 declare function print(...args: any): void;
 
 /**
  * Removes ANSI control characters from a string.
+ *
+ * **Example**
+ * ```ts
+ * const plain = stripAnsi(red("error"));
+ * console.log(plain.length);
+ * ```
  */
 declare function stripAnsi(input: string | number | Path): string;
 
 /**
  * Wraps a string in double quotes, and escapes any double-quotes inside using `\"`.
+ *
+ * **Example**
+ * ```ts
+ * console.log(quote('She said "hi"'));
+ * ```
  */
 declare function quote(input: string | number | Path): string;
 
 // Colors
 
-/** Wraps a string with the ANSI control characters that will make it print as black text. */
+/**
+ * Wraps a string with the ANSI control characters that will make it print as black text.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bgWhite(black("dark text on a light background")));
+ * ```
+ */
 declare function black(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print as red text. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print as red text.
+ *
+ * **Example**
+ * ```ts
+ * console.error(red("Error: file not found"));
+ * ```
+ */
 declare function red(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print as green text. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print as green text.
+ *
+ * **Example**
+ * ```ts
+ * console.log(green("All tests passed"));
+ * ```
+ */
 declare function green(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print as yellow text. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print as yellow text.
+ *
+ * **Example**
+ * ```ts
+ * console.warn(yellow("Warning: config file is missing"));
+ * ```
+ */
 declare function yellow(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print as blue text. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print as blue text.
+ *
+ * **Example**
+ * ```ts
+ * console.log(blue("Downloading dependencies..."));
+ * ```
+ */
 declare function blue(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print as magenta text. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print as magenta text.
+ *
+ * **Example**
+ * ```ts
+ * console.log(magenta("Deploying to production"));
+ * ```
+ */
 declare function magenta(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print as cyan text. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print as cyan text.
+ *
+ * **Example**
+ * ```ts
+ * console.log(cyan("https://example.com"));
+ * ```
+ */
 declare function cyan(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print as white text. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print as white text.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bgBlue(white("light text on a dark background")));
+ * ```
+ */
 declare function white(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print as gray text. (Alias for {@link grey}.) */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print as gray text. (Alias for {@link grey}.)
+ *
+ * **Example**
+ * ```ts
+ * console.log(gray("(skipped 3 files)"));
+ * ```
+ */
 declare function gray(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print as grey text. (Alias for {@link gray}.) */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print as grey text. (Alias for {@link gray}.)
+ *
+ * **Example**
+ * ```ts
+ * console.log(grey("(skipped 3 files)"));
+ * ```
+ */
 declare function grey(input: string | number | Path): string;
 
 // Background Colors
 
-/** Wraps a string with the ANSI control characters that will make it have a black background when printed. */
+/**
+ * Wraps a string with the ANSI control characters that will make it have a black background when printed.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bgBlack(white(" README.md ")));
+ * ```
+ */
 declare function bgBlack(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it have a red background when printed. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it have a red background when printed.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bgRed(" FAIL "), "tests/math.test.ts");
+ * ```
+ */
 declare function bgRed(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it have a green background when printed. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it have a green background when printed.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bgGreen(" PASS "), "tests/math.test.ts");
+ * ```
+ */
 declare function bgGreen(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it have a yellow background when printed. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it have a yellow background when printed.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bgYellow(black(" WARN ")), "deprecated option");
+ * ```
+ */
 declare function bgYellow(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it have a blue background when printed. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it have a blue background when printed.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bgBlue(" INFO "), "server started");
+ * ```
+ */
 declare function bgBlue(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it have a magenta background when printed. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it have a magenta background when printed.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bgMagenta(" DEBUG "), "cache miss");
+ * ```
+ */
 declare function bgMagenta(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it have a cyan background when printed. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it have a cyan background when printed.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bgCyan(black(" NOTE ")), "using default config");
+ * ```
+ */
 declare function bgCyan(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it have a white background when printed. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it have a white background when printed.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bgWhite(black(" v1.0.0 ")));
+ * ```
+ */
 declare function bgWhite(input: string | number | Path): string;
 
 // Modifiers
 
-/** Prefixes a string with the ANSI control character that resets all styling. */
+/**
+ * Prefixes a string with the ANSI control character that resets all styling.
+ *
+ * **Example**
+ * ```ts
+ * console.log(reset("plain text with no styling"));
+ * ```
+ */
 declare function reset(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print with a bold style. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print with a bold style.
+ *
+ * **Example**
+ * ```ts
+ * console.log(bold("Important:"), "read this first");
+ * ```
+ */
 declare function bold(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print with a dimmed style. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print with a dimmed style.
+ *
+ * **Example**
+ * ```ts
+ * console.log(dim("last updated 3 days ago"));
+ * ```
+ */
 declare function dim(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print italicized. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print italicized.
+ *
+ * **Example**
+ * ```ts
+ * console.log(italic("emphasis"));
+ * ```
+ */
 declare function italic(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print underlined. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print underlined.
+ *
+ * **Example**
+ * ```ts
+ * console.log(underline("https://example.com"));
+ * ```
+ */
 declare function underline(input: string | number | Path): string;
-/** Wraps a string with ANSI control characters that will make it print with its foreground (text) and background colors swapped. */
+
+/**
+ * Wraps a string with ANSI control characters that will make it print with its foreground (text) and background colors swapped.
+ *
+ * **Example**
+ * ```ts
+ * console.log(inverse(" selected item "));
+ * ```
+ */
 declare function inverse(input: string | number | Path): string;
-/** Wraps a string with ANSI control characters that will make it print as hidden. */
+
+/**
+ * Wraps a string with ANSI control characters that will make it print as hidden.
+ *
+ * **Example**
+ * ```ts
+ * console.log("password:", hidden("hunter2"));
+ * ```
+ */
 declare function hidden(input: string | number | Path): string;
-/** Wraps a string with the ANSI control characters that will make it print with a horizontal line through its center. */
+
+/**
+ * Wraps a string with the ANSI control characters that will make it print with a horizontal line through its center.
+ *
+ * **Example**
+ * ```ts
+ * console.log(strikethrough("buy milk"));
+ * ```
+ */
 declare function strikethrough(input: string | number | Path): string;
 
 /**
@@ -1904,6 +3198,12 @@ declare function strikethrough(input: string | number | Path): string;
  *
  * See also {@link grepFile}, {@link grepArray}, {@link String.prototype.grep},
  * and {@link Array.prototype.grep}.
+ *
+ * **Example**
+ * ```ts
+ * const lines = grepString("apple\nbanana\ncherry", /an/);
+ * console.log(lines); // ["banana"]
+ * ```
  */
 declare const grepString: {
   (
@@ -1925,6 +3225,12 @@ declare const grepString: {
  *
  * See also {@link grepString}, {@link grepFile}, {@link String.prototype.grep},
  * and {@link Array.prototype.grep}.
+ *
+ * **Example**
+ * ```ts
+ * const matches = grepArray(["apple", "banana", "cherry"], "an");
+ * console.log(matches); // ["banana"]
+ * ```
  */
 declare const grepArray: {
   <T>(
@@ -1951,6 +3257,12 @@ declare const grepArray: {
  *
  * See also {@link grepArray}, {@link grepString},
  * {@link String.prototype.grep}, and {@link Array.prototype.grep}.
+ *
+ * **Example**
+ * ```ts
+ * const todos = grepFile("README.md", /TODO/);
+ * console.log(todos);
+ * ```
  */
 declare const grepFile: {
   (
@@ -1978,6 +3290,12 @@ interface String {
    *
    * See also {@link grepString}, {@link grepArray}, {@link grepFile}, and
    * {@link Array.prototype.grep}.
+   *
+   * **Example**
+   * ```ts
+   * const lines = "apple\nbanana\ncherry".grep(/an/);
+   * console.log(lines); // ["banana"]
+   * ```
    */
   grep: {
     (
@@ -2000,6 +3318,12 @@ interface Array<T> {
    *
    * See also {@link grepString}, {@link grepArray}, {@link grepFile}, and
    * {@link String.prototype.grep}.
+   *
+   * **Example**
+   * ```ts
+   * const matches = ["apple", "banana", "cherry"].grep(/an/);
+   * console.log(matches); // ["banana"]
+   * ```
    */
   grep: {
     (
@@ -2015,6 +3339,13 @@ declare interface GrepOptions {
   /**
    * When `inverse` is true, the grep function returns those lines which DON'T
    * match the pattern, instead of those which do. Defaults to `false`.
+   *
+   * **Example**
+   * ```ts
+   * const fruits = "apple\nbanana\ncherry";
+   * const nonMatching = grepString(fruits, /an/, { inverse: true });
+   * console.log(nonMatching); // ["apple", "cherry"]
+   * ```
    */
   inverse?: boolean;
 
@@ -2022,6 +3353,13 @@ declare interface GrepOptions {
    * When `details` is true, the grep function returns an array of
    * {@link GrepMatchDetail} objects instead of an array of strings. Defaults to
    * `false`.
+   *
+   * **Example**
+   * ```ts
+   * const fruits = "apple\nbanana\ncherry";
+   * const details = grepString(fruits, /an/, { details: true });
+   * console.log(details[0].lineNumber, details[0].lineContent);
+   * ```
    */
   details?: boolean;
 }
@@ -2030,15 +3368,37 @@ declare interface GrepOptions {
  * When `grepString`, `grepArray`, `grepFile`, or `String.prototype.grep` are
  * called with the `{ details: true }` option set, an Array of `GrepMatchDetail`
  * objects is returned.
+ *
+ * **Example**
+ * ```ts
+ * const [detail] = grepString("apple\nbanana", /an/, { details: true });
+ * console.log(detail.lineNumber, detail.lineContent, detail.matches);
+ * ```
  */
 declare interface GrepMatchDetail<ItemType = string> {
   lineNumber: number;
   lineContent: ItemType;
   matches: RegExpMatchArray;
 
-  /** Same as lineNumber - 1. */
+  /**
+   * Same as lineNumber - 1.
+   *
+   * **Example**
+   * ```ts
+   * const [detail] = grepString("apple\nbanana", /an/, { details: true });
+   * console.log(detail.index === detail.lineNumber - 1);
+   * ```
+   */
   index: number;
-  /** Alias for lineContent. */
+  /**
+   * Alias for lineContent.
+   *
+   * **Example**
+   * ```ts
+   * const [detail] = grepString("apple\nbanana", /an/, { details: true });
+   * console.log(detail.content === detail.lineContent);
+   * ```
+   */
   content: ItemType;
 }
 
@@ -3180,9 +4540,7 @@ declare const types: {
   objectWithProperties<
     T extends {
       [key: string | number | symbol]:
-        | TypeValidator<any>
-        | CoerceableToTypeValidator
-        | unknown;
+        TypeValidator<any> | CoerceableToTypeValidator | unknown;
     },
   >(
     properties: T,
@@ -3192,9 +4550,7 @@ declare const types: {
   objectWithOnlyTheseProperties<
     T extends {
       [key: string | number | symbol]:
-        | TypeValidator<any>
-        | CoerceableToTypeValidator
-        | unknown;
+        TypeValidator<any> | CoerceableToTypeValidator | unknown;
     },
   >(
     properties: T,
@@ -3233,17 +4589,13 @@ declare const types: {
   partialObjectWithProperties<
     T extends {
       [key: string | number | symbol]:
-        | TypeValidator<any>
-        | CoerceableToTypeValidator
-        | unknown;
+        TypeValidator<any> | CoerceableToTypeValidator | unknown;
     },
   >(
     properties: T,
   ): TypeValidator<{
     [key in keyof T]:
-      | UnwrapTypeFromCoerceableOrValidator<T[key]>
-      | null
-      | undefined;
+      UnwrapTypeFromCoerceableOrValidator<T[key]> | null | undefined;
   }>;
   tuple: {
     <
@@ -3539,7 +4891,9 @@ declare type CoerceToTypeValidator<V extends CoerceableToTypeValidator> =
                                                     ? TypeValidator<string>
                                                     : V extends {}
                                                       ? TypeValidator<{
-                                                          [key in keyof V]: CoerceToTypeValidator<
+                                                          [
+                                                            key in keyof V
+                                                          ]: CoerceToTypeValidator<
                                                             V[key]
                                                           >;
                                                         }>
@@ -3686,6 +5040,12 @@ declare const assert: {
    *
    * @param value - The value to test for truthiness
    * @param message - An optional error message to use. If unspecified, "Assertion failed" will be used.
+   *
+   * **Example**
+   * ```ts
+   * const files = ls();
+   * assert(files.length > 0, "Expected the current directory to have files");
+   * ```
    */
   <ValueType>(
     value: ValueType,
@@ -3700,6 +5060,13 @@ declare const assert: {
    * @param value - The value to test the type of
    * @param type - The type that `value` should be, as either a `TypeValidator` (from the `types.*` namespace) or a value which can be coerced into a `TypeValidator` via the `types.coerce` function, like `String`, `Boolean`, etc.
    * @param message - An optional error message to use. If unspecified, a generic-but-descriptive message will be used.
+   *
+   * **Example**
+   * ```ts
+   * const port: unknown = 8080;
+   * assert.type(port, Number, "port must be a number");
+   * console.log(port.toFixed(0));
+   * ```
    */
   type: <T extends TypeValidator<any> | CoerceableToTypeValidator>(
     value: any,
@@ -3765,6 +5132,14 @@ interface InteractivePromptConstructor {
   /**
    * Make a prompt which calls `handleInput` with each line the user enters.
    * Nothing is printed and no input is read until you call `start`.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt((input) => {
+   *   console.log("you typed:", input);
+   * });
+   * prompt.start();
+   * ```
    */
   new (
     handleInput: (input: string) => void,
@@ -3774,6 +5149,13 @@ interface InteractivePromptConstructor {
        * for each new line, so it can change as your program does.
        *
        * Defaults to `"> "`.
+       *
+       * **Example**
+       * ```ts
+       * const prompt = new InteractivePrompt(console.log, {
+       *   prompt: () => `${pwd().basename()}> `,
+       * });
+       * ```
        */
       prompt?: () => string;
 
@@ -3786,6 +5168,13 @@ interface InteractivePromptConstructor {
        * which is what any highlighting needs, since a character typed now can
        * change how earlier ones should look. Leave it out and the line is
        * echoed plainly as it is typed.
+       *
+       * **Example**
+       * ```ts
+       * const prompt = new InteractivePrompt(console.log, {
+       *   printInput: (input) => std.puts(cyan(input)),
+       * });
+       * ```
        */
       printInput?: (input: string) => void;
 
@@ -3807,12 +5196,30 @@ interface InteractivePromptConstructor {
        * Should the environment variable a platform relies on be unset, there is
        * nowhere to write the file, and history is kept for the current session
        * only as though no name had been given.
+       *
+       * **Example**
+       * ```ts
+       * const prompt = new InteractivePrompt(console.log, {
+       *   historyFileName: "my-tool-history.txt",
+       * });
+       * ```
        */
       historyFileName?: string;
 
       /**
        * The completions available at `cursorIndex` within `line`. Called every
        * time the user presses Tab.
+       *
+       * **Example**
+       * ```ts
+       * const commands = ["help", "status", "quit"];
+       * const prompt = new InteractivePrompt(console.log, {
+       *   getCompletions: (line, cursorIndex) => ({
+       *     candidates: commands.filter((command) => command.startsWith(line)),
+       *     prefixLength: cursorIndex,
+       *   }),
+       * });
+       * ```
        */
       getCompletions?: (
         line: string,
@@ -3828,6 +5235,14 @@ interface InteractivePromptConstructor {
  * A prompt which reads lines from the user, with readline-style editing keys,
  * history recall and Tab completion. See the `InteractivePrompt` global for the
  * full list of keys it binds.
+ *
+ * **Example**
+ * ```ts
+ * const prompt: InteractivePrompt = new InteractivePrompt((input) => {
+ *   console.log(input.toUpperCase());
+ * });
+ * prompt.start();
+ * ```
  */
 interface InteractivePrompt {
   /**
@@ -3835,6 +5250,12 @@ interface InteractivePrompt {
    * each new line, so it can change as your program does.
    *
    * Defaults to `"> "`.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt(console.log);
+   * prompt.prompt = () => "$ ";
+   * ```
    */
   prompt?: () => string;
 
@@ -3847,6 +5268,12 @@ interface InteractivePrompt {
    * which is what any highlighting needs, since a character typed now can
    * change how earlier ones should look. Leave it out and the line is echoed
    * plainly as it is typed.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt(console.log);
+   * prompt.printInput = (input) => std.puts(bold(input));
+   * ```
    */
   printInput?: (input: string) => void;
 
@@ -3866,12 +5293,28 @@ interface InteractivePrompt {
    * Should the environment variable a platform relies on be unset, there is
    * nowhere to write the file, and history is kept for the current session only
    * as though no name had been given.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt(console.log);
+   * prompt.historyFileName = "my-tool-history.txt";
+   * ```
    */
   historyFileName?: string;
 
   /**
    * The completions available at `cursorIndex` within `line`. Called every time
    * the user presses Tab.
+   *
+   * **Example**
+   * ```ts
+   * const commands = ["help", "status", "quit"];
+   * const prompt = new InteractivePrompt(console.log);
+   * prompt.getCompletions = (line, cursorIndex) => ({
+   *   candidates: commands.filter((command) => command.startsWith(line)),
+   *   prefixLength: cursorIndex,
+   * });
+   * ```
    */
   getCompletions?: (
     line: string,
@@ -3882,6 +5325,14 @@ interface InteractivePrompt {
    * Called with each line the user accepts by pressing Enter. Lines arrive one
    * at a time; nothing is held back waiting for a multi-line construct to be
    * finished off.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt(() => {});
+   * prompt.handleInput = (input) => {
+   *   console.log("you typed:", input);
+   * };
+   * ```
    */
   handleInput: (input: string) => void;
 
@@ -3891,6 +5342,15 @@ interface InteractivePrompt {
    * This returns straight away instead of blocking; the prompt keeps running
    * off the event loop afterwards. It stops when the user presses Ctrl+D on an
    * empty line, or exits the process when they press Ctrl+C twice in a row.
+   *
+   * **Example**
+   * ```ts
+   * const prompt = new InteractivePrompt((input) => {
+   *   console.log("you typed:", input);
+   * });
+   * prompt.start();
+   * console.log("this prints before the user has typed anything");
+   * ```
    */
   start(): void;
 }
@@ -3898,6 +5358,14 @@ interface InteractivePrompt {
 /**
  * The candidate completions for a position in a line, as returned by
  * `InteractivePrompt`'s `getCompletions`.
+ *
+ * **Example**
+ * ```ts
+ * const completions: InteractivePromptCompletions = {
+ *   candidates: ["parse", "stringify"],
+ *   prefixLength: 0,
+ * };
+ * ```
  */
 interface InteractivePromptCompletions {
   /**
@@ -3905,6 +5373,14 @@ interface InteractivePromptCompletions {
    * the parts still missing. When several of them match, pressing Tab a second
    * time lists these for the user to pick from, so they need to read as
    * complete words on their own.
+   *
+   * **Example**
+   * ```ts
+   * const completions: InteractivePromptCompletions = {
+   *   candidates: ["status", "stash", "switch"],
+   *   prefixLength: 1,
+   * };
+   * ```
    */
   candidates: Array<string>;
   /**
@@ -3924,6 +5400,14 @@ interface InteractivePromptCompletions {
    * typed in whole, which is how you offer something that follows a finished
    * word instead of completing one: once `JSON.parse` is fully typed, offering
    * `(` gives the user `JSON.parse(`.
+   *
+   * **Example**
+   * ```ts
+   * const completions: InteractivePromptCompletions = {
+   *   candidates: ["parse"],
+   *   prefixLength: "pars".length,
+   * };
+   * ```
    */
   prefixLength: number;
 }
@@ -3933,6 +5417,11 @@ interface InteractivePromptCompletions {
  *
  * @param context Variables to make available as globals within the repl.
  * @param lang The language to use in the repl. Defaults to "javascript".
+ *
+ * **Example**
+ * ```ts
+ * startRepl({ answer: 42 }, "typescript");
+ * ```
  */
 declare const startRepl: {
   (
@@ -3952,6 +5441,16 @@ declare const startRepl: {
   /**
    * A special value; when expressions result in this value, the repl will
    * print nothing instead of printing this value.
+   *
+   * **Example**
+   * ```ts
+   * startRepl({
+   *   quietly: (fn: () => void) => {
+   *     fn();
+   *     return startRepl.NOTHING;
+   *   },
+   * });
+   * ```
    */
   NOTHING: symbol;
 };
@@ -4066,12 +5565,24 @@ declare class GitRepo {
 
   /**
    * Creates a new `GitRepo` object for the given repo on disk.
+   *
+   * **Example**
+   * ```ts
+   * const repo = new GitRepo(GitRepo.findRoot(pwd()));
+   * console.log(repo.branchName());
+   * ```
    */
   constructor(repoDir: string | Path);
 
   /**
    * The root folder of the git repo that this `GitRepo` object represents (the
    * folder that contains the '.git' folder).
+   *
+   * **Example**
+   * ```ts
+   * const repo = new GitRepo(GitRepo.findRoot(pwd()));
+   * cd(repo.repoDir);
+   * ```
    */
   repoDir: Path;
 
@@ -4123,6 +5634,14 @@ declare class GitRepo {
    * git repo. `true` means there are changes, `false` means there are no
    * changes (ie. the repo is clean). Staged changes, unstaged changes, and
    * untracked files that aren't ignored all count as changes.
+   *
+   * **Example**
+   * ```ts
+   * const repo = new GitRepo(GitRepo.findRoot(pwd()));
+   * if (repo.isWorkingTreeDirty()) {
+   *   console.log("You have uncommitted changes");
+   * }
+   * ```
    */
   isWorkingTreeDirty(): boolean;
 
@@ -4163,6 +5682,13 @@ declare class GitRepo {
  * amount and style of log output from yavascript API functions.
  *
  * This object behaves similarly to the shell builtin `set -x`.
+ *
+ * **Example**
+ * ```ts
+ * logger.trace = console.error;
+ * logger.info = () => {};
+ * exec("echo hi");
+ * ```
  */
 declare const logger: {
   /**
@@ -4171,6 +5697,12 @@ declare const logger: {
    * {@link exec}, {@link copy} and {@link glob}.
    *
    * The default value of `logger.trace` is a no-op function.
+   *
+   * **Example**
+   * ```ts
+   * logger.trace = (...args) => console.error("[trace]", ...args);
+   * which("git");
+   * ```
    */
   trace: (...args: Array<any>) => void;
 
@@ -4180,6 +5712,12 @@ declare const logger: {
    * {@link copy}, and {@link glob}.
    *
    * The default value of `logger.info` writes dimmed text to stderr.
+   *
+   * **Example**
+   * ```ts
+   * logger.info = () => {};
+   * exec("echo hi");
+   * ```
    */
   info: (...args: Array<any>) => void;
 
@@ -4188,6 +5726,12 @@ declare const logger: {
    * functions which receive `logging.warn` as an option, like {@link readEnvBool}.
    *
    * The default value of `logger.warn` writes yellow text to stderr.
+   *
+   * **Example**
+   * ```ts
+   * logger.warn = (...args) => console.error("warning:", ...args);
+   * readEnvBool("VERBOSE", false);
+   * ```
    */
   warn: (...args: Array<any>) => void;
 };
@@ -4267,6 +5811,11 @@ declare namespace JSX {
    *
    * For more info, including info on how to change how JSX is compiled, see
    * {@link JSX}.
+   *
+   * **Example**
+   * ```ts
+   * JSX.pragma = "React.createElement";
+   * ```
    */
   export let pragma: string;
 
@@ -4291,6 +5840,11 @@ declare namespace JSX {
    *
    * For more info, including info on how to change how JSX is compiled, see
    * {@link JSX}.
+   *
+   * **Example**
+   * ```ts
+   * JSX.pragmaFrag = "React.Fragment";
+   * ```
    */
   export let pragmaFrag: string;
 
@@ -4336,6 +5890,12 @@ declare namespace JSX {
   /**
    * The TypeScript type for JSX Element objects created by the default
    * implementation of `JSX.createElement`.
+   *
+   * **Example**
+   * ```tsx
+   * const link: JSX.Element<{ href: string }, "a"> = <a href="https://example.com" />;
+   * console.log(link.type, link.props.href);
+   * ```
    */
   export interface Element<
     Props = { [key: string | symbol | number]: any },
@@ -4390,6 +5950,12 @@ declare namespace JSX {
    * If you modify properties on the JSX global such that `JSX.Fragment` is no
    * longer used (eg. by replacing it with `React.Fragment`), this type may no
    * longer be relevant.
+   *
+   * **Example**
+   * ```tsx
+   * const fragment: JSX.Fragment = <>hi</>;
+   * console.log(fragment.type === JSX.Fragment);
+   * ```
    */
   export type Fragment = Element<{}, typeof Fragment>;
 
@@ -4411,6 +5977,20 @@ declare namespace JSX {
    * For more info, including info on how to change how JSX is compiled, see
    * {@link JSX}.
    *
+   * **Example**
+   * ```tsx
+   * const link = JSX.createElement(
+   *   "a",
+   *   { href: "https://example.com" },
+   *   "click here",
+   * );
+   * console.log(link.props.href, link.props.children);
+   *
+   * // Same as:
+   *
+   * const link = <a href="https://example.com">click here</a>;
+   * console.log(link.props.href, link.props.children);
+   * ```
    */
   export let createElement: {
     <Type extends string | typeof Fragment | ((...args: any) => any)>(
@@ -4447,11 +6027,24 @@ declare namespace JSX {
 /**
  * The `YAML` namespace contains functions which can serialize and deserialize
  * YAML documents, following the same pattern as JavaScript's `JSON` builtin.
+ *
+ * **Example**
+ * ```ts
+ * const config = YAML.parse(readFile("config.yaml"));
+ * config.replicas = 3;
+ * writeFile("config.yaml", YAML.stringify(config));
+ * ```
  */
 declare const YAML: {
   /**
    * Converts a YAML document string into a JavaScript value. It works the same
    * way that `JSON.parse` does, but for YAML.
+   *
+   * **Example**
+   * ```ts
+   * const data = YAML.parse("name: my-project\ntags:\n  - one\n  - two\n");
+   * console.log(data.name, data.tags);
+   * ```
    */
   parse(
     input: string,
@@ -4461,6 +6054,13 @@ declare const YAML: {
   /**
    * Converts a JavaScript value into a YAML document string. It works the same
    * way that `JSON.stringify` does, but for YAML.
+   *
+   * **Example**
+   * ```ts
+   * const data = { name: "my-project", tags: ["one", "two"] };
+   * const yaml = YAML.stringify(data, null, 2);
+   * console.log(yaml);
+   * ```
    */
   stringify(
     input: any,
@@ -4483,6 +6083,13 @@ declare const YAML: {
  * Its interface is similar to `JSON.parse` and `JSON.stringify`, but CSV does
  * not support the spacing/replacer/reviver options that `JSON.parse` and
  * `JSON.stringify` have.
+ *
+ * **Example**
+ * ```ts
+ * const rows = CSV.parse("name,age\nAlice,30\n");
+ * rows.push(["Bob", "25"]);
+ * console.log(CSV.stringify(rows));
+ * ```
  */
 declare const CSV: {
   /**
@@ -4490,6 +6097,14 @@ declare const CSV: {
    *
    * The outer array holds the rows, and the inner arrays hold the items in
    * each row.
+   *
+   * **Example**
+   * ```ts
+   * const rows = CSV.parse(readFile("data.csv"));
+   * for (const [name, age] of rows) {
+   *   console.log(name, age);
+   * }
+   * ```
    */
   parse(input: string): Array<Array<string>>;
 
@@ -4498,6 +6113,15 @@ declare const CSV: {
    *
    * The outer array holds the rows, and the inner arrays hold the items in
    * each row.
+   *
+   * **Example**
+   * ```ts
+   * const csv = CSV.stringify([
+   *   ["name", "age"],
+   *   ["Alice", "30"],
+   * ]);
+   * writeFile("people.csv", csv);
+   * ```
    */
   stringify(input: Array<Array<string>>): string;
 };
@@ -4510,14 +6134,42 @@ declare const CSV: {
  * Its interface is similar to `JSON.parse` and `JSON.stringify`, but
  * `TOML.parse` and `TOML.stringify` do not support the spacing/replacer/reviver
  * options that `JSON.parse` and `JSON.stringify` do.
+ *
+ * **Example**
+ * ```ts
+ * const config = TOML.parse(readFile("config.toml"));
+ * config.version = "1.0.0";
+ * writeFile("config.toml", TOML.stringify(config));
+ * ```
  */
 declare var TOML: {
   /**
    * Parse a TOML document string (`data`) into an object.
+   *
+   * **Example**
+   * ```ts
+   * const toml = 'name = "my-project"\n[build]\ntarget = "dist"\n';
+   * const config = TOML.parse(toml);
+   * console.log(config.name, config.build.target);
+   * ```
    */
   parse(data: string): { [key: string]: any };
   /**
    * Convert an object into a TOML document.
+   *
+   * **Example**
+   * ```ts
+   * const toml = TOML.stringify({
+   *   name: "my-project",
+   *   build: { target: "dist" },
+   * });
+   * console.log(toml);
+   * // name = "my-project"
+   * //
+   * // [build]
+   * // target = "dist"
+   * //
+   * ```
    */
   stringify(data: { [key: string]: any }): string;
 };
@@ -4544,6 +6196,16 @@ interface StringConstructor {
    * `String.dedent` is the default export from the npm package `string-dedent`.
    * See its readme on npm for more info:
    * https://www.npmjs.com/package/string-dedent
+   *
+   * **Example**
+   * ```ts
+   * const usage = String.dedent`
+   *   Usage: my-script [options]
+   *
+   *     --help  Show this message
+   * `;
+   * console.log(usage);
+   * ```
    */
   dedent: {
     /**
@@ -4551,6 +6213,12 @@ interface StringConstructor {
      * The first line of `input` MUST be empty.
      *
      * For more info, see: https://www.npmjs.com/package/string-dedent#usage
+     *
+     * **Example**
+     * ```ts
+     * const text = String.dedent("\n    first line\n      second line\n");
+     * console.log(text);
+     * ```
      */
     (input: string): string;
 
@@ -4559,6 +6227,16 @@ interface StringConstructor {
      * The first line of the template literal MUST be empty.
      *
      * For more info, see: https://www.npmjs.com/package/string-dedent#usage
+     *
+     * **Example**
+     * ```ts
+     * const name = "world";
+     * const message = String.dedent`
+     *   Hello, ${name}!
+     *     This line stays indented by two spaces.
+     * `;
+     * console.log(message);
+     * ```
      */
     (
       strings: readonly string[] | ArrayLike<string>,
@@ -4570,6 +6248,17 @@ interface StringConstructor {
      * become dedented before being passed to the wrapped function.
      *
      * For more info, see: https://www.npmjs.com/package/string-dedent#usage
+     *
+     * **Example**
+     * ```ts
+     * const shout = (strings: ArrayLike<string>, ...values: any[]) =>
+     *   String.raw({ raw: strings }, ...values).toUpperCase();
+     * const dedentedShout = String.dedent(shout);
+     * console.log(dedentedShout`
+     *   hello
+     *     world
+     * `);
+     * ```
      */
     <
       Func extends (
@@ -4600,6 +6289,26 @@ interface PromiseConstructor {
    * Promise will be awaited before being passed into your mapper function.
    * Additionally, async iterables are supported; if iterable.next() returns a
    * Promise, it will be awaited.
+   *
+   * **Example**
+   * ```ts
+   * const files = glob("src/*.ts");
+   *
+   * const lineCounts = await Promise.map(
+   *   files,
+   *   async (file) => {
+   *     // readFile blocks the thread, so we use runInWorker to run
+   *     // it in another thread
+   *     const lengthFromWorker = await runInWorker(file.toString(), (file) => {
+   *       return readFile(file).split("\n").length;
+   *     });
+   *     return lengthFromWorker;
+   *   },
+   *   { concurrency: 4 },
+   * );
+   *
+   * console.log(lineCounts);
+   * ```
    */
   map<T, U>(
     inputs: Iterable<T | Promise<T>> | AsyncIterable<T | Promise<T>>,
@@ -4607,11 +6316,23 @@ interface PromiseConstructor {
     {
       /**
        * How many jobs are allowed to run at once.
+       *
+       * **Example**
+       * ```ts
+       * const delays = [300, 200, 100];
+       * await Promise.map(delays, (ms) => sleep.async(ms), { concurrency: 2 });
+       * ```
        */
       concurrency,
     }?: {
       /**
        * How many jobs are allowed to run at once.
+       *
+       * **Example**
+       * ```ts
+       * const delays = [300, 200, 100];
+       * await Promise.map(delays, (ms) => sleep.async(ms), { concurrency: 2 });
+       * ```
        */
       concurrency?: number;
     },
@@ -4637,7 +6358,16 @@ interface PromiseConstructor {
 declare function openUrl(urlOrFilePath: string | Path): void;
 
 // prettier-ignore
-/** Any integer in the range [0, 255]. */
+/**
+ * Any integer in the range [0, 255].
+ *
+ * **Example**
+ * ```ts
+ * const red: byte = 255;
+ * const green: byte = 128;
+ * console.log(red, green);
+ * ```
+ */
 declare type byte =
 |   0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 |  10 |  11 |  12 |  13 |  14 |  15 
 |  16 |  17 |  18 |  19 |  20 |  21 |  22 |  23 |  24 |  25 |  26 |  27 |  28 |  29 |  30 |  31 
@@ -4691,6 +6421,11 @@ interface ErrorOptions {
 /**
  * For compatibility with Node.js scripts, the global object is accessible via
  * the global variable named "global".
+ *
+ * **Example**
+ * ```ts
+ * console.log(global === globalThis);
+ * ```
  */
 declare var global: typeof globalThis;
 
@@ -4704,6 +6439,12 @@ declare var global: typeof globalThis;
  *
  * If you are writing yavascript-specific code, you should use yavascript's APIs
  * instead of `process`.
+ *
+ * **Example**
+ * ```ts
+ * console.log(process.version, process.arch);
+ * console.log(process.argv);
+ * ```
  */
 declare var process: {
   version: string;
@@ -4713,24 +6454,64 @@ declare var process: {
     unicode: string;
   };
   arch: string;
-  /** Same as the global {@link env}. */
+  /**
+   * Same as the global {@link env}.
+   *
+   * **Example**
+   * ```ts
+   * console.log(process.env.HOME);
+   * ```
+   */
   readonly env: { [key: string]: string | undefined };
-  /** Same as the global {@link scriptArgs}. */
+  /**
+   * Same as the global {@link scriptArgs}.
+   *
+   * **Example**
+   * ```ts
+   * const args = process.argv.slice(2);
+   * console.log(args);
+   * ```
+   */
   readonly argv: Array<string>;
-  /** Same as `scriptArgs[0]`. */
+  /**
+   * Same as `scriptArgs[0]`.
+   *
+   * **Example**
+   * ```ts
+   * console.log(process.argv0);
+   * ```
+   */
   readonly argv0: string;
   /**
    * Shortcut for `os.realpath(os.execPath())`, using the QuickJS {@link os}
    * module.
+   *
+   * **Example**
+   * ```ts
+   * exec([process.execPath, "--version"]);
+   * ```
    */
   readonly execPath: string;
   /**
    * Uses `std.getExitCode()` and `std.setExitCode()` from the QuickJS
    * {@link std} module.
+   *
+   * **Example**
+   * ```ts
+   * process.exitCode = 1;
+   * ```
    */
   exitCode: number;
   /**
    * Uses `std.exit()` from the QuickJS {@link std} module.
+   *
+   * **Example**
+   * ```ts
+   * if (process.argv.length < 3) {
+   *   console.error("Please specify an input file");
+   *   process.exit(1);
+   * }
+   * ```
    */
   exit(code?: number | null | undefined): void;
 };
@@ -4744,6 +6525,16 @@ declare var process: {
  *
  * It behaves similar to [Web
  * Workers](https://developer.mozilla.org/en-US/docs/Web/API/Worker).
+ *
+ * **Example**
+ * ```ts
+ * const worker = new Worker("./my-worker.js");
+ * worker.onmessage = (event) => {
+ *   console.log("worker says:", event.data);
+ *   worker.terminate();
+ * };
+ * worker.postMessage({ task: "start" });
+ * ```
  */
 declare class Worker {
   /**
@@ -4757,6 +6548,18 @@ declare class Worker {
    *
    * If `options.initialData` is present, it'll be available within the worker
    * as the static `initialData` property on the Worker constructor.
+   *
+   * **Example**
+   * ```ts
+   * const worker = new Worker("inline-worker.js", {
+   *   overrideCode: "Worker.parent.postMessage(Worker.initialData.name)",
+   *   initialData: { name: "bob" },
+   * });
+   * worker.onmessage = (event) => {
+   *   console.log(event.data);
+   *   worker.terminate();
+   * };
+   * ```
    */
   constructor(
     moduleFilename: string,
@@ -4772,30 +6575,75 @@ declare class Worker {
    * initial data.
    *
    * Outside of a worker, this is always `undefined`.
+   *
+   * **Example**
+   * ```ts
+   * const data = Worker.initialData;
+   * if (data !== undefined) {
+   *   console.log("Running inside a worker with:", data);
+   * }
+   * ```
    */
   static initialData: StructuredClonable;
 
   /**
    * Worker-side communication channel back to the parent context that invoked
    * it (ie. the main thread).
+   *
+   * **Example**
+   * ```ts
+   * Worker.parent.onmessage = (event) => {
+   *   Worker.parent.postMessage({ received: event.data });
+   * };
+   * ```
    */
   static parent: {
-    /** Send a message from the worker back to the main thread. */
+    /**
+     * Send a message from the worker back to the main thread.
+     *
+     * **Example**
+     * ```ts
+     * Worker.parent.postMessage({ status: "done", result: 42 });
+     * ```
+     */
     postMessage(msg: StructuredClonable): void;
 
     /**
      * This function is called when a message arrives from the parent. You may
      * override this property with your own function.
+     *
+     * **Example**
+     * ```ts
+     * Worker.parent.onmessage = (event) => {
+     *   console.log("message from the main thread:", event.data);
+     * };
+     * ```
      */
     onmessage: null | ((event: { data: StructuredClonable }) => void);
   };
 
-  /** Send a message from the main thread to the worker. */
+  /**
+   * Send a message from the main thread to the worker.
+   *
+   * **Example**
+   * ```ts
+   * const worker = new Worker("./my-worker.js");
+   * worker.postMessage({ task: "resize", width: 800 });
+   * ```
+   */
   postMessage(msg: StructuredClonable): void;
 
   /**
    * This function is called when a message arrives from the Worker. You may
    * override this property with your own function.
+   *
+   * **Example**
+   * ```ts
+   * const worker = new Worker("./my-worker.js");
+   * worker.onmessage = (event) => {
+   *   console.log("message from the worker:", event.data);
+   * };
+   * ```
    */
   onmessage: null | ((event: { data: StructuredClonable }) => void);
 
@@ -4804,6 +6652,14 @@ declare class Worker {
    * rejected in the worker, this `onerror` function will be run.
    *
    * When `onerror` is unset, errors print to stderr.
+   *
+   * **Example**
+   * ```ts
+   * const worker = new Worker("./my-worker.js");
+   * worker.onerror = (event) => {
+   *   console.error(`${event.filename}:${event.lineno}: ${event.message}`);
+   * };
+   * ```
    */
   onerror:
     | null
@@ -4816,11 +6672,30 @@ declare class Worker {
 
   /**
    * Terminate the worker thread. Equivalent to setting `onmessage` to `null`.
+   *
+   * **Example**
+   * ```ts
+   * const worker = new Worker("./my-worker.js");
+   * worker.onmessage = () => {
+   *   worker.terminate();
+   * };
+   * ```
    */
   terminate(): void;
 }
 
-/** Types which can be sent to/from Workers. */
+/**
+ * Types which can be sent to/from Workers.
+ *
+ * **Example**
+ * ```ts
+ * const message: StructuredClonable = {
+ *   name: "resize",
+ *   sizes: [640, 1280],
+ *   createdAt: new Date(),
+ * };
+ * ```
+ */
 declare type StructuredClonable =
   | string
   | number
@@ -4898,6 +6773,13 @@ declare function runInWorker<
  *
  * This is the same as {@link import("quickjs:context")}, but with a
  * `yavascriptGlobals` option added.
+ *
+ * **Example**
+ * ```ts
+ * const context = new Context();
+ * context.eval("globalThis.x = 5");
+ * console.log(context.eval("x * 2"));
+ * ```
  */
 declare class Context {
   /**
@@ -4944,9 +6826,27 @@ declare class Context {
    * Note that new contexts don't have a `scriptArgs` global. If you need one
    * to be present in the new context, you can add one onto the Context's
    * `globalThis` property.
+   *
+   * **Example**
+   * ```ts
+   * const sandbox = new Context({
+   *   yavascriptGlobals: false,
+   *   moduleGlobals: false,
+   *   timers: false,
+   * });
+   * console.log(sandbox.eval("typeof setTimeout"));
+   * ```
    */
   constructor(options?: {
-    /** Enables `Date`. Defaults to `true`. */
+    /**
+     * Enables `Date`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ date: false, yavascriptGlobals: false });
+     * console.log(context.eval("typeof Date"));
+     * ```
+     */
     date?: boolean;
 
     /**
@@ -4955,22 +6855,68 @@ declare class Context {
      * > NOTE: The {@link Context.eval} method will still work even with this
      * > option set to false. This option only disables eval *within* the
      * > context.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ eval: false });
+     * console.log(context.eval("1 + 1"));
+     * ```
      */
     eval?: boolean;
 
-    /** Enables `String.prototype.normalize`. Defaults to `true`. */
+    /**
+     * Enables `String.prototype.normalize`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ stringNormalize: false });
+     * console.log(context.eval("typeof String.prototype.normalize"));
+     * ```
+     */
     stringNormalize?: boolean;
 
-    /** Enables `RegExp`. Defaults to `true`. */
+    /**
+     * Enables `RegExp`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ regExp: false, yavascriptGlobals: false });
+     * console.log(context.eval("typeof RegExp"));
+     * ```
+     */
     regExp?: boolean;
 
-    /** Enables `JSON`. Defaults to `true`. */
+    /**
+     * Enables `JSON`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ json: false });
+     * console.log(context.eval("typeof JSON"));
+     * ```
+     */
     json?: boolean;
 
-    /** Enables `Proxy`. Defaults to `true`. */
+    /**
+     * Enables `Proxy`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ proxy: false, yavascriptGlobals: false });
+     * console.log(context.eval("typeof Proxy"));
+     * ```
+     */
     proxy?: boolean;
 
-    /** Enables `Map` and `Set`. Defaults to `true`. */
+    /**
+     * Enables `Map` and `Set`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ mapSet: false, yavascriptGlobals: false });
+     * console.log(context.eval("typeof Map"), context.eval("typeof Set"));
+     * ```
+     */
     mapSet?: boolean;
 
     /**
@@ -4992,6 +6938,12 @@ declare class Context {
      * - DataView
      *
      * Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ typedArrays: false });
+     * console.log(context.eval("typeof Uint8Array"));
+     * ```
      */
     typedArrays?: boolean;
 
@@ -5004,10 +6956,30 @@ declare class Context {
      * - async generators
      *
      * Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({
+     *   promise: false,
+     *   yavascriptGlobals: false,
+     * });
+     * console.log(context.eval("typeof Promise"));
+     * ```
      */
     promise?: boolean;
 
-    /** Enables `inspect`. Defaults to `true`. */
+    /**
+     * Enables `inspect`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({
+     *   inspect: false,
+     *   yavascriptGlobals: false,
+     * });
+     * console.log(context.eval("typeof inspect"));
+     * ```
+     */
     inspect?: boolean;
     /**
      * Enables the QuickJS `console` object. Defaults to `true`.
@@ -5015,6 +6987,15 @@ declare class Context {
      * YavaScript extends the builtin QuickJS `console` by passing its arguments
      * through `inspect`. To gain this functionality, pass option
      * `yavascriptGlobals: true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({
+     *   console: false,
+     *   yavascriptGlobals: false,
+     * });
+     * console.log(context.eval("typeof console"));
+     * ```
      */
     console?: boolean;
     /**
@@ -5023,13 +7004,36 @@ declare class Context {
      * YavaScript extends the builtin QuickJS `print` by passing its arguments
      * through `inspect`. To gain this functionality, pass option
      * `yavascriptGlobals: true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ print: false, yavascriptGlobals: false });
+     * console.log(context.eval("typeof print"));
+     * ```
      */
     print?: boolean;
-    /** Enables `require`. Defaults to `true`. */
+    /**
+     * Enables `require`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({
+     *   moduleGlobals: false,
+     *   yavascriptGlobals: false,
+     * });
+     * console.log(context.eval("typeof require"));
+     * ```
+     */
     moduleGlobals?: boolean;
     /**
      * Enables `setTimeout`, `clearTimeout`, `setInterval`, and
      * `clearInterval`. Defaults to `true`.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ timers: false });
+     * console.log(context.eval("typeof setTimeout"));
+     * ```
      */
     timers?: boolean;
 
@@ -5044,26 +7048,120 @@ declare class Context {
      * > things (like `instanceof Function`) therefore won't work, but
      * > everything that matters in practice will work just fine. All other
      * > globals get created within the child context.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({ yavascriptGlobals: false });
+     * console.log(context.eval("typeof exec"));
+     * ```
      */
     yavascriptGlobals?: boolean;
 
-    /** Enable builtin modules. */
+    /**
+     * Enable builtin modules.
+     *
+     * **Example**
+     * ```ts
+     * const context = new Context({
+     *   yavascriptGlobals: false,
+     *   modules: { "quickjs:os": false, "quickjs:std": false },
+     * });
+     * ```
+     */
     modules?: {
-      /** Enables the "quickjs:bytecode" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:bytecode" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:bytecode": false },
+       * });
+       * ```
+       */
       "quickjs:bytecode"?: boolean;
-      /** Enables the "quickjs:cmdline" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:cmdline" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:cmdline": false },
+       * });
+       * ```
+       */
       "quickjs:cmdline"?: boolean;
-      /** Enables the "quickjs:context" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:context" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   modules: { "quickjs:context": false },
+       * });
+       * ```
+       */
       "quickjs:context"?: boolean;
-      /** Enables the "quickjs:encoding" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:encoding" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:encoding": false },
+       * });
+       * ```
+       */
       "quickjs:encoding"?: boolean;
-      /** Enables the "quickjs:engine" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:engine" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:engine": false },
+       * });
+       * ```
+       */
       "quickjs:engine"?: boolean;
-      /** Enables the "quickjs:os" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:os" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:os": false },
+       * });
+       * ```
+       */
       "quickjs:os"?: boolean;
-      /** Enables the "quickjs:std" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:std" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   yavascriptGlobals: false,
+       *   modules: { "quickjs:std": false },
+       * });
+       * ```
+       */
       "quickjs:std"?: boolean;
-      /** Enables the "quickjs:timers" module. Defaults to `true`. */
+      /**
+       * Enables the "quickjs:timers" module. Defaults to `true`.
+       *
+       * **Example**
+       * ```ts
+       * const context = new Context({
+       *   modules: { "quickjs:timers": false },
+       * });
+       * ```
+       */
       "quickjs:timers"?: boolean;
     };
   });
@@ -5072,6 +7170,13 @@ declare class Context {
    * The `globalThis` object used by this context.
    *
    * You can add to or remove from it to change what is visible to the context.
+   *
+   * **Example**
+   * ```ts
+   * const context = new Context();
+   * Object.assign(context.globalThis, { greeting: "hello" });
+   * console.log(context.eval("greeting"));
+   * ```
    */
   globalThis: typeof globalThis;
 
@@ -5082,10 +7187,16 @@ declare class Context {
    *
    * > NOTE: This function will work even if you created the Context with option
    * > `eval: false` (which only disables eval *within* the context).
+   *
+   * **Example**
+   * ```ts
+   * const context = new Context();
+   * const doubled = context.eval("[1, 2, 3].map((n) => n * 2)");
+   * console.log(doubled);
+   * ```
    */
   eval(code: string): any;
 }
-
 
 // ==========================================
 // ------------------------------------------
@@ -5104,7 +7215,7 @@ interface ObjectConstructor {
    */
   toPrimitive(
     input: any,
-    hint: "string" | "number" | "default"
+    hint: "string" | "number" | "default",
   ): string | number | bigint | boolean | undefined | symbol | null;
 
   /**
@@ -5284,7 +7395,7 @@ declare module "quickjs:timers" {
   /** Call the function func repeatedly, with delay ms between each call. Return a handle to the timer. */
   export function setInterval(
     func: (...args: any) => any,
-    delay: number
+    delay: number,
   ): Timer;
 
   /** Cancel an interval timer. */
@@ -5650,7 +7761,7 @@ declare module "quickjs:std" {
      */
     (
       url: string,
-      options: { full: true }
+      options: { full: true },
     ): {
       status: number;
       response: string;
@@ -5668,7 +7779,7 @@ declare module "quickjs:std" {
      */
     (
       url: string,
-      options: { full: true; binary: false }
+      options: { full: true; binary: false },
     ): {
       status: number;
       response: string;
@@ -5686,7 +7797,7 @@ declare module "quickjs:std" {
      */
     (
       url: string,
-      options: { full: true; binary: true }
+      options: { full: true; binary: true },
     ): {
       status: number;
       response: ArrayBuffer;
@@ -5720,7 +7831,7 @@ declare module "quickjs:std" {
   export function strftime(
     maxBytes: number,
     format: string,
-    time: Date | number
+    time: Date | number,
   ): string;
 }
 
@@ -5761,13 +7872,13 @@ declare module "quickjs:os" {
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
-    length: number
+    length: number,
   ): number;
   export function write(
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
-    length: number
+    length: number,
   ): number;
   export function isatty(fd: number): boolean;
   export function ttyGetWinSize(fd: number): null | [number, number];
@@ -5847,7 +7958,7 @@ declare module "quickjs:os" {
 
   export function signal(
     signal: number,
-    func: null | undefined | (() => void)
+    func: null | undefined | (() => void),
   ): void;
 
   /* Signal constants */
@@ -5969,7 +8080,7 @@ declare module "quickjs:os" {
       options?: {
         overrideCode?: string;
         initialData?: StructuredClonable;
-      }
+      },
     );
 
     /**
@@ -6104,7 +8215,7 @@ declare module "quickjs:os" {
     | undefined
     | ((
         commandLine: string | null,
-        options?: CreateProcessOptions
+        options?: CreateProcessOptions,
       ) => CreateProcessResult);
 
   /**
@@ -6117,8 +8228,7 @@ declare module "quickjs:os" {
    * NOTE: this function is only present on windows
    */
   export var WaitForSingleObject:
-    | undefined
-    | ((handle: Win32Handle, timeoutMs?: number) => number);
+    undefined | ((handle: Win32Handle, timeoutMs?: number) => number);
 
   /**
    * Retrieve the exit code of a process (wrapper for Win32 `GetExitCodeProcess`).
@@ -6139,8 +8249,7 @@ declare module "quickjs:os" {
    * NOTE: this function is only present on windows
    */
   export var TerminateProcess:
-    | undefined
-    | ((handle: Win32Handle, exitCode: number) => void);
+    undefined | ((handle: Win32Handle, exitCode: number) => void);
 
   /**
    * Close a Win32 handle. The handle will automatically be closed when the
@@ -6181,8 +8290,7 @@ declare module "quickjs:os" {
    * NOTE: this function is only present on windows
    */
   export var CreatePipe:
-    | undefined
-    | ((options?: CreatePipeOptions) => CreatePipeResult);
+    undefined | ((options?: CreatePipeOptions) => CreatePipeResult);
 
   /* Win32-specific constants */
 
@@ -6363,7 +8471,7 @@ interface ModuleDelegate {
     [key: string]: (
       filename: string,
       content: string,
-      attributes?: Record<string, string>
+      attributes?: Record<string, string>,
     ) => string;
   };
 
@@ -6391,7 +8499,7 @@ interface ModuleDelegate {
   resolve(
     name: string,
     fromFile: string,
-    attributes?: Record<string, string>
+    attributes?: Record<string, string>,
   ): string;
 
   /**
@@ -6455,7 +8563,7 @@ interface RequireFunction {
    */
   resolve: (
     source: string,
-    options?: { with?: Record<string, string> }
+    options?: { with?: Record<string, string> },
   ) => string;
 }
 
@@ -6552,7 +8660,7 @@ declare module "quickjs:engine" {
       backtraceBarrier?: boolean;
       filename?: string;
       async?: boolean;
-    }
+    },
   ): any;
 
   /**
@@ -6574,7 +8682,7 @@ declare module "quickjs:engine" {
   export function importModule(
     filename: string,
     basename?: string,
-    options?: { with?: Record<string, string> }
+    options?: { with?: Record<string, string> },
   ): { [key: string]: any };
 
   /**
@@ -6588,7 +8696,7 @@ declare module "quickjs:engine" {
   export function resolveModule(
     filename: string,
     basename?: string,
-    options?: { with?: Record<string, string> }
+    options?: { with?: Record<string, string> },
   ): string;
 
   /**
@@ -6660,7 +8768,7 @@ declare module "quickjs:engine" {
    */
   export function defineBuiltinModule(
     name: string,
-    obj: { [key: string]: any }
+    obj: { [key: string]: any },
   ): void;
 
   /**
@@ -6690,7 +8798,7 @@ declare module "quickjs:engine" {
   export type StackFrameMapper = (
     filename: string,
     line: number,
-    column: number
+    column: number,
   ) => { filename: string; line: number; column: number } | null | undefined;
 
   /**
@@ -6727,7 +8835,7 @@ declare module "quickjs:engine" {
    * @param mapper - The translation callback, or `null`/`undefined` to unregister.
    */
   export function setStackFrameMapper(
-    mapper: StackFrameMapper | null | undefined
+    mapper: StackFrameMapper | null | undefined,
   ): void;
 
   /**
@@ -6784,7 +8892,7 @@ declare module "quickjs:engine" {
       maxDepth?: number;
       maxStringLength?: number;
       maxItemCount?: number;
-    }
+    },
   ): string;
 
   /**
@@ -6834,7 +8942,7 @@ declare module "quickjs:bytecode" {
        *   matter.
        */
       strip?: "source" | "debug" | false;
-    }
+    },
   ): ArrayBuffer;
 
   /**
@@ -6873,7 +8981,7 @@ declare module "quickjs:bytecode" {
        * matching option so the Error is reified to a real instance.
        */
       serializeErrors?: boolean;
-    }
+    },
   ): ArrayBuffer;
 
   /**
@@ -6895,7 +9003,7 @@ declare module "quickjs:bytecode" {
     options?: {
       preserveReferences?: boolean;
       serializeErrors?: boolean;
-    }
+    },
   ): any;
 }
 
@@ -7081,7 +9189,7 @@ declare module "quickjs:encoding" {
      */
     encodeInto(
       source: string,
-      destination: Uint8Array
+      destination: Uint8Array,
     ): { read: number; written: number };
   }
 
@@ -7158,19 +9266,17 @@ declare module "quickjs:encoding" {
   export class TextDecoder {
     constructor(
       label?: TextEncodingLabel,
-      options?: { fatal?: boolean; ignoreBOM?: boolean }
+      options?: { fatal?: boolean; ignoreBOM?: boolean },
     );
     readonly encoding: TextEncoding;
     readonly fatal: boolean;
     readonly ignoreBOM: boolean;
     decode(
       input?: ArrayBuffer | ArrayBufferView,
-      options?: { stream?: boolean }
+      options?: { stream?: boolean },
     ): string;
   }
 }
 
-
 declare const std: typeof import("quickjs:std");
 declare const os: typeof import("quickjs:os");
-

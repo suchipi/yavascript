@@ -37,6 +37,13 @@ the specified pattern, as an array of strings or detail objects.
 See also [grepFile](/meta/generated-docs/grep.md#grepfile-function), [grepArray](/meta/generated-docs/grep.md#greparray-function), [String.prototype.grep](/meta/generated-docs/grep.md#stringgrep-function-property),
 and [Array.prototype.grep](/meta/generated-docs/grep.md#arraygrep-function-property).
 
+**Example**
+
+```ts
+const lines = grepString("apple\nbanana\ncherry", /an/);
+console.log(lines); // ["banana"]
+```
+
 ```ts
 const grepString: {
   (
@@ -75,6 +82,13 @@ Array of items or an Array of detail objects.
 
 See also [grepString](/meta/generated-docs/grep.md#grepstring-function), [grepFile](/meta/generated-docs/grep.md#grepfile-function), [String.prototype.grep](/meta/generated-docs/grep.md#stringgrep-function-property),
 and [Array.prototype.grep](/meta/generated-docs/grep.md#arraygrep-function-property).
+
+**Example**
+
+```ts
+const matches = grepArray(["apple", "banana", "cherry"], "an");
+console.log(matches); // ["banana"]
+```
 
 ```ts
 const grepArray: {
@@ -119,6 +133,13 @@ objects.
 
 See also [grepArray](/meta/generated-docs/grep.md#greparray-function), [grepString](/meta/generated-docs/grep.md#grepstring-function),
 [String.prototype.grep](/meta/generated-docs/grep.md#stringgrep-function-property), and [Array.prototype.grep](/meta/generated-docs/grep.md#arraygrep-function-property).
+
+**Example**
+
+```ts
+const todos = grepFile("README.md", /TODO/);
+console.log(todos);
+```
 
 ```ts
 const grepFile: {
@@ -179,6 +200,13 @@ specified pattern, as an array of strings or detail objects.
 See also [grepString](/meta/generated-docs/grep.md#grepstring-function), [grepArray](/meta/generated-docs/grep.md#greparray-function), [grepFile](/meta/generated-docs/grep.md#grepfile-function), and
 [Array.prototype.grep](/meta/generated-docs/grep.md#arraygrep-function-property).
 
+**Example**
+
+```ts
+const lines = "apple\nbanana\ncherry".grep(/an/);
+console.log(lines); // ["banana"]
+```
+
 ```ts
 grep: {
   (pattern: string | RegExp, options: GrepOptions & {
@@ -229,6 +257,13 @@ Array of items or an Array of detail objects.
 See also [grepString](/meta/generated-docs/grep.md#grepstring-function), [grepArray](/meta/generated-docs/grep.md#greparray-function), [grepFile](/meta/generated-docs/grep.md#grepfile-function), and
 [String.prototype.grep](/meta/generated-docs/grep.md#stringgrep-function-property).
 
+**Example**
+
+```ts
+const matches = ["apple", "banana", "cherry"].grep(/an/);
+console.log(matches); // ["banana"]
+```
+
 ```ts
 grep: {
   (pattern: string | RegExp, options: GrepOptions & {
@@ -266,6 +301,14 @@ declare interface GrepOptions {
 When `inverse` is true, the grep function returns those lines which DON'T
 match the pattern, instead of those which do. Defaults to `false`.
 
+**Example**
+
+```ts
+const fruits = "apple\nbanana\ncherry";
+const nonMatching = grepString(fruits, /an/, { inverse: true });
+console.log(nonMatching); // ["apple", "cherry"]
+```
+
 ```ts
 inverse?: boolean;
 ```
@@ -276,6 +319,14 @@ When `details` is true, the grep function returns an array of
 [GrepMatchDetail](/meta/generated-docs/grep.md#grepmatchdetail-interface) objects instead of an array of strings. Defaults to
 `false`.
 
+**Example**
+
+```ts
+const fruits = "apple\nbanana\ncherry";
+const details = grepString(fruits, /an/, { details: true });
+console.log(details[0].lineNumber, details[0].lineContent);
+```
+
 ```ts
 details?: boolean;
 ```
@@ -285,6 +336,13 @@ details?: boolean;
 When `grepString`, `grepArray`, `grepFile`, or `String.prototype.grep` are
 called with the `{ details: true }` option set, an Array of `GrepMatchDetail`
 objects is returned.
+
+**Example**
+
+```ts
+const [detail] = grepString("apple\nbanana", /an/, { details: true });
+console.log(detail.lineNumber, detail.lineContent, detail.matches);
+```
 
 ```ts
 declare interface GrepMatchDetail<ItemType = string> {
@@ -318,6 +376,13 @@ matches: RegExpMatchArray;
 
 Same as lineNumber - 1.
 
+**Example**
+
+```ts
+const [detail] = grepString("apple\nbanana", /an/, { details: true });
+console.log(detail.index === detail.lineNumber - 1);
+```
+
 ```ts
 index: number;
 ```
@@ -325,6 +390,13 @@ index: number;
 ## GrepMatchDetail.content (ItemType property)
 
 Alias for lineContent.
+
+**Example**
+
+```ts
+const [detail] = grepString("apple\nbanana", /an/, { details: true });
+console.log(detail.content === detail.lineContent);
+```
 
 ```ts
 content: ItemType;

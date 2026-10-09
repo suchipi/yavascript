@@ -2,11 +2,24 @@
  * Set the permission bits for the specified file.
  *
  * Provides the same functionality as the unix binary of the same name.
+ *
+ * **Example**
+ * ```ts
+ * chmod(0o755, "script.sh");
+ * chmod("add", { user: "execute" }, "script.sh");
+ * ```
  */
 declare const chmod: Chmod;
 
 /**
  * The interface for the global function `chmod`, which has two call signatures.
+ *
+ * **Example**
+ * ```ts
+ * const setPermissions: Chmod = chmod;
+ * setPermissions("644", "notes.txt");
+ * setPermissions("remove", { others: "read" }, "notes.txt");
+ * ```
  */
 interface Chmod {
   /**
@@ -16,6 +29,12 @@ interface Chmod {
    *
    * @param permissions The permission bits to set. This can be a number, or a string containing an octal number.
    * @param path The path to the file.
+   *
+   * **Example**
+   * ```ts
+   * chmod(0o755, "script.sh");
+   * chmod("644", "notes.txt");
+   * ```
    */
   (permissions: number | string, path: string | Path): void;
 
@@ -66,6 +85,12 @@ interface Chmod {
    * { ug: "rw", o: "w" }
    * { all: "full" }
    * ```
+   *
+   * **Example**
+   * ```ts
+   * chmod("add", { user: "execute" }, "script.sh");
+   * chmod("set", { ug: "rw", o: "r" }, "notes.txt");
+   * ```
    */
   <Operation extends Chmod.Operation>(
     operation: Operation,
@@ -75,7 +100,15 @@ interface Chmod {
 }
 
 declare namespace Chmod {
-  /** A string representing who a permission applies to. */
+  /**
+   * A string representing who a permission applies to.
+   *
+   * **Example**
+   * ```ts
+   * const who: Chmod.Who = "group";
+   * chmod("add", { [who]: "write" }, "notes.txt");
+   * ```
+   */
   export type Who =
     | "user"
     | "group"
@@ -89,10 +122,26 @@ declare namespace Chmod {
     | "go"
     | "uo";
 
-  /** A string representing how the permissions should be changed. */
+  /**
+   * A string representing how the permissions should be changed.
+   *
+   * **Example**
+   * ```ts
+   * const operation: Chmod.Operation = "remove";
+   * chmod(operation, { others: "read" }, "notes.txt");
+   * ```
+   */
   export type Operation = "add" | "set" | "remove";
 
-  /** A string representing the access level for the given permission. */
+  /**
+   * A string representing the access level for the given permission.
+   *
+   * **Example**
+   * ```ts
+   * const permission: Chmod.Permission = "readwrite";
+   * chmod("set", { user: permission }, "notes.txt");
+   * ```
+   */
   export type Permission =
     | "read"
     | "write"
