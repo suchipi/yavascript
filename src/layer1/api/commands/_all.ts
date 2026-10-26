@@ -8,6 +8,9 @@ export default makeGetterPropertyDescriptorMap({
   cat: () => (require("./cat") as typeof import("./cat")).cat,
   cd: () => (require("./cd") as typeof import("./cd")).cd,
   chmod: () => (require("./chmod") as typeof import("./chmod")).chmod,
+  curl: () => (require("./curl") as typeof import("./curl")).curl,
+  CurlResponse: () =>
+    (require("./curl") as typeof import("./curl")).CurlResponse,
   dirname: () => (require("./dirname") as typeof import("./dirname")).dirname,
   echo: () => (require("./echo") as typeof import("./echo")).echo,
   exit: () => (require("./exit") as typeof import("./exit")).exit,

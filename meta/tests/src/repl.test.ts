@@ -1310,8 +1310,9 @@ describe("repl completion", () => {
     expect(listing).not.toMatch(/\bcwd\b/);
     expect(listing).toMatchInlineSnapshot(`
       "> c
-      cat            chmod          clearInterval  console        copy
-      cd             clear          clearTimeout   constructor    cyan
+      cat            clear          console        curl           
+      cd             clearInterval  constructor    cyan           
+      chmod          clearTimeout   copy           
       > c
       "
     `);

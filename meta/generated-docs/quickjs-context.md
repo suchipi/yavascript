@@ -19,6 +19,8 @@ declare module "quickjs:context" {
       mapSet?: boolean;
       typedArrays?: boolean;
       promise?: boolean;
+      temporal?: boolean;
+      intl?: boolean;
       inspect?: boolean;
       console?: boolean;
       print?: boolean;
@@ -28,6 +30,7 @@ declare module "quickjs:context" {
         "quickjs:bytecode"?: boolean;
         "quickjs:cmdline"?: boolean;
         "quickjs:context"?: boolean;
+        "quickjs:curl"?: boolean;
         "quickjs:encoding"?: boolean;
         "quickjs:engine"?: boolean;
         "quickjs:os"?: boolean;
@@ -57,6 +60,8 @@ class Context {
     mapSet?: boolean;
     typedArrays?: boolean;
     promise?: boolean;
+    temporal?: boolean;
+    intl?: boolean;
     inspect?: boolean;
     console?: boolean;
     print?: boolean;
@@ -66,6 +71,7 @@ class Context {
       "quickjs:bytecode"?: boolean;
       "quickjs:cmdline"?: boolean;
       "quickjs:context"?: boolean;
+      "quickjs:curl"?: boolean;
       "quickjs:encoding"?: boolean;
       "quickjs:engine"?: boolean;
       "quickjs:os"?: boolean;
@@ -97,6 +103,8 @@ The following globals are always present, regardless of options:
 - URIError
 - InternalError
 - AggregateError
+- SuppressedError
+- DisposableStack
 - Array
 - parseInt
 - parseFloat
@@ -135,6 +143,8 @@ constructor(options?: {
   mapSet?: boolean;
   typedArrays?: boolean;
   promise?: boolean;
+  temporal?: boolean;
+  intl?: boolean;
   inspect?: boolean;
   console?: boolean;
   print?: boolean;
@@ -144,6 +154,7 @@ constructor(options?: {
     "quickjs:bytecode"?: boolean;
     "quickjs:cmdline"?: boolean;
     "quickjs:context"?: boolean;
+    "quickjs:curl"?: boolean;
     "quickjs:encoding"?: boolean;
     "quickjs:engine"?: boolean;
     "quickjs:os"?: boolean;

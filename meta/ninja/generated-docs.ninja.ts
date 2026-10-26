@@ -82,6 +82,7 @@ const quickjsDtsFilesMap = {
   modulesys: "node_modules/@suchipi/quickjs/build/dts/quickjs-modulesys.d.ts",
   // skipping print as we redefine it
   "quickjs-extensions": "node_modules/@suchipi/quickjs/build/dts/quickjs.d.ts",
+  "quickjs-curl": "node_modules/@suchipi/quickjs/build/dts/quickjs-curl.d.ts",
 };
 
 for (const [outputName, quickjsDtsPath] of Object.entries(quickjsDtsFilesMap)) {

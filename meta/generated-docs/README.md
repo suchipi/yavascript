@@ -195,6 +195,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`cat`]: /meta/generated-docs/cat.md#cat-function
 [`cd`]: /meta/generated-docs/cd.md#cd-function
 [`chmod`]: /meta/generated-docs/chmod.md#chmod-chmod
+[`curl`]: /meta/generated-docs/curl.md#curl-function
 [`dirname`]: /meta/generated-docs/dirname.md#dirname-function
 [`echo`]: /meta/generated-docs/echo.md#echo-value
 [`exit`]: /meta/generated-docs/exit.md#exit-function
@@ -325,6 +326,8 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`console.error`]: /meta/generated-docs/console.md#consoleerror-method
 [`console.warn`]: /meta/generated-docs/console.md#consolewarn-method
 [`BaseExecOptions`]: /meta/generated-docs/exec.md#baseexecoptions-type
+[`CurlOptions`]: /meta/generated-docs/curl.md#curloptions-type
+[`CurlResponse`]: /meta/generated-docs/curl.md#curlresponse-class
 [`Path.normalize`]: /meta/generated-docs/path.md#pathnormalize-static-method
 [`Path.OS_PROGRAM_EXTENSIONS`]: /meta/generated-docs/path.md#pathos_program_extensions-static-property
 [`GrepMatchDetail`]: /meta/generated-docs/grep.md#grepmatchdetail-interface
@@ -341,6 +344,11 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`getpwuid`]: /meta/generated-docs/std.md#quickjsstdgetpwuid-exported-function
 [`CreateProcess`]: /meta/generated-docs/os.md#quickjsoscreateprocess-exported-value
 [`Promise.map`]: /meta/generated-docs/promise-map.md#promiseconstructormap-method
+[`urlGet`]: /meta/generated-docs/quickjs-curl.md#quickjscurlurlget-exported-urlget
+[`UrlGetOptions`]: /meta/generated-docs/quickjs-curl.md#quickjscurlurlgetoptions-exported-interface
+[`urlRequest`]: /meta/generated-docs/quickjs-curl.md#quickjscurlurlrequest-exported-urlrequest
+[`UrlRequest`]: /meta/generated-docs/quickjs-curl.md#quickjscurlurlrequest-exported-interface
+[`UrlRequestOptions`]: /meta/generated-docs/quickjs-curl.md#quickjscurlurlrequestoptions-exported-interface
 [`"quickjs:std"`]: /meta/generated-docs/std.md#quickjsstd-namespace
 [`"quickjs:os"`]: /meta/generated-docs/os.md#quickjsos-namespace
 [`"quickjs:bytecode"`]: /meta/generated-docs/bytecode.md#quickjsbytecode-namespace

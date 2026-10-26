@@ -1,4 +1,4 @@
-import * as std from "quickjs:std";
+import * as curl from "quickjs:curl";
 import compilers from "../compilers";
 import { ModuleDelegate } from "quickjs:engine";
 import { makeErrorWithProperties } from "../error-with-properties";
@@ -17,7 +17,7 @@ export function readModule(
   modulePath: string,
   attributes?: { [key: string]: string },
 ) {
-  const { status, response, responseHeaders } = std.urlGet(modulePath, {
+  const { status, response, responseHeaders } = curl.urlGet(modulePath, {
     full: true,
   });
   if (status < 200 || status > 299) {

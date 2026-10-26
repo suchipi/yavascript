@@ -199,6 +199,7 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`cat`]: ./cat.md#cat-function
 [`cd`]: ./cd.md#cd-function
 [`chmod`]: ./chmod.md#chmod-chmod
+[`curl`]: ./curl.md#curl-function
 [`dirname`]: ./dirname.md#dirname-function
 [`echo`]: ./echo.md#echo-value
 [`exit`]: ./exit.md#exit-function
@@ -329,6 +330,8 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`console.error`]: ./console.md#consoleerror-method
 [`console.warn`]: ./console.md#consolewarn-method
 [`BaseExecOptions`]: ./exec.md#baseexecoptions-type
+[`CurlOptions`]: ./curl.md#curloptions-type
+[`CurlResponse`]: ./curl.md#curlresponse-class
 [`Path.normalize`]: ./path.md#pathnormalize-static-method
 [`Path.OS_PROGRAM_EXTENSIONS`]: ./path.md#pathos_program_extensions-static-property
 [`GrepMatchDetail`]: ./grep.md#grepmatchdetail-interface
@@ -345,6 +348,11 @@ For convenience, two of the builtin modules from QuickJS are also available as g
 [`getpwuid`]: ./std.md#quickjsstdgetpwuid-exported-function
 [`CreateProcess`]: ./os.md#quickjsoscreateprocess-exported-value
 [`Promise.map`]: ./promise-map.md#promiseconstructormap-method
+[`urlGet`]: ./quickjs-curl.md#quickjscurlurlget-exported-urlget
+[`UrlGetOptions`]: ./quickjs-curl.md#quickjscurlurlgetoptions-exported-interface
+[`urlRequest`]: ./quickjs-curl.md#quickjscurlurlrequest-exported-urlrequest
+[`UrlRequest`]: ./quickjs-curl.md#quickjscurlurlrequest-exported-interface
+[`UrlRequestOptions`]: ./quickjs-curl.md#quickjscurlurlrequestoptions-exported-interface
 [`"quickjs:std"`]: ./std.md#quickjsstd-namespace
 [`"quickjs:os"`]: ./os.md#quickjsos-namespace
 [`"quickjs:bytecode"`]: ./bytecode.md#quickjsbytecode-namespace

@@ -1171,9 +1171,10 @@ The event is a plain object shaped like a WHATWG `ErrorEvent`
   otherwise the worker's entry-module filename.
 - `lineno` — from the error's `lineNumber` own-prop, otherwise `0`.
 - `error` — a real `Error` instance when the worker threw an
-  Error (one of the nine recognized classes: `Error`, `TypeError`,
+  Error (one of the ten recognized classes: `Error`, `TypeError`,
   `RangeError`, `SyntaxError`, `ReferenceError`, `URIError`,
-  `EvalError`, `AggregateError`, `InternalError`, with user
+  `EvalError`, `AggregateError`, `SuppressedError`,
+  `InternalError`, with user
   subclasses reified to base `Error` with `.name` preserved).
   `null` when the thrown value was not an Error.
 

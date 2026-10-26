@@ -1649,6 +1649,86 @@ declare namespace Chmod {
 }
 
 /**
+ * Make a web request synchronously using the system libcurl library.
+ *
+ * Although most of yavascript is statically-linked, libcurl is not, because it
+ * changes often and relies on your system's TLS libraries. To keep its
+ * functionality secure and reliable, it's loaded dynamically on demand.
+ *
+ * On macOS, we attempt to load "libcurl.dylib". On Windows, we attempt to load
+ * "libcurl.dll" or "libcurl-4.dll". On other platforms, we attempt to load
+ * "libcurl.so.4" or "libcurl.so".
+ *
+ * To make a web request asynchronously, use curl within {@link runInWorker}.
+ *
+ * @param url - The web request url.
+ * @param options - Request options. See {@link CurlOptions}.
+ * @returns - A {@link CurlResponse} with the response data.
+ */
+declare function curl(url: string, options?: CurlOptions): CurlResponse;
+
+/** Options for {@link curl}. */
+declare type CurlOptions = {
+  /**
+   * HTTP request method. Defaults to "GET".
+   *
+   * Input values get uppercased.
+   */
+  method?: string;
+  /** HTTP request body. */
+  body?: string | ArrayBuffer | undefined;
+  /** HTTP request headers. */
+  headers?: Record<string, string | number | bigint>;
+  /**
+   * Redirect-following behavior. The default value is "follow", meaning
+   * redirects will be followed.
+   */
+  redirect?: "follow" | "error" | "manual" | undefined;
+};
+
+/**
+ * The response object returned by {@link curl}.
+ *
+ * Although it resembles the standard web `Response` object, note that its
+ * methods aren't async (and neither is {@link curl}).
+ */
+declare class CurlResponse {
+  /** The status code, eg. 200, 404, etc. */
+  status: number;
+  /**
+   * The response headers, **with lowercase header names**.
+   *
+   * The value is an array of strings because headers such as "Set-Cookie" can
+   * be specified more than once.
+   */
+  headers: {
+    [name: string]: string[] | undefined;
+  };
+  /** A boolean indicating whether the status code is >= 200 and <= 299. */
+  ok: boolean;
+
+  /** Returns the response body as an ArrayBuffer. */
+  arrayBuffer(): ArrayBuffer;
+  /** Returns the response body as a Uint8Array. */
+  bytes(): Uint8Array;
+  /** Returns the response body as UTF-8 text passed through JSON.parse. */
+  json(): unknown;
+  /** Returns the response body as UTF-8 text. */
+  text(): string;
+
+  constructor(result: {
+    status: number;
+    response: ArrayBuffer;
+    responseHeaders: {
+      [name: string]: string[] | undefined;
+    };
+  });
+
+  /** The raw response data. */
+  protected _response: ArrayBuffer;
+}
+
+/**
  * Removes the final component from a path string.
  *
  * Provides the same functionality as the unix binary of the same name.
@@ -2094,6 +2174,7 @@ declare interface WhoAmIResult {
  * ```
  */
 declare function whoami(): WhoAmIResult;
+
 
 /**
  * Runs a child process and blocks until it exits. You can call it with either a
@@ -4540,7 +4621,9 @@ declare const types: {
   objectWithProperties<
     T extends {
       [key: string | number | symbol]:
-        TypeValidator<any> | CoerceableToTypeValidator | unknown;
+        | TypeValidator<any>
+        | CoerceableToTypeValidator
+        | unknown;
     },
   >(
     properties: T,
@@ -4550,7 +4633,9 @@ declare const types: {
   objectWithOnlyTheseProperties<
     T extends {
       [key: string | number | symbol]:
-        TypeValidator<any> | CoerceableToTypeValidator | unknown;
+        | TypeValidator<any>
+        | CoerceableToTypeValidator
+        | unknown;
     },
   >(
     properties: T,
@@ -4589,13 +4674,17 @@ declare const types: {
   partialObjectWithProperties<
     T extends {
       [key: string | number | symbol]:
-        TypeValidator<any> | CoerceableToTypeValidator | unknown;
+        | TypeValidator<any>
+        | CoerceableToTypeValidator
+        | unknown;
     },
   >(
     properties: T,
   ): TypeValidator<{
     [key in keyof T]:
-      UnwrapTypeFromCoerceableOrValidator<T[key]> | null | undefined;
+      | UnwrapTypeFromCoerceableOrValidator<T[key]>
+      | null
+      | undefined;
   }>;
   tuple: {
     <
@@ -4891,9 +4980,7 @@ declare type CoerceToTypeValidator<V extends CoerceableToTypeValidator> =
                                                     ? TypeValidator<string>
                                                     : V extends {}
                                                       ? TypeValidator<{
-                                                          [
-                                                            key in keyof V
-                                                          ]: CoerceToTypeValidator<
+                                                          [key in keyof V]: CoerceToTypeValidator<
                                                             V[key]
                                                           >;
                                                         }>
@@ -7198,6 +7285,7 @@ declare class Context {
   eval(code: string): any;
 }
 
+
 // ==========================================
 // ------------------------------------------
 // QuickJS APIs, which YavaScript builds upon
@@ -7215,7 +7303,7 @@ interface ObjectConstructor {
    */
   toPrimitive(
     input: any,
-    hint: "string" | "number" | "default",
+    hint: "string" | "number" | "default"
   ): string | number | bigint | boolean | undefined | symbol | null;
 
   /**
@@ -7395,7 +7483,7 @@ declare module "quickjs:timers" {
   /** Call the function func repeatedly, with delay ms between each call. Return a handle to the timer. */
   export function setInterval(
     func: (...args: any) => any,
-    delay: number,
+    delay: number
   ): Timer;
 
   /** Cancel an interval timer. */
@@ -7695,118 +7783,6 @@ declare module "quickjs:std" {
    */
   export function getpwuid(id: number): PasswdEntry;
 
-  interface UrlGet {
-    /**
-     * Download `url` using libcurl (dynamically loaded). Returns string when
-     * the http status code is between 200 and 299, and throws otherwise.
-     *
-     * Pass an object with { full: true } as the second argument to get response
-     * headers and status code.
-     */
-    (url: string): string;
-
-    /**
-     * Download `url` using libcurl (dynamically loaded). Returns string when
-     * the http status code is between 200 and 299, and throws otherwise.
-     *
-     * Pass an object with { full: true } as the second argument to get response
-     * headers and status code.
-     */
-    (url: string, options: { binary: false }): string;
-
-    /**
-     * Download `url` using libcurl (dynamically loaded). Returns string when
-     * the http status code is between 200 and 299, and throws otherwise.
-     *
-     * Pass an object with { full: true } as the second argument to get response
-     * headers and status code.
-     */
-    (url: string, options: { full: false }): string;
-
-    /**
-     * Download `url` using libcurl (dynamically loaded). Returns string when
-     * the http status code is between 200 and 299, and throws otherwise.
-     *
-     * Pass an object with { full: true } as the second argument to get response
-     * headers and status code.
-     */
-    (url: string, options: { binary: false; full: false }): string;
-
-    /**
-     * Download `url` using libcurl (dynamically loaded). Returns ArrayBuffer
-     * when the http status code is between 200 and 299, and throws otherwise.
-     *
-     * Pass an object with { full: true } as the second argument to get response
-     * headers and status code.
-     */
-    (url: string, options: { binary: true }): ArrayBuffer;
-
-    /**
-     * Download `url` using libcurl (dynamically loaded). Returns ArrayBuffer
-     * when the http status code is between 200 and 299, and throws otherwise.
-     *
-     * Pass an object with { full: true } as the second argument to get response
-     * headers and status code.
-     */
-    (url: string, options: { binary: true; full: false }): ArrayBuffer;
-
-    /**
-     * Download `url` using libcurl (dynamically loaded).
-     *
-     * Returns an object with three properties:
-     *
-     * - `response`: response body content (string)
-     * - `responseHeaders`: headers separated by CRLF (string)
-     * - `status`: status code (number)
-     */
-    (
-      url: string,
-      options: { full: true },
-    ): {
-      status: number;
-      response: string;
-      responseHeaders: string;
-    };
-
-    /**
-     * Download `url` using libcurl (dynamically loaded).
-     *
-     * Returns an object with three properties:
-     *
-     * - `response`: response body content (string)
-     * - `responseHeaders`: headers separated by CRLF (string)
-     * - `status`: status code (number)
-     */
-    (
-      url: string,
-      options: { full: true; binary: false },
-    ): {
-      status: number;
-      response: string;
-      responseHeaders: string;
-    };
-
-    /**
-     * Download `url` using libcurl (dynamically loaded).
-     *
-     * Returns an object with three properties:
-     *
-     * - `response`: response body content (ArrayBuffer)
-     * - `responseHeaders`: headers separated by CRLF (string)
-     * - `status`: status code (number)
-     */
-    (
-      url: string,
-      options: { full: true; binary: true },
-    ): {
-      status: number;
-      response: ArrayBuffer;
-      responseHeaders: string;
-    };
-  }
-
-  export var urlGet: UrlGet;
-
   /**
    * Parse `str` using a superset of JSON.parse. The following extensions are accepted:
    *
@@ -7831,7 +7807,7 @@ declare module "quickjs:std" {
   export function strftime(
     maxBytes: number,
     format: string,
-    time: Date | number,
+    time: Date | number
   ): string;
 }
 
@@ -7872,13 +7848,13 @@ declare module "quickjs:os" {
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
-    length: number,
+    length: number
   ): number;
   export function write(
     fd: number,
     buffer: ArrayBuffer,
     offset: number,
-    length: number,
+    length: number
   ): number;
   export function isatty(fd: number): boolean;
   export function ttyGetWinSize(fd: number): null | [number, number];
@@ -7958,7 +7934,7 @@ declare module "quickjs:os" {
 
   export function signal(
     signal: number,
-    func: null | undefined | (() => void),
+    func: null | undefined | (() => void)
   ): void;
 
   /* Signal constants */
@@ -8080,7 +8056,7 @@ declare module "quickjs:os" {
       options?: {
         overrideCode?: string;
         initialData?: StructuredClonable;
-      },
+      }
     );
 
     /**
@@ -8119,9 +8095,10 @@ declare module "quickjs:os" {
      *   otherwise the worker's entry-module filename.
      * - `lineno` — from the error's `lineNumber` own-prop, otherwise `0`.
      * - `error` — a real `Error` instance when the worker threw an
-     *   Error (one of the nine recognized classes: `Error`, `TypeError`,
+     *   Error (one of the ten recognized classes: `Error`, `TypeError`,
      *   `RangeError`, `SyntaxError`, `ReferenceError`, `URIError`,
-     *   `EvalError`, `AggregateError`, `InternalError`, with user
+     *   `EvalError`, `AggregateError`, `SuppressedError`,
+     *   `InternalError`, with user
      *   subclasses reified to base `Error` with `.name` preserved).
      *   `null` when the thrown value was not an Error.
      *
@@ -8215,7 +8192,7 @@ declare module "quickjs:os" {
     | undefined
     | ((
         commandLine: string | null,
-        options?: CreateProcessOptions,
+        options?: CreateProcessOptions
       ) => CreateProcessResult);
 
   /**
@@ -8228,7 +8205,8 @@ declare module "quickjs:os" {
    * NOTE: this function is only present on windows
    */
   export var WaitForSingleObject:
-    undefined | ((handle: Win32Handle, timeoutMs?: number) => number);
+    | undefined
+    | ((handle: Win32Handle, timeoutMs?: number) => number);
 
   /**
    * Retrieve the exit code of a process (wrapper for Win32 `GetExitCodeProcess`).
@@ -8249,7 +8227,8 @@ declare module "quickjs:os" {
    * NOTE: this function is only present on windows
    */
   export var TerminateProcess:
-    undefined | ((handle: Win32Handle, exitCode: number) => void);
+    | undefined
+    | ((handle: Win32Handle, exitCode: number) => void);
 
   /**
    * Close a Win32 handle. The handle will automatically be closed when the
@@ -8290,7 +8269,8 @@ declare module "quickjs:os" {
    * NOTE: this function is only present on windows
    */
   export var CreatePipe:
-    undefined | ((options?: CreatePipeOptions) => CreatePipeResult);
+    | undefined
+    | ((options?: CreatePipeOptions) => CreatePipeResult);
 
   /* Win32-specific constants */
 
@@ -8471,7 +8451,7 @@ interface ModuleDelegate {
     [key: string]: (
       filename: string,
       content: string,
-      attributes?: Record<string, string>,
+      attributes?: Record<string, string>
     ) => string;
   };
 
@@ -8499,7 +8479,7 @@ interface ModuleDelegate {
   resolve(
     name: string,
     fromFile: string,
-    attributes?: Record<string, string>,
+    attributes?: Record<string, string>
   ): string;
 
   /**
@@ -8563,7 +8543,7 @@ interface RequireFunction {
    */
   resolve: (
     source: string,
-    options?: { with?: Record<string, string> },
+    options?: { with?: Record<string, string> }
   ) => string;
 }
 
@@ -8660,7 +8640,7 @@ declare module "quickjs:engine" {
       backtraceBarrier?: boolean;
       filename?: string;
       async?: boolean;
-    },
+    }
   ): any;
 
   /**
@@ -8682,7 +8662,7 @@ declare module "quickjs:engine" {
   export function importModule(
     filename: string,
     basename?: string,
-    options?: { with?: Record<string, string> },
+    options?: { with?: Record<string, string> }
   ): { [key: string]: any };
 
   /**
@@ -8696,7 +8676,7 @@ declare module "quickjs:engine" {
   export function resolveModule(
     filename: string,
     basename?: string,
-    options?: { with?: Record<string, string> },
+    options?: { with?: Record<string, string> }
   ): string;
 
   /**
@@ -8768,7 +8748,7 @@ declare module "quickjs:engine" {
    */
   export function defineBuiltinModule(
     name: string,
-    obj: { [key: string]: any },
+    obj: { [key: string]: any }
   ): void;
 
   /**
@@ -8798,7 +8778,7 @@ declare module "quickjs:engine" {
   export type StackFrameMapper = (
     filename: string,
     line: number,
-    column: number,
+    column: number
   ) => { filename: string; line: number; column: number } | null | undefined;
 
   /**
@@ -8835,7 +8815,7 @@ declare module "quickjs:engine" {
    * @param mapper - The translation callback, or `null`/`undefined` to unregister.
    */
   export function setStackFrameMapper(
-    mapper: StackFrameMapper | null | undefined,
+    mapper: StackFrameMapper | null | undefined
   ): void;
 
   /**
@@ -8892,7 +8872,7 @@ declare module "quickjs:engine" {
       maxDepth?: number;
       maxStringLength?: number;
       maxItemCount?: number;
-    },
+    }
   ): string;
 
   /**
@@ -8942,7 +8922,7 @@ declare module "quickjs:bytecode" {
        *   matter.
        */
       strip?: "source" | "debug" | false;
-    },
+    }
   ): ArrayBuffer;
 
   /**
@@ -8957,7 +8937,8 @@ declare module "quickjs:bytecode" {
    *
    * To serialize Error instances (including `TypeError`, `RangeError`,
    * `SyntaxError`, `ReferenceError`, `URIError`, `EvalError`,
-   * `AggregateError`, and `InternalError`), pass `serializeErrors: true`.
+   * `AggregateError`, `SuppressedError`, and `InternalError`), pass
+   * `serializeErrors: true`.
    * Without it, attempting to serialize any Error instance throws.
    */
   export function fromValue(
@@ -8981,7 +8962,7 @@ declare module "quickjs:bytecode" {
        * matching option so the Error is reified to a real instance.
        */
       serializeErrors?: boolean;
-    },
+    }
   ): ArrayBuffer;
 
   /**
@@ -9003,7 +8984,7 @@ declare module "quickjs:bytecode" {
     options?: {
       preserveReferences?: boolean;
       serializeErrors?: boolean;
-    },
+    }
   ): any;
 }
 
@@ -9030,6 +9011,8 @@ declare module "quickjs:context" {
      * - URIError
      * - InternalError
      * - AggregateError
+     * - SuppressedError
+     * - DisposableStack
      * - Array
      * - parseInt
      * - parseFloat
@@ -9108,10 +9091,29 @@ declare module "quickjs:context" {
        * - async functions
        * - async iterators
        * - async generators
+       * - AsyncDisposableStack
        *
        * Defaults to `true`.
        */
       promise?: boolean;
+
+      /**
+       * Enables `Temporal`. Defaults to `true`.
+       *
+       * Has no effect if QuickJS was built with `CONFIG_TEMPORAL_INTL=0`, in
+       * which case `Temporal` is never available.
+       */
+      temporal?: boolean;
+
+      /**
+       * Enables `Intl`, and makes `toLocaleString` and related methods (such as
+       * `Number.prototype.toLocaleString`, `Date.prototype.toLocaleString`, and
+       * `String.prototype.localeCompare`) use it. Defaults to `true`.
+       *
+       * Has no effect if QuickJS was built with `CONFIG_TEMPORAL_INTL=0`, in
+       * which case `Intl` is never available.
+       */
+      intl?: boolean;
 
       /** Enables `inspect`. Defaults to `true`. */
       inspect?: boolean;
@@ -9135,6 +9137,8 @@ declare module "quickjs:context" {
         "quickjs:cmdline"?: boolean;
         /** Enables the "quickjs:context" module. Defaults to `true`. */
         "quickjs:context"?: boolean;
+        /** Enables the "quickjs:curl" module. Defaults to `true`. */
+        "quickjs:curl"?: boolean;
         /** Enables the "quickjs:encoding" module. Defaults to `true`. */
         "quickjs:encoding"?: boolean;
         /** Enables the "quickjs:engine" module. Defaults to `true`. */
@@ -9189,7 +9193,7 @@ declare module "quickjs:encoding" {
      */
     encodeInto(
       source: string,
-      destination: Uint8Array,
+      destination: Uint8Array
     ): { read: number; written: number };
   }
 
@@ -9266,17 +9270,19 @@ declare module "quickjs:encoding" {
   export class TextDecoder {
     constructor(
       label?: TextEncodingLabel,
-      options?: { fatal?: boolean; ignoreBOM?: boolean },
+      options?: { fatal?: boolean; ignoreBOM?: boolean }
     );
     readonly encoding: TextEncoding;
     readonly fatal: boolean;
     readonly ignoreBOM: boolean;
     decode(
       input?: ArrayBuffer | ArrayBufferView,
-      options?: { stream?: boolean },
+      options?: { stream?: boolean }
     ): string;
   }
 }
 
+
 declare const std: typeof import("quickjs:std");
 declare const os: typeof import("quickjs:os");
+
