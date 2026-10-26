@@ -162,7 +162,7 @@ declare const yavascript: {
     /**
      * The function yavascript uses internally to load [Civet](https://civet.dev/) files.
      *
-     * yavascript embeds Civet 0.9.0.
+     * yavascript embeds Civet 0.11.16.
      *
      * **Example**
      * ```ts
