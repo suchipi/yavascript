@@ -92,30 +92,30 @@ test("pwd.initial cannot be modified", async () => {
 
   const result = await evaluate(script, { cwd: rootDir() });
   expect(result).toMatchInlineSnapshot(`
-   {
-     "code": 1,
-     "error": null,
-     "stderr": "TypeError: object is not extensible
-     at somewhere
-   {
-     fileName: "<rootDir>/<evalScript>"
-     lineNumber: <redacted>
-     columnNumber: <redacted>
-   }
-   ",
-     "stdout": "1 Path {
-     Frozen
-     <rootDir>
-   }
-   2 Path {
-     Frozen
-     <rootDir>
-   }
-   3 Path {
-     Frozen
-     <rootDir>
-   }
-   ",
-   }
+    {
+      "code": 1,
+      "error": null,
+      "stderr": "TypeError: 'length' is read-only
+      at somewhere
+    {
+      fileName: "<internal>/quickjs.c"
+      lineNumber: <redacted>
+      columnNumber: <redacted>
+    }
+    ",
+      "stdout": "1 Path {
+      Frozen
+      <rootDir>
+    }
+    2 Path {
+      Frozen
+      <rootDir>
+    }
+    3 Path {
+      Frozen
+      <rootDir>
+    }
+    ",
+    }
   `);
 });
