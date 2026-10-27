@@ -812,3 +812,16 @@ true
 ",
 }
 `;
+
+exports[`using-in-civet.civet 1`] = `
+{
+  "code": 0,
+  "error": null,
+  "stderr": "",
+  "stdout": "{
+  Symbol(Symbol.dispose): Function "[Symbol.dispose]" {}
+}
+dispose called
+",
+}
+`;

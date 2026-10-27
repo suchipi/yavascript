@@ -192,7 +192,6 @@ const compilersInternal = {
   civet(code: string, options?: CompilerOptions): CompileInternalResult {
     const filename = options?.filename?.toString();
     const compiled = getCivet().compile(code, {
-      js: true,
       filename,
       sync: true,
       sourceMap: true,
@@ -201,8 +200,8 @@ const compilersInternal = {
       filename ?? "",
     ) as EncodedSourceMap;
 
-    const jsxResult = compilersInternal.jsx(compiled.code, options);
-    return { code: jsxResult.code, mappers: [...jsxResult.mappers, civetMap] };
+    const tsxResult = compilersInternal.tsx(compiled.code, options);
+    return { code: tsxResult.code, mappers: [...tsxResult.mappers, civetMap] };
   },
 
   autodetect(code: string, options?: CompilerOptions): CompileInternalResult {

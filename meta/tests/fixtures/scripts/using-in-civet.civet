@@ -1,0 +1,11 @@
+#!/usr/bin/env yavascript
+
+blah := () ->
+  using a = {
+    [Symbol.dispose]() {
+      console.log("dispose called")
+    }
+  }
+  console.log(a)
+
+blah()
