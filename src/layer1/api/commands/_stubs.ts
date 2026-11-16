@@ -41,6 +41,9 @@ export default makeGetterPropertyDescriptorMap(
         "'openURL' is not defined. Did you mean 'openUrl'?",
       );
     },
+    fetch() {
+      throw new ReferenceError("'fetch' is not defined. Did you mean 'curl'?");
+    },
   },
   false,
 );

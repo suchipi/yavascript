@@ -127,6 +127,7 @@ test("context globals", async () => {
     where: get throws error (GSC)
     id: get throws error (GSC)
     openURL: get throws error (GSC)
+    fetch: get throws error (GSC)
     FILE: get throws error (GSC)
     env: object (GSCE)
     readEnvBool: function (GSCE)
