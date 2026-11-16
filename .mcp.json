@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "netlify-mcp": {
-      "type": "http",
-      "url": "https://netlify-mcp.netlify.app/mcp"
-    }
-  }
-}
